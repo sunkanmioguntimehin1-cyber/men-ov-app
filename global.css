@@ -1,0 +1,16 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+:root {
+ --background: #FCFCFD;
+  --primary: #8A3FFC;
+  --primaryLight:#E9D7FE;
+  --secondary: #F9F5FF;
+  --white: #ffffff;
+  --titleText: #42307D;
+  --blackbright: #ECE3ED;
+  --black: #101828;
+  --errorline:#CA2B30;
+}
