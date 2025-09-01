@@ -12,8 +12,12 @@
       "supportsTablet": true,
       "bundleIdentifier": "com.conefia.menoviaapp",
       "infoPlist": {
-        "ITSAppUsesNonExemptEncryption": false
+        "ITSAppUsesNonExemptEncryption": false,
+        "NSCameraUsageDescription": "This app uses the camera to allow users upload photos.",
+        "NSMicrophoneUsageDescription": "This app uses the microphone for video recording .",
+        "NSPhotoLibraryUsageDescription": "This app needs access to your photo library so you can upload photos."
       }
+      
     },
     "android": {
       "adaptiveIcon": {
@@ -21,7 +25,12 @@
         "backgroundColor": "#ffffff"
       },
       "edgeToEdgeEnabled": true,
-      "package": "com.conefia.menoviaapp"
+      "package": "com.conefia.menoviaapp",
+      "permissions": [
+       
+        "android.permission.CAMERA",
+        "android.permission.RECORD_AUDIO"
+      ]
     },
     "web": {
       "bundler": "metro",
