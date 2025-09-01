@@ -10,7 +10,7 @@ const Symptoms = () => {
     console.log("selected:", selectedList);
  
   return (
-    <View className="mt-5">
+    <View className=" mt-5">
       <View>
         {!selectedList && <SymptomsList setSelectedList={setSelectedList} />}
 

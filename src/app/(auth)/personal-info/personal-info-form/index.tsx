@@ -71,7 +71,7 @@ const PersonalInfoForm = () => {
 
   return (
     <>
-      <Screen className="">
+      <Screen scroll={true} className="">
         {/* Back to previous screen (navigation) */}
         <TouchableOpacity
           className="px-8 my-4"
