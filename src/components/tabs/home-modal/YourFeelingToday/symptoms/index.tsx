@@ -30,7 +30,7 @@ const Symptoms = () => {
     <View className="mt-5">
       {symptomsData.map((item) => (
         <>
-          <TouchableOpacity className="flex-row items-center h-14 rounded-xl  bg-[#EAECF0] my-1">
+          <TouchableOpacity className="flex-row items-center h-14 rounded-xl  bg-[#F9FAFB] my-1">
             <View className=" w-6 h-6 ml-2 ">
               <Image
                 source={require("@/assets/images/backpain.png")}
@@ -44,7 +44,9 @@ const Symptoms = () => {
                 onError={(error) => console.log("Image error:", error)}
               />
             </View>
-            <Text className=" text-sm mx-3 font-[PoppinsMedium]">{item.name}</Text>
+            <Text className=" text-sm mx-3 font-[PoppinsMedium]">
+              {item.name}
+            </Text>
           </TouchableOpacity>
         </>
       ))}
