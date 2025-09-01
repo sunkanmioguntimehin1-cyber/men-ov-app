@@ -3,7 +3,7 @@ import { rS, rV } from "@/src/lib/responsivehandler";
 import { Entypo } from "@expo/vector-icons";
 import React, { useState } from "react";
 import { Controller, useForm } from "react-hook-form";
-import { Text, TextInput, TouchableOpacity, View } from "react-native";
+import { ScrollView, Text, TextInput, TouchableOpacity, View } from "react-native";
 
 const AddNote = () => {
   const [note, setNote] = useState("");
@@ -17,17 +17,13 @@ const AddNote = () => {
    } = useForm({
      mode: "onChange",
      defaultValues: {
-       full_name: "",
-       email: "",
-       phone_number: "",
-       bio: "",
-       region: "",
-       gender: "",
+      
+       notes: "",
      },
    });
 
   return (
-    <View>
+    <ScrollView>
       <View className="mt-3 mb-5">
         <Text
           className="mb-2 font-[PoppinsMedium] "
@@ -38,7 +34,7 @@ const AddNote = () => {
 
         <Controller
           control={control}
-          name="bio"
+          name="notes"
           render={({ field: { onChange, onBlur, value } }) => (
             <View className="border border-[#B4B4B4] bg-white rounded-lg p-4">
               <TextInput
@@ -70,7 +66,7 @@ const AddNote = () => {
       <View className="my-3">
         <CustomButton primary title="Add" />
       </View>
-    </View>
+    </ScrollView>
   );
 };
 

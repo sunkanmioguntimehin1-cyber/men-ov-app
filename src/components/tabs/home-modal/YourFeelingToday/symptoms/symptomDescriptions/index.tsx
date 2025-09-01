@@ -176,7 +176,7 @@ const SymptomsDescriptions = ({ selectedList }: Prop) => {
               <Text className="font-[PoppinsMedium] mx-2">Add image</Text>
               {/* </View> */}
             </TouchableOpacity>
-           
+            
           </View>
         )}
       </View>

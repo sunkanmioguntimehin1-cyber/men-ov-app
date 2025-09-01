@@ -32,7 +32,7 @@ SplashScreen.setOptions({
 setupNetworkStatus();
 
 export default function RootLayout() {
-  const isLoggedIn = false;
+  const isLoggedIn = true;
 
   const [loaded] = useFonts({
     PoppinsLight: require("../../assets/fonts/Poppins-Light.ttf"),
