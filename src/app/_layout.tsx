@@ -6,6 +6,7 @@ import * as SplashScreen from "expo-splash-screen";
 import { StatusBar } from "expo-status-bar";
 import { useEffect } from "react";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
+import { KeyboardProvider } from "react-native-keyboard-controller";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import "../../global.css";
 import NetworkStatus from "../components/NetworkStatus";
@@ -31,7 +32,7 @@ SplashScreen.setOptions({
 setupNetworkStatus();
 
 export default function RootLayout() {
-  const isLoggedIn = true;
+  const isLoggedIn = false;
 
   const [loaded] = useFonts({
     PoppinsLight: require("../../assets/fonts/Poppins-Light.ttf"),
@@ -71,14 +72,22 @@ export default function RootLayout() {
         <SafeAreaProvider>
           <GestureHandlerRootView style={{ flex: 1 }}>
             <NetworkStatus />
-            <Stack>
-              <Stack.Protected guard={isLoggedIn}>
-                <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-              </Stack.Protected>
-              <Stack.Protected guard={!isLoggedIn}>
-                <Stack.Screen name="(auth)" options={{ headerShown: false }} />
-              </Stack.Protected>
-            </Stack>
+            <KeyboardProvider>
+              <Stack>
+                <Stack.Protected guard={isLoggedIn}>
+                  <Stack.Screen
+                    name="(tabs)"
+                    options={{ headerShown: false }}
+                  />
+                </Stack.Protected>
+                <Stack.Protected guard={!isLoggedIn}>
+                  <Stack.Screen
+                    name="(auth)"
+                    options={{ headerShown: false }}
+                  />
+                </Stack.Protected>
+              </Stack>
+            </KeyboardProvider>
             <StatusBar style="auto" />
           </GestureHandlerRootView>
         </SafeAreaProvider>

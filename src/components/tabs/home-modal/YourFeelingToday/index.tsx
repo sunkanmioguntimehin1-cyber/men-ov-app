@@ -1,7 +1,9 @@
 import { MaterialIcons } from "@expo/vector-icons";
 import React, { useState } from "react";
 import { Text, TouchableOpacity, View } from "react-native";
+import AddNote from "./addnote";
 import Symptoms from "./symptoms";
+import TriggersActivities from "./TriggersActivities";
 
 const YourFeelingToday = ({ onCancel }:any) => {
   const [activeIndex, setActiveIndex] = useState(0);
@@ -47,9 +49,15 @@ const YourFeelingToday = ({ onCancel }:any) => {
         ))}
       </View>
 
-      <View>{activeIndex === 0 && <Symptoms />}</View>
+      <View>
+        {activeIndex === 0 && <Symptoms />}
+        {activeIndex === 1 && <TriggersActivities />}
+        {activeIndex === 2 && <AddNote />}
+      </View>
     </View>
   );
 };
 
 export default YourFeelingToday;
+
+
