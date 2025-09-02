@@ -29,12 +29,12 @@ const TriggersActivities = () => {
   };
   return (
     <View>
-      <View className="flex-row flex-wrap">
+      <View className=" mt-5 flex-row flex-wrap">
         {triggers.map((trigger) => (
           <TouchableOpacity
             key={trigger}
             onPress={() => toggleTrigger(trigger)}
-            className={`px-4 py-2 m-1 rounded-full border ${
+            className={`px-4  items-center justify-center h-12 m-1 rounded-xl border ${
               selectedTriggers.includes(trigger)
                 ? "bg-primary border-primary"
                 : "bg-white border-gray-300"
@@ -54,7 +54,6 @@ const TriggersActivities = () => {
       </View>
       <View className="mt-4 flex-row items-center">
         <View className="flex-1 h-12 border border-gray-300 rounded-lg px-3 flex-row items-center">
-          
           <TextInput
             placeholder="Something else?"
             className=" font-[PoppinsRegular]"

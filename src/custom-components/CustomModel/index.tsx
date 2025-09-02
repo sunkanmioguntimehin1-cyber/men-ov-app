@@ -1,5 +1,5 @@
-import { View, Text, Modal, TouchableOpacity } from "react-native";
-import React, { ReactNode } from "react";
+import React from "react";
+import { Modal, TouchableOpacity } from "react-native";
 
 interface Props {
   modelVisible: boolean;
@@ -35,7 +35,7 @@ const CustomModel = ({
           }
         }}
       >
-        <Text>{message}</Text>
+        {message}
       </TouchableOpacity>
     </Modal>
   );

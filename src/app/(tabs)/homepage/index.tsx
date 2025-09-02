@@ -1,4 +1,5 @@
 import FloatingAiButton from "@/src/components/tabs/FloatingAiButton";
+import CycleTracking from "@/src/components/tabs/home-modal/CycleTracking";
 import YourFeelingToday from "@/src/components/tabs/home-modal/YourFeelingToday";
 import LastSymptomsModal from "@/src/components/tabs/home-modal/YourFeelingToday/lastSymptomsModal";
 import TabsArticles from "@/src/components/tabs/TabsArticles";
@@ -14,6 +15,8 @@ import { Platform, Text, TouchableOpacity, View } from "react-native";
 export default function HomePage() {
   const [modelVisible, setModelVisible] = React.useState(false);
   const [modelVisible1, setModelVisible1] = React.useState(false);
+  const [modelVisible2, setModelVisible2] = React.useState(false);
+
 
 
   const handleOpenmodal =()=>{
@@ -32,9 +35,17 @@ export default function HomePage() {
      setModelVisible1(false);
    };
 
+   const handleOpenmodal2 = () => {
+     setModelVisible2(true);
+   };
+
+   const onCancel2 = () => {
+     setModelVisible2(false);
+   };
+
 
   return (
-    <Screen className="relative">
+    <Screen scroll={true} className="relative">
       <CustomModel
         modelVisible={modelVisible}
         setModelVisible={setModelVisible}
@@ -47,6 +58,13 @@ export default function HomePage() {
         setModelVisible={setModelVisible1}
         closeOnOutsideClick={false}
         message={<LastSymptomsModal onCancel={onCancel1} />}
+      />
+
+      <CustomModel
+        modelVisible={modelVisible2}
+        setModelVisible={setModelVisible2}
+        closeOnOutsideClick={false}
+        message={<CycleTracking onCancel={onCancel2} />}
       />
       <View className="p-8 flex-row items-center justify-end">
         <TouchableOpacity className=" mx-3">
@@ -127,7 +145,7 @@ export default function HomePage() {
 
         <View className="my-5">
           <CustomSelectData
-            onPress={() => {}}
+            onPress={handleOpenmodal2}
             primary
             label="Cycle Tracking"
             placeholder="Add your last cycle"
