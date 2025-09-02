@@ -5,7 +5,7 @@ import { Text, TouchableOpacity, View } from 'react-native';
 const FloatingAiButton = () => {
   return (
     <View>
-      <TouchableOpacity className=" my-3 border border-[#EAEAEA] p-4 rounded-2xl">
+      <TouchableOpacity className=" w-full bg-white my-3 border border-[#EAEAEA] p-4 rounded-2xl">
         <Text className=" text-[#101828] font-[PoppinsSemiBold] text-base">
           AI-Powered Tool
         </Text>
