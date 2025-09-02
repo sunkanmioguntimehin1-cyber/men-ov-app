@@ -227,7 +227,7 @@ const CustomInput = ({
   onBlur,
   multiline,
   isLoading,
-  normalize = true,
+  normalize = false,
   autoCapitalize = "none",
   returnKeyType = "done",
   onSubmitEditing,
