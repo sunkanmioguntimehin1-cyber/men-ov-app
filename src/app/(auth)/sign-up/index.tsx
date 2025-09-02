@@ -84,17 +84,49 @@
 // export default SignUp;
 
 
+import { useRegisterUser } from "@/src/api_services/authApi/authMutation";
 import CustomButton from "@/src/custom-components/CustomButton";
 import CustomInput from "@/src/custom-components/CustomInput";
 import KeyboardAwareScreen from "@/src/layout/KeyboardAwareScreen";
-import { MaterialIcons } from "@expo/vector-icons";
+import { Ionicons, MaterialIcons } from "@expo/vector-icons";
 import { Image } from "expo-image";
 import { useRouter } from "expo-router";
 import React from "react";
+import { Controller, useForm } from "react-hook-form";
 import { Text, TouchableOpacity, View } from "react-native";
 
 const SignUp = () => {
   const router = useRouter();
+    const [isSecureEntry, setIsSecureEntry] = React.useState(true);
+     const registerUser = useRegisterUser();
+  
+
+   const {
+     control,
+     handleSubmit,
+     formState: { errors, isValid },
+   } = useForm({
+     mode: "onChange",
+     defaultValues: {
+       username: "",
+       password: "",
+       email: "",
+       fullname: "",
+      
+     },
+   });
+
+   const onSubmit = (data: any) => {
+     if (data) {
+       registerUser.mutate(data);
+      //  setUserRegOtps({
+      //    email: data.email.toLowerCase(),
+      //  });
+       console.log("testing234: ", data);
+     }
+   };
+
+   console.log("registerUser:", registerUser);
   return (
     <KeyboardAwareScreen
       scroll={true}
@@ -131,28 +163,105 @@ const SignUp = () => {
 
       <View className="p-8 flex-1">
         <View className="my-5">
-          <CustomInput primary label="Fullname" placeholder="Fullname" />
-        </View>
-
-        <View>
-          <CustomInput primary label="Username" placeholder="Username" />
-        </View>
-
-        <View className="my-5">
-          <CustomInput
-            primary
-            label="Email"
-            placeholder="Email"
-            keyboardType="email-address"
+          <Controller
+            control={control}
+            name="fullname"
+            rules={{
+              required: "username is required",
+            }}
+            render={({ field: { onChange, onBlur, value } }) => (
+              <CustomInput
+                primary
+                label="Fullname"
+                placeholder="Fullname"
+                onChangeText={onChange}
+                onBlur={onBlur}
+                value={value}
+                error={errors.fullname?.message}
+              />
+            )}
           />
         </View>
 
         <View>
-          <CustomInput
-            primary
-            label="Password"
-            placeholder="Password"
-            secureTextEntry={true}
+          <Controller
+            control={control}
+            name="username"
+            rules={{
+              required: "username is required",
+            }}
+            render={({ field: { onChange, onBlur, value } }) => (
+              <CustomInput
+                primary
+                label="Username"
+                placeholder="username"
+                onChangeText={onChange}
+                onBlur={onBlur}
+                value={value}
+                error={errors.username?.message}
+              />
+            )}
+          />
+        </View>
+
+        <View className="my-5">
+          <Controller
+            control={control}
+            name="email"
+            rules={{
+              required: "Email is required",
+            }}
+            render={({ field: { onChange, onBlur, value } }) => (
+              <CustomInput
+                primary
+                label="Email"
+                placeholder="Email"
+                onChangeText={onChange}
+                onBlur={onBlur}
+                value={value}
+                keyboardType="email-address"
+                error={errors.email?.message}
+              />
+            )}
+          />
+        </View>
+
+        <View>
+          <Controller
+            control={control}
+            name="password"
+            rules={{
+              required: "Password is required",
+            }}
+            render={({ field: { onChange, onBlur, value } }) => (
+              <CustomInput
+                primary
+                label="Password"
+                placeholder="Create your password"
+                secureTextEntry={isSecureEntry}
+                value={value}
+                error={errors.password?.message}
+                onChangeText={onChange}
+                iconPostion="right"
+                icon={
+                  <TouchableOpacity
+                    onPress={() => {
+                      setIsSecureEntry(!isSecureEntry);
+                    }}
+                  >
+                    {isSecureEntry ? (
+                      <Ionicons
+                        name="eye-off-outline"
+                        size={24}
+                        color="#717171"
+                      />
+                    ) : (
+                      <Ionicons name="eye-outline" size={24} color="#717171" />
+                    )}
+                  </TouchableOpacity>
+                }
+              />
+            )}
           />
         </View>
       </View>
@@ -162,9 +271,9 @@ const SignUp = () => {
           <CustomButton
             primary
             title="Sign up"
-            onPress={() => {
-              // router.push("/(auth)/login")
-            }}
+            disabled={registerUser.isPending}
+            loading={registerUser.isPending}
+            onPress={handleSubmit(onSubmit)}
           />
         </View>
         <View className="my-5">
