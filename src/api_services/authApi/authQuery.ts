@@ -1,6 +1,6 @@
 
-import { useQuery } from "@tanstack/react-query";
-import { getProfile } from ".";
+// import { useQuery } from "@tanstack/react-query";
+// import { getProfile } from ".";
 // import { kycToken } from ".";
 
 
@@ -12,11 +12,11 @@ import { getProfile } from ".";
 //   });
 // };
 
-export const useGetUserApi = () => {
-  return useQuery({
-    queryKey: ["get-profile"],
-    queryFn: getProfile,
-  });
-};
+// export const useGetUserApi = () => {
+//   return useQuery({
+//     queryKey: ["get-profile"],
+//     queryFn: getProfile,
+//   });
+// };
 
 

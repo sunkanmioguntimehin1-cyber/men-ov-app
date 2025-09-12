@@ -8,6 +8,7 @@ import { useEffect } from "react";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { KeyboardProvider } from "react-native-keyboard-controller";
 import { SafeAreaProvider } from "react-native-safe-area-context";
+import Toast from "react-native-toast-message";
 import "../../global.css";
 import NetworkStatus from "../components/NetworkStatus";
 import { useAppFocusManager } from "../lib/focusManager";
@@ -89,6 +90,7 @@ export default function RootLayout() {
               </Stack>
             </KeyboardProvider>
             <StatusBar style="auto" />
+            <Toast />
           </GestureHandlerRootView>
         </SafeAreaProvider>
       </QueryClientProvider>
