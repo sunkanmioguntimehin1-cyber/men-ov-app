@@ -1,8 +1,8 @@
 {
-  "name": "menovia-app",
+  "name": "Menovia",
   "main": "expo-router/entry",
   "version": "1.0.0",
-  "owner": "conefia",
+  "owner": "Menovia",
   "scripts": {
     "start": "expo start",
     "reset-project": "node ./scripts/reset-project.js",

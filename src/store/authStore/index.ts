@@ -6,6 +6,8 @@ const authStore = (set: any) => ({
   userRegOtps: {
     phoneNumber: "",
     email: "",
+    otp:"",
+    regToken:""
   },
   isAuthenticated: false,
   isLoading: true,
@@ -18,10 +20,10 @@ const authStore = (set: any) => ({
     }));
   },
 
-  setUserRegOtps: (otps: any) => {
+  setUserRegOtps: (data: any) => {
     set((state: any) => ({
       ...state,
-      userRegOtps: { ...state.userRegOtps, ...otps },
+      userRegOtps: { ...state.userRegOtps, ...data },
     }));
   },
 

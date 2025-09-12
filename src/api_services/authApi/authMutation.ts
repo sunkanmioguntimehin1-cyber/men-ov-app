@@ -1,22 +1,31 @@
 import { handleAxiosError } from "@/src/lib/handleAxiosError";
+import { showSuccessToast } from "@/src/lib/showSuccessToast";
 import useAuthStore from "@/src/store/authStore";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useMutation } from "@tanstack/react-query";
 import { useRouter } from "expo-router";
-import { EditUserDetails, loginUser, registerUser, verifyEmail } from ".";
-
+import {
+  forgotPasswordApi,
+  loginUser,
+  registerUser,
+  resetPasswordApi,
+  verifyEmail,
+} from ".";
 
 // Mutation api call
 
 export const useRegisterUser = () => {
   const router = useRouter();
+  const setAuthToken = useAuthStore().setAuthToken;
   return useMutation({
     mutationFn: registerUser,
-    onSuccess(data: any) {
+    async onSuccess(data: any) {
       // showSuccessToast({
       //   message: data.message,
       // });
-      // router.push("/(auth)/create-account/verification");
-        router.push("/(auth)/personal-info");
+      // setAuthToken(data.access_token);
+      await AsyncStorage.setItem("token", data.access_token);
+      router.push("/(auth)/personal-info");
     },
     onError(error: any) {
       handleAxiosError(error);
@@ -53,8 +62,7 @@ export const useLoginUser = () => {
         // await AsyncStorage.setItem("token", data.data.access_token.token);
         // setIsLoggedIn(true);
         // router.push("/(tabs)/homepage");
-      console.log("data000:", data);
-
+        console.log("data000:", data);
       }
     },
     onError(error: any) {
@@ -64,19 +72,36 @@ export const useLoginUser = () => {
   });
 };
 
-
-export const useEditUser = () => {
-  const queryClient = useQueryClient();
+export const useForgotPasswordApi = () => {
+  const router = useRouter();
   return useMutation({
-    mutationFn: EditUserDetails,
-    onSuccess(data: any) {
-      // showSuccessToast({
-      //   message: data.message,
-      // });
-
-      queryClient.invalidateQueries({ queryKey: ["get-profile"] });
+    mutationFn: forgotPasswordApi,
+    async onSuccess(data) {
+      showSuccessToast({
+        message: data.message,
+      });
+      if (data) {
+        router.push("/(auth)/login/forgotPassword/enter-otp");
+      }
     },
-    onError(error: any) {
+    onError(error) {
+      console.log("forgot password error", error);
+      handleAxiosError(error);
+    },
+  });
+};
+
+export const useResetPasswordApi = () => {
+  const router = useRouter();
+  return useMutation({
+    mutationFn: resetPasswordApi,
+    async onSuccess(data) {
+      if (data) {
+        router.push("/(auth)/login");
+      }
+    },
+    onError(error) {
+      console.log("Reset password error", error);
       handleAxiosError(error);
     },
   });

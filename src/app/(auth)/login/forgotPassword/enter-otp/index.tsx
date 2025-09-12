@@ -1,6 +1,7 @@
 import ForgotPasswordOtp from "@/src/components/ForgotpasswordOtp";
 import CustomButton from "@/src/custom-components/CustomButton";
 import Screen from "@/src/layout/Screen";
+import useAuthStore from "@/src/store/authStore";
 import { MaterialIcons } from "@expo/vector-icons";
 import { Image } from "expo-image";
 import { router } from "expo-router";
@@ -9,6 +10,17 @@ import { Text, TouchableOpacity, View } from "react-native";
 
 const EnterOtp = () => {
   const [value, setValue] = React.useState("");
+  const setUserRegOtps = useAuthStore().setUserRegOtps;
+
+  const onSubmit = () => {
+    console.log(value);
+    if (value) {
+      setUserRegOtps({
+        otp: value,
+      });
+      router.push("/(auth)/login/forgotPassword/reset-password");
+    }
+  };
   return (
     <Screen className="">
       <TouchableOpacity
@@ -49,11 +61,11 @@ const EnterOtp = () => {
             </Text>
           </TouchableOpacity>
 
-          <TouchableOpacity className="">
+          {/* <TouchableOpacity className="">
             <Text className=" text-[#CA2B30] font-[PoppinsRegular]">
               Wrong Code. Try again!
             </Text>
-          </TouchableOpacity>
+          </TouchableOpacity> */}
         </View>
       </View>
       <View className=" p-8 my-5 ">
@@ -61,9 +73,10 @@ const EnterOtp = () => {
           <CustomButton
             primary
             title="Request password reset code"
-            onPress={() => {
-              router.push("/(auth)/login/forgotPassword/reset-password");
-            }}
+            // onPress={() => {
+            //   router.push("/(auth)/login/forgotPassword/reset-password");
+            // }}
+            onPress={onSubmit}
           />
         </View>
       </View>

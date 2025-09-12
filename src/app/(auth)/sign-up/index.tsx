@@ -87,6 +87,7 @@
 import { useRegisterUser } from "@/src/api_services/authApi/authMutation";
 import CustomButton from "@/src/custom-components/CustomButton";
 import CustomInput from "@/src/custom-components/CustomInput";
+import LoadingOverlay from "@/src/custom-components/LoadingOverlay";
 import KeyboardAwareScreen from "@/src/layout/KeyboardAwareScreen";
 import { Ionicons, MaterialIcons } from "@expo/vector-icons";
 import { Image } from "expo-image";
@@ -133,6 +134,12 @@ const SignUp = () => {
       keyboardAware={true}
       extraScrollHeight={50}
     >
+      <LoadingOverlay
+        isOpen={registerUser.isPending} // Required: Controls visibility
+        // message="Login..." // Optional: Loading text
+        animationType="pulse" // Optional: "spin" | "pulse" | "bounce" | "fade"
+        backdropClassName="..." // Optional: Additional backdrop styling
+      />
       <TouchableOpacity
         className="px-8 my-4"
         onPress={() => {

@@ -96,6 +96,7 @@
 import { useLoginUser } from "@/src/api_services/authApi/authMutation";
 import CustomButton from "@/src/custom-components/CustomButton";
 import CustomInput from "@/src/custom-components/CustomInput";
+import LoadingOverlay from "@/src/custom-components/LoadingOverlay";
 import KeyboardAwareScreen from "@/src/layout/KeyboardAwareScreen";
 import { rMS, rS } from "@/src/lib/responsivehandler";
 import { Ionicons } from "@expo/vector-icons";
@@ -138,6 +139,12 @@ const LoginScreen = () => {
       className="pt-safe"
       extraScrollHeight={50}
     >
+      <LoadingOverlay
+        isOpen={userLogin.isPending} // Required: Controls visibility
+        // message="Login..." // Optional: Loading text
+        animationType="pulse" // Optional: "spin" | "pulse" | "bounce" | "fade"
+        backdropClassName="..." // Optional: Additional backdrop styling
+      />
       <View className="items-center mb-20">
         <View className="w-16 h-14">
           <Image

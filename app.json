@@ -1,36 +1,37 @@
 {
   "expo": {
-    "name": "menovia-app",
-    "slug": "menovia-app",
+    "name": "Menovia",
+    "slug": "menovia",
+    "owner": "menovia",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
     "scheme": "menoviaapp",
-    "userInterfaceStyle": "automatic",
+    "userInterfaceStyle": "light",
     "newArchEnabled": true,
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.conefia.menoviaapp",
       "infoPlist": {
         "ITSAppUsesNonExemptEncryption": false,
+        "userInterfaceStyle": "light",
         "NSCameraUsageDescription": "This app uses the camera to allow users upload photos.",
         "NSMicrophoneUsageDescription": "This app uses the microphone for video recording .",
         "NSPhotoLibraryUsageDescription": "This app needs access to your photo library so you can upload photos."
-      }
+      },
+      "bundleIdentifier": "com.menovia.menovia"
     },
     "android": {
+      "userInterfaceStyle": "light",
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
       "edgeToEdgeEnabled": true,
-      "package": "com.conefia.menoviaapp",
       "permissions": [
         "android.permission.CAMERA",
-        "android.permission.RECORD_AUDIO",
-        "android.permission.CAMERA",
         "android.permission.RECORD_AUDIO"
-      ]
+      ],
+      "package": "com.menovia.menovia"
     },
     "web": {
       "bundler": "metro",
@@ -61,14 +62,14 @@
     "extra": {
       "router": {},
       "eas": {
-        "projectId": "066f17ad-d4de-437b-a4b2-d3ffc11fac2a"
+        "projectId": "99d071a9-b0d9-4db0-85b7-90a308101011"
       }
     },
     "runtimeVersion": {
       "policy": "appVersion"
     },
     "updates": {
-      "url": "https://u.expo.dev/066f17ad-d4de-437b-a4b2-d3ffc11fac2a"
+      "url": "https://u.expo.dev/99d071a9-b0d9-4db0-85b7-90a308101011"
     }
   }
 }
