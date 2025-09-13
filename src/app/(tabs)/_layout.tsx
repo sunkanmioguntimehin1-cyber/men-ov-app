@@ -1,4 +1,4 @@
-import { Ionicons } from "@expo/vector-icons";
+import { FontAwesome5, Ionicons } from "@expo/vector-icons";
 import { Tabs } from "expo-router";
 import { Platform } from "react-native";
 
@@ -27,7 +27,7 @@ export default function TabsLayout() {
             <Ionicons
               name={focused ? "home" : "home-outline"}
               size={24}
-              color={focused ?  "black" :"#E4D9F7"}
+              color={focused ? "black" : "#E4D9F7"}
             />
           ),
         }}
@@ -50,7 +50,13 @@ export default function TabsLayout() {
         name="profilepage/index"
         options={{
           title: "Profile",
-          // tabBarIcon: ({ color }) => <IconSymbol size={28} name="house.fill" color={color} />,
+          tabBarIcon: ({ color, focused }) => (
+            <FontAwesome5
+              name={focused ? "user-alt" : "user"}
+              size={24}
+              color={focused ? "black" : "#E4D9F7"}
+            />
+          ),
         }}
       />
     </Tabs>

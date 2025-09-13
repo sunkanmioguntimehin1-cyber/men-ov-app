@@ -4,7 +4,7 @@ import { useFonts } from "expo-font";
 import { Stack } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
 import { StatusBar } from "expo-status-bar";
-import { useEffect } from "react";
+import React, { useEffect } from "react";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { KeyboardProvider } from "react-native-keyboard-controller";
 import { SafeAreaProvider } from "react-native-safe-area-context";
@@ -13,6 +13,7 @@ import "../../global.css";
 import NetworkStatus from "../components/NetworkStatus";
 import { useAppFocusManager } from "../lib/focusManager";
 import { setupNetworkStatus } from "../lib/networkManager";
+import useAuthStore from "../store/authStore";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -33,7 +34,15 @@ SplashScreen.setOptions({
 setupNetworkStatus();
 
 export default function RootLayout() {
-  const isLoggedIn = false;
+  // const isLoggedIn = false;
+
+  const isLoggedIn = useAuthStore((state) => state.isLoggedIn);
+  const initializeAuth = useAuthStore((state) => state.initializeAuth);
+
+  // Initialize auth on app start
+  React.useEffect(() => {
+    initializeAuth();
+  }, [initializeAuth]);
 
   const [loaded] = useFonts({
     PoppinsLight: require("../../assets/fonts/Poppins-Light.ttf"),
@@ -47,26 +56,25 @@ export default function RootLayout() {
   // Setup app focus management
   useAppFocusManager();
 
-
   useEffect(() => {
     GoogleSignin.configure({
       webClientId:
         "759542327992-qs4vbi3gejg8gkgu5anov1igbffgmh5d.apps.googleusercontent.com",
       iosClientId:
         "759542327992-971ok5geank09ddh8kaeoglsk9mqg1fo.apps.googleusercontent.com",
-        profileImageSize: 120,
+      profileImageSize: 120,
     });
   }, []);
 
-   useEffect(() => {
-     if (loaded) {
-       SplashScreen.hide();
-     }
-   }, [loaded]);
+  useEffect(() => {
+    if (loaded) {
+      SplashScreen.hide();
+    }
+  }, [loaded]);
 
-   if (!loaded) {
-     return null;
-   }
+  if (!loaded) {
+    return null;
+  }
   return (
     <>
       <QueryClientProvider client={queryClient}>

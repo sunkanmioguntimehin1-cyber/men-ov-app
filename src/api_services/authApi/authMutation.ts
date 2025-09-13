@@ -59,10 +59,10 @@ export const useLoginUser = () => {
       //   message: data.message,
       // });
       if (data) {
-        // await AsyncStorage.setItem("token", data.data.access_token.token);
-        // setIsLoggedIn(true);
-        // router.push("/(tabs)/homepage");
-        console.log("data000:", data);
+        await AsyncStorage.setItem("token", data.access_token);
+        setIsLoggedIn(true);
+        router.push("/(tabs)/homepage");
+      
       }
     },
     onError(error: any) {

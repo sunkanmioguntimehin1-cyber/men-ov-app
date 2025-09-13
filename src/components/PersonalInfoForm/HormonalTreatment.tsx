@@ -4,7 +4,7 @@ import React from "react";
 import { Text, View } from "react-native";
 
 const HormonalTreatment = ({ isOnHormoneTherapy, setIsOnHormoneTherapy }:any) => {
-  
+  console.log("isOnHormoneTherapy", isOnHormoneTherapy);
 
   return (
     <View>
