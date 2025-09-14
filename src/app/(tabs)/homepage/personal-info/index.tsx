@@ -29,12 +29,13 @@ const PersonalInfo = () => {
       <View className=" my-5 p-8">
         <View>
           <CustomButton primary title="Add your personal informations" onPress={()=>{
-            router.push("/(auth)/personal-info/personal-info-form")
+            router.push("/homepage/personal-info/personal-info-form");
+
           }} />
         </View>
 
         <TouchableOpacity className="my-5 flex-row items-center justify-center" onPress={()=>{
-          router.push("/(auth)/login")
+          router.push("/homepage")
         }}>
           <View>
             <MaterialIcons name="arrow-back-ios" size={20} color="#6F649A" />

@@ -15,7 +15,6 @@ const MenstrualHistory = ({
   setPeriodsStoppedAnswer,
 }: any) => {
 
-
   return (
     <View>
       <View className=" items-center my-5">

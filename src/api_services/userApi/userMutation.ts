@@ -23,14 +23,18 @@ export const useEditUser = (handleNextBtn: any) => {
 
 export const useIntakeDetailsApi = () => {
   const queryClient = useQueryClient();
+  
   const router = useRouter()
   return useMutation({
     mutationFn: intakeDetailsApi,
     onSuccess(data: any) {
-      showSuccessToast({
-        message: data.message,
-      });
-      router.push("/homepage");
+      // showSuccessToast({
+      //   message: data.message,
+      // });
+      
+      console.log("data300", data)
+      
+      router.push("/(tabs)/homepage");
       // queryClient.invalidateQueries({ queryKey: ["get-user"] });
     },
     onError(error: any) {
