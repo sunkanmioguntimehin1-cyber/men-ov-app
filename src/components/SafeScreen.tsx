@@ -16,10 +16,13 @@ export default function SafeScreen({
   contentClassName,
 }: SafeScreenProps) {
   return (
-    <SafeAreaView className={["flex-1", className].filter(Boolean).join(" ")} edges={edges}>
-      <View className={["flex-1", contentClassName].filter(Boolean).join(" ")}>{children}</View>
+    <SafeAreaView
+      className={["flex-1", className].filter(Boolean).join(" ")}
+      edges={edges}
+    >
+      <View className={["flex-1", contentClassName].filter(Boolean).join(" ")}>
+        {children}
+      </View>
     </SafeAreaView>
   );
 }
-
-

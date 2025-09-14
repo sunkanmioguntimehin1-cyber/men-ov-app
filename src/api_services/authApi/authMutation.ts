@@ -16,7 +16,7 @@ import {
 
 export const useRegisterUser = () => {
   const router = useRouter();
-  const setAuthToken = useAuthStore().setAuthToken;
+  const setIsLoggedIn = useAuthStore().setIsLoggedIn;
   return useMutation({
     mutationFn: registerUser,
     async onSuccess(data: any) {
@@ -25,7 +25,8 @@ export const useRegisterUser = () => {
       // });
       // setAuthToken(data.access_token);
       await AsyncStorage.setItem("token", data.access_token);
-      router.push("/(auth)/personal-info");
+      setIsLoggedIn(true)
+      router.push("/(tabs)/homepage/personal-info");
     },
     onError(error: any) {
       handleAxiosError(error);

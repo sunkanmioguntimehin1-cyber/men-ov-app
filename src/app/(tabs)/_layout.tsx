@@ -5,7 +5,7 @@ import { Platform } from "react-native";
 export default function TabsLayout() {
   return (
     <Tabs
-      initialRouteName="homepage/index"
+      initialRouteName="homepage"
       screenOptions={{
         // tabBarActiveTintColor: Colors[colorScheme ?? 'light'].tint,
         headerShown: false,
@@ -20,7 +20,7 @@ export default function TabsLayout() {
       backBehavior="history"
     >
       <Tabs.Screen
-        name="homepage/index"
+        name="homepage"
         options={{
           title: "Home",
           tabBarIcon: ({ color, focused }) => (

@@ -26,10 +26,14 @@
   },
   "submit": {
     "production": {
-      "ios":{
+      "ios": {
         "appleId": "oguntimehins@gmail.com",
         "ascAppId": "6751870235",
         "appleTeamId": "7V5T539Z23"
+      },
+      "android": {
+        "serviceAccountKeyPath": "./google-services.json",
+        "track": "production"
       }
     }
   }

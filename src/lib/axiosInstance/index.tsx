@@ -13,12 +13,11 @@ interface NavigationParams {
 }
 
 // Define the API base URL
-const ROOT_URL = "https://dev-api.menovia.aviyatelemed.com";
-// const ROOT_URL = "http://165.227.227.144/api/v1";
+// const ROOT_URL = "https://dev-api.menovia.aviyatelemed.com";
+const ROOT_URL = process.env.EXPO_PUBLIC_API_URL;
 
 // Create an axios instance
 const axiosInstance: AxiosInstance = axios.create({
-  // baseURL: process.env.EXPO_PUBLIC_API_URL,
   baseURL: ROOT_URL,
   timeout: 10000,
   headers: {
@@ -34,6 +33,7 @@ axiosInstance.interceptors.request.use(
       if (token) {
         config.headers.Authorization = `Bearer ${token}`;
       }
+      console.log("token:", token)
       return config;
     } catch (error) {
       console.error("Error in request interceptor:", error);

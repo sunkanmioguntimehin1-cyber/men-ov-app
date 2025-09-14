@@ -58,10 +58,8 @@ export default function RootLayout() {
 
   useEffect(() => {
     GoogleSignin.configure({
-      webClientId:
-        "759542327992-qs4vbi3gejg8gkgu5anov1igbffgmh5d.apps.googleusercontent.com",
-      iosClientId:
-        "759542327992-971ok5geank09ddh8kaeoglsk9mqg1fo.apps.googleusercontent.com",
+      webClientId: process.env.EXPO_PUBLIC_WEB_CLIENT_ID,
+      iosClientId: process.env.EXPO_PUBLIC_IOS_CLIENT_ID,
       profileImageSize: 120,
     });
   }, []);
