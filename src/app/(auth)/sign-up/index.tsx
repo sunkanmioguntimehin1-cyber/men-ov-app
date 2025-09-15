@@ -95,8 +95,8 @@ const SignUp = () => {
             render={({ field: { onChange, onBlur, value } }) => (
               <CustomInput
                 primary
-                label="Fullname"
-                placeholder="Fullname"
+                label="Full name"
+                placeholder="Full name"
                 onChangeText={onChange}
                 onBlur={onBlur}
                 value={value}

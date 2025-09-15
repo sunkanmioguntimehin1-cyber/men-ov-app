@@ -19,11 +19,17 @@ export default function ProfilePage() {
       img: <Feather name="user" size={24} color="black" />,
       title: "Profile",
       icon: <AntDesign name="right" size={24} color="black" />,
+      onPress: () => {
+        router.push("/profilepage/profile-screen");
+      },
     },
     {
       img: <SimpleLineIcons name="chart" size={24} color="black" />,
       title: "Summary",
       icon: <AntDesign name="right" size={24} color="black" />,
+      onPress: () => {
+        router.push("/profilepage/summary-screen");
+      },
     },
   ];
 
@@ -58,7 +64,7 @@ export default function ProfilePage() {
 
   const handleRouter = (item: string) => {
     if (item === "Notifications") {
-      //  router.push( "/settings/my-beneficiary" );
+      //  router.push( "/profilepage/profile-screen" );
     } else if (item === "Contact Us") {
       //  router.push({ pathname: "/settings/privacy-policy" });
     } else if (item === "Share App") {
@@ -111,9 +117,7 @@ export default function ProfilePage() {
           <TouchableOpacity
             key={index}
             className=" my-3 border border-[#ECE3ED] flex-row justify-between items-center p-5 rounded-3xl"
-            // onPress={() => {
-            //   handleRouter(item.title);
-            // }}
+            onPress={item.onPress}
           >
             <View className=" flex-row items-center justify-between">
               <View>{item.img}</View>
