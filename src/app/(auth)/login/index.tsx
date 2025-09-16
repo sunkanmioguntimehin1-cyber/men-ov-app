@@ -117,7 +117,7 @@ const LoginScreen = () => {
   } = useForm({
     mode: "onChange",
     defaultValues: {
-      username: "",
+      email: "",
       password: "",
     },
   });
@@ -125,7 +125,7 @@ const LoginScreen = () => {
   const onSubmit = (data: any) => {
     Keyboard.dismiss();
     userLogin.mutate({
-      username: data?.username.toLowerCase(),
+      email: data?.email.toLowerCase(),
       password: data?.password,
     });
   };
@@ -168,19 +168,19 @@ const LoginScreen = () => {
         <View className="my-5">
           <Controller
             control={control}
-            name="username"
+            name="email"
             rules={{
-              required: "username is required",
+              required: "email is required",
             }}
             render={({ field: { onChange, onBlur, value } }) => (
               <CustomInput
                 primary
-                label="Username"
-                placeholder="username"
+                label="Email"
+                placeholder="Enter your email"
                 onChangeText={onChange}
                 onBlur={onBlur}
                 value={value}
-                error={errors.username?.message}
+                error={errors.email?.message}
               />
             )}
           />

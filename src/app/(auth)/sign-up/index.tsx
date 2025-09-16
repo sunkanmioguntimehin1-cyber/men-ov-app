@@ -25,7 +25,7 @@ const SignUp = () => {
    } = useForm({
      mode: "onChange",
      defaultValues: {
-       username: "",
+      //  username: "",
        password: "",
        email: "",
        fullname: "",
@@ -90,7 +90,7 @@ const SignUp = () => {
             control={control}
             name="fullname"
             rules={{
-              required: "username is required",
+              required: "Full name is required",
             }}
             render={({ field: { onChange, onBlur, value } }) => (
               <CustomInput
@@ -106,7 +106,7 @@ const SignUp = () => {
           />
         </View>
 
-        <View>
+        {/* <View>
           <Controller
             control={control}
             name="username"
@@ -125,7 +125,7 @@ const SignUp = () => {
               />
             )}
           />
-        </View>
+        </View> */}
 
         <View className="my-5">
           <Controller
