@@ -7,7 +7,7 @@ export default function TabsLayout() {
     <Tabs
       initialRouteName="homepage"
       screenOptions={{
-        // tabBarActiveTintColor: Colors[colorScheme ?? 'light'].tint,
+        tabBarActiveTintColor: "#8A3FFC",
         headerShown: false,
         tabBarStyle: Platform.select({
           ios: {
