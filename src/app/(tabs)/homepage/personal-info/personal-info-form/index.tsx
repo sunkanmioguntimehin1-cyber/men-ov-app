@@ -449,6 +449,7 @@ const PersonalInfoForm = () => {
     defaultValues: {
       address: "",
       fullname: "",
+      dob:"",
     },
   });
 
@@ -499,6 +500,8 @@ const PersonalInfoForm = () => {
 
   const editUserProfile = useEditUser(handleEditProfileSuccess);
   const intakeDetails = useIntakeDetailsApi();
+
+  
 
   // Function to validate current step before proceeding
   const validateCurrentStep = () => {
@@ -603,6 +606,7 @@ const PersonalInfoForm = () => {
       reset({
         fullname: getUserData?.data?.fullname,
         address: getUserData?.data?.address,
+        dob: getUserData?.data?.dob,
       });
       const matchingGender = dataItem.find((item) => item.value === userGender);
       setSelected(matchingGender || null);

@@ -9,6 +9,7 @@ import Screen from "@/src/layout/Screen";
 import { rS } from "@/src/lib/responsivehandler";
 import { AntDesign, Ionicons } from "@expo/vector-icons";
 import { Image } from "expo-image";
+import { useRouter } from "expo-router";
 import React from "react";
 import { Platform, Text, TouchableOpacity, View } from "react-native";
 
@@ -16,6 +17,9 @@ export default function HomePage() {
   const [modelVisible, setModelVisible] = React.useState(false);
   const [modelVisible1, setModelVisible1] = React.useState(false);
   const [modelVisible2, setModelVisible2] = React.useState(false);
+  const router = useRouter();
+
+ 
 
   const handleOpenmodal = () => {
     setModelVisible(true);
