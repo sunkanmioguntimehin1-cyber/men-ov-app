@@ -28,7 +28,7 @@ export default function ProfilePage() {
       title: "Summary",
       icon: <AntDesign name="right" size={24} color="black" />,
       onPress: () => {
-        router.push("/profilepage/summary-screen");
+        // router.push("/profilepage/summary-screen");
       },
     },
   ];
