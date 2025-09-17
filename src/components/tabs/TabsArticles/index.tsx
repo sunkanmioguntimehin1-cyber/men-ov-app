@@ -49,7 +49,7 @@ const TabsArticles = () => {
 
           console.log("item", item.title);
           return (
-            <View key={item.id} className=" w-60 mx-3 h-auto">
+            <View key={item.id} className=" w-60 mx-2 h-auto">
               <View className=" w-60 h-40 ">
                 <Image
                   source={item.images[0]}
