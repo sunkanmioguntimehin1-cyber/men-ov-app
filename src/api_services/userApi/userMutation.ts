@@ -1,8 +1,9 @@
 import { handleAxiosError } from "@/src/lib/handleAxiosError";
 import { showSuccessToast } from "@/src/lib/showSuccessToast";
+import useAuthStore from "@/src/store/authStore";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "expo-router";
-import { editUserDetails, intakeDetailsApi } from ".";
+import { deleteUser, editUserDetails, intakeDetailsApi } from ".";
 
 export const useEditUser = (handleNextBtn: any) => {
   const queryClient = useQueryClient();
@@ -36,6 +37,27 @@ export const useIntakeDetailsApi = () => {
       
       router.push("/(tabs)/homepage");
       // queryClient.invalidateQueries({ queryKey: ["get-user"] });
+    },
+    onError(error: any) {
+      handleAxiosError(error);
+    },
+  });
+};
+
+
+export const useDeleteUserApi = () => {
+  const router = useRouter();
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: deleteUser,
+    onSuccess(data: any) {
+      // showSuccessToast({
+      //   message: data.message,
+      // });
+
+      // queryClient.invalidateQueries({ queryKey: ["get-user"] });
+      useAuthStore.getState().clearAuthState();
+      router.replace("/(auth)/login");
     },
     onError(error: any) {
       handleAxiosError(error);

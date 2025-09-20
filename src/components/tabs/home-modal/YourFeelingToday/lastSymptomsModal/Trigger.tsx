@@ -10,9 +10,6 @@ const Triggers = ({
   customTrigger,
   setCustomTrigger,
 }: any) => {
-  console.log("selectedTriggers900:", selectedTriggers);
-  console.log("selectedTriggers500:", selectedLastSymptom?.triggers);
-
   const [openTrigger, setOpenTrigger] = React.useState(false);
 
   const triggers = [
@@ -28,7 +25,6 @@ const Triggers = ({
     "Anxiety",
   ];
 
-  console.log("selectedTriggers6000:", selectedTriggers);
   return (
     <View>
       <View className="flex-row items-center justify-between">
@@ -41,7 +37,7 @@ const Triggers = ({
       {/* Show Selected */}
       {selectedTriggers.length > 0 && (
         <View className="flex-row flex-wrap mt-3">
-          {selectedTriggers.map((trigger:any, index:number) => (
+          {selectedTriggers.map((trigger: any, index: number) => (
             <TouchableOpacity
               key={index}
               onPress={() => toggleTrigger(trigger)} // remove on press

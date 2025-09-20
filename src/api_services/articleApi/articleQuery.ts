@@ -10,11 +10,6 @@ export const useGetArticleApi = () => {
   });
 };
 
-// export const useGetUserApi = () => {
-//   return useQuery({
-//     queryKey: ["get-profile"],
-//     queryFn: getProfile,
-//   });
-// };
+
 
 

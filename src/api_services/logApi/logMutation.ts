@@ -1,28 +1,27 @@
 import { handleAxiosError } from "@/src/lib/handleAxiosError";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "expo-router";
 import { createLogApi, updateLogApi } from ".";
 
-
 // Mutation api call
-export const useCreateLogApi = () => {
+export const useCreateLogApi = (onCancel?: any) => {
   const router = useRouter();
+  const queryClient = useQueryClient();
   return useMutation({
     mutationFn: createLogApi,
     async onSuccess(data: any) {
       // showSuccessToast({
       //   message: data.message,
       // });
-      // setAuthToken(data.access_token);
-      
-      // router.push("/(tabs)/homepage/personal-info");
+
+      queryClient.invalidateQueries({ queryKey: ["get-log"] });
+      onCancel();
     },
     onError(error: any) {
       handleAxiosError(error);
     },
   });
 };
-
 
 export const useUpdateLogApi = () => {
   const router = useRouter();
@@ -32,12 +31,10 @@ export const useUpdateLogApi = () => {
       // showSuccessToast({
       //   message: data.message,
       // });
-      // setAuthToken(data.access_token);
-      // router.push("/(tabs)/homepage/personal-info");
+     
     },
     onError(error: any) {
       handleAxiosError(error);
     },
   });
 };
-

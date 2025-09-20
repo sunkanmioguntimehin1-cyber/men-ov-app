@@ -1,9 +1,12 @@
+import { useDeleteUserApi } from "@/src/api_services/userApi/userMutation";
+import AccountDeletionModal from "@/src/components/profile/AccountDeletionModal";
+import CustomModel from "@/src/custom-components/CustomModel";
 import useAuthStore from "@/src/store/authStore";
 import {
   AntDesign,
   Feather,
   MaterialIcons,
-  SimpleLineIcons,
+  SimpleLineIcons
 } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import React from "react";
@@ -12,6 +15,8 @@ import SafeScreen from "../../../components/SafeScreen";
 
 export default function ProfilePage() {
   const router = useRouter();
+   const deleteUserDetails = useDeleteUserApi();
+
   const [modelVisible, setModelVisible] = React.useState(false);
 
   const generalData = [
@@ -28,7 +33,7 @@ export default function ProfilePage() {
       title: "Summary",
       icon: <AntDesign name="right" size={24} color="black" />,
       onPress: () => {
-        // router.push("/profilepage/summary-screen");
+        router.push("/profilepage/summary-screen");
       },
     },
   ];
@@ -39,16 +44,16 @@ export default function ProfilePage() {
       title: "Notifications",
       icon: <AntDesign name="right" size={24} color="black" />,
     },
-    {
-      img: <AntDesign name="user" size={24} color="black" />,
-      title: "Contact Us",
-      icon: <AntDesign name="right" size={24} color="black" />,
-    },
-    {
-      img: <Feather name="share-2" size={24} color="black" />,
-      title: "Share App",
-      icon: <AntDesign name="right" size={24} color="black" />,
-    },
+    // {
+    //   img: <AntDesign name="user" size={24} color="black" />,
+    //   title: "Contact Us",
+    //   icon: <AntDesign name="right" size={24} color="black" />,
+    // },
+    // {
+    //   img: <Feather name="share-2" size={24} color="black" />,
+    //   title: "Share App",
+    //   icon: <AntDesign name="right" size={24} color="black" />,
+    // },
     {
       img: <MaterialIcons name="delete-outline" size={24} color="red" />,
       title: "Delete Account",
@@ -64,13 +69,13 @@ export default function ProfilePage() {
 
   const handleRouter = (item: string) => {
     if (item === "Notifications") {
-      //  router.push( "/profilepage/profile-screen" );
+       router.push( "/profilepage/notifications" );
     } else if (item === "Contact Us") {
       //  router.push({ pathname: "/settings/privacy-policy" });
     } else if (item === "Share App") {
       //  router.push({ pathname: "/settings/about" });
     } else if (item === "Delete Account") {
-      //  setModelVisible(true);
+       setModelVisible(true);
     } else if (item === "Log Out") {
       handlelogout();
     }
@@ -93,11 +98,23 @@ export default function ProfilePage() {
     ]);
   };
 
+   const onDelete = () => {
+     deleteUserDetails.mutate();
+     setModelVisible(false);
+   };
+
   const onCancel = () => {
     setModelVisible(false);
   };
   return (
     <SafeScreen className=" p-8">
+      <CustomModel
+        modelVisible={modelVisible}
+        setModelVisible={setModelVisible}
+        message={
+          <AccountDeletionModal onDelete={onDelete} onCancel={onCancel} />
+        }
+      />
       <View>
         <View className=" flex-row items-center justify-between">
           <TouchableOpacity>

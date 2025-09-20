@@ -206,6 +206,7 @@ const LastSymptomsModal = ({ onCancel, selectedLastSymptom }: any) => {
             <CustomButton
               primary
               title="Done"
+              disabled
               onPress={() => {
                 setIsDone(true);
               }}

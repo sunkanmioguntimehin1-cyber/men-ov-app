@@ -40,38 +40,42 @@ const TabsArticles = () => {
     <View className="">
       <Text className=" my-3 font-[PoppinsSemiBold] text-base">Articles</Text>
 
-      <ScrollView horizontal className=" flex-row">
-        {getArticles.data?.data?.map((item: any) => {
-          console.log(item.publishedAt);
-          // const date = parseISO(item?.publishedAt);
+      <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+  {getArticles.data?.data
+    ?.reduce((rows: any[][], item: any, index: number) => {
+      if (index % 2 === 0) rows.push([item]);
+      else rows[rows.length - 1].push(item);
+      return rows;
+    }, [])
+    .map((pair: any[], idx: number) => (
+      <View key={idx} className="flex-col w-60 mx-2">
+        {pair.map((item) => {
           const date = new Date(item.publishedAt);
           const formattedDate = format(date, "do MMMM yyyy");
 
-          console.log("item", item.title);
           return (
-            <View key={item.id} className=" w-60 mx-2 h-auto">
-              <View className=" w-60 h-40 ">
+            <View key={item.id} className="mb-4 h-auto">
+              <View className="w-60 h-40">
                 <Image
                   source={item.images[0]}
                   style={{
                     height: "100%",
                     width: "100%",
-                    // alignSelf: "center",
                     borderRadius: 10,
                   }}
                   contentFit="cover"
                   onError={(error) => console.log("Image error:", error)}
                 />
               </View>
+
               <View className="my-2">
-                <Text className=" text-primary text-xs font-[PoppinsMedium]">
+                <Text className="text-primary text-xs font-[PoppinsMedium]">
                   {item.author} • {formattedDate}
                 </Text>
               </View>
 
-              <View className=" flex-row text-sm  items-center justify-between">
-                <Text className=" font-[PoppinsSemiBold]">
-                  {/* My Recommendations */}
+              <View className="flex-row text-sm items-center justify-between">
+                <Text className="font-[PoppinsSemiBold]">
                   {truncateSimple(item.title, 17)}
                 </Text>
 
@@ -80,7 +84,7 @@ const TabsArticles = () => {
                 </TouchableOpacity>
               </View>
 
-              <View className="my-1 h-auto  ">
+              <View className="my-1 h-auto">
                 <Text className="text-sm font-[PoppinsLight]">
                   {item.summary}
                 </Text>
@@ -88,11 +92,66 @@ const TabsArticles = () => {
             </View>
           );
         })}
+      </View>
+    ))}
+</ScrollView>
 
-       
-      </ScrollView>
     </View>
   );
 };
 
 export default TabsArticles;
+
+
+
+
+
+
+
+//  <ScrollView horizontal className=" flex-row">
+//   {getArticles.data?.data?.map((item: any) => {
+//     console.log(item.publishedAt);
+//     // const date = parseISO(item?.publishedAt);
+//     const date = new Date(item.publishedAt);
+//     const formattedDate = format(date, "do MMMM yyyy");
+
+//     console.log("item", item.title);
+//     return (
+//       <View key={item.id} className=" w-60 mx-2 h-auto">
+//         <View className=" w-60 h-40 ">
+//           <Image
+//             source={item.images[0]}
+//             style={{
+//               height: "100%",
+//               width: "100%",
+//               // alignSelf: "center",
+//               borderRadius: 10,
+//             }}
+//             contentFit="cover"
+//             onError={(error) => console.log("Image error:", error)}
+//           />
+//         </View>
+//         <View className="my-2">
+//           <Text className=" text-primary text-xs font-[PoppinsMedium]">
+//             {item.author} • {formattedDate}
+//           </Text>
+//         </View>
+
+//         <View className=" flex-row text-sm  items-center justify-between">
+//           <Text className=" font-[PoppinsSemiBold]">
+//             {/* My Recommendations */}
+//             {truncateSimple(item.title, 17)}
+//           </Text>
+
+//           <TouchableOpacity onPress={() => handleOpenArticle(item.url)}>
+//             <Feather name="arrow-up-right" size={24} color="black" />
+//           </TouchableOpacity>
+//         </View>
+
+//         <View className="my-1 h-auto  ">
+//           <Text className="text-sm font-[PoppinsLight]">{item.summary}</Text>
+//         </View>
+//       </View>
+//     );
+//   })}
+// </ScrollView>; */}

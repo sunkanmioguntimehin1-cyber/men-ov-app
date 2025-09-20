@@ -13,10 +13,7 @@ const ImageUploadedDetails = ({
 }: any) => {
   const [openDropDown, setOpenDropDown] = useState(false);
 
-  console.log(
-    selectedLastSymptom.symptomImages[0],
-    "selectedLastSymptom2020202"
-  );
+ 
 
   const handleImagePick = async () => {
     try {
