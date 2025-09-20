@@ -357,6 +357,7 @@ const YourFeelingToday = ({ onCancel }: any) => {
       images: notePublicUrl,
       notes: data.notes,
       duration: durationData,
+      recommendation: "Drink More Water",
     };
 
     createLogApi.mutate(requestedPayload);

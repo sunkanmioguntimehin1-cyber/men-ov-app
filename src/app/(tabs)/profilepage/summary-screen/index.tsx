@@ -9,6 +9,12 @@ import { ScrollView, Text, TouchableOpacity, View } from 'react-native';
 const SummaryScreen = () => {
   const router = useRouter()
   const getAllLog = useGetLogApi();
+  const SeverityLevelData = [
+    { level: "Lvl 1", levelColor: "#20D72A" },
+    { level: "Lvl 2", levelColor: "#D7CE20" },
+    { level: "Lvl 3", levelColor: "#D77F20" },
+    { level: "Lvl 4", levelColor: "#D72020" },
+  ];
   return (
     <SafeScreen className="bg-white">
       <ScrollView className="flex-1">
@@ -56,7 +62,18 @@ const SummaryScreen = () => {
                     <Text className="text-white">{item.symptoms}</Text>
                   </View>
 
-                  <View className=" items-center justify-center w-5 h-5 rounded-full bg-[#D7CE20]">
+                  {/* <View className=" items-center justify-center w-5 h-5 rounded-full bg-[#D7CE20]">
+                    <Text className="text-white">{item.severityLevel}</Text>
+                  </View> */}
+
+                  <View
+                    className="items-center justify-center w-5 h-5 rounded-full mx-2"
+                    style={{
+                      backgroundColor:
+                        SeverityLevelData[item.severityLevel - 1]?.levelColor ||
+                        "#D0D5DD",
+                    }}
+                  >
                     <Text className="text-white">{item.severityLevel}</Text>
                   </View>
                 </View>
