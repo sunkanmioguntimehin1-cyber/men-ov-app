@@ -1,13 +1,15 @@
+import useSymtomsStore from "@/src/store/symtomsStore";
 import { Image } from "expo-image";
 import React from "react";
 import { Text, TouchableOpacity, View } from "react-native";
-
 
 type Prop = {
   setSelectedList: (value: string | null) => void;
 };
 
 const SymptomsList = ({ setSelectedList }: Prop) => {
+  const setSymtomsDataList = useSymtomsStore().setSymtomsDataList;
+
   const symptomsData = [
     {
       name: "Back Pain",
@@ -32,8 +34,9 @@ const SymptomsList = ({ setSelectedList }: Prop) => {
   ];
 
   const handleSelectedList = (item: string) => {
-    console.log("item:", item);
+    console.log("item333:", item);
     setSelectedList(item);
+    setSymtomsDataList({ symptomslist: item });
   };
   return (
     <View className="">
@@ -62,9 +65,6 @@ const SymptomsList = ({ setSelectedList }: Prop) => {
           </TouchableOpacity>
         </>
       ))}
-      {/* <View className="my-3">
-        <CustomButton primary title="Add" />
-      </View> */}
     </View>
   );
 };

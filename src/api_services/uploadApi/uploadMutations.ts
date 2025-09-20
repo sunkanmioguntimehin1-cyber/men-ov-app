@@ -21,16 +21,18 @@ export const useImageUpload = (storeData: any) => {
     mutationFn: uploadImageApi,
   });
 
+  // console.log("storeDataeee", storeData);
+
   const uploadImage = async (image: any) => {
     let fileInfo = {
       uri: image,
       type: "*/*",
-      name: "file.jpg",
+      name: "file.png",
     };
     const formData = new FormData();
     formData.append("file", fileInfo as any);
     mutate({
-      uploadUrl: storeData.uploadUrl,
+      uploadUrl: storeData.publicUrl,
       formData: formData,
     });
   };

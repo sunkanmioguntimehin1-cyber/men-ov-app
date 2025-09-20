@@ -20,3 +20,14 @@ export const createLogApi = async (data: any) => {
     throw error;
   }
 };
+
+export const updateLogApi = async (data: any) => {
+  console.log("data:", data);
+  try {
+    const res = await axiosInstance.patch(`/log`, data);
+    return res.data;
+  } catch (error) {
+    console.error("updateLogApi", error);
+    throw error;
+  }
+};

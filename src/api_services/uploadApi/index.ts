@@ -1,5 +1,4 @@
 import axiosInstance from "@/src/lib/axiosInstance";
-import axios from "axios";
 
 export const getUploadUrl = async (data: any) => {
   try {
@@ -13,7 +12,7 @@ export const getUploadUrl = async (data: any) => {
 
 export const uploadImageApi = async (data: any) => {
   try {
-    const res = await axios.put(`${data?.uploadUrl}`, data?.formData, {
+    const res = await axiosInstance.put(`${data?.uploadUrl}`, data?.formData, {
       headers: {
         "Content-Type": "multipart/form-data", // This is important for form data
       },
