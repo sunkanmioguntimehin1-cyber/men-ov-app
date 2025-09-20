@@ -1,10 +1,12 @@
 // Import axios and AsyncStorage
+import { refreshToken } from "@/src/api_services/authApi";
+import useAuthStore from "@/src/store/authStore";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios, {
   AxiosInstance,
+  AxiosResponse,
   InternalAxiosRequestConfig
 } from "axios";
-// import useAuthStore from "@/src/stores/authStore";
 
 // Define the interface for the navigation params
 interface NavigationParams {
@@ -46,21 +48,48 @@ axiosInstance.interceptors.request.use(
 );
 
 // Response interceptor for handling 401 Unauthorized errors
-// axiosInstance.interceptors.response.use(
-//   (response: AxiosResponse) => response,
-//   async (error: any) => {
-//     if (error.response?.status === 401) {
-//       try {
-//         // Clear token from storage
-//         await AsyncStorage.removeItem("token");
-//         // Logout user from store
-//         useAuthStore.getState().clearAuthState();
-//       } catch (error) {
-//         console.error("Error in response interceptor:", error);
-//       }
-//     }
-//     return Promise.reject(error);
-//   }
-// );
+axiosInstance.interceptors.response.use(
+  (response: AxiosResponse) => response,
+  async (error: any) => {
+    const originalRequest = error.config;
+    
+    if (error.response?.status === 401 && !originalRequest._retry) {
+      originalRequest._retry = true;
+      
+      try {
+        const refreshTokenValue = await AsyncStorage.getItem("refresh_token");
+        
+        if (refreshTokenValue) {
+          // Attempt to refresh the token
+          const response = await refreshToken(refreshTokenValue);
+          
+          if (response.access_token) {
+            // Store new tokens
+            await AsyncStorage.setItem("token", response.access_token);
+            if (response.refresh_token) {
+              await AsyncStorage.setItem("refresh_token", response.refresh_token);
+            }
+            
+            // Update the original request with new token
+            originalRequest.headers.Authorization = `Bearer ${response.access_token}`;
+            
+            // Retry the original request
+            return axiosInstance(originalRequest);
+          }
+        }
+        
+        // If refresh fails or no refresh token, clear auth state
+        await useAuthStore.getState().clearAuthState();
+        
+      } catch (refreshError) {
+        console.error("Token refresh failed:", refreshError);
+        // Clear auth state on refresh failure
+        await useAuthStore.getState().clearAuthState();
+      }
+    }
+    
+    return Promise.reject(error);
+  }
+);
 
 export default axiosInstance;

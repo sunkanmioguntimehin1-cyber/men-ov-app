@@ -17,12 +17,15 @@ import {
   View,
 } from "react-native";
 
-const AddNote = ({ errors, control, setNotePublicUrls }: any) => {
+const AddNote = ({
+  errors,
+  control,
+  setNotePublicUrls,
+  notePublicUrls,
+}: any) => {
   const [storeData, setStoreData] = React.useState<string | any>(null);
   const [imageSelected, setImageSelected] = React.useState<any>(null);
-  
 
- 
 
   React.useEffect(() => {
     if (imageSelected) {
@@ -35,13 +38,12 @@ const AddNote = ({ errors, control, setNotePublicUrls }: any) => {
   const handleStoreData = (data: any) => {
     setStoreData(data);
     if (data?.publicUrl) {
-      
-      setNotePublicUrls((prev:any) => [...prev, data.publicUrl]);
+      setNotePublicUrls((prev: any) => [...prev, data.publicUrl]);
     }
     // keep track of only URLs
   };
 
- 
+  console.log("notePublicUrls2222", notePublicUrls);
 
   //UPLOADING
   const {

@@ -1,8 +1,11 @@
 
 
 import { useRegisterUser } from "@/src/api_services/authApi/authMutation";
+import RegisterFormModal from "@/src/components/RegisterFormModal";
+import TermsAndPrivacy from "@/src/components/TermsAndPrivacy";
 import CustomButton from "@/src/custom-components/CustomButton";
 import CustomInput from "@/src/custom-components/CustomInput";
+import CustomModel from "@/src/custom-components/CustomModel";
 import LoadingOverlay from "@/src/custom-components/LoadingOverlay";
 import KeyboardAwareScreen from "@/src/layout/KeyboardAwareScreen";
 import { Ionicons, MaterialIcons } from "@expo/vector-icons";
@@ -15,6 +18,8 @@ import { Text, TouchableOpacity, View } from "react-native";
 const SignUp = () => {
   const router = useRouter();
     const [isSecureEntry, setIsSecureEntry] = React.useState(true);
+     const [modelVisible, setModelVisible] = React.useState(false);
+     const [hasAgreed, setHasAgreed] = React.useState(false);
      const registerUser = useRegisterUser();
   
 
@@ -43,6 +48,20 @@ const SignUp = () => {
      }
    };
 
+     React.useEffect(() => {
+       setModelVisible(true);
+     }, []);
+
+    const handleAgree = () => {
+      setHasAgreed(true);
+      setModelVisible(false);
+    };
+
+    const onCancel = () => {
+      // router.push("/guess-home");
+      setModelVisible(false);
+    };
+
    console.log("registerUser:", registerUser);
   return (
     <KeyboardAwareScreen
@@ -50,6 +69,14 @@ const SignUp = () => {
       keyboardAware={true}
       extraScrollHeight={50}
     >
+      <CustomModel
+        modelVisible={modelVisible}
+        setModelVisible={setModelVisible}
+        closeOnOutsideClick={false}
+        message={
+          <RegisterFormModal onCancel={onCancel} onAgree={handleAgree} />
+        }
+      />
       <LoadingOverlay
         isOpen={registerUser.isPending} // Required: Controls visibility
         // message="Login..." // Optional: Loading text
@@ -190,6 +217,9 @@ const SignUp = () => {
       </View>
 
       <View className="p-8">
+        <View className="mb-4">
+          <TermsAndPrivacy />
+        </View>
         <View>
           <CustomButton
             primary

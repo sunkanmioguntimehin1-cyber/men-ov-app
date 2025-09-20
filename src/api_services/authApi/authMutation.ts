@@ -5,11 +5,12 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useMutation } from "@tanstack/react-query";
 import { useRouter } from "expo-router";
 import {
-  forgotPasswordApi,
-  loginUser,
-  registerUser,
-  resetPasswordApi,
-  verifyEmail,
+    forgotPasswordApi,
+    loginUser,
+    refreshToken,
+    registerUser,
+    resetPasswordApi,
+    verifyEmail,
 } from ".";
 
 // Mutation api call
@@ -25,6 +26,9 @@ export const useRegisterUser = () => {
       // });
       // setAuthToken(data.access_token);
       await AsyncStorage.setItem("token", data.access_token);
+      if (data.refresh_token) {
+        await AsyncStorage.setItem("refresh_token", data.refresh_token);
+      }
       setIsLoggedIn(true)
       router.push("/(tabs)/homepage/personal-info");
     },
@@ -61,6 +65,9 @@ export const useLoginUser = () => {
       // });
       if (data) {
         await AsyncStorage.setItem("token", data.access_token);
+        if (data.refresh_token) {
+          await AsyncStorage.setItem("refresh_token", data.refresh_token);
+        }
         setIsLoggedIn(true);
         router.push("/(tabs)/homepage");
       
@@ -104,6 +111,37 @@ export const useResetPasswordApi = () => {
     onError(error) {
       console.log("Reset password error", error);
       handleAxiosError(error);
+    },
+  });
+};
+
+
+export const useRefreshToken = () => {
+  const router = useRouter();
+  const setIsLoggedIn = useAuthStore().setIsLoggedIn;
+  
+  return useMutation({
+    mutationFn: async () => {
+      const refreshTokenValue = await AsyncStorage.getItem("refresh_token");
+      if (!refreshTokenValue) {
+        throw new Error("No refresh token available");
+      }
+      return refreshToken(refreshTokenValue);
+    },
+    async onSuccess(data) {
+      if (data.access_token) {
+        await AsyncStorage.setItem("token", data.access_token);
+        if (data.refresh_token) {
+          await AsyncStorage.setItem("refresh_token", data.refresh_token);
+        }
+        setIsLoggedIn(true);
+      }
+    },
+    onError(error) {
+      console.log("Refresh token error", error);
+      // Clear auth state on refresh failure
+      useAuthStore.getState().clearAuthState();
+      router.push("/(auth)/login");
     },
   });
 };

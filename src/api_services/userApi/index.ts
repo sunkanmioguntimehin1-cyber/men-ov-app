@@ -30,3 +30,14 @@ export const intakeDetailsApi = async (data: any) => {
     throw error;
   }
 };
+
+
+export const deleteUser = async () => {
+  try {
+    const res = await axiosInstance.delete(`/users/me`);
+    return res.data;
+  } catch (error) {
+    console.error("DeleteUser:", error);
+    throw error;
+  }
+};

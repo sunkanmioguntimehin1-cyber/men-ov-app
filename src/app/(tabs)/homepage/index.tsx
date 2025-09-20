@@ -1,4 +1,3 @@
-import FloatingAiButton from "@/src/components/tabs/FloatingAiButton";
 import CycleTracking from "@/src/components/tabs/home-modal/CycleTracking";
 import YourFeelingToday from "@/src/components/tabs/home-modal/YourFeelingToday";
 import LastSymptomsModal from "@/src/components/tabs/home-modal/YourFeelingToday/lastSymptomsModal";
@@ -46,8 +45,6 @@ export default function HomePage() {
     setModelVisible2(false);
   };
 
-
-
   return (
     <>
       <View className="flex-1 relative">
@@ -56,12 +53,7 @@ export default function HomePage() {
             modelVisible={modelVisible}
             setModelVisible={setModelVisible}
             closeOnOutsideClick={false}
-            message={
-              <YourFeelingToday
-               
-                onCancel={onCancel}
-              />
-            }
+            message={<YourFeelingToday onCancel={onCancel} />}
           />
 
           <CustomModel
@@ -84,11 +76,15 @@ export default function HomePage() {
           />
 
           <View className="p-8 flex-row items-center justify-end">
-            <TouchableOpacity className=" mx-3">
+            <TouchableOpacity className=" mx-3" onPress={()=>{
+              router.push("/profilepage/notifications")
+            }}>
               <Ionicons name="notifications-outline" size={20} color="black" />
             </TouchableOpacity>
 
-            <TouchableOpacity className=" w-6 h-6 ">
+            <TouchableOpacity className=" w-6 h-6 " onPress={()=>{
+              router.push("/(tabs)/profilepage")
+            }}>
               <Image
                 source={require("@/assets/images/profile-image.png")}
                 style={{
@@ -124,7 +120,7 @@ export default function HomePage() {
                 }
               />
             </View>
-            <View className="my-5">
+            {/* <View className="my-5">
               <CustomSelectData
                 onPress={handleOpenmodal2}
                 primary
@@ -136,7 +132,7 @@ export default function HomePage() {
                   </TouchableOpacity>
                 }
               />
-            </View>
+            </View> */}
             <View className="">
               <TabsArticles />
             </View>
@@ -144,11 +140,10 @@ export default function HomePage() {
         </Screen>
 
         {/* Floating button positioned outside of scrollable content */}
-        <View className="absolute bottom-24 right-10">
+        {/* <View className="absolute bottom-24 right-10">
           <FloatingAiButton />
-        </View>
+        </View> */}
       </View>
-     
     </>
   );
 }

@@ -3,6 +3,7 @@ import { create } from "zustand";
 
 const authStore = (set: any) => ({
   authToken: null as any,
+  refreshToken: null as any,
   userRegOtps: {
     phoneNumber: "",
     email: "",
@@ -17,6 +18,13 @@ const authStore = (set: any) => ({
     set((state: any) => ({
       ...state,
       authToken: data,
+    }));
+  },
+
+  setRefreshToken: (data: any) => {
+    set((state: any) => ({
+      ...state,
+      refreshToken: data,
     }));
   },
 
@@ -37,17 +45,20 @@ const authStore = (set: any) => ({
   },
   clearAuthState: async () => {
     await AsyncStorage.removeItem("token");
-    set({ authToken: null, isAuthenticated: false, isLoggedIn: false });
+    await AsyncStorage.removeItem("refresh_token");
+    set({ authToken: null, refreshToken: null, isAuthenticated: false, isLoggedIn: false });
   },
  
 
   initializeAuth: async () => {
     try {
       const token = await AsyncStorage.getItem("token");
+      const refreshToken = await AsyncStorage.getItem("refresh_token");
 
       if (token) {
         set({
           authToken: token,
+          refreshToken: refreshToken,
           isAuthenticated: true,
           isLoggedIn: true, // needs to change to true after testing
           isLoading: false,
@@ -55,6 +66,7 @@ const authStore = (set: any) => ({
       } else {
         set({
           authToken: null,
+          refreshToken: null,
           isAuthenticated: false,
           isLoggedIn: false,
           isLoading: false,
@@ -65,6 +77,7 @@ const authStore = (set: any) => ({
       // Even on error, we should stop loading
       set({
         authToken: null,
+        refreshToken: null,
         isAuthenticated: false,
         isLoggedIn: false,
         isLoading: false,

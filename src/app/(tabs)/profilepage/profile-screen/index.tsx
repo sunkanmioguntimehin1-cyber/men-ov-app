@@ -1,13 +1,41 @@
+import { useGetArticleApi } from "@/src/api_services/articleApi/articleQuery";
+import { useGetUser } from "@/src/api_services/userApi/userQuery";
 import SafeScreen from "@/src/components/SafeScreen";
 import { Feather, MaterialIcons } from "@expo/vector-icons";
+import { format } from "date-fns";
+import { Image } from "expo-image";
 import { useRouter } from "expo-router";
-import { ScrollView, Text, TouchableOpacity, View } from "react-native";
+import { Alert, Linking, ScrollView, Text, TouchableOpacity, View } from "react-native";
 // import SafeScreen from "../../../components/SafeScreen";
 
 export default function ProfilePage() {
   const router = useRouter();
+  const getUserData = useGetUser();
+  const getArticles = useGetArticleApi();
+
+  console.log("getUserData", getUserData.data);
 
   const healthTags = ["Post-menopause", "Sleep", "Sleep", "Back Pain"];
+
+  const handleOpenArticle = async (itemUrl: string) => {
+      try {
+        const uri = itemUrl;
+  
+        if (!uri) {
+          Alert.alert("No transfer URl found.");
+          return;
+        }
+  
+        const supported = await Linking.canOpenURL(uri);
+        if (supported) {
+          await Linking.openURL(uri);
+        } else {
+          Alert.alert("Can't open this URL:", uri);
+        }
+      } catch (error) {
+        Alert.alert("Failed to fetch Url.");
+      }
+    };
 
   return (
     <SafeScreen className="bg-white">
@@ -42,12 +70,12 @@ export default function ProfilePage() {
 
           {/* Name */}
           <Text className="text-2xl font-[PoppinsSemiBold] text-black mb-2">
-            Elizabeth
+            {getUserData.data?.fullname}
           </Text>
 
           {/* Demographics */}
           <Text className="text-sm text-gray-600 mb-6">
-            45 years old - Female
+            45 years old - {getUserData.data?.gender}
           </Text>
 
           {/* Health Tags */}
@@ -65,7 +93,7 @@ export default function ProfilePage() {
           </View>
 
           {/* Action Buttons */}
-          <View className="flex-row w-full justify-between">
+          {/* <View className="flex-row w-full justify-between">
             <TouchableOpacity className="bg-[#8A3FFC] rounded-xl px-6 py-4 flex-1 mr-2">
               <Text className="text-white font-[PoppinsMedium] text-center">
                 Health Information
@@ -77,66 +105,86 @@ export default function ProfilePage() {
                 Your Meds
               </Text>
             </TouchableOpacity>
-          </View>
+          </View> */}
         </View>
 
         {/* My Recommendations Section */}
-        <View className="px-6 ">
-          {/* Recommendation Header */}
-          <View className="flex-row items-center justify-between mb-4">
-            <View className="flex-row items-center">
-              <View className="w-8 h-8 rounded-full bg-purple-200 items-center justify-center mr-3">
-                <View className="w-6 h-6 rounded-full bg-pink-300 items-center justify-center">
-                  <MaterialIcons name="person" size={16} color="#8A3FFC" />
+        {getArticles.data?.data?.map((item: any) => {
+          const date = new Date(item.publishedAt);
+          const formattedDate = format(date, "do MMMM yyyy");
+          return (
+            <View key={item.id} className="px-6 ">
+              {/* Recommendation Header */}
+              <View className="flex-row items-center justify-between mb-4">
+                <View className="flex-row items-center">
+                  <View className="w-8 h-8 rounded-full bg-purple-200 items-center justify-center mr-3">
+                    <View className="w-6 h-6 rounded-full bg-pink-300 items-center justify-center">
+                      <MaterialIcons name="person" size={16} color="#8A3FFC" />
+                    </View>
+                  </View>
+                  <View>
+                    <Text className="text-sm font-[PoppinsSemiBold] text-black">
+                      {item.author}
+                    </Text>
+                    <Text className="text-xs text-gray-500">
+                      {/* 20 Jan 2025 8:30 AM */}
+                      {formattedDate}
+                    </Text>
+                  </View>
                 </View>
+
+                <TouchableOpacity>
+                  <Feather name="bookmark" size={20} color="gray" />
+                </TouchableOpacity>
               </View>
-              <View>
-                <Text className="text-sm font-[PoppinsSemiBold] text-black">
-                  Elizabeth
-                </Text>
-                <Text className="text-xs text-gray-500">
-                  20 Jan 2025 8:30 AM
-                </Text>
+
+              {/* Title */}
+              <Text className="text-lg font-[PoppinsSemiBold] text-black mb-3">
+                {/* My Recommendations */}
+                {item.title}
+              </Text>
+
+              {/* Description */}
+              <Text className="text-sm text-gray-600 mb-4 leading-5">
+                {item.summary}
+              </Text>
+
+              {/* Hashtags */}
+              <View className="flex-row mb-4">
+                {item.tags.map((tag: any) => (
+                  <View
+                    key={tag}
+                    className="bg-gray-200 rounded-full px-3 py-1 mr-2"
+                  >
+                    <Text className="text-xs text-gray-700">#{tag}</Text>
+                  </View>
+                ))}
               </View>
-            </View>
 
-            <TouchableOpacity>
-              <Feather name="bookmark" size={20} color="gray" />
-            </TouchableOpacity>
-          </View>
+              {/* Embedded Image */}
+              <TouchableOpacity
+                className="w-full h-48 bg-gray-200 rounded-lg mb-4 items-center justify-center"
+                onPress={() => handleOpenArticle(item.url)}
+              >
+                {/* <MaterialIcons name="image" size={40} color="gray" />
+                <Text className="text-gray-500 mt-2">
+                  Office/Coworking Image
+                </Text> */}
+                <Image
+                  source={item.images[0]}
+                  style={{
+                    height: "100%",
+                    width: "100%",
+                    // alignSelf: "center",
+                    borderRadius: 10,
+                  }}
+                  contentFit="cover"
+                  onError={(error) => console.log("Image error:", error)}
+                />
+              </TouchableOpacity>
 
-          {/* Title */}
-          <Text className="text-lg font-[PoppinsSemiBold] text-black mb-3">
-            My Recommendations
-          </Text>
-
-          {/* Description */}
-          <Text className="text-sm text-gray-600 mb-4 leading-5">
-            Lorem ipsum dolor sit amet consectetur. Diam et nisl sapien
-            pellentesque egestas quis. Sit pharetra mattis auctor nibh gravida
-            sagittis. Nullam viverra eget consectetur massa tempus...
-          </Text>
-
-          {/* Hashtags */}
-          <View className="flex-row mb-4">
-            <View className="bg-gray-200 rounded-full px-3 py-1 mr-2">
-              <Text className="text-xs text-gray-700">#hotflash</Text>
-            </View>
-            <View className="bg-gray-200 rounded-full px-3 py-1">
-              <Text className="text-xs text-gray-700">#sleep</Text>
-            </View>
-          </View>
-
-          {/* Embedded Image */}
-          <View className="w-full h-48 bg-gray-200 rounded-lg mb-4 items-center justify-center">
-            <MaterialIcons name="image" size={40} color="gray" />
-            <Text className="text-gray-500 mt-2">
-              Office/Coworking Space Image
-            </Text>
-          </View>
-
-          {/* Engagement Bar */}
-          <View className="flex-row items-center justify-between">
+              {/* Engagement Bar */}
+              {/* <View className="flex-row items-center justify-between">
             <View className="flex-row items-center">
               <View className="flex-row items-center mr-6">
                 <Feather name="thumbs-up" size={16} color="gray" />
@@ -152,8 +200,10 @@ export default function ProfilePage() {
               <Feather name="share" size={16} color="gray" />
               <Text className="text-xs text-gray-600 ml-1">3 shares</Text>
             </View>
-          </View>
-        </View>
+          </View> */}
+            </View>
+          );
+        })}
       </ScrollView>
     </SafeScreen>
   );
