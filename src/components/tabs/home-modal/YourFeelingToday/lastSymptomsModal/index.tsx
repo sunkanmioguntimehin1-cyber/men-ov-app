@@ -2,9 +2,14 @@ import CustomButton from "@/src/custom-components/CustomButton";
 import CustomInput from "@/src/custom-components/CustomInput";
 import { MaterialIcons } from "@expo/vector-icons";
 // import { ImageBackground } from "expo-image";
+import {
+  useGetUploadUrl,
+  useImageUpload,
+} from "@/src/api_services/uploadApi/uploadMutations";
 import { rMS } from "@/src/lib/responsivehandler";
 import { Image } from "expo-image";
 import React from "react";
+import { Controller, useForm } from "react-hook-form";
 import {
   ImageBackground,
   ScrollView,
@@ -22,12 +27,50 @@ interface Item {
   price?: string;
 }
 
-const LastSymptomsModal = ({ onCancel }: any) => {
-  const [selected, setSelected] = React.useState<Item | null>(null);
-  const [openDropDown, setOpenDropDown] = React.useState(false);
+const LastSymptomsModal = ({ onCancel, selectedLastSymptom }: any) => {
+  const [selectedSeverityLevel, setSelectedSeverityLevel] = React.useState<
+    number | null
+  >(selectedLastSymptom?.severityLevel || null);
+  const [selectedTriggers, setSelectedTriggers] = React.useState<string[]>(
+    selectedLastSymptom?.triggers || []
+  );
+
+  const [customTrigger, setCustomTrigger] = React.useState("");
+  const [storeData, setStoreData] = React.useState<string | any>(null);
   const [imageSelected, setImageSelected] = React.useState<any>(null);
-  const [isDone, setIsDone] = React.useState(false)
- 
+
+  const [isDone, setIsDone] = React.useState(false);
+
+  const toggleTrigger = (trigger: string) => {
+    setSelectedTriggers((prev) =>
+      prev.includes(trigger)
+        ? prev.filter((t) => t !== trigger)
+        : [...prev, trigger]
+    );
+  };
+
+  const addCustomTrigger = () => {
+    const newTrigger = customTrigger.trim();
+
+    if (newTrigger && !selectedTriggers.includes(newTrigger)) {
+      setSelectedTriggers((prev) => [...prev, newTrigger]); // add new trigger
+    }
+    setCustomTrigger(""); // clear input after add
+  };
+
+  const formMethods = useForm({
+    mode: "onChange",
+    defaultValues: {
+      symptoms: "",
+      notes: "",
+    },
+  });
+
+  const {
+    handleSubmit,
+    reset,
+    formState: { errors, isValid },
+  } = formMethods;
 
   const SeverityLevelData = [
     {
@@ -48,12 +91,38 @@ const LastSymptomsModal = ({ onCancel }: any) => {
     },
   ];
 
-  const handleWelconeBtn =()=>{
-    setIsDone(false)
-    onCancel()
-  }
+  const handleWelconeBtn = () => {
+    setIsDone(false);
+    onCancel();
+  };
 
-  
+  React.useEffect(() => {
+    if (selectedLastSymptom) {
+      // const userGender = getUserData.data.gender;
+      reset({
+        symptoms: selectedLastSymptom.symptoms,
+        notes: selectedLastSymptom.notes,
+      });
+    }
+  }, [selectedLastSymptom, reset]);
+
+  const handleStoreData = (data: any) => {
+    setStoreData(data);
+  };
+
+  const getUploadUrlData = useGetUploadUrl(handleStoreData);
+
+  //UPLOADING
+  const {
+    uploadImage: imageUploadedSelected,
+    imageData: itemImgData,
+    isImageUploadPending: ImgIsPending,
+    isImageUploadError: ImgIsError,
+    resetImageData,
+  } = useImageUpload(storeData);
+
+
+
   return (
     <>
       {!isDone && (
@@ -69,42 +138,78 @@ const LastSymptomsModal = ({ onCancel }: any) => {
 
           <ScrollView className="">
             <View>
-              <CustomInput
-                primary
-                label="Symptoms"
-                placeholder="Back Pain"
-                //   value={selected || undefined}
+              <Controller
+                control={formMethods.control}
+                name="symptoms"
+                render={({ field: { onChange, onBlur, value } }) => (
+                  <CustomInput
+                    primary
+                    label="Symptoms"
+                    value={value}
+                    onChangeText={onChange}
+                    // placeholder="Back Paisn"
+                    //   value={selected || undefined}
+                  />
+                )}
               />
             </View>
 
-            <View className="my-3">
-              <Text className="font-[PoppinsMedium]">Severity Level</Text>
+            <View className="flex-row items-center justify-between my-3">
+              {SeverityLevelData.map((item, index) => {
+                const levelValue = index + 1;
+                const isSelected = levelValue === selectedSeverityLevel;
 
-              <View className="flex-row items-center justify-between">
-                {SeverityLevelData.map((item) => (
-                  <>
-                    <TouchableOpacity
-                      key={item.level}
-                      className=" w-20 h-12 items-center justify-center border border-[#D0D5DD] rounded-xl my-3"
+                return (
+                  <TouchableOpacity
+                    key={item.level}
+                    className="w-20 h-12 items-center justify-center border rounded-xl my-3"
+                    style={{
+                      borderColor: "#D0D5DD",
+                      backgroundColor: isSelected
+                        ? item.levelColor
+                        : "transparent",
+                    }}
+                    onPress={() => setSelectedSeverityLevel(levelValue)} // update state
+                  >
+                    <Text
+                      className="font-[PoppinsRegular]"
+                      style={{
+                        color: isSelected ? "white" : "#667085",
+                      }}
                     >
-                      <Text className=" font-[PoppinsRegular] text-[#667085]">
-                        {item.level}
-                      </Text>
-                    </TouchableOpacity>
-                  </>
-                ))}
-              </View>
+                      {item.level}
+                    </Text>
+                  </TouchableOpacity>
+                );
+              })}
             </View>
 
-            <Triggers />
-            <Note />
-            <ImageUploadedDetails />
+            <Triggers
+              selectedTriggers={selectedTriggers}
+              toggleTrigger={toggleTrigger}
+              addCustomTrigger={addCustomTrigger}
+              selectedLastSymptom={selectedLastSymptom}
+              customTrigger={customTrigger}
+              setCustomTrigger={setCustomTrigger}
+            />
+            <Note errors={errors} control={formMethods.control} />
+            <ImageUploadedDetails
+              imageSelected={imageSelected}
+              setImageSelected={setImageSelected}
+              imageUploadedSelected={imageUploadedSelected}
+              selectedLastSymptom={selectedLastSymptom}
+              resetImageData={resetImageData}
+            />
           </ScrollView>
 
           <View className="my-3">
-            <CustomButton primary title="Done" onPress={()=>{
-              setIsDone(true)
-            }} />
+            <CustomButton
+              primary
+              title="Done"
+              onPress={() => {
+                setIsDone(true);
+              }}
+            />
           </View>
         </View>
       )}

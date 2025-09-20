@@ -4,8 +4,8 @@ import SafeScreen from "../../../components/SafeScreen";
 export default function ExplorePage() {
   return (
     <SafeScreen>
-      <View className="flex-1 justify-center items-center bg-red-300">
-        <Text className="text-3xl font-semibold text-red-800"> I am the ExplorePage.</Text>
+      <View className="flex-1 justify-center items-center ">
+        <Text className="text-3xl font-semibold text-red-800">Watch out...</Text>
       </View>
     </SafeScreen>
   );

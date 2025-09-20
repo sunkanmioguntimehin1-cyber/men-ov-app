@@ -4,9 +4,19 @@ import * as ImagePicker from "expo-image-picker";
 import React, { useState } from "react";
 import { Text, TouchableOpacity, View } from "react-native";
 
-const ImageUploadedDetails = () => {
+const ImageUploadedDetails = ({
+  imageSelected,
+  setImageSelected,
+  selectedLastSymptom,
+  imageUploadedSelected,
+  resetImageData,
+}: any) => {
   const [openDropDown, setOpenDropDown] = useState(false);
-  const [imageSelected, setImageSelected] = useState<any>(null);
+
+  console.log(
+    selectedLastSymptom.symptomImages[0],
+    "selectedLastSymptom2020202"
+  );
 
   const handleImagePick = async () => {
     try {
@@ -19,7 +29,7 @@ const ImageUploadedDetails = () => {
       });
 
       if (!result.canceled) {
-        // imageUploadedSelected(result.assets[0].uri);
+        imageUploadedSelected(result.assets[0].uri);
 
         setImageSelected(result.assets[0].uri);
       }
@@ -30,12 +40,12 @@ const ImageUploadedDetails = () => {
 
   const handleCloseImage = () => {
     setImageSelected(null);
-    // resetImageData();
+    resetImageData();
   };
   return (
     <View>
       <View className="mt-5 ">
-        {imageSelected ? (
+        {imageSelected || selectedLastSymptom?.symptomImages.length > 0 ? (
           <View className="w-full h-56  bg-white items-center justify-center rounded-2xl">
             {/* {imageSelected ? (
               <View>
@@ -45,7 +55,9 @@ const ImageUploadedDetails = () => {
             <View className=" flex-row ">
               <View className=" w-80 h-56 p-3">
                 <Image
-                  source={{ uri: imageSelected }}
+                  source={{
+                    uri: imageSelected || selectedLastSymptom?.symptomImages[0],
+                  }}
                   style={{ width: "100%", height: "100%" }}
                 />
               </View>

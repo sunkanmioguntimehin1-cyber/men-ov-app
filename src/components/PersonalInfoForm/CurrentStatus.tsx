@@ -7,9 +7,9 @@ const CurrentStatus = ({ menopauseStage, setMenopauseStage }:any) => {
  
 
   const menopauseStageData = [
-    { label: "Perimenopause", value: "Perimenopause" },
-    { label: "Menopause", value: "Menopause" },
-    { label: "Postmenopause", value: "Postmenopause" },
+    { label: "Premenopause", value: "premenopause" },
+    { label: "Perimenopause", value: "perimenopause" },
+    { label: "Postmenopause", value: "postmenopause" },
   ];
   return (
     <View>

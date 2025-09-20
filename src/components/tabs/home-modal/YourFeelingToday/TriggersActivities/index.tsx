@@ -1,13 +1,12 @@
-import CustomButton from "@/src/custom-components/CustomButton";
 import { AntDesign } from "@expo/vector-icons";
 import React, { useState } from "react";
 import { Text, TextInput, TouchableOpacity, View } from "react-native";
 
-const TriggersActivities = () => {
-  const [selectedTriggers, setSelectedTriggers] = useState<string[]>([]);
+const TriggersActivities = ({ selectedTriggers, setSelectedTriggers }:any) => {
+  
   const [customTrigger, setCustomTrigger] = useState("");
 
-  const triggers = [
+  const [triggers, setTriggers] = useState<string[]>([
     "Alcohol",
     "Caffeine",
     "Lack of Sleep",
@@ -18,7 +17,20 @@ const TriggersActivities = () => {
     "Physical Activity",
     "Mental load",
     "Anxiety",
-  ];
+  ]);
+
+  // const triggers = [
+  //   "Alcohol",
+  //   "Caffeine",
+  //   "Lack of Sleep",
+  //   "Certain Food",
+  //   "Hormonal Changes",
+  //   "Medication",
+  //   "Weather",
+  //   "Physical Activity",
+  //   "Mental load",
+  //   "Anxiety",
+  // ];
 
   const toggleTrigger = (trigger: string) => {
     setSelectedTriggers((prev) =>
@@ -27,6 +39,22 @@ const TriggersActivities = () => {
         : [...prev, trigger]
     );
   };
+
+  const addCustomTrigger = () => {
+    const newTrigger = customTrigger.trim();
+
+    if (newTrigger && !selectedTriggers.includes(newTrigger)) {
+      setSelectedTriggers((prev) => [...prev, newTrigger]);
+    }
+
+    if (newTrigger && !triggers.includes(newTrigger)) {
+      setTriggers((prev) => [...prev, newTrigger]); // add to main list too
+    }
+
+    setCustomTrigger(""); // clear input
+  };
+
+  console.log("selectedTriggers:", selectedTriggers);
   return (
     <View>
       <View className=" mt-5 flex-row flex-wrap">
@@ -56,11 +84,16 @@ const TriggersActivities = () => {
         <View className="flex-1 h-12 border border-gray-300 rounded-lg px-3 flex-row items-center">
           <TextInput
             placeholder="Something else?"
-            className=" font-[PoppinsRegular]"
+            value={customTrigger}
+            onChangeText={setCustomTrigger}
+            className="font-[PoppinsRegular] flex-1"
           />
         </View>
 
-        <TouchableOpacity className=" flex-row items-center ml-2 bg-primary rounded-lg px-4 py-3">
+        <TouchableOpacity
+          className=" flex-row items-center ml-2 bg-primary rounded-lg px-4 py-3"
+          onPress={addCustomTrigger}
+        >
           <View>
             <AntDesign name="plus" size={20} color="white" />
           </View>
@@ -68,9 +101,9 @@ const TriggersActivities = () => {
         </TouchableOpacity>
       </View>
 
-      <View className="my-3">
+      {/* <View className="my-3">
         <CustomButton primary title="Next" />
-      </View>
+      </View> */}
     </View>
   );
 };
