@@ -117,7 +117,9 @@ export default function ProfilePage() {
       />
       <View>
         <View className=" flex-row items-center justify-between">
-          <TouchableOpacity>
+          <TouchableOpacity onPress={()=>{
+            router.back()
+          }}>
             <MaterialIcons name="arrow-back-ios" size={24} color="black" />
           </TouchableOpacity>
 
