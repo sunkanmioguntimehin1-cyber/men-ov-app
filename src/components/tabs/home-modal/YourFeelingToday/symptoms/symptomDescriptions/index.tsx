@@ -152,6 +152,7 @@ const SymptomsDescriptions = ({
       <View className=" ">
         <View>
           <CustomSelectData
+            onPress={handleDateBottomSheetOpen}
             primary
             placeholder="Pick a date"
             label="When did happen"
@@ -166,6 +167,7 @@ const SymptomsDescriptions = ({
 
         <View>
           <CustomSelectData
+            onPress={handleDurationBottomSheetOpen}
             primary
             label="How long did it last"
             placeholder="Choose"
