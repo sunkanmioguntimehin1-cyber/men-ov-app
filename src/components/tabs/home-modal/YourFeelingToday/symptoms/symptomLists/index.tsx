@@ -17,19 +17,19 @@ const SymptomsList = ({ setSelectedList }: Prop) => {
     },
     {
       name: "Headache",
-      img: require("@/assets/images/backpain.png"),
+      img: require("@/assets/images/headache.png"),
     },
     {
       name: "Heart Palpitations",
-      img: require("@/assets/images/backpain.png"),
+      img: require("@/assets/images/heart_palpitations.png"),
     },
     {
       name: "Anxiety",
-      img: require("@/assets/images/backpain.png"),
+      img: require("@/assets/images/anxiety.png"),
     },
     {
       name: "Describe how you feel",
-      img: require("@/assets/images/backpain.png"),
+      img: require("@/assets/images/general.png"),
     },
   ];
 
@@ -48,7 +48,7 @@ const SymptomsList = ({ setSelectedList }: Prop) => {
           >
             <View className=" w-6 h-6 ml-2 ">
               <Image
-                source={require("@/assets/images/backpain.png")}
+                source={item.img}
                 style={{
                   height: "100%",
                   width: "100%",

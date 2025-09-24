@@ -211,9 +211,9 @@ const SymptomsDescriptions = ({
             >
               {/* <View className=" my-3 w-[131px] flex-row items-center ml-2 bg-[#F9F5FF] rounded-full px-4 py-3"> */}
               <View className="">
-                <Entypo name="image-inverted" size={20} color="#8A3FFC" />
+                <Entypo name="image-inverted" size={15} color="#8A3FFC" />
               </View>
-              <Text className="font-[PoppinsMedium] mx-2">Add image</Text>
+              <Text className="font-[PoppinsMedium] text-sm mx-2">Add image</Text>
               {/* </View> */}
             </TouchableOpacity>
           </View>

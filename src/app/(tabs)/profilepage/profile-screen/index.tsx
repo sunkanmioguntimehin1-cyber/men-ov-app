@@ -1,44 +1,58 @@
-import { useGetArticleApi } from "@/src/api_services/articleApi/articleQuery";
+import { useGetRecommendationApi } from "@/src/api_services/recommendationApi/recommendationQuery";
 import { useGetUser } from "@/src/api_services/userApi/userQuery";
 import SafeScreen from "@/src/components/SafeScreen";
-import { Feather, MaterialIcons } from "@expo/vector-icons";
+import LoadingOverlay from "@/src/custom-components/LoadingOverlay";
+import { Feather, Ionicons, MaterialIcons } from "@expo/vector-icons";
 import { format } from "date-fns";
 import { Image } from "expo-image";
 import { useRouter } from "expo-router";
-import { Alert, Linking, ScrollView, Text, TouchableOpacity, View } from "react-native";
+import {
+  Alert,
+  Linking,
+  ScrollView,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
 // import SafeScreen from "../../../components/SafeScreen";
 
 export default function ProfilePage() {
   const router = useRouter();
   const getUserData = useGetUser();
-  const getArticles = useGetArticleApi();
+  const getRecommendationData = useGetRecommendationApi();
 
   console.log("getUserData", getUserData.data);
 
   const healthTags = ["Post-menopause", "Sleep", "Sleep", "Back Pain"];
 
   const handleOpenArticle = async (itemUrl: string) => {
-      try {
-        const uri = itemUrl;
-  
-        if (!uri) {
-          Alert.alert("No transfer URl found.");
-          return;
-        }
-  
-        const supported = await Linking.canOpenURL(uri);
-        if (supported) {
-          await Linking.openURL(uri);
-        } else {
-          Alert.alert("Can't open this URL:", uri);
-        }
-      } catch (error) {
-        Alert.alert("Failed to fetch Url.");
+    try {
+      const uri = itemUrl;
+
+      if (!uri) {
+        Alert.alert("No transfer URl found.");
+        return;
       }
-    };
+
+      const supported = await Linking.canOpenURL(uri);
+      if (supported) {
+        await Linking.openURL(uri);
+      } else {
+        Alert.alert("Can't open this URL:", uri);
+      }
+    } catch (error) {
+      Alert.alert("Failed to fetch Url.");
+    }
+  };
 
   return (
     <SafeScreen className="bg-white">
+      <LoadingOverlay
+        isOpen={getUserData.isPending} // Required: Controls visibility
+        // message="Login..." // Optional: Loading text
+        animationType="pulse" // Optional: "spin" | "pulse" | "bounce" | "fade"
+        backdropClassName="..." // Optional: Additional backdrop styling
+      />
       <ScrollView className="flex-1">
         {/* Header */}
         <View className="flex-row items-center justify-between px-6 py-4">
@@ -80,7 +94,7 @@ export default function ProfilePage() {
 
           {/* Health Tags */}
           <View className="flex-row flex-wrap justify-center mb-3">
-            {healthTags.map((tag, index) => (
+            {getUserData.data?.tags?.map((tag: string, index: number) => (
               <View
                 key={index}
                 className="bg-white border border-gray-300 rounded-full px-4 py-2 mr-2 mb-2"
@@ -109,8 +123,9 @@ export default function ProfilePage() {
         </View>
 
         {/* My Recommendations Section */}
-        {getArticles.data?.data?.map((item: any) => {
-          const date = new Date(item.publishedAt);
+        {getRecommendationData.data?.map((item: any) => {
+          // const date = new Date(item.publishedAt);
+          const date = new Date(item?.article?.updatedAt);
           const formattedDate = format(date, "do MMMM yyyy");
           return (
             <View key={item.id} className="px-6 ">
@@ -124,7 +139,7 @@ export default function ProfilePage() {
                   </View>
                   <View>
                     <Text className="text-sm font-[PoppinsSemiBold] text-black">
-                      {item.author}
+                      {item.article?.author}
                     </Text>
                     <Text className="text-xs text-gray-500">
                       {/* 20 Jan 2025 8:30 AM */}
@@ -134,24 +149,28 @@ export default function ProfilePage() {
                 </View>
 
                 <TouchableOpacity>
-                  <Feather name="bookmark" size={20} color="gray" />
+                  {item.article?.isSaved ? (
+                    <Ionicons name="bookmark-outline" size={24} color="gray" />
+                  ) : (
+                    <Ionicons name="bookmark" size={20} color="gray" />
+                  )}
                 </TouchableOpacity>
               </View>
 
               {/* Title */}
               <Text className="text-lg font-[PoppinsSemiBold] text-black mb-3">
                 {/* My Recommendations */}
-                {item.title}
+                {item.article?.title}
               </Text>
 
               {/* Description */}
               <Text className="text-sm text-gray-600 mb-4 leading-5">
-                {item.summary}
+                {item.article?.summary}
               </Text>
 
               {/* Hashtags */}
               <View className="flex-row mb-4">
-                {item.tags.map((tag: any) => (
+                {item.article?.tags.map((tag: any) => (
                   <View
                     key={tag}
                     className="bg-gray-200 rounded-full px-3 py-1 mr-2"
@@ -164,14 +183,10 @@ export default function ProfilePage() {
               {/* Embedded Image */}
               <TouchableOpacity
                 className="w-full h-48 bg-gray-200 rounded-lg mb-4 items-center justify-center"
-                onPress={() => handleOpenArticle(item.url)}
+                onPress={() => handleOpenArticle(item.article?.url)}
               >
-                {/* <MaterialIcons name="image" size={40} color="gray" />
-                <Text className="text-gray-500 mt-2">
-                  Office/Coworking Image
-                </Text> */}
                 <Image
-                  source={item.images[0]}
+                  source={item.article?.images[0]}
                   style={{
                     height: "100%",
                     width: "100%",
@@ -184,23 +199,27 @@ export default function ProfilePage() {
               </TouchableOpacity>
 
               {/* Engagement Bar */}
-              {/* <View className="flex-row items-center justify-between">
-            <View className="flex-row items-center">
-              <View className="flex-row items-center mr-6">
-                <Feather name="thumbs-up" size={16} color="gray" />
-                <Text className="text-xs text-gray-600 ml-1">5 likes</Text>
-              </View>
-              <View className="flex-row items-center">
-                <Feather name="message-circle" size={16} color="gray" />
-                <Text className="text-xs text-gray-600 ml-1">Comments</Text>
-              </View>
-            </View>
+              <View className="flex-row items-center justify-between">
+                <View className="flex-row items-center">
+                  <View className="flex-row items-center mr-6">
+                    <Feather name="thumbs-up" size={16} color="gray" />
+                    <Text className="text-xs text-gray-600 ml-1">
+                      {item?.article?.likes} likes
+                    </Text>
+                  </View>
+                  <View className="flex-row items-center">
+                    <Feather name="message-circle" size={16} color="gray" />
+                    <Text className="text-xs text-gray-600 ml-1">Comments</Text>
+                  </View>
+                </View>
 
-            <View className="flex-row items-center">
-              <Feather name="share" size={16} color="gray" />
-              <Text className="text-xs text-gray-600 ml-1">3 shares</Text>
-            </View>
-          </View> */}
+                <View className="flex-row items-center">
+                  <Feather name="share" size={16} color="gray" />
+                  <Text className="text-xs text-gray-600 ml-1">
+                    {item?.article?.shares} shares
+                  </Text>
+                </View>
+              </View>
             </View>
           );
         })}

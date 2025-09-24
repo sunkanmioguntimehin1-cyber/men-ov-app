@@ -65,19 +65,19 @@ const YourLastSymptoms = ({ handleOpenLastSymptoms }:any) => {
                   <Text className="text-white">{item.symptoms}</Text>
                 </View>
 
-                {/* <View className=" items-center justify-center w-5 h-5 rounded-full bg-[#D7CE20] mx-2">
-                  <Text className="text-white">{item.severityLevel}</Text>
-                </View> */}
+               
 
                 <View
-                  className="items-center justify-center w-5 h-5 rounded-full mx-2"
+                  className="items-center justify-center  w-5 h-5 rounded-full mx-2"
                   style={{
                     backgroundColor:
                       SeverityLevelData[item.severityLevel - 1]?.levelColor ||
                       "#D0D5DD",
                   }}
                 >
-                  <Text className="text-white">{item.severityLevel}</Text>
+                  <Text className="text-sm text-white">
+                    {item.severityLevel}
+                  </Text>
                 </View>
               </View>
 

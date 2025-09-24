@@ -29,6 +29,7 @@ const MenstrualHistory = ({
         <View>
           {/* <CustomInput primary label="Age of first period" /> */}
           <CustomSelectData
+            onPress={handleFirstPeriodBottomSheetOpen}
             primary
             label="Age of first period"
             placeholder="Choose"
@@ -44,9 +45,10 @@ const MenstrualHistory = ({
         <View className=" my-3">
           {/* <CustomInput primary label="Date of last menstrual period " /> */}
           <CustomSelectData
+            onPress={handleLastPeriodOpen}
             primary
             placeholder="Date of last menstrual period"
-            label="Date of birth"
+            label="Date of last menstrual period "
             value={selectedDate}
             icon={
               <TouchableOpacity onPress={handleLastPeriodOpen}>

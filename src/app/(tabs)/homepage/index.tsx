@@ -1,3 +1,4 @@
+import FloatingAiButton from "@/src/components/tabs/FloatingAiButton";
 import CycleTracking from "@/src/components/tabs/home-modal/CycleTracking";
 import YourFeelingToday from "@/src/components/tabs/home-modal/YourFeelingToday";
 import LastSymptomsModal from "@/src/components/tabs/home-modal/YourFeelingToday/lastSymptomsModal";
@@ -140,9 +141,9 @@ export default function HomePage() {
         </Screen>
 
         {/* Floating button positioned outside of scrollable content */}
-        {/* <View className="absolute bottom-24 right-10">
+        <View className="absolute bottom-24 right-10">
           <FloatingAiButton />
-        </View> */}
+        </View>
       </View>
     </>
   );

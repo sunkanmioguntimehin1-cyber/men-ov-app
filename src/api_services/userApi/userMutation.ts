@@ -3,7 +3,7 @@ import { showSuccessToast } from "@/src/lib/showSuccessToast";
 import useAuthStore from "@/src/store/authStore";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "expo-router";
-import { deleteUser, editUserDetails, intakeDetailsApi } from ".";
+import { deleteUser, editUserDetails, intakeDetailsApi, updateNotificationSettings } from ".";
 
 export const useEditUser = (handleNextBtn: any) => {
   const queryClient = useQueryClient();
@@ -58,6 +58,24 @@ export const useDeleteUserApi = () => {
       // queryClient.invalidateQueries({ queryKey: ["get-user"] });
       useAuthStore.getState().clearAuthState();
       router.replace("/(auth)/login");
+    },
+    onError(error: any) {
+      handleAxiosError(error);
+    },
+  });
+};
+
+
+export const useUpdateNotificationSettings = () => {
+  const router = useRouter();
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: updateNotificationSettings,
+    onSuccess(data: any) {
+      // showSuccessToast({
+      //   message: data.message,
+      // });
+      queryClient.invalidateQueries({ queryKey: ["get-user"] });
     },
     onError(error: any) {
       handleAxiosError(error);
