@@ -48,8 +48,8 @@ const PersonalForm = ({
               render={({ field: { onChange, onBlur, value } }) => (
                 <CustomInput
                   primary
-                  label="Fullname"
-                  placeholder="Fullname"
+                  label="Full name"
+                  placeholder="Full name"
                   onChangeText={onChange}
                   onBlur={onBlur}
                   value={value}
@@ -75,6 +75,7 @@ const PersonalForm = ({
 
           <View className=" my-3">
             <CustomSelectData
+              onPress={handleDateBottomSheetOpen}
               primary
               placeholder="Pick a date"
               label="Date of birth"

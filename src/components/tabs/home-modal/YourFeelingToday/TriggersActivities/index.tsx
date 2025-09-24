@@ -33,9 +33,9 @@ const TriggersActivities = ({ selectedTriggers, setSelectedTriggers }:any) => {
   // ];
 
   const toggleTrigger = (trigger: string) => {
-    setSelectedTriggers((prev) =>
+    setSelectedTriggers((prev:any) =>
       prev.includes(trigger)
-        ? prev.filter((t) => t !== trigger)
+        ? prev.filter((t:any) => t !== trigger)
         : [...prev, trigger]
     );
   };
@@ -44,7 +44,7 @@ const TriggersActivities = ({ selectedTriggers, setSelectedTriggers }:any) => {
     const newTrigger = customTrigger.trim();
 
     if (newTrigger && !selectedTriggers.includes(newTrigger)) {
-      setSelectedTriggers((prev) => [...prev, newTrigger]);
+      setSelectedTriggers((prev:any) => [...prev, newTrigger]);
     }
 
     if (newTrigger && !triggers.includes(newTrigger)) {
@@ -62,7 +62,7 @@ const TriggersActivities = ({ selectedTriggers, setSelectedTriggers }:any) => {
           <TouchableOpacity
             key={trigger}
             onPress={() => toggleTrigger(trigger)}
-            className={`px-4  items-center justify-center h-12 m-1 rounded-xl border ${
+            className={`px-2  items-center justify-center h-10 m-1 rounded-xl border ${
               selectedTriggers.includes(trigger)
                 ? "bg-primary border-primary"
                 : "bg-white border-gray-300"
@@ -95,9 +95,9 @@ const TriggersActivities = ({ selectedTriggers, setSelectedTriggers }:any) => {
           onPress={addCustomTrigger}
         >
           <View>
-            <AntDesign name="plus" size={20} color="white" />
+            <AntDesign name="plus" size={15} color="white" />
           </View>
-          <Text className="text-white font-[PoppinsMedium]"> Add</Text>
+          <Text className="text-white text-sm font-[PoppinsMedium]"> Add</Text>
         </TouchableOpacity>
       </View>
 

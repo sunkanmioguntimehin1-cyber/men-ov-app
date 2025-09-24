@@ -41,3 +41,13 @@ export const deleteUser = async () => {
     throw error;
   }
 };
+
+export const updateNotificationSettings = async (data: any) => {
+  try {
+    const res = await axiosInstance.put(`/user/me/notifications`, data);
+    return res.data;
+  } catch (error) {
+    console.error("updateNotificationSettings:", error);
+    throw error;
+  }
+};

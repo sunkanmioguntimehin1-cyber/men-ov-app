@@ -107,22 +107,17 @@ const AddNote = ({
                 onChangeText={onChange}
                 onBlur={onBlur}
                 style={{
-                  fontSize: rS(14),
+                  fontSize: rS(10),
                   color: "#000",
                   textAlignVertical: "top",
-                  minHeight: rV(100),
+                  minHeight: rV(70),
                 }}
               />
             </View>
           )}
         />
       </View>
-      {/* <TouchableOpacity className="w-[131px] flex-row items-center ml-2 bg-[#F9F5FF] rounded-full px-4 py-3">
-        <Text className="font-[PoppinsMedium]">Add image</Text>
-        <View className="mx-2">
-          <Entypo name="image-inverted" size={24} color="#8A3FFC" />
-        </View>
-      </TouchableOpacity> */}
+     
 
       <View className=" ">
         {imageSelected ? (
@@ -153,9 +148,9 @@ const AddNote = ({
               onPress={handleImagePick}
             >
               <View className="">
-                <Entypo name="image-inverted" size={20} color="#8A3FFC" />
+                <Entypo name="image-inverted" size={15} color="#8A3FFC" />
               </View>
-              <Text className="font-[PoppinsMedium] mx-2">Add image</Text>
+              <Text className=" text-sm font-[PoppinsMedium] mx-2">Add image</Text>
             </TouchableOpacity>
           </View>
         )}

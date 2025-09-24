@@ -112,7 +112,7 @@ const SignUp = () => {
       </View>
 
       <View className="p-8 flex-1">
-        <View className="my-5">
+        <View className="mt-5">
           <Controller
             control={control}
             name="fullname"
