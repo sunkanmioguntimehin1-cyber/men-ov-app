@@ -1,4 +1,5 @@
-import FloatingAiButton from "@/src/components/tabs/FloatingAiButton";
+import { useGetArticleApi } from "@/src/api_services/articleApi/articleQuery";
+import { useCycleTrackingApi } from "@/src/api_services/logApi/logQuery";
 import CycleTracking from "@/src/components/tabs/home-modal/CycleTracking";
 import YourFeelingToday from "@/src/components/tabs/home-modal/YourFeelingToday";
 import LastSymptomsModal from "@/src/components/tabs/home-modal/YourFeelingToday/lastSymptomsModal";
@@ -6,6 +7,7 @@ import TabsArticles from "@/src/components/tabs/TabsArticles";
 import YourLastSymptoms from "@/src/components/tabs/YourLastSymptoms";
 import CustomModel from "@/src/custom-components/CustomModel";
 import CustomSelectData from "@/src/custom-components/CustomSelectData";
+import LoadingOverlay from "@/src/custom-components/LoadingOverlay";
 import Screen from "@/src/layout/Screen";
 import { AntDesign, Ionicons } from "@expo/vector-icons";
 import { Image } from "expo-image";
@@ -18,6 +20,11 @@ export default function HomePage() {
   const [modelVisible1, setModelVisible1] = React.useState(false);
   const [modelVisible2, setModelVisible2] = React.useState(false);
   const [selectedLastSymptom, setSelectedLastSymptom] = React.useState(null);
+  const cycleTracking = useCycleTrackingApi();
+    const getArticles = useGetArticleApi();
+  
+
+  console.log("cycleTracking", cycleTracking?.data?.data[0].note);
 
   const router = useRouter();
 
@@ -48,6 +55,12 @@ export default function HomePage() {
 
   return (
     <>
+      <LoadingOverlay
+        isOpen={getArticles.isLoading || cycleTracking.isLoading} // Required: Controls visibility
+        // message="Login..." // Optional: Loading text
+        animationType="pulse" // Optional: "spin" | "pulse" | "bounce" | "fade"
+        backdropClassName="..." // Optional: Additional backdrop styling
+      />
       <View className="flex-1 relative">
         <Screen scroll={true}>
           <CustomModel
@@ -77,15 +90,21 @@ export default function HomePage() {
           />
 
           <View className="p-8 flex-row items-center justify-end">
-            <TouchableOpacity className=" mx-3" onPress={()=>{
-              router.push("/profilepage/notifications")
-            }}>
+            <TouchableOpacity
+              className=" mx-3"
+              onPress={() => {
+                router.push("/profilepage/notifications");
+              }}
+            >
               <Ionicons name="notifications-outline" size={20} color="black" />
             </TouchableOpacity>
 
-            <TouchableOpacity className=" w-6 h-6 " onPress={()=>{
-              router.push("/(tabs)/profilepage")
-            }}>
+            <TouchableOpacity
+              className=" w-6 h-6 "
+              onPress={() => {
+                router.push("/(tabs)/profilepage");
+              }}
+            >
               <Image
                 source={require("@/assets/images/profile-image.png")}
                 style={{
@@ -121,19 +140,20 @@ export default function HomePage() {
                 }
               />
             </View>
-            {/* <View className="my-5">
+            <View className="my-5">
               <CustomSelectData
                 onPress={handleOpenmodal2}
                 primary
                 label="Cycle Tracking"
-                placeholder="Add your last cycle"
+                placeholder={"Add your last cycle"}
+                // placeholder={cycleTracking?.data?.data[0].note? cycleTracking?.data?.data[0].note : "Add your last cycle"}
                 icon={
                   <TouchableOpacity>
                     <AntDesign name="right" size={24} color="black" />
                   </TouchableOpacity>
                 }
               />
-            </View> */}
+            </View>
             <View className="">
               <TabsArticles />
             </View>
@@ -141,9 +161,9 @@ export default function HomePage() {
         </Screen>
 
         {/* Floating button positioned outside of scrollable content */}
-        <View className="absolute bottom-24 right-10">
+        {/* <View className="absolute bottom-24 right-10">
           <FloatingAiButton />
-        </View>
+        </View> */}
       </View>
     </>
   );

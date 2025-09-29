@@ -1,8 +1,10 @@
+import { rS } from "@/src/lib/responsivehandler";
 import { AntDesign, Entypo } from "@expo/vector-icons";
 import { Image } from "expo-image";
 import * as ImagePicker from "expo-image-picker";
 import React, { useState } from "react";
 import { Text, TouchableOpacity, View } from "react-native";
+import { ICarouselInstance } from "react-native-reanimated-carousel";
 
 const ImageUploadedDetails = ({
   imageSelected,
@@ -12,8 +14,7 @@ const ImageUploadedDetails = ({
   resetImageData,
 }: any) => {
   const [openDropDown, setOpenDropDown] = useState(false);
-
- 
+  const ref = React.useRef<ICarouselInstance>(null);
 
   const handleImagePick = async () => {
     try {
@@ -41,7 +42,10 @@ const ImageUploadedDetails = ({
   };
   return (
     <View>
-      <View className="mt-5 ">
+      <Text className="font-[PoppinsMedium] " style={{ fontSize: rS(12) }}>
+        symptom Images
+      </Text>
+      <View className=" ">
         {imageSelected || selectedLastSymptom?.symptomImages.length > 0 ? (
           <View className="w-full h-56  bg-white items-center justify-center rounded-2xl">
             {/* {imageSelected ? (
@@ -56,7 +60,34 @@ const ImageUploadedDetails = ({
                     uri: imageSelected || selectedLastSymptom?.symptomImages[0],
                   }}
                   style={{ width: "100%", height: "100%" }}
+                  contentFit="contain"
+                  onError={(error) => console.log("Image error:", error)}
                 />
+
+                {/* <Carousel
+                  ref={ref}
+                  width={300}
+                  height={220}
+                  data={selectedLastSymptom?.symptomImages}
+                  renderItem={({ item }) => (
+                    <View
+                      style={{
+                        flex: 1,
+                        borderWidth: 1,
+                        justifyContent: "center",
+                      }}
+                    >
+                      <Image
+                        source={{
+                          uri: item,
+                        }}
+                        style={{ width: "100%", height: "100%" }}
+                        contentFit="contain"
+                        onError={(error) => console.log("Image error:", error)}
+                      />
+                    </View>
+                  )}
+                /> */}
               </View>
 
               <TouchableOpacity onPress={handleCloseImage} className="">

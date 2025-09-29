@@ -1,17 +1,10 @@
 import React from "react";
 import { Text, TouchableOpacity, View } from "react-native";
 
-const SeverityLevel = ({ selectedSeverityLevel, setSelectedSeverityLevel }:any) => {
-  // const setSymtomsDataList = useSymtomsStore().setSymtomsDataList;
-  // const selectedSeverityLevel =
-  //   useSymtomsStore().symtomsDataList.selectedSeverityLevel;
-
-  // const [selectedSeverityLevel, setSelectedSeverityLevel] = React.useState<
-  //   number | null
-  // >(null);
-
-  console.log("selectedSeverityLevel", selectedSeverityLevel);
-
+const SeverityLevel = ({
+  selectedSeverityLevel,
+  setSelectedSeverityLevel,
+}: any) => {
   const SeverityLevelData = [
     {
       level: "Lvl 1",

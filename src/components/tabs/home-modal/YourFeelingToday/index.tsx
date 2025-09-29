@@ -363,11 +363,10 @@ const YourFeelingToday = ({ onCancel }: any) => {
     createLogApi.mutate(requestedPayload);
 
     console.log("requestedPayload:", requestedPayload);
-    // Call your API here
-    // createLogApi.mutate(requestedPayload);
+   
   };
 
-  console.log("selectedDate", selectedDate);
+  // console.log("selectedDate", selectedDate);
 
   return (
     <>

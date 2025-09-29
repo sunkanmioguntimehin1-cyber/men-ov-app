@@ -31,6 +31,16 @@ export const intakeDetailsApi = async (data: any) => {
   }
 };
 
+export const getIntakeDetailsApi = async () => {
+  try {
+    const res = await axiosInstance.get(`/user/intake`);
+    return res.data;
+  } catch (error) {
+    console.error("getIntakeDetailsApi", error);
+    throw error;
+  }
+};
+
 
 export const deleteUser = async () => {
   try {

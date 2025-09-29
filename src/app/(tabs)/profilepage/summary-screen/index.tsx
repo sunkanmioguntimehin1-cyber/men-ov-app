@@ -19,6 +19,8 @@ const SummaryScreen = () => {
 
   const logs = getAllLog?.data?.data || [];
 
+  console.log("logs234:", logs);
+
   // Mock data for demonstration - replace with actual data
   const symptomsData = [
     {
