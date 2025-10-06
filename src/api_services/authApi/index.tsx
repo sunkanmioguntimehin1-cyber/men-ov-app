@@ -1,4 +1,5 @@
 import axiosInstance from "@/src/lib/axiosInstance";
+import axios from "axios";
 
 export const registerUser = async (data: any) => {
     console.log("data66:", data);
@@ -55,7 +56,7 @@ export const resetPasswordApi = async (data: any) => {
 
 export const refreshToken = async (refreshTokenValue: string) => {
   try {
-    const res = await axiosInstance.post(`/auth/refresh-token`, {
+    const res = await axios.post(`/auth/refresh-token`, {
       refresh_token: refreshTokenValue
     });
     return res.data;

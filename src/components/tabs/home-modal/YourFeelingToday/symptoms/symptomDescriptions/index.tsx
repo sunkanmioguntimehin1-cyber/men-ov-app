@@ -65,7 +65,11 @@ const SymptomsDescriptions = ({
   }, [imageSelected]);
 
   const handleStoreData = (data: any) => {
+    console.log(data, "coming from the data")
+    if(data){
     setStoreData(data);
+
+    }
     if (data?.publicUrl) {
       setSymtomsDataList({
         publicUrl: [...currentPublicUrls, data.publicUrl],
@@ -84,6 +88,8 @@ const SymptomsDescriptions = ({
   } = useImageUpload(storeData);
 
   const getUploadUrlData = useGetUploadUrl(handleStoreData);
+
+  console.log("storeDatacompone:", storeData);
 
   const handleImagePick = async () => {
     try {
@@ -104,6 +110,8 @@ const SymptomsDescriptions = ({
       console.log("error from image upload", error);
     }
   };
+
+ 
 
   const handleCloseImage = () => {
     setImageSelected(null);

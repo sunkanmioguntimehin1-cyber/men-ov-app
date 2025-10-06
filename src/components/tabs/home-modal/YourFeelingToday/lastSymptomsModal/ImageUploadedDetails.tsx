@@ -36,6 +36,11 @@ const ImageUploadedDetails = ({
     }
   };
 
+  console.log(
+    "selectedLastSymptom?.symptomImages[0]",
+    selectedLastSymptom?.symptomImages[0]
+  );
+
   const handleCloseImage = () => {
     setImageSelected(null);
     resetImageData();
@@ -57,10 +62,10 @@ const ImageUploadedDetails = ({
               <View className=" w-80 h-56 p-3">
                 <Image
                   source={{
-                    uri: imageSelected || selectedLastSymptom?.symptomImages[0],
+                    uri: selectedLastSymptom?.symptomImages[0],
                   }}
                   style={{ width: "100%", height: "100%" }}
-                  contentFit="contain"
+                  contentFit="cover"
                   onError={(error) => console.log("Image error:", error)}
                 />
 

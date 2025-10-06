@@ -57,6 +57,7 @@ const CycleTrackingAddnote = ({
   const getUploadUrlData = useGetUploadUrl(handleStoreData);
 
   const handleImagePick = async () => {
+     console.log("am_here45");
     try {
       await ImagePicker.requestCameraPermissionsAsync();
       let result = await ImagePicker.launchImageLibraryAsync({
@@ -68,6 +69,7 @@ const CycleTrackingAddnote = ({
 
       if (!result.canceled) {
         imageUploadedSelected(result.assets[0].uri);
+        console.log("am_here")
 
         setImageSelected(result.assets[0]);
         console.log("result2222", result.assets[0]);
@@ -76,6 +78,39 @@ const CycleTrackingAddnote = ({
       console.log("error from image upload", error);
     }
   };
+
+  // const handleImagePick = async () => {
+  //   try {
+  //     await ImagePicker.requestCameraPermissionsAsync();
+  //     let result = await ImagePicker.launchImageLibraryAsync({
+  //       mediaTypes: ImagePicker.MediaType, // Changed from MediaType
+  //       allowsEditing: false,
+  //       aspect: [4, 3],
+  //       quality: 1,
+  //     });
+
+  //     if (!result.canceled) {
+  //       const asset = result.assets[0];
+
+  //       imageUploadedSelected(asset.uri);
+  //       setImageSelected(asset);
+
+  //       console.log("imageUploadedSelected", imageUploadedSelected);
+
+  //       console.log("Selected image:", {
+  //         uri: asset.uri,
+  //         width: asset.width,
+  //         height: asset.height,
+  //         type: asset.type,
+  //       });
+  //     }
+  //   } catch (error) {
+  //     console.log("error from image upload", error);
+  //   }
+  // };
+
+
+ 
 
   const handleCloseImage = () => {
     setImageSelected(null);

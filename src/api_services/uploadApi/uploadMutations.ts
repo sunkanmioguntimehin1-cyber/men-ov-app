@@ -8,6 +8,7 @@ export const useGetUploadUrl = (handleStoreData: (data: any) => void) => {
     onSuccess(data: any) {
       if (data) {
         handleStoreData(data);
+        console.log("daata:", data);
       }
     },
     onError(error: any) {
@@ -21,20 +22,17 @@ export const useImageUpload = (storeData: any) => {
     mutationFn: uploadImageApi,
   });
 
-  // console.log("storeDataeee", storeData);
-
   const uploadImage = async (image: any) => {
-    let fileInfo = {
-      uri: image,
-      type: "*/*",
-      name: "file.png",
-    };
-    const formData = new FormData();
-    formData.append("file", fileInfo as any);
-    mutate({
-      uploadUrl: storeData.publicUrl,
-      formData: formData,
-    });
+    console.log("storeDataNew20004", storeData);
+    // console.log("publicUrlNew300", storeData.uploadUrl);
+    console.log("imageAssetNew6000", image);
+    if (storeData) {
+      mutate({
+        uploadUrl: storeData?.uploadUrl,
+        // formData: formData,
+        fileUri: image,
+      });
+    }
   };
 
   const resetImageData = () => {

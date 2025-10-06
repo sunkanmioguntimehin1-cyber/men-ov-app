@@ -9,7 +9,6 @@ const YourLastSymptoms = ({ handleOpenLastSymptoms }:any) => {
   const router = useRouter()
     const getAllLog = useGetLogApi();
 
-    console.log("logs:", getAllLog?.data);
 
     const SeverityLevelData = [
       { level: "Lvl 1", levelColor: "#20D72A" },
@@ -40,10 +39,10 @@ const YourLastSymptoms = ({ handleOpenLastSymptoms }:any) => {
       </View>
 
       <ScrollView horizontal className="">
-        {getAllLog?.data?.slice(0,5).map((item: any) => {
+        {getAllLog?.data?.slice(0,5)?.map((item: any) => {
           return (
             <TouchableOpacity
-              key={item.id}
+              key={item._id}
               className=" bg-[#8A3FFC] h-20  rounded-xl mx-1"
               onPress={() => handleOpenLastSymptoms(item)}
             >

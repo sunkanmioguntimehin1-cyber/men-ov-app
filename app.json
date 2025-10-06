@@ -31,7 +31,13 @@
         "android.permission.CAMERA",
         "android.permission.RECORD_AUDIO"
       ],
-      "package": "com.menovia.menovia"
+      "package": "com.menovia.menovia",
+      "splash": {
+        "dark": {
+          "image": "./assets/images/splash-icon.png",
+          "backgroundColor": "#171717"
+        }
+      }
     },
     "web": {
       "bundler": "metro",

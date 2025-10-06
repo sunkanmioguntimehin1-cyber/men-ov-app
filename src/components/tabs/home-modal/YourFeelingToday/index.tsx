@@ -333,16 +333,7 @@ const YourFeelingToday = ({ onCancel }: any) => {
   // formatting Date
   const dateValue = selectedDate ? format(selectedDate, "dd-MM-yyy") : "";
 
-  console.log("all-datas200", {
-    symptoms: selectedList,
-    icon: selectedList,
-    severityLevel: selectedSeverityLevel,
-    triggers: selectedTriggers,
-    startDate: selectedDate,
-    duration: durationData,
-    symptomImages: publicUrls,
-    images: notePublicUrls,
-  });
+ 
 
   const createLogApi = useCreateLogApi(onCancel);
 
@@ -362,11 +353,9 @@ const YourFeelingToday = ({ onCancel }: any) => {
 
     createLogApi.mutate(requestedPayload);
 
-    console.log("requestedPayload:", requestedPayload);
    
   };
 
-  // console.log("selectedDate", selectedDate);
 
   return (
     <>
@@ -381,6 +370,7 @@ const YourFeelingToday = ({ onCancel }: any) => {
           {tellUsHowYouFeel.map((item, index) => (
             <TouchableOpacity
               key={index}
+              disabled={isButtonDisabled()}
               className={` ${
                 activeIndex === index ? " border-b border-[#42307D] p-2" : null
               }`}

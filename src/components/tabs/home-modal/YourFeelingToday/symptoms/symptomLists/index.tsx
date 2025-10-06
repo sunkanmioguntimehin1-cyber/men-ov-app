@@ -40,9 +40,10 @@ const SymptomsList = ({ setSelectedList }: Prop) => {
   };
   return (
     <View className="">
-      {symptomsData.map((item) => (
+      {symptomsData.map((item, index) => (
         <>
           <TouchableOpacity
+            key={index}
             className="flex-row items-center h-14 rounded-xl  bg-[#F9FAFB] my-1"
             onPress={() => handleSelectedList(item.name)}
           >
