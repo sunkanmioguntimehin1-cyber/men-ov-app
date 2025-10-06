@@ -192,9 +192,9 @@ import {
   TouchableOpacity,
   View,
   useWindowDimensions,
-  KeyboardAvoidingView,
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+  import { KeyboardStickyView } from "react-native-keyboard-controller";
 
 interface Message {
   id: number;
@@ -230,6 +230,7 @@ const ChatWithAi = () => {
   const flatListRef = useRef<FlatList>(null);
   const insets = useSafeAreaInsets();
   const { width } = useWindowDimensions();
+  const [inputHeight, setInputHeight] = useState<number>(0);
 
   // Responsive layout measurements
   const containerMaxWidth = Math.min(width, 900);
@@ -304,59 +305,62 @@ const ChatWithAi = () => {
 
   return (
     <Screen className="bg-white">
-      <KeyboardAvoidingView
-        behavior={Platform.OS === "ios" ? "padding" : "height"}
-        style={{ flex: 1 }}
-        keyboardVerticalOffset={Platform.OS === "ios" ? insets.top : 0}
+      <View
+        style={{
+          flex: 1,
+          alignSelf: "center",
+          width: "100%",
+          maxWidth: containerMaxWidth,
+        }}
       >
+        {/* Header */}
         <View
-          style={{
-            flex: 1,
-            alignSelf: "center",
-            width: "100%",
-            maxWidth: containerMaxWidth,
-          }}
+          className="flex-row items-center justify-between py-4 border-b border-[#EAEAEA]"
+          style={{ paddingHorizontal: horizontalPadding }}
         >
-          {/* Header */}
-          <View
-            className="flex-row items-center justify-between py-4 border-b border-[#EAEAEA]"
-            style={{ paddingHorizontal: horizontalPadding }}
+          <TouchableOpacity
+            onPress={() => router.back()}
+            className="w-10 h-10 items-center justify-center"
           >
-            <TouchableOpacity
-              onPress={() => router.back()}
-              className="w-10 h-10 items-center justify-center"
-            >
-              <MaterialIcons name="arrow-back-ios" size={24} color="black" />
-            </TouchableOpacity>
+            <MaterialIcons name="arrow-back-ios" size={24} color="black" />
+          </TouchableOpacity>
 
-            <Text className="text-lg font-[PoppinsSemiBold] text-black">
-              Talk with AI
-            </Text>
+          <Text className="text-lg font-[PoppinsSemiBold] text-black">
+            Talk with AI
+          </Text>
 
-            <View className="w-10" />
-          </View>
+          <View className="w-10" />
+        </View>
 
-          {/* Messages List */}
-          <FlatList
-            ref={flatListRef}
-            data={messages}
-            renderItem={renderMessage}
-            keyExtractor={(item) => item.id.toString()}
-            contentContainerStyle={{
-              paddingVertical: 16,
-              paddingHorizontal: horizontalPadding,
-              flexGrow: 1,
-            }}
-            style={{ flex: 1 }}
-            showsVerticalScrollIndicator={false}
-            scrollEnabled={true}
-            nestedScrollEnabled={true}
-            onContentSizeChange={() =>
-              flatListRef.current?.scrollToEnd({ animated: true })
-            }
-          />
+        {/* Messages List */}
+        <FlatList
+          ref={flatListRef}
+          data={messages}
+          renderItem={renderMessage}
+          keyExtractor={(item) => item.id.toString()}
+          contentContainerStyle={{
+            paddingTop: 16,
+            paddingBottom: 16 + inputHeight,
+            paddingHorizontal: horizontalPadding,
+            flexGrow: 1,
+          }}
+          style={{ flex: 1 }}
+          showsVerticalScrollIndicator={false}
+          scrollEnabled={true}
+          nestedScrollEnabled={true}
+          onContentSizeChange={() =>
+            flatListRef.current?.scrollToEnd({ animated: true })
+          }
+        />
 
-          {/* Input Area */}
+        {/* Sticky Input */}
+        <KeyboardStickyView
+          offset={{
+            closed: insets.bottom,
+            opened: insets.bottom,
+          }}
+          onLayout={({ height }) => setInputHeight(height)}
+        >
           <View
             className="border-t border-[#EAEAEA] bg-white"
             style={{
@@ -392,8 +396,8 @@ const ChatWithAi = () => {
               </TouchableOpacity>
             </View>
           </View>
-        </View>
-      </KeyboardAvoidingView>
+        </KeyboardStickyView>
+      </View>
     </Screen>
   );
 };
