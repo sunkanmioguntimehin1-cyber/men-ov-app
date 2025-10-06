@@ -38,9 +38,7 @@ const Symptoms = ({
           )}
         </View>
       </View>
-      {/* <View className="my-3">
-        <CustomButton primary title="Add" />
-      </View> */}
+     
     </View>
   );
 };

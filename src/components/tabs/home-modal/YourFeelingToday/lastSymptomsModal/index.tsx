@@ -3,6 +3,10 @@ import CustomInput from "@/src/custom-components/CustomInput";
 import { MaterialIcons } from "@expo/vector-icons";
 // import { ImageBackground } from "expo-image";
 import {
+  useCloseLogApi,
+  useUpdateLogApi,
+} from "@/src/api_services/logApi/logMutation";
+import {
   useGetUploadUrl,
   useImageUpload,
 } from "@/src/api_services/uploadApi/uploadMutations";
@@ -39,7 +43,10 @@ const LastSymptomsModal = ({ onCancel, selectedLastSymptom }: any) => {
   const [storeData, setStoreData] = React.useState<string | any>(null);
   const [imageSelected, setImageSelected] = React.useState<any>(null);
 
-  const [isDone, setIsDone] = React.useState(false);
+
+
+  console.log("selectedLastSymptom", selectedLastSymptom);
+  console.log("selectedSeverityLevel", selectedSeverityLevel);
 
   const toggleTrigger = (trigger: string) => {
     setSelectedTriggers((prev) =>
@@ -92,7 +99,6 @@ const LastSymptomsModal = ({ onCancel, selectedLastSymptom }: any) => {
   ];
 
   const handleWelconeBtn = () => {
-    setIsDone(false);
     onCancel();
   };
 
@@ -121,11 +127,42 @@ const LastSymptomsModal = ({ onCancel, selectedLastSymptom }: any) => {
     resetImageData,
   } = useImageUpload(storeData);
 
+  const onSubmit = (data: any) => {
+    const payload = {
+      symptoms: data.symptoms || selectedLastSymptom.symptoms,
+      severityLevel: selectedSeverityLevel || selectedLastSymptom.severityLevel,
+      triggers: selectedTriggers || selectedLastSymptom.triggers,
+      notes: data.notes || selectedLastSymptom.notes,
+      symptomImages: itemImgData
+        ? [itemImgData]
+        : selectedLastSymptom?.symptomImages || [],
+      images: selectedLastSymptom?.images || [],
+      id: selectedLastSymptom._id,
+    };
+    updateLogDetails.mutate(payload);
+  };
 
+  const handleCloseLog = (data: any) => {
+    const payload = {
+      symptoms: data.symptoms || selectedLastSymptom.symptoms,
+      severityLevel: selectedSeverityLevel || selectedLastSymptom.severityLevel,
+      triggers: selectedTriggers || selectedLastSymptom.triggers,
+      notes: data.notes || selectedLastSymptom.notes,
+      symptomImages: itemImgData
+        ? [itemImgData]
+        : selectedLastSymptom?.symptomImages || [],
+      images: selectedLastSymptom?.images || [],
+      id: selectedLastSymptom._id,
+    };
+    closeLog.mutate(payload);
+  };
+
+  const updateLogDetails = useUpdateLogApi(onCancel);
+  const closeLog = useCloseLogApi(onCancel);
 
   return (
     <>
-      {!isDone && (
+      {selectedLastSymptom.isClosed === false && (
         <View className=" h-[600px] w-96 p-5 bg-white rounded-lg  shadow-lg overflow-hidden">
           <View className=" flex-row items-center justify-between">
             <Text className=" font-[PoppinsSemiBold] text-base">
@@ -202,19 +239,34 @@ const LastSymptomsModal = ({ onCancel, selectedLastSymptom }: any) => {
             />
           </ScrollView>
 
-          <View className="my-3">
-            <CustomButton
-              primary
-              title="Done"
-              disabled
-              onPress={() => {
-                setIsDone(true);
-              }}
-            />
+          <View className="my-3 flex-row items-center justify-center gap-1 space-x-3">
+            <View className=" flex-1">
+              <CustomButton
+                primary
+                title="I am feeling better"
+                disabled={
+                  (selectedSeverityLevel !== null &&
+                    selectedSeverityLevel > 1) ||
+                  closeLog.isPending
+                }
+                loading={closeLog.isPending}
+                onPress={handleSubmit(handleCloseLog)}
+              />
+            </View>
+
+            <View className=" ">
+              <CustomButton
+                primary
+                title="Update"
+                disabled={updateLogDetails.isPending}
+                loading={updateLogDetails.isPending}
+                onPress={handleSubmit(onSubmit)}
+              />
+            </View>
           </View>
         </View>
       )}
-      {isDone && (
+      {selectedLastSymptom.isClosed === true && (
         <View className="h-[550px] w-96 p-5 bg-white rounded-xl  shadow-lg overflow-hidden">
           <ImageBackground
             source={require("@/assets/images/isdonebg.png")}

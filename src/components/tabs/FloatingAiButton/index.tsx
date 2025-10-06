@@ -1,8 +1,10 @@
 import { AntDesign, MaterialIcons } from '@expo/vector-icons';
+import { useRouter } from 'expo-router';
 import React, { useEffect, useRef } from 'react';
 import { Animated, Easing, Text, TouchableOpacity, View } from 'react-native';
 
 const FloatingAiButton = () => {
+  const router=useRouter()
   const bounceAnim = useRef(new Animated.Value(0)).current;
   const pulseAnim = useRef(new Animated.Value(0)).current;
 
@@ -64,17 +66,17 @@ const FloatingAiButton = () => {
           transform: [{ translateY }],
         }}
       >
-        <View style={{ position: 'relative' }}>
+        <View style={{ position: "relative" }}>
           <Animated.View
             pointerEvents="none"
             style={{
-              position: 'absolute',
+              position: "absolute",
               left: -6,
               right: -6,
               top: -6,
               bottom: -6,
               borderRadius: 18,
-              backgroundColor: 'rgba(138,63,252,0.25)',
+              backgroundColor: "rgba(138,63,252,0.25)",
               opacity: glowOpacity as unknown as number,
               transform: [{ scale: glowScale as unknown as number }],
             }}
@@ -82,9 +84,9 @@ const FloatingAiButton = () => {
           <TouchableOpacity
             accessibilityLabel="Open AI assistant"
             activeOpacity={0.9}
-            className=" w-full bg-white my-3 border border-[#EAEAEA] p-4 rounded-2xl"
+            className=" w-full  bg-white my-3 border border-[#EAEAEA] p-4 rounded-2xl"
             style={{
-              shadowColor: '#8A3FFC',
+              shadowColor: "#8A3FFC",
               shadowOpacity: 0.25,
               shadowRadius: 12,
               shadowOffset: { width: 0, height: 6 },
@@ -96,18 +98,22 @@ const FloatingAiButton = () => {
             </Text>
 
             <View className=" flex-row items-center justify-between ">
-              <View>
+              <View className="flex-1">
                 <AntDesign name="adduser" size={26} color="#8A3FFC" />
               </View>
-              <View className=" mx-3 bg-[#F4EBFF] border border-[#EAECF0] p-4 rounded-lg">
+              <View className=" flex-1 mx-3 bg-[#F4EBFF] border border-[#EAECF0] p-4 rounded-lg">
                 <Text className=" text-base font-[PoppinsRegulars]">
                   Ask about your menopausal symptoms
                 </Text>
               </View>
 
-              <View>
+              <TouchableOpacity
+                onPress={() => {
+                  router.push("/(tabs)/homepage/chat-with-ai");
+                }}
+              >
                 <MaterialIcons name="send" size={26} color="#8A3FFC" />
-              </View>
+              </TouchableOpacity>
             </View>
 
             <View className=" my-2">
@@ -121,3 +127,7 @@ const FloatingAiButton = () => {
 }
 
 export default FloatingAiButton
+
+
+
+

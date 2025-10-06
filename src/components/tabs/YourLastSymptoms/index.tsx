@@ -3,11 +3,12 @@ import { rS } from "@/src/lib/responsivehandler";
 import { Image } from "expo-image";
 import { useRouter } from "expo-router";
 import React from "react";
-import { Platform, ScrollView, Text, TouchableOpacity, View } from "react-native";
+import { ScrollView, Text, TouchableOpacity, View } from "react-native";
 
 const YourLastSymptoms = ({ handleOpenLastSymptoms }:any) => {
   const router = useRouter()
     const getAllLog = useGetLogApi();
+
 
     const SeverityLevelData = [
       { level: "Lvl 1", levelColor: "#20D72A" },
@@ -16,13 +17,12 @@ const YourLastSymptoms = ({ handleOpenLastSymptoms }:any) => {
       { level: "Lvl 4", levelColor: "#D72020" },
     ];
 
-    // console.log("getAllLog", getAllLog?.data?.data);
   return (
     <View>
       <View className=" flex-row items-center justify-between">
         <Text
           className="mb-2 font-[PoppinsMedium] text-black"
-          style={{ fontSize: Platform.OS === "android" ? rS(13) : rS(12) }}
+          style={{ fontSize:  rS(12) }}
         >
           Your last symptoms
         </Text>
@@ -31,7 +31,7 @@ const YourLastSymptoms = ({ handleOpenLastSymptoms }:any) => {
         }}>
           <Text
             className="mb-2 font-[PoppinsMedium] text-black"
-            style={{ fontSize: Platform.OS === "android" ? rS(13) : rS(12) }}
+            style={{ fontSize: rS(12) }}
           >
             View
           </Text>
@@ -39,10 +39,10 @@ const YourLastSymptoms = ({ handleOpenLastSymptoms }:any) => {
       </View>
 
       <ScrollView horizontal className="">
-        {getAllLog?.data?.data.slice(0,5).map((item: any, index: number) => {
+        {getAllLog?.data?.slice(0,5)?.map((item: any) => {
           return (
             <TouchableOpacity
-              key={item.id}
+              key={item._id}
               className=" bg-[#8A3FFC] h-20  rounded-xl mx-1"
               onPress={() => handleOpenLastSymptoms(item)}
             >
@@ -65,8 +65,6 @@ const YourLastSymptoms = ({ handleOpenLastSymptoms }:any) => {
                   <Text className="text-white">{item.symptoms}</Text>
                 </View>
 
-               
-
                 <View
                   className="items-center justify-center  w-5 h-5 rounded-full mx-2"
                   style={{
@@ -81,9 +79,10 @@ const YourLastSymptoms = ({ handleOpenLastSymptoms }:any) => {
                 </View>
               </View>
 
-              <Text className=" text-center text-xs text-white font-[PoppinsMedium]">
-                {item.recommendation}
-                {/* Don't forget to hydrate */}
+              <Text className=" text-center text-xs text-white font-[PoppinsMedium] px-2">
+                {item.recommendation
+                  ? item.recommendation
+                  : " Don't forget to hydrate"}
               </Text>
             </TouchableOpacity>
           );

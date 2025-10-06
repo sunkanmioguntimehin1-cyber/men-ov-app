@@ -25,7 +25,7 @@ type Prop = {
   durationData?: string;
   selectedSeverityLevel?: number | null;
   setSelectedSeverityLevel?: () => void;
-  setPublicUrls?:any
+  setPublicUrls?: any;
 };
 
 interface Item {
@@ -49,14 +49,12 @@ const SymptomsDescriptions = ({
   setSelected,
 }: Prop) => {
   const [storeData, setStoreData] = React.useState<string | any>(null);
- 
+
   const [imageSelected, setImageSelected] = React.useState<any>(null);
 
   const clearPublicUrls = useSymtomsStore().clearPublicUrls;
   const setSymtomsDataList = useSymtomsStore().setSymtomsDataList;
   const currentPublicUrls = useSymtomsStore().symtomsDataList.publicUrl;
-
-  
 
   React.useEffect(() => {
     if (imageSelected) {
@@ -67,15 +65,17 @@ const SymptomsDescriptions = ({
   }, [imageSelected]);
 
   const handleStoreData = (data: any) => {
-
-    console.log("dat22a", data);
+    console.log(data, "coming from the data")
+    if(data){
     setStoreData(data);
-      if (data?.publicUrl) {
-        setSymtomsDataList({
-          publicUrl: [...currentPublicUrls, data.publicUrl],
-        }); // keep track of only URLs
-        setPublicUrls((prev:any) => [...prev, data.publicUrl]); // keep track of only URLs
-      }
+
+    }
+    if (data?.publicUrl) {
+      setSymtomsDataList({
+        publicUrl: [...currentPublicUrls, data.publicUrl],
+      }); // keep track of only URLs
+      setPublicUrls((prev: any) => [...prev, data.publicUrl]); // keep track of only URLs
+    }
   };
 
   //UPLOADING
@@ -87,10 +87,9 @@ const SymptomsDescriptions = ({
     resetImageData,
   } = useImageUpload(storeData);
 
-  console.log("currentPublicUrls", currentPublicUrls);
-  // console.log("publicUrls", publicUrls);
-
   const getUploadUrlData = useGetUploadUrl(handleStoreData);
+
+  console.log("storeDatacompone:", storeData);
 
   const handleImagePick = async () => {
     try {
@@ -106,17 +105,18 @@ const SymptomsDescriptions = ({
         imageUploadedSelected(result.assets[0].uri);
 
         setImageSelected(result.assets[0]);
-        console.log("result2222", result.assets[0]);
       }
     } catch (error) {
       console.log("error from image upload", error);
     }
   };
 
+ 
+
   const handleCloseImage = () => {
     setImageSelected(null);
     resetImageData();
-    clearPublicUrls()
+    clearPublicUrls();
   };
   return (
     <View>
@@ -183,7 +183,7 @@ const SymptomsDescriptions = ({
 
       <View className="mt-5 ">
         {imageSelected ? (
-          <View className="w-full h-56  bg-white items-center justify-center rounded-2xl">
+          <View className="w-full h-56  bg-blue-500 items-center justify-center rounded-2xl">
             {ImgIsPending ? (
               <View>
                 <ActivityIndicator size={40} />
@@ -194,6 +194,7 @@ const SymptomsDescriptions = ({
                   <Image
                     source={{ uri: imageSelected.uri || storeData.publicUrl }}
                     style={{ width: "100%", height: "100%" }}
+                    contentFit="cover"
                   />
                 </View>
 
@@ -213,7 +214,9 @@ const SymptomsDescriptions = ({
               <View className="">
                 <Entypo name="image-inverted" size={15} color="#8A3FFC" />
               </View>
-              <Text className="font-[PoppinsMedium] text-sm mx-2">Add image</Text>
+              <Text className="font-[PoppinsMedium] text-sm mx-2">
+                Add image
+              </Text>
               {/* </View> */}
             </TouchableOpacity>
           </View>

@@ -62,7 +62,6 @@ const SignUp = () => {
       setModelVisible(false);
     };
 
-   console.log("registerUser:", registerUser);
   return (
     <KeyboardAwareScreen
       scroll={true}

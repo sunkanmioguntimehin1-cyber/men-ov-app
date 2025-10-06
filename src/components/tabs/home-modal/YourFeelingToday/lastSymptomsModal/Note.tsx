@@ -37,10 +37,10 @@ const Note = ({errors, control }:any) => {
               onChangeText={onChange}
               onBlur={onBlur}
               style={{
-                fontSize: rS(14),
+                fontSize: rS(10),
                 color: "#000",
                 textAlignVertical: "top",
-                minHeight: rV(100),
+                minHeight: rV(50),
               }}
             />
           </View>

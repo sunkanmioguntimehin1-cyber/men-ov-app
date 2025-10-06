@@ -74,7 +74,7 @@ export default function GetStarted() {
             <CustomButton
               whiteBg
               title="Continue with google"
-              onPress={signIn}
+              // onPress={signIn}
             />
           </View>
         </View>

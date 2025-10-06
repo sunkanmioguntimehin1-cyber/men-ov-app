@@ -8,7 +8,14 @@ function getTabBarVisibility(route: any) {
   const routeName = getFocusedRouteNameFromRoute(route) ?? "index";
 
   // Hide tab bar for these specific routes
-  const hiddenRoutes = ["personal-info", "personal-info-form", "notifications", "profile-screen","summary-screen" ];
+  const hiddenRoutes = [
+    "personal-info",
+    "personal-info-form",
+    "notifications",
+    "profile-screen",
+    "summary-screen",
+    "chat-with-ai",
+  ];
 
   // Check if the current route or any part of it matches hidden routes
   const shouldHide = hiddenRoutes.some(

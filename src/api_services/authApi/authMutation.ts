@@ -5,12 +5,12 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useMutation } from "@tanstack/react-query";
 import { useRouter } from "expo-router";
 import {
-    forgotPasswordApi,
-    loginUser,
-    refreshToken,
-    registerUser,
-    resetPasswordApi,
-    verifyEmail,
+  forgotPasswordApi,
+  loginUser,
+  refreshToken,
+  registerUser,
+  resetPasswordApi,
+  verifyEmail,
 } from ".";
 
 // Mutation api call
@@ -64,9 +64,9 @@ export const useLoginUser = () => {
       //   message: data.message,
       // });
       if (data) {
-        await AsyncStorage.setItem("token", data.access_token);
+        await AsyncStorage.setItem("token", data?.access_token);
         if (data.refresh_token) {
-          await AsyncStorage.setItem("refresh_token", data.refresh_token);
+          await AsyncStorage.setItem("refresh_token", data?.refresh_token);
         }
         setIsLoggedIn(true);
         router.push("/(tabs)/homepage");

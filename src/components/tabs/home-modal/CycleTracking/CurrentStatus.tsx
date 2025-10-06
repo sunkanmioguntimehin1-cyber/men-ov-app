@@ -1,16 +1,25 @@
-import CustomButton from "@/src/custom-components/CustomButton";
 import CustomRadio from "@/src/custom-components/CustomRadio";
 import React from "react";
 import { Text, View } from "react-native";
 
-const CurrentStatus = () => {
-  const [size, setSize] = React.useState("");
+const CurrentStatus = ({
+  menopauseStage,
+  setMenopauseStage,
+  getIntakeDetails,
+}: any) => {
+  console.log("getIntakeDetails", getIntakeDetails?.data);
 
-  const sizeData = [
-    { label: "Perimenopause", value: "Perimenopause" },
-    { label: "Menopause", value: "Menopause" },
-    { label: "Postmenopause", value: "Postmenopause" },
+  const menopauseStageData = [
+    { label: "Premenopause", value: "premenopause" },
+    { label: "Perimenopause", value: "perimenopause" },
+    { label: "Postmenopause", value: "postmenopause" },
   ];
+
+  React.useEffect(() => {
+    if (getIntakeDetails?.data) {
+      setMenopauseStage(getIntakeDetails?.data?.menopauseStage || "");
+    }
+  }, [getIntakeDetails?.data, setMenopauseStage]);
   return (
     <View>
       <View className=" my-3">
@@ -21,17 +30,17 @@ const CurrentStatus = () => {
           Current menopause stage
         </Text>
         <CustomRadio
-          options={sizeData}
-          checkedValue={size}
-          onChange={setSize}
+          options={menopauseStageData}
+          checkedValue={menopauseStage}
+          onChange={setMenopauseStage}
           borderWidth={1}
           style={{ marginBottom: 15 }}
         />
       </View>
 
-      <View className="">
+      {/* <View className="">
         <CustomButton primary title="Add" />
-      </View>
+      </View> */}
     </View>
   );
 };
