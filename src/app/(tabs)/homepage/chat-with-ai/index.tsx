@@ -185,8 +185,15 @@ import Screen from "@/src/layout/Screen";
 import { MaterialIcons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import React, { useRef, useState } from "react";
-import { FlatList, Platform, Text, TouchableOpacity, View } from "react-native";
-import { KeyboardAwareScrollView } from "react-native-keyboard-controller";
+import {
+  FlatList,
+  Platform,
+  Text,
+  TouchableOpacity,
+  View,
+  useWindowDimensions,
+  KeyboardAvoidingView,
+} from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 interface Message {
@@ -222,6 +229,13 @@ const ChatWithAi = () => {
 
   const flatListRef = useRef<FlatList>(null);
   const insets = useSafeAreaInsets();
+  const { width } = useWindowDimensions();
+
+  // Responsive layout measurements
+  const containerMaxWidth = Math.min(width, 900);
+  const horizontalPadding = width >= 1024 ? 32 : width >= 768 ? 24 : 16;
+  const contentWidth = containerMaxWidth - horizontalPadding * 2;
+  const bubbleMaxWidth = Math.min(640, contentWidth * 0.9);
 
   const handleSend = () => {
     if (message.trim()) {
@@ -265,13 +279,14 @@ const ChatWithAi = () => {
   };
 
   const renderMessage = ({ item }: { item: Message }) => (
-    <View className={`mb-4 px-4 ${item.isAi ? "items-start" : "items-end"}`}>
+    <View className={`mb-4 ${item.isAi ? "items-start" : "items-end"}`}>
       <View
-        className={`max-w-[80%] px-4 py-3 rounded-2xl ${
+        className={`px-4 py-3 rounded-2xl ${
           item.isAi
             ? "bg-secondary rounded-tl-none"
             : "bg-primary rounded-tr-none"
         }`}
+        style={{ maxWidth: bubbleMaxWidth }}
       >
         <Text
           className={`text-base font-[PoppinsRegular] ${
@@ -289,80 +304,96 @@ const ChatWithAi = () => {
 
   return (
     <Screen className="bg-white">
-      <KeyboardAwareScrollView
-        contentContainerStyle={{ flexGrow: 1 }}
-        keyboardShouldPersistTaps="handled"
-        bounces={false}
+      <KeyboardAvoidingView
+        behavior={Platform.OS === "ios" ? "padding" : "height"}
+        style={{ flex: 1 }}
+        keyboardVerticalOffset={Platform.OS === "ios" ? insets.top : 0}
       >
-        {/* Header */}
-        <View className="flex-row items-center justify-between px-6 py-4 border-b border-[#EAEAEA]">
-          <TouchableOpacity
-            onPress={() => router.back()}
-            className="w-10 h-10 items-center justify-center"
-          >
-            <MaterialIcons name="arrow-back-ios" size={24} color="black" />
-          </TouchableOpacity>
-
-          <Text className="text-lg font-[PoppinsSemiBold] text-black">
-            Talk with AI
-          </Text>
-
-          <View className="w-10" />
-        </View>
-
-        {/* Messages List */}
-        <FlatList
-          ref={flatListRef}
-          data={messages}
-          renderItem={renderMessage}
-          keyExtractor={(item) => item.id.toString()}
-          contentContainerStyle={{
-            paddingVertical: 16,
-            flexGrow: 1,
-          }}
-          showsVerticalScrollIndicator={false}
-          scrollEnabled={true}
-          nestedScrollEnabled={true}
-          onContentSizeChange={() =>
-            flatListRef.current?.scrollToEnd({ animated: true })
-          }
-        />
-
-        {/* Input Area */}
         <View
-          className="px-4 py-3 border-t border-[#EAEAEA] bg-white"
           style={{
-            paddingBottom: Platform.OS === "ios" ? insets.bottom + 8 : 8,
+            flex: 1,
+            alignSelf: "center",
+            width: "100%",
+            maxWidth: containerMaxWidth,
           }}
         >
-          <View className="flex-row items-center space-x-2">
-            <View className="flex-1">
-              <CustomInput
-                placeholder="Type a message..."
-                value={message}
-                onChangeText={setMessage}
-                primary
-                returnKeyType="send"
-                onSubmitEditing={handleSend}
-                autoCapitalize="sentences"
-              />
-            </View>
+          {/* Header */}
+          <View
+            className="flex-row items-center justify-between py-4 border-b border-[#EAEAEA]"
+            style={{ paddingHorizontal: horizontalPadding }}
+          >
             <TouchableOpacity
-              onPress={handleSend}
-              disabled={!message.trim()}
-              className={`w-12 h-12 rounded-full items-center justify-center ${
-                message.trim() ? "bg-primary" : "bg-primaryLight"
-              }`}
+              onPress={() => router.back()}
+              className="w-10 h-10 items-center justify-center"
             >
-              <MaterialIcons
-                name="send"
-                size={20}
-                color={message.trim() ? "white" : "#B0B0B0"}
-              />
+              <MaterialIcons name="arrow-back-ios" size={24} color="black" />
             </TouchableOpacity>
+
+            <Text className="text-lg font-[PoppinsSemiBold] text-black">
+              Talk with AI
+            </Text>
+
+            <View className="w-10" />
+          </View>
+
+          {/* Messages List */}
+          <FlatList
+            ref={flatListRef}
+            data={messages}
+            renderItem={renderMessage}
+            keyExtractor={(item) => item.id.toString()}
+            contentContainerStyle={{
+              paddingVertical: 16,
+              paddingHorizontal: horizontalPadding,
+              flexGrow: 1,
+            }}
+            style={{ flex: 1 }}
+            showsVerticalScrollIndicator={false}
+            scrollEnabled={true}
+            nestedScrollEnabled={true}
+            onContentSizeChange={() =>
+              flatListRef.current?.scrollToEnd({ animated: true })
+            }
+          />
+
+          {/* Input Area */}
+          <View
+            className="border-t border-[#EAEAEA] bg-white"
+            style={{
+              paddingTop: 8,
+              paddingHorizontal: horizontalPadding,
+              paddingBottom: Platform.OS === "ios" ? insets.bottom + 8 : 8,
+            }}
+          >
+            <View className="flex-row items-center space-x-2">
+              <View className="flex-1">
+                <CustomInput
+                  placeholder="Type a message..."
+                  value={message}
+                  onChangeText={setMessage}
+                  primary
+                  returnKeyType="send"
+                  onSubmitEditing={handleSend}
+                  autoCapitalize="sentences"
+                />
+              </View>
+              <TouchableOpacity
+                onPress={handleSend}
+                disabled={!message.trim()}
+                className={`w-12 h-12 rounded-full items-center justify-center ${
+                  message.trim() ? "bg-primary" : "bg-primaryLight"
+                }`}
+              >
+                <MaterialIcons
+                  name="send"
+                  size={20}
+                  color={message.trim() ? "white" : "#B0B0B0"}
+                />
+              </TouchableOpacity>
+            </View>
           </View>
         </View>
-      </KeyboardAwareScrollView>
+      </KeyboardAvoidingView>
     </Screen>
   );
 };
