@@ -182,11 +182,20 @@
 
 import CustomInput from "@/src/custom-components/CustomInput";
 import Screen from "@/src/layout/Screen";
+import { rS, rV } from "@/src/lib/responsivehandler";
 import { MaterialIcons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import React, { useRef, useState } from "react";
-import { FlatList, Platform, Text, TouchableOpacity, View } from "react-native";
-import { KeyboardAwareScrollView } from "react-native-keyboard-controller";
+import {
+  Dimensions,
+  FlatList,
+  KeyboardAvoidingView,
+  Platform,
+  Text,
+  TouchableOpacity,
+  View,
+  useWindowDimensions,
+} from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 interface Message {
@@ -222,6 +231,12 @@ const ChatWithAi = () => {
 
   const flatListRef = useRef<FlatList>(null);
   const insets = useSafeAreaInsets();
+  const { width: screenWidth, height: screenHeight } = useWindowDimensions();
+  
+  // Responsive values based on screen size
+  const isSmallScreen = screenWidth < 375;
+  const isMediumScreen = screenWidth >= 375 && screenWidth < 768;
+  const isLargeScreen = screenWidth >= 768;
 
   const handleSend = () => {
     if (message.trim()) {
@@ -264,24 +279,50 @@ const ChatWithAi = () => {
     }
   };
 
+  // Calculate responsive message bubble max width
+  const getMessageMaxWidth = () => {
+    if (isLargeScreen) return "70%";
+    if (isSmallScreen) return "85%";
+    return "80%";
+  };
+
   const renderMessage = ({ item }: { item: Message }) => (
-    <View className={`mb-4 px-4 ${item.isAi ? "items-start" : "items-end"}`}>
+    <View
+      className={`${item.isAi ? "items-start" : "items-end"}`}
+      style={{
+        marginBottom: rV(12),
+        paddingHorizontal: rS(isSmallScreen ? 12 : 16),
+      }}
+    >
       <View
-        className={`max-w-[80%] px-4 py-3 rounded-2xl ${
+        className={`rounded-2xl ${
           item.isAi
             ? "bg-secondary rounded-tl-none"
             : "bg-primary rounded-tr-none"
         }`}
+        style={{
+          maxWidth: getMessageMaxWidth(),
+          paddingHorizontal: rS(isSmallScreen ? 12 : 16),
+          paddingVertical: rV(10),
+        }}
       >
         <Text
-          className={`text-base font-[PoppinsRegular] ${
+          className={`font-[PoppinsRegular] ${
             item.isAi ? "text-titleText" : "text-white"
           }`}
+          style={{ fontSize: rS(isSmallScreen ? 13 : 14), lineHeight: rV(20) }}
         >
           {item.text}
         </Text>
       </View>
-      <Text className="text-xs text-gray-400 mt-1 px-2 font-[PoppinsRegular]">
+      <Text
+        className="text-gray-400 font-[PoppinsRegular]"
+        style={{
+          fontSize: rS(10),
+          marginTop: rV(4),
+          paddingHorizontal: rS(8),
+        }}
+      >
         {item.timestamp}
       </Text>
     </View>
@@ -289,25 +330,43 @@ const ChatWithAi = () => {
 
   return (
     <Screen className="bg-white">
-      <KeyboardAwareScrollView
-        contentContainerStyle={{ flexGrow: 1 }}
-        keyboardShouldPersistTaps="handled"
-        bounces={false}
+      <KeyboardAvoidingView
+        behavior={Platform.OS === "ios" ? "padding" : "height"}
+        className="flex-1"
+        keyboardVerticalOffset={Platform.OS === "ios" ? 0 : 0}
       >
         {/* Header */}
-        <View className="flex-row items-center justify-between px-6 py-4 border-b border-[#EAEAEA]">
+        <View
+          className="flex-row items-center justify-between border-b border-[#EAEAEA]"
+          style={{
+            paddingHorizontal: rS(isSmallScreen ? 12 : 16),
+            paddingVertical: rV(12),
+          }}
+        >
           <TouchableOpacity
             onPress={() => router.back()}
-            className="w-10 h-10 items-center justify-center"
+            style={{
+              width: rS(40),
+              height: rV(40),
+              alignItems: "center",
+              justifyContent: "center",
+            }}
           >
-            <MaterialIcons name="arrow-back-ios" size={24} color="black" />
+            <MaterialIcons
+              name="arrow-back-ios"
+              size={rS(isSmallScreen ? 20 : 24)}
+              color="black"
+            />
           </TouchableOpacity>
 
-          <Text className="text-lg font-[PoppinsSemiBold] text-black">
+          <Text
+            className="font-[PoppinsSemiBold] text-black"
+            style={{ fontSize: rS(isSmallScreen ? 16 : 18) }}
+          >
             Talk with AI
           </Text>
 
-          <View className="w-10" />
+          <View style={{ width: rS(40) }} />
         </View>
 
         {/* Messages List */}
@@ -317,12 +376,10 @@ const ChatWithAi = () => {
           renderItem={renderMessage}
           keyExtractor={(item) => item.id.toString()}
           contentContainerStyle={{
-            paddingVertical: 16,
+            paddingVertical: rV(16),
             flexGrow: 1,
           }}
           showsVerticalScrollIndicator={false}
-          scrollEnabled={true}
-          nestedScrollEnabled={true}
           onContentSizeChange={() =>
             flatListRef.current?.scrollToEnd({ animated: true })
           }
@@ -330,12 +387,17 @@ const ChatWithAi = () => {
 
         {/* Input Area */}
         <View
-          className="px-4 py-3 border-t border-[#EAEAEA] bg-white"
+          className="border-t border-[#EAEAEA] bg-white"
           style={{
-            paddingBottom: Platform.OS === "ios" ? insets.bottom + 8 : 8,
+            paddingHorizontal: rS(isSmallScreen ? 12 : 16),
+            paddingTop: rV(12),
+            paddingBottom:
+              Platform.OS === "ios"
+                ? Math.max(insets.bottom, rV(12))
+                : rV(12),
           }}
         >
-          <View className="flex-row items-center space-x-2">
+          <View className="flex-row items-center" style={{ gap: rS(8) }}>
             <View className="flex-1">
               <CustomInput
                 placeholder="Type a message..."
@@ -350,19 +412,23 @@ const ChatWithAi = () => {
             <TouchableOpacity
               onPress={handleSend}
               disabled={!message.trim()}
-              className={`w-12 h-12 rounded-full items-center justify-center ${
+              className={`rounded-full items-center justify-center ${
                 message.trim() ? "bg-primary" : "bg-primaryLight"
               }`}
+              style={{
+                width: rS(isSmallScreen ? 44 : 48),
+                height: rV(isSmallScreen ? 44 : 48),
+              }}
             >
               <MaterialIcons
                 name="send"
-                size={20}
+                size={rS(isSmallScreen ? 18 : 20)}
                 color={message.trim() ? "white" : "#B0B0B0"}
               />
             </TouchableOpacity>
           </View>
         </View>
-      </KeyboardAwareScrollView>
+      </KeyboardAvoidingView>
     </Screen>
   );
 };
