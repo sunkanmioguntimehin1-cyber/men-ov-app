@@ -1,19 +1,19 @@
-import CustomInput from "@/src/custom-components/CustomInput";
 import CustomSelectData from "@/src/custom-components/CustomSelectData";
 import YesNoSelector from "@/src/custom-components/YesNoSelector";
 import { rS } from "@/src/lib/responsivehandler";
 import { AntDesign } from "@expo/vector-icons";
-import React, { useState } from "react";
+import React from "react";
 import { Text, TouchableOpacity, View } from "react-native";
 
 const MenstrualHistory = ({
   handleFirstPeriodBottomSheetOpen,
+  handleLastPeriodOpen,
   firstPeriod,
+  selectedDate,
+  setSelected,
+  periodsStoppedAnswer,
+  setPeriodsStoppedAnswer,
 }: any) => {
-  const [periodsStoppedAnswer, setPeriodsStoppedAnswer] = useState<
-    "yes" | "no" | null
-  >(null);
-
 
   return (
     <View>
@@ -29,6 +29,7 @@ const MenstrualHistory = ({
         <View>
           {/* <CustomInput primary label="Age of first period" /> */}
           <CustomSelectData
+            onPress={handleFirstPeriodBottomSheetOpen}
             primary
             label="Age of first period"
             placeholder="Choose"
@@ -42,7 +43,19 @@ const MenstrualHistory = ({
         </View>
 
         <View className=" my-3">
-          <CustomInput primary label="Date of last menstrual period " />
+          {/* <CustomInput primary label="Date of last menstrual period " /> */}
+          <CustomSelectData
+            onPress={handleLastPeriodOpen}
+            primary
+            placeholder="Date of last menstrual period"
+            label="Date of last menstrual period "
+            value={selectedDate}
+            icon={
+              <TouchableOpacity onPress={handleLastPeriodOpen}>
+                <AntDesign name="down" size={20} color="#1E1D2F" />
+              </TouchableOpacity>
+            }
+          />
         </View>
 
         <View className=" my-3">
@@ -59,9 +72,9 @@ const MenstrualHistory = ({
           />
         </View>
 
-        <View className=" my-3">
+        {/* <View className=" my-3">
           <CustomInput primary label="Estimated Date of Menopause Onset" />
-        </View>
+        </View> */}
       </View>
     </View>
   );

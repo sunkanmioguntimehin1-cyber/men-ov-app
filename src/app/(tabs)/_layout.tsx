@@ -1,13 +1,38 @@
-import { Ionicons } from "@expo/vector-icons";
+import { FontAwesome5, Ionicons } from "@expo/vector-icons";
+import { getFocusedRouteNameFromRoute } from "@react-navigation/native";
 import { Tabs } from "expo-router";
 import { Platform } from "react-native";
+
+// Function to determine if tab bar should be hidden
+function getTabBarVisibility(route: any) {
+  const routeName = getFocusedRouteNameFromRoute(route) ?? "index";
+
+  // Hide tab bar for these specific routes
+  const hiddenRoutes = [
+    "personal-info",
+    "personal-info-form",
+    "notifications",
+    "profile-screen",
+    "summary-screen",
+    "chat-with-ai",
+  ];
+
+  // Check if the current route or any part of it matches hidden routes
+  const shouldHide = hiddenRoutes.some(
+    (hiddenRoute) =>
+      routeName.includes(hiddenRoute) ||
+      route?.params?.screen?.includes(hiddenRoute)
+  );
+
+  return shouldHide;
+}
 
 export default function TabsLayout() {
   return (
     <Tabs
-      initialRouteName="homepage/index"
+      initialRouteName="homepage"
       screenOptions={{
-        // tabBarActiveTintColor: Colors[colorScheme ?? 'light'].tint,
+        tabBarActiveTintColor: "#8A3FFC",
         headerShown: false,
         tabBarStyle: Platform.select({
           ios: {
@@ -20,38 +45,85 @@ export default function TabsLayout() {
       backBehavior="history"
     >
       <Tabs.Screen
-        name="homepage/index"
-        options={{
+        name="homepage"
+        options={({ route }) => ({
           title: "Home",
           tabBarIcon: ({ color, focused }) => (
             <Ionicons
               name={focused ? "home" : "home-outline"}
               size={24}
-              color={focused ?  "black" :"#E4D9F7"}
+              color={focused ? "black" : "#E4D9F7"}
             />
           ),
-        }}
+          tabBarStyle: getTabBarVisibility(route)
+            ? { display: "none" }
+            : Platform.select({
+                ios: {
+                  position: "absolute",
+                },
+                default: {},
+              }),
+        })}
       />
-      <Tabs.Screen
+      {/* <Tabs.Screen
         name="explorepage/index"
         options={{
           title: "Explore",
-          // tabBarIcon: ({ color }) => <IconSymbol size={28} name="house.fill" color={color} />,
+          tabBarIcon: ({ color, focused }) => (
+            <Ionicons
+              name={focused ? "search" : "search-outline"}
+              size={24}
+              color={focused ? "black" : "#E4D9F7"}
+            />
+          ),
         }}
-      />
-      <Tabs.Screen
+      /> */}
+      {/* <Tabs.Screen
         name="communitypage/index"
         options={{
           title: "Community",
-          // tabBarIcon: ({ color }) => <IconSymbol size={28} name="house.fill" color={color} />,
+          tabBarIcon: ({ color, focused }) => (
+            <Ionicons
+              name={focused ? "people" : "people-outline"}
+              size={24}
+              color={focused ? "black" : "#E4D9F7"}
+            />
+          ),
         }}
-      />
+      /> */}
       <Tabs.Screen
-        name="profilepage/index"
-        options={{
+        name="profilepage"
+        options={({ route }) => ({
           title: "Profile",
-          // tabBarIcon: ({ color }) => <IconSymbol size={28} name="house.fill" color={color} />,
-        }}
+          tabBarIcon: ({ color, focused }) => (
+            <FontAwesome5
+              name={focused ? "user-alt" : "user"}
+              size={24}
+              color={focused ? "black" : "#E4D9F7"}
+            />
+          ),
+          // Hide tab bar for profilepage and its nested routes
+          tabBarStyle: (() => {
+            const routeName = getFocusedRouteNameFromRoute(route) ?? "index";
+            const hiddenRoutes = ["personal-info", "personal-info-form", "notifications", "profile-screen","summary-screen"];
+            const shouldHide = hiddenRoutes.some((hiddenRoute) => 
+              routeName.includes(hiddenRoute) || 
+              (route?.params as any)?.screen?.includes(hiddenRoute)
+            );
+            
+            // Also hide when on the main profilepage route
+            const isProfilePage = routeName === "profilepage" || routeName === "index";
+            
+            return (shouldHide || isProfilePage) 
+              ? { display: "none" } 
+              : Platform.select({
+                  ios: {
+                    position: "absolute",
+                  },
+                  default: {},
+                });
+          })(),
+        })}
       />
     </Tabs>
   );

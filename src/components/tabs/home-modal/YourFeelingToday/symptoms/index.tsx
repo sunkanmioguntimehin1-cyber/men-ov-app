@@ -1,26 +1,44 @@
-import CustomButton from "@/src/custom-components/CustomButton";
 import React from "react";
 import { View } from "react-native";
 import SymptomsDescriptions from "./symptomDescriptions";
 import SymptomsList from "./symptomLists";
 
-const Symptoms = () => {
-    const [selectedList, setSelectedList]= React.useState<string |null>(null)
-
-    console.log("selected:", selectedList);
- 
+const Symptoms = ({
+  errors,
+  control,
+  handleDateBottomSheetOpen,
+  handleDurationBottomSheetOpen,
+  selectedDate,
+  durationData,
+  selectedList,
+  setSelectedList,
+  selectedSeverityLevel,
+  setSelectedSeverityLevel,
+  setPublicUrls,
+}: any) => {
   return (
     <View className=" mt-5">
       <View>
         {!selectedList && <SymptomsList setSelectedList={setSelectedList} />}
 
         <View>
-          {selectedList && <SymptomsDescriptions selectedList={selectedList} />}
+          {selectedList && (
+            <SymptomsDescriptions
+              errors={errors}
+              control={control}
+              selectedList={selectedList}
+              selectedDate={selectedDate}
+              durationData={durationData}
+              selectedSeverityLevel={selectedSeverityLevel}
+              setSelectedSeverityLevel={setSelectedSeverityLevel}
+              handleDateBottomSheetOpen={handleDateBottomSheetOpen}
+              handleDurationBottomSheetOpen={handleDurationBottomSheetOpen}
+              setPublicUrls={setPublicUrls}
+            />
+          )}
         </View>
       </View>
-      <View className="my-3">
-        <CustomButton primary title="Add" />
-      </View>
+     
     </View>
   );
 };

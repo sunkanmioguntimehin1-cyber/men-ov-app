@@ -1,195 +1,197 @@
+// import { useGetArticleApi } from "@/src/api_services/articleApi/articleQuery";
 // import FloatingAiButton from "@/src/components/tabs/FloatingAiButton";
 // import CycleTracking from "@/src/components/tabs/home-modal/CycleTracking";
 // import YourFeelingToday from "@/src/components/tabs/home-modal/YourFeelingToday";
 // import LastSymptomsModal from "@/src/components/tabs/home-modal/YourFeelingToday/lastSymptomsModal";
 // import TabsArticles from "@/src/components/tabs/TabsArticles";
+// import YourLastSymptoms from "@/src/components/tabs/YourLastSymptoms";
 // import CustomModel from "@/src/custom-components/CustomModel";
 // import CustomSelectData from "@/src/custom-components/CustomSelectData";
+// import LoadingOverlay from "@/src/custom-components/LoadingOverlay";
 // import Screen from "@/src/layout/Screen";
-// import { rS } from "@/src/lib/responsivehandler";
 // import { AntDesign, Ionicons } from "@expo/vector-icons";
 // import { Image } from "expo-image";
+// import { useRouter } from "expo-router";
 // import React from "react";
-// import { Platform, Text, TouchableOpacity, View } from "react-native";
+// import { TouchableOpacity, View } from "react-native";
 
 // export default function HomePage() {
 //   const [modelVisible, setModelVisible] = React.useState(false);
 //   const [modelVisible1, setModelVisible1] = React.useState(false);
 //   const [modelVisible2, setModelVisible2] = React.useState(false);
+//   const [selectedLastSymptom, setSelectedLastSymptom] = React.useState(null);
+//   const getArticles = useGetArticleApi();
 
+//   const router = useRouter();
 
-
-//   const handleOpenmodal =()=>{
-//     setModelVisible(true)
-//   }
+//   const handleOpenmodal = () => {
+//     setModelVisible(true);
+//   };
 
 //   const onCancel = () => {
 //     setModelVisible(false);
 //   };
 
-//    const handleOpenmodal1 = () => {
-//      setModelVisible1(true);
-//    };
+//   const handleOpenLastSymptoms = (item: any) => {
+//     setSelectedLastSymptom(item);
+//     setModelVisible1(true);
+//   };
 
-//    const onCancel1 = () => {
-//      setModelVisible1(false);
-//    };
+//   const onCancel1 = () => {
+//     setModelVisible1(false);
+//   };
 
-//    const handleOpenmodal2 = () => {
-//      setModelVisible2(true);
-//    };
+//   const handleOpenmodal2 = () => {
+//     setModelVisible2(true);
+//   };
 
-//    const onCancel2 = () => {
-//      setModelVisible2(false);
-//    };
-
+//   const onCancel2 = () => {
+//     setModelVisible2(false);
+//   };
 
 //   return (
-//     <Screen scroll={true} className="relative">
-//       <CustomModel
-//         modelVisible={modelVisible}
-//         setModelVisible={setModelVisible}
-//         closeOnOutsideClick={false}
-//         message={<YourFeelingToday onCancel={onCancel} />}
+//     <>
+//       <LoadingOverlay
+//         isOpen={getArticles.isLoading} // Required: Controls visibility
+//         // message="Login..." // Optional: Loading text
+//         animationType="pulse" // Optional: "spin" | "pulse" | "bounce" | "fade"
+//         backdropClassName="..." // Optional: Additional backdrop styling
 //       />
-
-//       <CustomModel
-//         modelVisible={modelVisible1}
-//         setModelVisible={setModelVisible1}
-//         closeOnOutsideClick={false}
-//         message={<LastSymptomsModal onCancel={onCancel1} />}
-//       />
-
-//       <CustomModel
-//         modelVisible={modelVisible2}
-//         setModelVisible={setModelVisible2}
-//         closeOnOutsideClick={false}
-//         message={<CycleTracking onCancel={onCancel2} />}
-//       />
-//       <View className="p-8 flex-row items-center justify-end">
-//         <TouchableOpacity className=" mx-3">
-//           <Ionicons name="notifications-outline" size={20} color="black" />
-//         </TouchableOpacity>
-
-//         <TouchableOpacity className=" w-6 h-6 ">
-//           <Image
-//             source={require("@/assets/images/profile-image.png")}
-//             style={{
-//               height: "100%",
-//               width: "100%",
-//               // alignSelf: "center",
-//               borderRadius: 100,
-//             }}
-//             contentFit="contain"
-//             onError={(error) => console.log("Image error:", error)}
+//       <View className="flex-1 relative">
+//         <Screen scroll={true}>
+//           <CustomModel
+//             modelVisible={modelVisible}
+//             setModelVisible={setModelVisible}
+//             closeOnOutsideClick={false}
+//             message={<YourFeelingToday onCancel={onCancel} />}
 //           />
-//         </TouchableOpacity>
-//       </View>
-//       <View className="px-8">
-//         <View className="my-3">
-//           <Text
-//             className="mb-2 font-[PoppinsMedium] text-black"
-//             style={{ fontSize: Platform.OS === "android" ? rS(13) : rS(12) }}
-//           >
-//             Your last symptoms
-//           </Text>
 
-//           <View>
+//           <CustomModel
+//             modelVisible={modelVisible1}
+//             setModelVisible={setModelVisible1}
+//             closeOnOutsideClick={false}
+//             message={
+//               <LastSymptomsModal
+//                 selectedLastSymptom={selectedLastSymptom}
+//                 onCancel={onCancel1}
+//               />
+//             }
+//           />
+
+//           <CustomModel
+//             modelVisible={modelVisible2}
+//             setModelVisible={setModelVisible2}
+//             closeOnOutsideClick={false}
+//             message={<CycleTracking onCancel={onCancel2} />}
+//           />
+
+//           <View className="p-8 flex-row items-center justify-end">
 //             <TouchableOpacity
-//               className=" bg-[#8A3FFC] h-20 w-40 rounded-xl"
-//               onPress={handleOpenmodal1}
+//               className=" mx-3"
+//               onPress={() => {
+//                 router.push("/profilepage/notifications");
+//               }}
 //             >
-//               <View className=" mb-3 flex-row items-center justify-between p-2">
-//                 <View className=" w-6 h-6">
-//                   <Image
-//                     source={require("@/assets/images/sman.png")}
-//                     style={{
-//                       height: "100%",
-//                       width: "100%",
-//                       // alignSelf: "center",
-//                       borderRadius: 100,
-//                     }}
-//                     contentFit="contain"
-//                     onError={(error) => console.log("Image error:", error)}
-//                   />
-//                 </View>
+//               <Ionicons name="notifications-outline" size={20} color="black" />
+//             </TouchableOpacity>
 
-//                 <View>
-//                   <Text className="text-white">Back Pain</Text>
-//                 </View>
-
-//                 <View className=" items-center justify-center w-5 h-5 rounded-full bg-[#D7CE20]">
-//                   <Text className="text-white">3</Text>
-//                 </View>
-//               </View>
-
-//               <Text className=" text-center text-xs text-white font-[PoppinsMedium]">
-//                 Don’t forget to hydrate
-//               </Text>
+//             <TouchableOpacity
+//               className=" w-6 h-6 "
+//               onPress={() => {
+//                 router.push("/(tabs)/profilepage");
+//               }}
+//             >
+//               <Image
+//                 source={require("@/assets/images/profile-image.png")}
+//                 style={{
+//                   height: "100%",
+//                   width: "100%",
+//                   // alignSelf: "center",
+//                   borderRadius: 100,
+//                 }}
+//                 contentFit="contain"
+//                 onError={(error) => console.log("Image error:", error)}
+//               />
 //             </TouchableOpacity>
 //           </View>
-//         </View>
-//         <View>
-//           <CustomSelectData
-//             onPress={handleOpenmodal}
-//             primary
-//             label="How do you Feel today?"
-//             placeholder="Log "
-//             icon={
-//               <TouchableOpacity>
-//                 <AntDesign name="right" size={24} color="black" />
-//               </TouchableOpacity>
-//             }
-//           />
-//         </View>
 
-//         <View className="my-5">
-//           <CustomSelectData
-//             onPress={handleOpenmodal2}
-//             primary
-//             label="Cycle Tracking"
-//             placeholder="Add your last cycle"
-//             icon={
-//               <TouchableOpacity>
-//                 <AntDesign name="right" size={24} color="black" />
-//               </TouchableOpacity>
-//             }
-//           />
-//         </View>
+//           <View className="px-8 pb-24">
+//             {/* Added bottom padding to prevent content being hidden behind floating button */}
+//             <View className="my-3">
+//               <YourLastSymptoms
+//                 handleOpenLastSymptoms={handleOpenLastSymptoms}
+//               />
+//             </View>
+//             <View>
+//               <CustomSelectData
+//                 onPress={handleOpenmodal}
+//                 primary
+//                 label="How do you Feel today?"
+//                 placeholder="Log "
+//                 icon={
+//                   <TouchableOpacity>
+//                     <AntDesign name="right" size={24} color="black" />
+//                   </TouchableOpacity>
+//                 }
+//               />
+//             </View>
+//             <View className="my-5">
+//               <CustomSelectData
+//                 onPress={handleOpenmodal2}
+//                 primary
+//                 label="Cycle Tracking"
+//                 placeholder={"Add your last cycle"}
+//                 // placeholder={cycleTracking?.data?.data[0]?.note? cycleTracking?.data?.data[0]?.note : "Add your last cycle"}
+//                 icon={
+//                   <TouchableOpacity>
+//                     <AntDesign name="right" size={24} color="black" />
+//                   </TouchableOpacity>
+//                 }
+//               />
+//             </View>
+//             <View className="">
+//               <TabsArticles />
+//             </View>
+//           </View>
+//         </Screen>
 
-//         <View className="">
-//           <TabsArticles />
-//         </View>
-
-//         <View className="absolute top-full left-0 right-0 px-4 pb-8">
+//         {/* Floating button positioned outside of scrollable content */}
+//         <View className="absolute bottom-24 right-10">
 //           <FloatingAiButton />
 //         </View>
 //       </View>
-//     </Screen>
+//     </>
 //   );
 // }
 
 
-
-
+import { useGetArticleApi } from "@/src/api_services/articleApi/articleQuery";
 import FloatingAiButton from "@/src/components/tabs/FloatingAiButton";
 import CycleTracking from "@/src/components/tabs/home-modal/CycleTracking";
 import YourFeelingToday from "@/src/components/tabs/home-modal/YourFeelingToday";
 import LastSymptomsModal from "@/src/components/tabs/home-modal/YourFeelingToday/lastSymptomsModal";
 import TabsArticles from "@/src/components/tabs/TabsArticles";
+import YourLastSymptoms from "@/src/components/tabs/YourLastSymptoms";
 import CustomModel from "@/src/custom-components/CustomModel";
 import CustomSelectData from "@/src/custom-components/CustomSelectData";
+import LoadingOverlay from "@/src/custom-components/LoadingOverlay";
 import Screen from "@/src/layout/Screen";
-import { rS } from "@/src/lib/responsivehandler";
 import { AntDesign, Ionicons } from "@expo/vector-icons";
 import { Image } from "expo-image";
+import { useRouter } from "expo-router";
 import React from "react";
-import { Platform, Text, TouchableOpacity, View } from "react-native";
+import { Platform, TouchableOpacity, View } from "react-native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 export default function HomePage() {
   const [modelVisible, setModelVisible] = React.useState(false);
   const [modelVisible1, setModelVisible1] = React.useState(false);
   const [modelVisible2, setModelVisible2] = React.useState(false);
+  const [selectedLastSymptom, setSelectedLastSymptom] = React.useState(null);
+  const getArticles = useGetArticleApi();
+  const insets = useSafeAreaInsets();
+
+  const router = useRouter();
 
   const handleOpenmodal = () => {
     setModelVisible(true);
@@ -199,7 +201,8 @@ export default function HomePage() {
     setModelVisible(false);
   };
 
-  const handleOpenmodal1 = () => {
+  const handleOpenLastSymptoms = (item: any) => {
+    setSelectedLastSymptom(item);
     setModelVisible1(true);
   };
 
@@ -216,131 +219,122 @@ export default function HomePage() {
   };
 
   return (
-    <View className="flex-1 relative">
-      <Screen scroll={true}>
-        <CustomModel
-          modelVisible={modelVisible}
-          setModelVisible={setModelVisible}
-          closeOnOutsideClick={false}
-          message={<YourFeelingToday onCancel={onCancel} />}
-        />
+    <>
+      <LoadingOverlay
+        isOpen={getArticles.isLoading}
+        animationType="pulse"
+        backdropClassName="..."
+      />
+      <View className="flex-1 relative">
+        <Screen scroll={true}>
+          <CustomModel
+            modelVisible={modelVisible}
+            setModelVisible={setModelVisible}
+            closeOnOutsideClick={false}
+            message={<YourFeelingToday onCancel={onCancel} />}
+          />
 
-        <CustomModel
-          modelVisible={modelVisible1}
-          setModelVisible={setModelVisible1}
-          closeOnOutsideClick={false}
-          message={<LastSymptomsModal onCancel={onCancel1} />}
-        />
+          <CustomModel
+            modelVisible={modelVisible1}
+            setModelVisible={setModelVisible1}
+            closeOnOutsideClick={false}
+            message={
+              <LastSymptomsModal
+                selectedLastSymptom={selectedLastSymptom}
+                onCancel={onCancel1}
+              />
+            }
+          />
 
-        <CustomModel
-          modelVisible={modelVisible2}
-          setModelVisible={setModelVisible2}
-          closeOnOutsideClick={false}
-          message={<CycleTracking onCancel={onCancel2} />}
-        />
+          <CustomModel
+            modelVisible={modelVisible2}
+            setModelVisible={setModelVisible2}
+            closeOnOutsideClick={false}
+            message={<CycleTracking onCancel={onCancel2} />}
+          />
 
-        <View className="p-8 flex-row items-center justify-end">
-          <TouchableOpacity className=" mx-3">
-            <Ionicons name="notifications-outline" size={20} color="black" />
-          </TouchableOpacity>
-
-          <TouchableOpacity className=" w-6 h-6 ">
-            <Image
-              source={require("@/assets/images/profile-image.png")}
-              style={{
-                height: "100%",
-                width: "100%",
-                // alignSelf: "center",
-                borderRadius: 100,
+          <View className="p-8 flex-row items-center justify-end">
+            <TouchableOpacity
+              className=" mx-3"
+              onPress={() => {
+                router.push("/profilepage/notifications");
               }}
-              contentFit="contain"
-              onError={(error) => console.log("Image error:", error)}
-            />
-          </TouchableOpacity>
-        </View>
-
-        <View className="px-8 pb-24">
-          {" "}
-          {/* Added bottom padding to prevent content being hidden behind floating button */}
-          <View className="my-3">
-            <Text
-              className="mb-2 font-[PoppinsMedium] text-black"
-              style={{ fontSize: Platform.OS === "android" ? rS(13) : rS(12) }}
             >
-              Your last symptoms
-            </Text>
+              <Ionicons name="notifications-outline" size={20} color="black" />
+            </TouchableOpacity>
 
+            <TouchableOpacity
+              className=" w-6 h-6 "
+              onPress={() => {
+                router.push("/(tabs)/profilepage");
+              }}
+            >
+              <Image
+                source={require("@/assets/images/profile-image.png")}
+                style={{
+                  height: "100%",
+                  width: "100%",
+                  borderRadius: 100,
+                }}
+                contentFit="contain"
+                onError={(error) => console.log("Image error:", error)}
+              />
+            </TouchableOpacity>
+          </View>
+
+          <View className="px-8 pb-32">
+            {/* Increased bottom padding to ensure content isn't hidden */}
+            <View className="my-3">
+              <YourLastSymptoms
+                handleOpenLastSymptoms={handleOpenLastSymptoms}
+              />
+            </View>
             <View>
-              <TouchableOpacity
-                className=" bg-[#8A3FFC] h-20 w-40 rounded-xl"
-                onPress={handleOpenmodal1}
-              >
-                <View className=" mb-3 flex-row items-center justify-between p-2">
-                  <View className=" w-6 h-6">
-                    <Image
-                      source={require("@/assets/images/sman.png")}
-                      style={{
-                        height: "100%",
-                        width: "100%",
-                        // alignSelf: "center",
-                        borderRadius: 100,
-                      }}
-                      contentFit="contain"
-                      onError={(error) => console.log("Image error:", error)}
-                    />
-                  </View>
-
-                  <View>
-                    <Text className="text-white">Back Pain</Text>
-                  </View>
-
-                  <View className=" items-center justify-center w-5 h-5 rounded-full bg-[#D7CE20]">
-                    <Text className="text-white">3</Text>
-                  </View>
-                </View>
-
-                <Text className=" text-center text-xs text-white font-[PoppinsMedium]">
-                  Don't forget to hydrate
-                </Text>
-              </TouchableOpacity>
+              <CustomSelectData
+                onPress={handleOpenmodal}
+                primary
+                label="How do you Feel today?"
+                placeholder="Log "
+                icon={
+                  <TouchableOpacity>
+                    <AntDesign name="right" size={24} color="black" />
+                  </TouchableOpacity>
+                }
+              />
+            </View>
+            <View className="my-5">
+              <CustomSelectData
+                onPress={handleOpenmodal2}
+                primary
+                label="Cycle Tracking"
+                placeholder={"Add your last cycle"}
+                icon={
+                  <TouchableOpacity>
+                    <AntDesign name="right" size={24} color="black" />
+                  </TouchableOpacity>
+                }
+              />
+            </View>
+            <View className="">
+              <TabsArticles />
             </View>
           </View>
-          <View>
-            <CustomSelectData
-              onPress={handleOpenmodal}
-              primary
-              label="How do you Feel today?"
-              placeholder="Log "
-              icon={
-                <TouchableOpacity>
-                  <AntDesign name="right" size={24} color="black" />
-                </TouchableOpacity>
-              }
-            />
-          </View>
-          <View className="my-5">
-            <CustomSelectData
-              onPress={handleOpenmodal2}
-              primary
-              label="Cycle Tracking"
-              placeholder="Add your last cycle"
-              icon={
-                <TouchableOpacity>
-                  <AntDesign name="right" size={24} color="black" />
-                </TouchableOpacity>
-              }
-            />
-          </View>
-          <View className="">
-            <TabsArticles />
-          </View>
-        </View>
-      </Screen>
+        </Screen>
 
-      {/* Floating button positioned outside of scrollable content */}
-      <View className="absolute bottom-24 right-10">
-        <FloatingAiButton />
+        {/* Floating button with proper positioning for all screen sizes */}
+        <View
+          style={{
+            position: "absolute",
+            bottom: Platform.OS === "ios" ? insets.bottom + 50 : 10,
+            left: 0,
+            right: 0,
+            paddingHorizontal: 32,
+            pointerEvents: "box-none", // Allow touches to pass through empty space
+          }}
+        >
+          <FloatingAiButton />
+        </View>
       </View>
-    </View>
+    </>
   );
 }

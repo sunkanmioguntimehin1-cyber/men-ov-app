@@ -96,6 +96,7 @@
 import { useLoginUser } from "@/src/api_services/authApi/authMutation";
 import CustomButton from "@/src/custom-components/CustomButton";
 import CustomInput from "@/src/custom-components/CustomInput";
+import LoadingOverlay from "@/src/custom-components/LoadingOverlay";
 import KeyboardAwareScreen from "@/src/layout/KeyboardAwareScreen";
 import { rMS, rS } from "@/src/lib/responsivehandler";
 import { Ionicons } from "@expo/vector-icons";
@@ -116,7 +117,7 @@ const LoginScreen = () => {
   } = useForm({
     mode: "onChange",
     defaultValues: {
-      username: "",
+      email: "",
       password: "",
     },
   });
@@ -124,7 +125,7 @@ const LoginScreen = () => {
   const onSubmit = (data: any) => {
     Keyboard.dismiss();
     userLogin.mutate({
-      username: data?.username.toLowerCase(),
+      email: data?.email.toLowerCase(),
       password: data?.password,
     });
   };
@@ -138,6 +139,12 @@ const LoginScreen = () => {
       className="pt-safe"
       extraScrollHeight={50}
     >
+      <LoadingOverlay
+        isOpen={userLogin.isPending} // Required: Controls visibility
+        // message="Login..." // Optional: Loading text
+        animationType="pulse" // Optional: "spin" | "pulse" | "bounce" | "fade"
+        backdropClassName="..." // Optional: Additional backdrop styling
+      />
       <View className="items-center mb-20">
         <View className="w-16 h-14">
           <Image
@@ -161,19 +168,19 @@ const LoginScreen = () => {
         <View className="my-5">
           <Controller
             control={control}
-            name="username"
+            name="email"
             rules={{
-              required: "username is required",
+              required: "email is required",
             }}
             render={({ field: { onChange, onBlur, value } }) => (
               <CustomInput
                 primary
-                label="Username"
-                placeholder="username"
+                label="Email"
+                placeholder="Enter your email"
                 onChangeText={onChange}
                 onBlur={onBlur}
                 value={value}
-                error={errors.username?.message}
+                error={errors.email?.message}
               />
             )}
           />

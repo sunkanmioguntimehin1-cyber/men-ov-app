@@ -3,13 +3,13 @@ import { rS } from "@/src/lib/responsivehandler";
 import React from "react";
 import { Text, View } from "react-native";
 
-const CurrentStatus = () => {
-  const [size, setSize] = React.useState("");
+const CurrentStatus = ({ menopauseStage, setMenopauseStage }:any) => {
+ 
 
-  const sizeData = [
-    { label: "Perimenopause", value: "Perimenopause" },
-    { label: "Menopause", value: "Menopause" },
-    { label: "Postmenopause", value: "Postmenopause" },
+  const menopauseStageData = [
+    { label: "Premenopause", value: "premenopause" },
+    { label: "Perimenopause", value: "perimenopause" },
+    { label: "Postmenopause", value: "postmenopause" },
   ];
   return (
     <View>
@@ -31,9 +31,9 @@ const CurrentStatus = () => {
             Current menopause stage
           </Text>
           <CustomRadio
-            options={sizeData}
-            checkedValue={size}
-            onChange={setSize}
+            options={menopauseStageData}
+            checkedValue={menopauseStage}
+            onChange={setMenopauseStage}
             borderWidth={1}
             style={{ marginBottom: 15 }}
           />

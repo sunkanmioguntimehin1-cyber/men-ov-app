@@ -3,24 +3,28 @@ import CustomSelect from "@/src/custom-components/CustomSelect";
 import CustomSelectData from "@/src/custom-components/CustomSelectData";
 import { AntDesign } from "@expo/vector-icons";
 import React from "react";
-import { Text, TouchableOpacity, View } from "react-native";
+import { Controller } from "react-hook-form";
+import { ScrollView, Text, TouchableOpacity, View } from "react-native";
 
-interface Item {
-  title: string;
-  value: string;
-  price?: string;
-}
 
-const PersonalForm = ({ handleDateBottomSheetOpen, selectedDate }: any) => {
-  const [selected, setSelected] = React.useState<Item | null>(null);
+
+
+
+const PersonalForm = ({
+  handleDateBottomSheetOpen,
+  selectedDate,
+  setSelected,
+  selected,
+  control,
+  errors,
+  handleAddressSelect,
+  handleLocationChange,
+  dataItem,
+  getSearchOptionQuery,
+  option,
+  term,
+}: any) => {
   const [openDropDown, setOpenDropDown] = React.useState(false);
-
-  const dataItem = [
-    { title: "Female", value: "female" },
-    { title: "Male", value: "male" },
-    { title: "Intersex", value: "Intersex" },
-    // { title: "Farmer", value: "Farmer" },
-  ];
 
   return (
     <>
@@ -35,7 +39,24 @@ const PersonalForm = ({ handleDateBottomSheetOpen, selectedDate }: any) => {
         </View>
         <View>
           <View>
-            <CustomInput primary label="Full name" />
+            <Controller
+              control={control}
+              name="fullname"
+              rules={{
+                required: "username is required",
+              }}
+              render={({ field: { onChange, onBlur, value } }) => (
+                <CustomInput
+                  primary
+                  label="Full name"
+                  placeholder="Full name"
+                  onChangeText={onChange}
+                  onBlur={onBlur}
+                  value={value}
+                  error={errors.fullname?.message}
+                />
+              )}
+            />
           </View>
 
           <View className=" my-3">
@@ -54,6 +75,7 @@ const PersonalForm = ({ handleDateBottomSheetOpen, selectedDate }: any) => {
 
           <View className=" my-3">
             <CustomSelectData
+              onPress={handleDateBottomSheetOpen}
               primary
               placeholder="Pick a date"
               label="Date of birth"
@@ -67,7 +89,54 @@ const PersonalForm = ({ handleDateBottomSheetOpen, selectedDate }: any) => {
           </View>
 
           <View className=" my-3">
-            <CustomInput primary label="Address" />
+            <Controller
+              control={control}
+              name="address"
+              rules={{
+                required: "Address is required",
+              }}
+              render={({ field: { onChange, value, onBlur } }) => (
+                <>
+                  <CustomInput
+                    primary
+                    label="Address"
+                    normalize={false} // Normalize input
+                    placeholder="Enter your address"
+                    value={term?.description || value}
+                    onChangeText={(text) => {
+                      onChange(text);
+                      handleLocationChange(text);
+                    }}
+                    onBlur={onBlur}
+                    error={errors.address?.message}
+                  />
+
+                  {term && (
+                    <ScrollView className="z-50 h-auto bg-primaryLight w-full rounded-lg">
+                      {getSearchOptionQuery.isLoading ? (
+                        <Text className="py-10 mx-auto">Loading...</Text>
+                      ) : getSearchOptionQuery.isError ? (
+                        <Text className="py-10 mx-auto">
+                          Something went wrong
+                        </Text>
+                      ) : (
+                        option.map((item: any) => (
+                          <TouchableOpacity
+                            key={item.place_id}
+                            className="my-2 px-3"
+                            onPress={() => handleAddressSelect(item, onChange)}
+                          >
+                            <Text className="font-[PoppinsRegular] text-[#6F649A]">
+                              {item.description}
+                            </Text>
+                          </TouchableOpacity>
+                        ))
+                      )}
+                    </ScrollView>
+                  )}
+                </>
+              )}
+            />
           </View>
         </View>
       </View>

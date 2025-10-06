@@ -1,92 +1,12 @@
-// import CustomButton from "@/src/custom-components/CustomButton";
-// import CustomInput from "@/src/custom-components/CustomInput";
-// import Screen from "@/src/layout/Screen";
-// import { MaterialIcons } from "@expo/vector-icons";
-// import { Image } from "expo-image";
-// import { useRouter } from "expo-router";
-// import React from "react";
-// import { Text, TouchableOpacity, View } from "react-native";
-
-
-// const SignUp = () => {
-//     const router = useRouter();
-//   return (
-//     <Screen className="">
-//       <TouchableOpacity
-//         className="px-8 my-4"
-//         onPress={() => {
-//           router.back();
-//         }}
-//       >
-//         <MaterialIcons name="arrow-back-ios" size={24} color="black" />
-//       </TouchableOpacity>
-//       <View className=" items-center">
-//         <View className=" w-16 h-14 ">
-//           <Image
-//             source={require("@/assets/images/logo.png")}
-//             style={{
-//               height: "100%",
-//               width: "100%",
-//               // alignSelf: "center",
-//               // borderRadius: 100,
-//             }}
-//             contentFit="contain"
-//             onError={(error) => console.log("Image error:", error)}
-//           />
-//         </View>
-//         <View>
-//           <Text className=" font-[PoppinsMedium] text-[#42307D] text-xl">
-//             Create App account!
-//           </Text>
-//         </View>
-//       </View>
-//       <View className="p-8 flex-1">
-//         <View className=" my-5">
-//           <CustomInput primary label="Fullname" placeholder=" Fullname" />
-//         </View>
-
-//         <View>
-//           <CustomInput primary label="Username" placeholder="Username" />
-//         </View>
-//         <View className=" my-5">
-//           <CustomInput primary label="Email" placeholder=" Email" />
-//         </View>
-
-//         <View>
-//           <CustomInput primary label="Password" placeholder="Password" />
-//         </View>
-//       </View>
-
-//       <View className=" p-8  ">
-//         <View>
-//           <CustomButton
-//             primary
-//             title="Sign up"
-//             onPress={() => {
-//               // router.push("/(auth)/login")
-//             }}
-//           />
-//         </View>
-//         <View className="my-5">
-//           <CustomButton
-//             whiteBg
-//             title="Log in"
-//             onPress={() => {
-//               router.push("/(auth)/login");
-//             }}
-//           />
-//         </View>
-//       </View>
-//     </Screen>
-//   );
-// };
-
-// export default SignUp;
 
 
 import { useRegisterUser } from "@/src/api_services/authApi/authMutation";
+import RegisterFormModal from "@/src/components/RegisterFormModal";
+import TermsAndPrivacy from "@/src/components/TermsAndPrivacy";
 import CustomButton from "@/src/custom-components/CustomButton";
 import CustomInput from "@/src/custom-components/CustomInput";
+import CustomModel from "@/src/custom-components/CustomModel";
+import LoadingOverlay from "@/src/custom-components/LoadingOverlay";
 import KeyboardAwareScreen from "@/src/layout/KeyboardAwareScreen";
 import { Ionicons, MaterialIcons } from "@expo/vector-icons";
 import { Image } from "expo-image";
@@ -98,6 +18,8 @@ import { Text, TouchableOpacity, View } from "react-native";
 const SignUp = () => {
   const router = useRouter();
     const [isSecureEntry, setIsSecureEntry] = React.useState(true);
+     const [modelVisible, setModelVisible] = React.useState(false);
+     const [hasAgreed, setHasAgreed] = React.useState(false);
      const registerUser = useRegisterUser();
   
 
@@ -108,7 +30,7 @@ const SignUp = () => {
    } = useForm({
      mode: "onChange",
      defaultValues: {
-       username: "",
+      //  username: "",
        password: "",
        email: "",
        fullname: "",
@@ -126,13 +48,40 @@ const SignUp = () => {
      }
    };
 
-   console.log("registerUser:", registerUser);
+     React.useEffect(() => {
+       setModelVisible(true);
+     }, []);
+
+    const handleAgree = () => {
+      setHasAgreed(true);
+      setModelVisible(false);
+    };
+
+    const onCancel = () => {
+      // router.push("/guess-home");
+      setModelVisible(false);
+    };
+
   return (
     <KeyboardAwareScreen
       scroll={true}
       keyboardAware={true}
       extraScrollHeight={50}
     >
+      <CustomModel
+        modelVisible={modelVisible}
+        setModelVisible={setModelVisible}
+        closeOnOutsideClick={false}
+        message={
+          <RegisterFormModal onCancel={onCancel} onAgree={handleAgree} />
+        }
+      />
+      <LoadingOverlay
+        isOpen={registerUser.isPending} // Required: Controls visibility
+        // message="Login..." // Optional: Loading text
+        animationType="pulse" // Optional: "spin" | "pulse" | "bounce" | "fade"
+        backdropClassName="..." // Optional: Additional backdrop styling
+      />
       <TouchableOpacity
         className="px-8 my-4"
         onPress={() => {
@@ -162,18 +111,18 @@ const SignUp = () => {
       </View>
 
       <View className="p-8 flex-1">
-        <View className="my-5">
+        <View className="mt-5">
           <Controller
             control={control}
             name="fullname"
             rules={{
-              required: "username is required",
+              required: "Full name is required",
             }}
             render={({ field: { onChange, onBlur, value } }) => (
               <CustomInput
                 primary
-                label="Fullname"
-                placeholder="Fullname"
+                label="Full name"
+                placeholder="Full name"
                 onChangeText={onChange}
                 onBlur={onBlur}
                 value={value}
@@ -183,7 +132,7 @@ const SignUp = () => {
           />
         </View>
 
-        <View>
+        {/* <View>
           <Controller
             control={control}
             name="username"
@@ -202,7 +151,7 @@ const SignUp = () => {
               />
             )}
           />
-        </View>
+        </View> */}
 
         <View className="my-5">
           <Controller
@@ -267,6 +216,9 @@ const SignUp = () => {
       </View>
 
       <View className="p-8">
+        <View className="mb-4">
+          <TermsAndPrivacy />
+        </View>
         <View>
           <CustomButton
             primary

@@ -1,11 +1,11 @@
 import YesNoSelector from "@/src/custom-components/YesNoSelector";
 import { rS } from "@/src/lib/responsivehandler";
-import React, { useState } from "react";
+import React from "react";
 import { Text, View } from "react-native";
 
-const HormonalTreatment = () => {
-   const [periodsStoppedAnswer, setPeriodsStoppedAnswer] = useState<"yes" | "no" | null>(null);
-  
+const HormonalTreatment = ({ isOnHormoneTherapy, setIsOnHormoneTherapy }:any) => {
+  console.log("isOnHormoneTherapy", isOnHormoneTherapy);
+
   return (
     <View>
       <View className=" items-center my-5">
@@ -26,8 +26,8 @@ const HormonalTreatment = () => {
             Are you currently using hormone therapy (HRT)?
           </Text>
           <YesNoSelector
-            onSelectionChange={(value) => setPeriodsStoppedAnswer(value)}
-            selectedValue={periodsStoppedAnswer}
+            onSelectionChange={(value) => setIsOnHormoneTherapy(value)}
+            selectedValue={isOnHormoneTherapy}
             primaryColor="#6941C6" // Your brand purple
           />
         </View>

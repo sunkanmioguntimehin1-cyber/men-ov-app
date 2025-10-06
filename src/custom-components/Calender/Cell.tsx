@@ -1,8 +1,8 @@
 import React from "react";
 import {
-    StyleSheet,
-    Text,
-    TouchableOpacity,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
 } from "react-native";
 
 interface CellProps {
@@ -72,7 +72,7 @@ const styles = StyleSheet.create({
     color: "#bdbdbd",
   },
   selected: {
-    backgroundColor: "#007AFF",
+    backgroundColor: "#8A3FFC",
   },
   selectedText: {
     color: "#ffffff",
@@ -80,7 +80,7 @@ const styles = StyleSheet.create({
   },
   hasTimeSlots: {
     backgroundColor: "#d4edda",
-  } 
+  },
 });
 
 export default Cell;

@@ -1,13 +1,31 @@
-import CustomInput from '@/src/custom-components/CustomInput';
-import CustomSelect from '@/src/custom-components/CustomSelect';
-import { AntDesign, Entypo } from '@expo/vector-icons';
+import {
+  useGetUploadUrl,
+  useImageUpload,
+} from "@/src/api_services/uploadApi/uploadMutations";
+import CustomInput from "@/src/custom-components/CustomInput";
+import CustomSelectData from "@/src/custom-components/CustomSelectData";
+import useSymtomsStore from "@/src/store/symtomsStore";
+import { AntDesign, Entypo } from "@expo/vector-icons";
 import { Image } from "expo-image";
 import * as ImagePicker from "expo-image-picker";
-import React from 'react';
-import { Text, TouchableOpacity, View } from "react-native";
+import React from "react";
+import { Controller } from "react-hook-form";
+import { ActivityIndicator, Text, TouchableOpacity, View } from "react-native";
+import SeverityLevel from "../severityLevel";
 
 type Prop = {
   selectedList: string | null;
+  errors?: any;
+  control?: any;
+  selected?: Item;
+  setSelected?: () => void;
+  selectedDate?: Date | any;
+  handleDateBottomSheetOpen?: any;
+  handleDurationBottomSheetOpen?: any;
+  durationData?: string;
+  selectedSeverityLevel?: number | null;
+  setSelectedSeverityLevel?: () => void;
+  setPublicUrls?: any;
 };
 
 interface Item {
@@ -16,46 +34,62 @@ interface Item {
   price?: string;
 }
 
-const SymptomsDescriptions = ({ selectedList }: Prop) => {
-  const [selected, setSelected] = React.useState<Item | null>(null);
-  const [openDropDown, setOpenDropDown] = React.useState(false);
+const SymptomsDescriptions = ({
+  selectedList,
+  selectedDate,
+  handleDateBottomSheetOpen,
+  handleDurationBottomSheetOpen,
+  errors,
+  control,
+  durationData,
+  selectedSeverityLevel,
+  setSelectedSeverityLevel,
+  setPublicUrls,
+  selected,
+  setSelected,
+}: Prop) => {
+  const [storeData, setStoreData] = React.useState<string | any>(null);
+
   const [imageSelected, setImageSelected] = React.useState<any>(null);
 
+  const clearPublicUrls = useSymtomsStore().clearPublicUrls;
+  const setSymtomsDataList = useSymtomsStore().setSymtomsDataList;
+  const currentPublicUrls = useSymtomsStore().symtomsDataList.publicUrl;
+
+  React.useEffect(() => {
+    if (imageSelected) {
+      getUploadUrlData.mutate({
+        fileName: imageSelected.fileName,
+      });
+    }
+  }, [imageSelected]);
+
+  const handleStoreData = (data: any) => {
+    console.log(data, "coming from the data")
+    if(data){
+    setStoreData(data);
+
+    }
+    if (data?.publicUrl) {
+      setSymtomsDataList({
+        publicUrl: [...currentPublicUrls, data.publicUrl],
+      }); // keep track of only URLs
+      setPublicUrls((prev: any) => [...prev, data.publicUrl]); // keep track of only URLs
+    }
+  };
 
   //UPLOADING
-//   const {
-//     uploadImage: imageUploadedSelected,
-//     imageData: itemImgData,
-//     isImageUploadPending: ImgIsPending,
-//     isImageUploadError: ImgIsError,
-//     resetImageData,
-//   } = useImageUpload();
+  const {
+    uploadImage: imageUploadedSelected,
+    imageData: itemImgData,
+    isImageUploadPending: ImgIsPending,
+    isImageUploadError: ImgIsError,
+    resetImageData,
+  } = useImageUpload(storeData);
 
-  const SeverityLevelData = [
-    {
-      level: "Lvl 1",
-      levelColor: "#20D72A",
-    },
-    {
-      level: "Lvl 2",
-      levelColor: "#D7CE20",
-    },
-    {
-      level: "Lvl 3",
-      levelColor: "#D77F20",
-    },
-    {
-      level: "Lvl 4",
-      levelColor: "#D72020",
-    },
-  ];
+  const getUploadUrlData = useGetUploadUrl(handleStoreData);
 
-  const dataItem = [
-    { title: "Female", value: "female" },
-    { title: "Male", value: "male" },
-    { title: "Intersex", value: "Intersex" },
-    // { title: "Farmer", value: "Farmer" },
-  ];
+  console.log("storeDatacompone:", storeData);
 
   const handleImagePick = async () => {
     try {
@@ -68,100 +102,107 @@ const SymptomsDescriptions = ({ selectedList }: Prop) => {
       });
 
       if (!result.canceled) {
-        // imageUploadedSelected(result.assets[0].uri);
+        imageUploadedSelected(result.assets[0].uri);
 
-        setImageSelected(result.assets[0].uri);
+        setImageSelected(result.assets[0]);
       }
     } catch (error) {
       console.log("error from image upload", error);
     }
   };
 
+ 
+
   const handleCloseImage = () => {
     setImageSelected(null);
-    // resetImageData();
+    resetImageData();
+    clearPublicUrls();
   };
   return (
     <View>
       <View>
-        <CustomInput
-          primary
-          label="Symptoms"
-          placeholder="Back Pain"
-          //   value={selected || undefined}
+        <Controller
+          control={control}
+          name="symptoms"
+          rules={{
+            required: "Symptoms is required",
+          }}
+          render={({ field: { onChange, onBlur, value } }) => (
+            <CustomInput
+              primary
+              label="Symptoms"
+              // placeholder="Back Pain"
+              onChangeText={onChange}
+              onBlur={onBlur}
+              value={value}
+              error={errors.symptoms?.message}
+              //   value={selected || undefined}
+            />
+          )}
         />
       </View>
 
       <View className="my-3">
-        <Text>Severity Level</Text>
-
-        <View className="flex-row items-center justify-between">
-          {SeverityLevelData.map((item) => (
-            <>
-              <TouchableOpacity
-                key={item.level}
-                className=" w-20 h-12 items-center justify-center border border-[#D0D5DD] rounded-xl my-3"
-              >
-                <Text className=" font-[PoppinsRegular] text-[#667085]">
-                  {item.level}
-                </Text>
-              </TouchableOpacity>
-            </>
-          ))}
-        </View>
+        <SeverityLevel
+          selectedSeverityLevel={selectedSeverityLevel}
+          setSelectedSeverityLevel={setSelectedSeverityLevel}
+        />
       </View>
 
-      <View className=" flex-row items-center justify-between">
+      <View className=" ">
         <View>
-          <CustomSelect
-            label="When did happen"
+          <CustomSelectData
+            onPress={handleDateBottomSheetOpen}
             primary
-            selected={selected}
-            setSelected={setSelected}
-            openDropDown={openDropDown}
-            setOpenDropDown={setOpenDropDown}
-            placeholder="Choose"
-            dataItem={dataItem}
-            // style={{ borderRadius: 100 }}
+            placeholder="Pick a date"
+            label="When did happen"
+            value={selectedDate}
+            icon={
+              <TouchableOpacity onPress={handleDateBottomSheetOpen}>
+                <AntDesign name="down" size={20} color="#1E1D2F" />
+              </TouchableOpacity>
+            }
           />
         </View>
 
         <View>
-          <CustomSelect
-            label="How long did it last"
+          <CustomSelectData
+            onPress={handleDurationBottomSheetOpen}
             primary
-            selected={selected}
-            setSelected={setSelected}
-            openDropDown={openDropDown}
-            setOpenDropDown={setOpenDropDown}
+            label="How long did it last"
             placeholder="Choose"
-            dataItem={dataItem}
-            // style={{ borderRadius: 100 }}
+            value={durationData}
+            icon={
+              <TouchableOpacity onPress={handleDurationBottomSheetOpen}>
+                <AntDesign name="down" size={20} color="#1E1D2F" />
+              </TouchableOpacity>
+            }
           />
         </View>
       </View>
 
       <View className="mt-5 ">
         {imageSelected ? (
-          <View className="w-full h-56  bg-white items-center justify-center rounded-2xl">
-            {/* {imageSelected ? (
+          <View className="w-full h-56  bg-blue-500 items-center justify-center rounded-2xl">
+            {ImgIsPending ? (
               <View>
                 <ActivityIndicator size={40} />
               </View>
-            ) : ( */}
-            <View className=" flex-row ">
-              <View className=" w-80 h-56 p-3">
-                <Image
-                  source={{ uri: imageSelected }}
-                  style={{ width: "100%", height: "100%" }}
-                />
-              </View>
+            ) : (
+              <View className=" flex-row ">
+                <View className=" w-80 h-56 p-3">
+                  <Image
+                    source={{ uri: imageSelected.uri || storeData.publicUrl }}
+                    style={{ width: "100%", height: "100%" }}
+                    contentFit="cover"
+                  />
+                </View>
 
-              <TouchableOpacity onPress={handleCloseImage} className=''>
-                <AntDesign name="close" size={18} color="black" />
-              </TouchableOpacity>
-            </View>
-            {/* )} */}
+                <TouchableOpacity onPress={handleCloseImage} className="">
+                  <AntDesign name="close" size={18} color="black" />
+                </TouchableOpacity>
+              </View>
+            )}
           </View>
         ) : (
           <View>
@@ -171,12 +212,13 @@ const SymptomsDescriptions = ({ selectedList }: Prop) => {
             >
               {/* <View className=" my-3 w-[131px] flex-row items-center ml-2 bg-[#F9F5FF] rounded-full px-4 py-3"> */}
               <View className="">
-                <Entypo name="image-inverted" size={20} color="#8A3FFC" />
+                <Entypo name="image-inverted" size={15} color="#8A3FFC" />
               </View>
-              <Text className="font-[PoppinsMedium] mx-2">Add image</Text>
+              <Text className="font-[PoppinsMedium] text-sm mx-2">
+                Add image
+              </Text>
               {/* </View> */}
             </TouchableOpacity>
-            
           </View>
         )}
       </View>
@@ -184,4 +226,4 @@ const SymptomsDescriptions = ({ selectedList }: Prop) => {
   );
 };
 
-export default SymptomsDescriptions
+export default SymptomsDescriptions;

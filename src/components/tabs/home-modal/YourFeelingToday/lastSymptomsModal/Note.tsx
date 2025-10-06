@@ -1,23 +1,22 @@
 import { rS, rV } from '@/src/lib/responsivehandler';
 import React from 'react';
-import { Controller, useForm } from 'react-hook-form';
+import { Controller } from 'react-hook-form';
 import { Text, TextInput, View } from 'react-native';
 
-const Note = () => {
+const Note = ({errors, control }:any) => {
 
-       const {
-         control,
-         handleSubmit,
-         reset,
-         watch,
-         formState: { errors, isValid },
-       } = useForm({
-         mode: "onChange",
-         defaultValues: {
-          
-           notes: "",
-         },
-       });
+      //  const {
+      //    control,
+      //    handleSubmit,
+      //    reset,
+      //    watch,
+      //    formState: { errors, isValid },
+      //  } = useForm({
+      //    mode: "onChange",
+      //    defaultValues: {
+      //      notes: "",
+      //    },
+      //  });
   return (
     <View className="mt-3 mb-5">
       <Text className="mb-2 font-[PoppinsMedium] " style={{ fontSize: rS(12) }}>
@@ -38,10 +37,10 @@ const Note = () => {
               onChangeText={onChange}
               onBlur={onBlur}
               style={{
-                fontSize: rS(14),
+                fontSize: rS(10),
                 color: "#000",
                 textAlignVertical: "top",
-                minHeight: rV(100),
+                minHeight: rV(50),
               }}
             />
           </View>
