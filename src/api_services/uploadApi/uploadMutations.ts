@@ -22,6 +22,12 @@ export const useImageUpload = (storeData: any) => {
     mutationFn: uploadImageApi,
   });
 
+  console.log("status777", status);
+  console.log("data777", data);
+  console.log("isPending0000", isPending);
+
+
+
   const uploadImage = async (image: any) => {
     console.log("storeDataNew20004", storeData);
     // console.log("publicUrlNew300", storeData.uploadUrl);

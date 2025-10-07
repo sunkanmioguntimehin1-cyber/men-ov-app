@@ -36,7 +36,7 @@ export const uploadImageApi2 = async (data: any) => {
 
 
 export const uploadImageApi = async (data: any) => {
-  console.log("datazNew6000", data);
+  console.log("datazNew3000", data);
   try {
     // Fetch the file from the URI and convert to blob
     const response = await fetch(data.fileUri);

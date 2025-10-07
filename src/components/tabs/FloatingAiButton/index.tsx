@@ -97,16 +97,19 @@ const FloatingAiButton = () => {
               AI-Powered Tool
             </Text>
 
-            <View className=" flex-row items-center justify-between ">
-              <View className="flex-1">
-                <AntDesign name="adduser" size={26} color="#8A3FFC" />
-              </View>
-              <View className=" flex-1 mx-3 bg-[#F4EBFF] border border-[#EAECF0] p-4 rounded-lg">
-                <Text className=" text-base font-[PoppinsRegulars]">
+       
+            <View className="flex-row items-center justify-between">
+              
+              <AntDesign name="adduser" size={26} color="#8A3FFC" />
+
+             
+              <View className="flex-1 mx-3 bg-[#F4EBFF] border border-[#EAECF0] p-4 rounded-lg">
+                <Text className="text-base font-[PoppinsRegular]">
                   Ask about your menopausal symptoms
                 </Text>
               </View>
 
+              {/* Send button */}
               <TouchableOpacity
                 onPress={() => {
                   router.push("/(tabs)/homepage/chat-with-ai");
