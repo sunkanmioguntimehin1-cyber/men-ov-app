@@ -118,6 +118,26 @@ const LastSymptomsModal = ({ onCancel, selectedLastSymptom }: any) => {
 
   const getUploadUrlData = useGetUploadUrl(handleStoreData);
 
+  const inferType = (fileName?: string) => {
+    if (!fileName) return undefined;
+    const ext = fileName.split(".").pop()?.toLowerCase();
+    switch (ext) {
+      case "jpg":
+      case "jpeg":
+        return "image/jpeg";
+      case "png":
+        return "image/png";
+      case "webp":
+        return "image/webp";
+      case "heic":
+        return "image/heic";
+      case "heif":
+        return "image/heif";
+      default:
+        return undefined;
+    }
+  };
+
   //UPLOADING
   const {
     uploadImage: imageUploadedSelected,
@@ -126,6 +146,15 @@ const LastSymptomsModal = ({ onCancel, selectedLastSymptom }: any) => {
     isImageUploadError: ImgIsError,
     resetImageData,
   } = useImageUpload(storeData);
+
+  React.useEffect(() => {
+    if (imageSelected?.fileName) {
+      getUploadUrlData.mutate({
+        fileName: imageSelected.fileName,
+        contentType: inferType(imageSelected.fileName),
+      });
+    }
+  }, [imageSelected, getUploadUrlData]);
 
   const onSubmit = (data: any) => {
     const payload = {

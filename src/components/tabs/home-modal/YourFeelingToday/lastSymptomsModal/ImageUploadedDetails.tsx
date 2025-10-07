@@ -16,6 +16,26 @@ const ImageUploadedDetails = ({
   const [openDropDown, setOpenDropDown] = useState(false);
   const ref = React.useRef<ICarouselInstance>(null);
 
+  const inferType = (fileName?: string) => {
+    if (!fileName) return undefined;
+    const ext = fileName.split(".").pop()?.toLowerCase();
+    switch (ext) {
+      case "jpg":
+      case "jpeg":
+        return "image/jpeg";
+      case "png":
+        return "image/png";
+      case "webp":
+        return "image/webp";
+      case "heic":
+        return "image/heic";
+      case "heif":
+        return "image/heif";
+      default:
+        return undefined;
+    }
+  };
+
   const handleImagePick = async () => {
     try {
       await ImagePicker.requestCameraPermissionsAsync();
@@ -27,9 +47,10 @@ const ImageUploadedDetails = ({
       });
 
       if (!result.canceled) {
-        imageUploadedSelected(result.assets[0].uri);
+        const picked = result.assets[0];
+        imageUploadedSelected(picked.uri, inferType(picked.fileName));
 
-        setImageSelected(result.assets[0].uri);
+        setImageSelected(picked);
       }
     } catch (error) {
       console.log("error from image upload", error);
@@ -62,7 +83,7 @@ const ImageUploadedDetails = ({
               <View className=" w-80 h-56 p-3">
                 <Image
                   source={{
-                    uri: selectedLastSymptom?.symptomImages[0],
+                    uri: imageSelected?.uri || selectedLastSymptom?.symptomImages[0],
                   }}
                   style={{ width: "100%", height: "100%" }}
                   contentFit="cover"

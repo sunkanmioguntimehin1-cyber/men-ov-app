@@ -35,21 +35,34 @@ export const uploadImageApi2 = async (data: any) => {
 
 
 
-export const uploadImageApi = async (data: any) => {
+export const uploadImageApi = async (
+  data: {
+    uploadUrl: string;
+    fileUri: string;
+    publicUrl?: string;
+    contentType?: string;
+    headers?: Record<string, string>;
+  }
+) => {
   console.log("datazNew3000", data);
   try {
-    // Fetch the file from the URI and convert to blob
+    // Read local file into a Blob
     const response = await fetch(data.fileUri);
     const blob = await response.blob();
 
-    console.log("blob1111", blob);
-    console.log("response999999", response);
+    const resolvedContentType = data.contentType || blob.type || "application/octet-stream";
 
+    // Merge any server-provided headers (e.g., x-amz-acl) with Content-Type
+    const headers: Record<string, string> = {
+      "Content-Type": resolvedContentType,
+      ...(data.headers || {}),
+    };
 
-    // Upload to S3 using raw binary data (NOT FormData)
-    const res = await axios.put(data.uploadUrl, blob);
+    // Upload to S3 using raw binary data with correct headers
+    await axios.put(data.uploadUrl, blob, { headers });
 
-    return res.data;
+    // Return the eventual public URL so callers can persist/use it
+    return data.publicUrl;
   } catch (error) {
     console.error("Error upload Image Transaction:", error);
     throw error;

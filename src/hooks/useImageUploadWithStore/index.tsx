@@ -18,7 +18,7 @@ export const useImageUploadWithStore = () => {
   }, []);
 
   // Initialize hooks with current publicUrl
-  const getUploadUrlData = useGetUploadUrl(handleStoreData, publicUrl);
+  const getUploadUrlData = useGetUploadUrl(handleStoreData);
   const {
     uploadImage: imageUploadedSelected,
     imageData: itemImgData,
@@ -28,10 +28,31 @@ export const useImageUploadWithStore = () => {
   } = useImageUpload(storeData);
 
   // Auto-trigger upload URL when image is selected
+  const inferType = (fileName?: string) => {
+    if (!fileName) return undefined;
+    const ext = fileName.split(".").pop()?.toLowerCase();
+    switch (ext) {
+      case "jpg":
+      case "jpeg":
+        return "image/jpeg";
+      case "png":
+        return "image/png";
+      case "webp":
+        return "image/webp";
+      case "heic":
+        return "image/heic";
+      case "heif":
+        return "image/heif";
+      default:
+        return undefined;
+    }
+  };
+
   React.useEffect(() => {
     if (imageSelected) {
       getUploadUrlData.mutate({
         fileName: imageSelected.fileName,
+        contentType: inferType(imageSelected.fileName),
       });
     }
   }, [imageSelected, getUploadUrlData]);
@@ -48,8 +69,9 @@ export const useImageUploadWithStore = () => {
       });
 
       if (!result.canceled) {
-        imageUploadedSelected(result.assets[0].uri);
-        setImageSelected(result.assets[0]);
+        const picked = result.assets[0];
+        imageUploadedSelected(picked.uri, inferType(picked.fileName));
+        setImageSelected(picked);
       }
     } catch (error) {
       console.log("error from image upload", error);
