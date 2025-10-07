@@ -60,6 +60,8 @@ const SymptomsDescriptions = ({
     if (imageSelected) {
       getUploadUrlData.mutate({
         fileName: imageSelected.fileName,
+        contentType:
+          imageSelected.type || imageSelected.mimeType || inferType(imageSelected.fileName),
       });
     }
   }, [imageSelected]);
@@ -91,6 +93,26 @@ const SymptomsDescriptions = ({
 
   console.log("storeDatacompone:", storeData);
 
+  const inferType = (fileName?: string) => {
+    if (!fileName) return undefined;
+    const ext = fileName.split(".").pop()?.toLowerCase();
+    switch (ext) {
+      case "jpg":
+      case "jpeg":
+        return "image/jpeg";
+      case "png":
+        return "image/png";
+      case "webp":
+        return "image/webp";
+      case "heic":
+        return "image/heic";
+      case "heif":
+        return "image/heif";
+      default:
+        return undefined;
+    }
+  };
+
   const handleImagePick = async () => {
     try {
       await ImagePicker.requestCameraPermissionsAsync();
@@ -102,9 +124,10 @@ const SymptomsDescriptions = ({
       });
 
       if (!result.canceled) {
-        imageUploadedSelected(result.assets[0].uri);
+        const picked = result.assets[0];
+        imageUploadedSelected(picked.uri, inferType(picked.fileName));
 
-        setImageSelected(result.assets[0]);
+        setImageSelected(picked);
       }
     } catch (error) {
       console.log("error from image upload", error);
