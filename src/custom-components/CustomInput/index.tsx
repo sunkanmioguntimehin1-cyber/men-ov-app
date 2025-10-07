@@ -254,7 +254,7 @@ const CustomInput = ({
     if (primary)
       return `border ${
         error ? "border-red-500" : "border-[#EAEAEA]"
-      } bg-onsurface`;
+      } bg-white`;
     if (whiteBg)
       return `bg-[#ffffff] border ${
         error ? "border-red-500" : "border-divider"
@@ -347,7 +347,8 @@ const CustomInput = ({
               height: multiline ? rV(76) : rV(36),
               flex: 1,
               padding: 2,
-              color: "#000",
+              color: "#000000",
+              backgroundColor: "#ffffff",
               paddingTop: multiline ? 8 : 0,
             }}
           />
