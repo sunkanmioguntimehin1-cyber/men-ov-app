@@ -62,6 +62,20 @@ const handleToggle = (
   });
 };
 
+// Handle frequency selection (radio buttons)
+const handleFrequencyChange = (value: string) => {
+  setSelectedFrequency(value);
+  notificationSettingsUpdate.mutate({
+    isAll: allowNotifications,
+    isHealth: healthReminders,
+    isSymptomTracker: symptomTrackerReminders,
+    isCycleTracker: cycleTrackingAlerts,
+    isAi: aiSuggestions,
+    isCommunity: communityEngagement,
+    frequency: value,
+  });
+};
+
 
   return (
     <SafeScreen className="bg-white">
@@ -180,13 +194,11 @@ const handleToggle = (
                 <TouchableOpacity
                   key={opt.value}
                   className="flex-row items-center space-x-2"
+                  onPress={() => handleFrequencyChange(opt.value)}
                 >
                   <RadioButton
                     isSelected={selectedFrequency === opt.value}
-                    // onSelect={() => setSelectedFrequency(opt.value)}
-                    onSelect={() =>
-                      handleToggle(setSelectedFrequency, opt.value)
-                    }
+                    onSelect={() => handleFrequencyChange(opt.value)}
                   />
                   <Text className="text-base mx-2 font-[PoppinsMedium] text-black">
                     {opt.label}
