@@ -61,3 +61,13 @@ export const updateNotificationSettings = async (data: any) => {
     throw error;
   }
 };
+
+export const getUserChat = async () => {
+  try {
+    const res = await axiosInstance.get(`/user/chat?mode=chat-only`);
+    return res.data;
+  } catch (error) {
+    console.error("getUserChat:", error);
+    throw error;
+  }
+};
