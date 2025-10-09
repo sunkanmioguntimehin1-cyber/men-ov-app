@@ -1,12 +1,49 @@
+import { useGetUserChat } from '@/src/api_services/userApi/userQuery';
 import { AntDesign, MaterialIcons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import React, { useEffect, useRef } from 'react';
-import { Animated, Easing, Text, TouchableOpacity, View } from 'react-native';
+import {
+  Alert,
+  Animated,
+  Easing,
+  Linking,
+  Text,
+  TouchableOpacity,
+  View
+} from 'react-native';
 
 const FloatingAiButton = () => {
   const router=useRouter()
   const bounceAnim = useRef(new Animated.Value(0)).current;
   const pulseAnim = useRef(new Animated.Value(0)).current;
+
+  const getUserChatAi = useGetUserChat()
+
+  console.log("getUserChatAi:", getUserChatAi.data);
+
+
+  const openReceiptInBrowser = async () => {
+  
+    try {
+      // const result = await getReceipt.refetch(); // Manually fetch
+      // const uri = result.data?.url;
+    const uri = getUserChatAi.data.chatUrl;
+
+    if (!uri) {
+      Alert.alert("No  chat Url found");
+      return;
+    }
+
+      const supported = await Linking.canOpenURL(uri);
+      if (supported) {
+        await Linking.openURL(uri);
+      } else {
+        Alert.alert("Can't open this URL:", uri);
+      }
+    } catch (error) {
+      Alert.alert("Failed to fetch receipt.");
+    }
+  };
 
   useEffect(() => {
     Animated.loop(
@@ -97,12 +134,12 @@ const FloatingAiButton = () => {
               AI-Powered Tool
             </Text>
 
-       
-            <View className="flex-row items-center justify-between">
-              
+            <TouchableOpacity
+              className="flex-row items-center justify-between"
+              onPress={openReceiptInBrowser}
+            >
               <AntDesign name="adduser" size={26} color="#8A3FFC" />
 
-             
               <View className="flex-1 mx-3 bg-[#F4EBFF] border border-[#EAECF0] p-4 rounded-lg">
                 <Text className="text-base font-[PoppinsRegular]">
                   Ask about your menopausal symptoms
@@ -111,13 +148,14 @@ const FloatingAiButton = () => {
 
               {/* Send button */}
               <TouchableOpacity
-                onPress={() => {
-                  router.push("/(tabs)/homepage/chat-with-ai");
-                }}
+                // onPress={() => {
+                //   router.push("/(tabs)/homepage/chat-with-ai");
+                // }}
+                onPress={openReceiptInBrowser}
               >
                 <MaterialIcons name="send" size={26} color="#8A3FFC" />
               </TouchableOpacity>
-            </View>
+            </TouchableOpacity>
 
             <View className=" my-2">
               <Text>We care about your data in our privacy policy.</Text>
