@@ -33,10 +33,8 @@ export const uploadImageApi2 = async (data: any) => {
   }
 };
 
-
-
-export const uploadImageApi = async (data: any) => {
-  console.log("datazNew6000", data);
+export const uploadImageApi23 = async (data: any) => {
+  console.log("datazNew3000", data);
   try {
     // Fetch the file from the URI and convert to blob
     const response = await fetch(data.fileUri);
@@ -45,9 +43,14 @@ export const uploadImageApi = async (data: any) => {
     console.log("blob1111", blob);
     console.log("response999999", response);
 
+    const headers = {
+      "Content-Type": "application/octet-stream",
+    };
+
+    console.log("headers400", headers);
 
     // Upload to S3 using raw binary data (NOT FormData)
-    const res = await axios.put(data.uploadUrl, blob);
+    const res = await axios.put(data.uploadUrl, blob, { headers });
 
     return res.data;
   } catch (error) {
@@ -56,5 +59,27 @@ export const uploadImageApi = async (data: any) => {
   }
 };
 
+export const uploadImageApi = async (data: any) => {
+  console.log("datazNew3000", data);
+  try {
+    // Fetch the file from the URI and convert to blob
 
+    let fileInfo = {
+      uri: data,
+      type: "*/*",
+      name: "icon.png",
+    };
+    const headers = {
+      "Content-Type": "application/octet-stream",
+    };
 
+    console.log("headers400", headers);
+
+    const res = await axios.put(data.uploadUrl, fileInfo, { headers });
+
+    return res.data;
+  } catch (error) {
+    console.error("Error upload Image Transaction:", error);
+    throw error;
+  }
+};

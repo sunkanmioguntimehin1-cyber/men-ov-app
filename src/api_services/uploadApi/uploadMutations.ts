@@ -17,10 +17,14 @@ export const useGetUploadUrl = (handleStoreData: (data: any) => void) => {
   });
 };
 
-export const useImageUpload = (storeData: any) => {
+export const useImageUpload2 = (storeData: any) => {
   const { mutate, data, isPending, isError, reset, status } = useMutation({
     mutationFn: uploadImageApi,
   });
+
+  console.log("status777", status);
+  console.log("data777", data);
+  console.log("isPending0000", isPending);
 
   const uploadImage = async (image: any) => {
     console.log("storeDataNew20004", storeData);
@@ -45,5 +49,32 @@ export const useImageUpload = (storeData: any) => {
     isImageUploadPending: isPending,
     isImageUploadError: isError,
     resetImageData,
+  };
+};
+
+
+export const useImageUpload = (storeData: any) => {
+  const { mutate, data, isPending, isError, reset, status } = useMutation({
+    mutationFn: uploadImageApi,
+  });
+
+  const uploadImage = async (image: string) => {
+    mutate({
+      uploadUrl: storeData?.uploadUrl,
+      fileUri: image,
+    });
+  };
+
+  const resetImageData = () => {
+    reset();
+  };
+
+  return {
+    uploadImage,
+    imageData: data,
+    isImageUploadPending: isPending,
+    isImageUploadError: isError,
+    resetImageData,
+    status, // Good for debugging
   };
 };
