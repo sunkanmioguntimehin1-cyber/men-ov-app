@@ -42,11 +42,7 @@ const LastSymptomsModal = ({ onCancel, selectedLastSymptom }: any) => {
   const [customTrigger, setCustomTrigger] = React.useState("");
   const [storeData, setStoreData] = React.useState<string | any>(null);
   const [imageSelected, setImageSelected] = React.useState<any>(null);
-
-
-
-  console.log("selectedLastSymptom", selectedLastSymptom);
-  console.log("selectedSeverityLevel", selectedSeverityLevel);
+  const [isDone, setIsDone] = React.useState(false);
 
   const toggleTrigger = (trigger: string) => {
     setSelectedTriggers((prev) =>
@@ -98,8 +94,13 @@ const LastSymptomsModal = ({ onCancel, selectedLastSymptom }: any) => {
     },
   ];
 
+  const handleIsDone = () => {
+    setIsDone(true);
+  };
+
   const handleWelconeBtn = () => {
     onCancel();
+    setIsDone(false);
   };
 
   React.useEffect(() => {
@@ -158,11 +159,13 @@ const LastSymptomsModal = ({ onCancel, selectedLastSymptom }: any) => {
   };
 
   const updateLogDetails = useUpdateLogApi(onCancel);
-  const closeLog = useCloseLogApi(onCancel);
+  const closeLog = useCloseLogApi(handleIsDone);
+
+  console.log("selectedLastSymptom", selectedLastSymptom);
 
   return (
     <>
-      {selectedLastSymptom.isClosed === false && (
+      {!isDone && (
         <View className=" h-[600px] w-96 p-5 bg-white rounded-lg  shadow-lg overflow-hidden">
           <View className=" flex-row items-center justify-between">
             <Text className=" font-[PoppinsSemiBold] text-base">
@@ -266,10 +269,10 @@ const LastSymptomsModal = ({ onCancel, selectedLastSymptom }: any) => {
           </View>
         </View>
       )}
-      {selectedLastSymptom.isClosed === true && (
+      {isDone && (
         <View className="h-[550px] w-96 p-5 bg-white rounded-xl  shadow-lg overflow-hidden">
           <ImageBackground
-            source={require("@/assets/images/isdonebg.png")}
+            source={require("@/assets/images/done2.gif")}
             className="w-full h-full"
           >
             <View className=" flex-row items-center justify-between">

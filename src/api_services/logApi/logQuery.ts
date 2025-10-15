@@ -1,6 +1,6 @@
 
 import { useQuery } from "@tanstack/react-query";
-import { getCycleTrackingApi, getLogApi } from ".";
+import { getCycleTrackingApi, getCycleTrackinglatestApi, getLogApi } from ".";
 
 
 
@@ -18,4 +18,12 @@ export const useCycleTrackingApi = () => {
   });
 };
 
+export const useCycleTrackingLatest = () => {
+  return useQuery({
+    queryKey: ["get-cycle-tracking-latest"],
+    queryFn: getCycleTrackinglatestApi,
+  });
+};
+
+;
 

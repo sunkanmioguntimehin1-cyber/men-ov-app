@@ -14,6 +14,10 @@ const LogCycle = ({
   notePublicUrls,
   setNotePublicUrls,
 }: any) => {
+   
+  
+
+   
   return (
     <View className="my-3">
       <Text
@@ -31,7 +35,6 @@ const LogCycle = ({
           value={selectedDate}
           icon={
             <TouchableOpacity onPress={handleDateBottomSheetOpen}>
-              {/* <AntDesign name="down" size={20} color="#1E1D2F" /> */}
               <Feather name="calendar" size={24} className="!text-primary" />
             </TouchableOpacity>
           }

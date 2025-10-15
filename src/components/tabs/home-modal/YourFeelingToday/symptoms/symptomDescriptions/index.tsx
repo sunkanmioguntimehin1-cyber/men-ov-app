@@ -183,7 +183,7 @@ const SymptomsDescriptions = ({
 
       <View className="mt-5 ">
         {imageSelected ? (
-          <View className="w-full h-56  bg-blue-500 items-center justify-center rounded-2xl">
+          <View className="w-full h-56 border border-primary   items-center justify-center rounded-2xl">
             {ImgIsPending ? (
               <View>
                 <ActivityIndicator size={40} />

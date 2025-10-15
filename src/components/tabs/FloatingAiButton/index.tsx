@@ -1,7 +1,8 @@
-import { useGetUserChat } from '@/src/api_services/userApi/userQuery';
-import { AntDesign, MaterialIcons } from '@expo/vector-icons';
-import { useRouter } from 'expo-router';
-import React, { useEffect, useRef } from 'react';
+import { useGetUserChat } from "@/src/api_services/userApi/userQuery";
+import { AntDesign, MaterialIcons } from "@expo/vector-icons";
+import { useRouter } from "expo-router";
+import * as WebBrowser from "expo-web-browser";
+import React, { useEffect, useRef } from "react";
 import {
   Alert,
   Animated,
@@ -9,30 +10,28 @@ import {
   Linking,
   Text,
   TouchableOpacity,
-  View
-} from 'react-native';
+  View,
+} from "react-native";
+
 
 const FloatingAiButton = () => {
-  const router=useRouter()
+  const router = useRouter();
   const bounceAnim = useRef(new Animated.Value(0)).current;
   const pulseAnim = useRef(new Animated.Value(0)).current;
 
-  const getUserChatAi = useGetUserChat()
-
-  console.log("getUserChatAi:", getUserChatAi.data);
+  const getUserChatAi = useGetUserChat();
 
 
   const openReceiptInBrowser = async () => {
-  
     try {
       // const result = await getReceipt.refetch(); // Manually fetch
       // const uri = result.data?.url;
-    const uri = getUserChatAi.data.chatUrl;
+      const uri = getUserChatAi.data.chatUrl;
 
-    if (!uri) {
-      Alert.alert("No  chat Url found");
-      return;
-    }
+      if (!uri) {
+        Alert.alert("No  chat Url found");
+        return;
+      }
 
       const supported = await Linking.canOpenURL(uri);
       if (supported) {
@@ -43,6 +42,15 @@ const FloatingAiButton = () => {
     } catch (error) {
       Alert.alert("Failed to fetch receipt.");
     }
+  };
+
+  const openWebView = () => {
+   
+     router.push({
+       pathname: "/homepage/chat-webview-ai",
+       params: { item: JSON.stringify(getUserChatAi.data?.chatUrl) },
+
+     });
   };
 
   useEffect(() => {
@@ -96,6 +104,15 @@ const FloatingAiButton = () => {
     outputRange: [0.28, 0.08],
   });
 
+  const handleOpenPrivacyPolicy = async () => {
+      const uri = "https://menoviahealth.com/privacy.html";
+      try {
+        await WebBrowser.openBrowserAsync(uri);
+      } catch (error) {
+        Alert.alert("Failed to fetch receipt.");
+      }
+    };
+
   return (
     <View>
       <Animated.View
@@ -136,7 +153,8 @@ const FloatingAiButton = () => {
 
             <TouchableOpacity
               className="flex-row items-center justify-between"
-              onPress={openReceiptInBrowser}
+              // onPress={openReceiptInBrowser}
+              onPress={openWebView}
             >
               <AntDesign name="adduser" size={26} color="#8A3FFC" />
 
@@ -151,24 +169,28 @@ const FloatingAiButton = () => {
                 // onPress={() => {
                 //   router.push("/(tabs)/homepage/chat-with-ai");
                 // }}
-                onPress={openReceiptInBrowser}
+                onPress={openWebView}
               >
                 <MaterialIcons name="send" size={26} color="#8A3FFC" />
               </TouchableOpacity>
             </TouchableOpacity>
 
             <View className=" my-2">
-              <Text>We care about your data in our privacy policy.</Text>
+              <Text>
+                We care about your data in our{" "}
+                <Text
+                  style={{ color: "#007AFF", textDecorationLine: "underline" }}
+                  onPress={handleOpenPrivacyPolicy}
+                >
+                  <Text>privacy policy.</Text>
+                </Text>{" "}
+              </Text>
             </View>
           </TouchableOpacity>
         </View>
       </Animated.View>
     </View>
   );
-}
+};
 
-export default FloatingAiButton
-
-
-
-
+export default FloatingAiButton;

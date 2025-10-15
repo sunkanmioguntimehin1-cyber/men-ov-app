@@ -1,6 +1,10 @@
-import { useGetLogApi } from "@/src/api_services/logApi/logQuery";
+import {
+  useCycleTrackingApi,
+  useGetLogApi,
+} from "@/src/api_services/logApi/logQuery";
 import SafeScreen from "@/src/components/SafeScreen";
 import { MaterialIcons } from "@expo/vector-icons";
+import { formatDistance, parseISO } from "date-fns";
 import { Image } from "expo-image";
 import { useRouter } from "expo-router";
 import React from "react";
@@ -9,6 +13,7 @@ import { ScrollView, Text, TouchableOpacity, View } from "react-native";
 const SummaryScreen = () => {
   const router = useRouter();
   const getAllLog = useGetLogApi();
+  const getCycleTracking = useCycleTrackingApi();
 
   const SeverityLevelData = [
     { level: "lvl 1", levelColor: "#20D72A", badgeColor: "#D7CE20" },
@@ -17,32 +22,60 @@ const SummaryScreen = () => {
     { level: "lvl 4", levelColor: "#D72020", badgeColor: "#D72020" },
   ];
 
-  const logs = getAllLog?.data?.data || [];
+  const logs = getAllLog?.data || [];
 
-  console.log("logs234:", logs);
+  // console.log("logs234:", logs);
+  // console.log("getCycleTracking:", getCycleTracking?.data?.data);
 
   // Mock data for demonstration - replace with actual data
+  // const symptomsData = [
+  //   {
+  //     id: 1,
+  //     name: "Back Pain",
+  //     icon: require("@/assets/images/backpain.png"),
+  //     recommendation: "Don't forget to hydrate.",
+  //     severityLevel: 2,
+  //   },
+  //   {
+  //     id: 2,
+  //     name: "Heart Palpitations",
+  //     icon: require("@/assets/images/heart_palpitations.png"),
+  //     recommendation: "Don't forget to hydrate.",
+  //     severityLevel: 3,
+  //   },
+  // ];
+
   const symptomsData = [
     {
-      id: 1,
       name: "Back Pain",
-      icon: require("@/assets/images/backpain.png"),
-      recommendation: "Don't forget to hydrate.",
-      severityLevel: 2,
+      img: require("@/assets/images/backpain.png"),
     },
     {
-      id: 2,
+      name: "Headache",
+      img: require("@/assets/images/headache.png"),
+    },
+    {
       name: "Heart Palpitations",
-      icon: require("@/assets/images/heart_palpitations.png"),
-      recommendation: "Don't forget to hydrate.",
-      severityLevel: 3,
+      img: require("@/assets/images/heart_palpitations.png"),
+    },
+    {
+      name: "Anxiety",
+      img: require("@/assets/images/anxiety.png"),
+    },
+    {
+      name: "Describe how you feel",
+      img: require("@/assets/images/general.png"),
     },
   ];
 
-  const cycleSummary = {
-    status: "Postmenopause",
-    lastPeriod: "Last period • 6 mo. ago.",
+  const getSymptomImage = (iconName: string) => {
+    const symptom = symptomsData.find(
+      (item) => item.name.toLowerCase() === iconName.toLowerCase()
+    );
+    return symptom?.img || require("@/assets/images/general.png");
   };
+
+
 
   const aiInsight = "Your back pain often occurs on days with elevated stress";
 
@@ -70,8 +103,9 @@ const SummaryScreen = () => {
                 No logs found
               </Text>
               <Text className="text-gray-400 text-sm mt-2 text-center px-6">
-                You haven't added any symptoms yet. Start logging to see your
-                summary here.
+                {
+                  "You haven't added any symptoms yet. Start logging to see your summary here."
+                }
               </Text>
 
               <TouchableOpacity
@@ -90,8 +124,8 @@ const SummaryScreen = () => {
                 <Text className="text-lg font-[PoppinsSemiBold] text-black mb-4">
                   How do you Feel today?
                 </Text>
-                
-                {symptomsData.map((symptom) => (
+
+                {logs.map((symptom: any) => (
                   <View
                     key={symptom.id}
                     className="bg-[#8A3FFC] rounded-xl p-4 mb-3"
@@ -100,7 +134,7 @@ const SummaryScreen = () => {
                       <View className="flex-row items-center flex-1">
                         <View className="w-8 h-8 mr-3">
                           <Image
-                            source={symptom.icon}
+                            source={getSymptomImage(symptom.icon)}
                             style={{
                               height: "100%",
                               width: "100%",
@@ -110,19 +144,23 @@ const SummaryScreen = () => {
                         </View>
                         <View className="flex-1">
                           <Text className="text-white font-[PoppinsSemiBold] text-base">
-                            {symptom.name}
+                            {symptom.symptoms}
                           </Text>
                           <Text className="text-white text-sm mt-1">
                             {symptom.recommendation}
                           </Text>
                         </View>
                       </View>
-                      
+
                       <View
                         className="px-2 py-1 rounded-lg border"
                         style={{
-                          backgroundColor: SeverityLevelData[symptom.severityLevel - 1]?.badgeColor,
-                          borderColor: SeverityLevelData[symptom.severityLevel - 1]?.badgeColor,
+                          backgroundColor:
+                            SeverityLevelData[symptom.severityLevel - 1]
+                              ?.badgeColor,
+                          borderColor:
+                            SeverityLevelData[symptom.severityLevel - 1]
+                              ?.badgeColor,
                         }}
                       >
                         <Text className="text-black text-xs font-[PoppinsMedium]">
@@ -139,15 +177,28 @@ const SummaryScreen = () => {
                 <Text className="text-lg font-[PoppinsSemiBold] text-black mb-4">
                   Cycle summary
                 </Text>
-                
-                <View className="bg-[#8A3FFC] rounded-xl p-4">
-                  <Text className="text-white font-[PoppinsSemiBold] text-base">
-                    {cycleSummary.status}
-                  </Text>
-                  <Text className="text-white text-sm mt-1">
-                    {cycleSummary.lastPeriod}
-                  </Text>
-                </View>
+
+                {getCycleTracking?.data?.data.map((item: any) => {
+                  const dateString = item?.start;
+                  const date = parseISO(dateString);
+                  const now = new Date();
+                  const distance = formatDistance(date, now, {
+                    addSuffix: true,
+                  });
+                  return (
+                    <View
+                      className="bg-[#8A3FFC] rounded-xl p-4 mb-3"
+                      key={item.id}
+                    >
+                      <Text className="text-white font-[PoppinsSemiBold] text-base">
+                        {item.note}
+                      </Text>
+                      <Text className="text-white text-sm mt-1">
+                        Last period {distance}
+                      </Text>
+                    </View>
+                  );
+                })}
               </View>
 
               {/* AI insights Section */}
@@ -155,11 +206,15 @@ const SummaryScreen = () => {
                 <Text className="text-lg font-[PoppinsSemiBold] text-black mb-4">
                   AI insights
                 </Text>
-                
+
                 <View className="bg-white border border-gray-200 rounded-xl p-4">
                   <View className="flex-row items-center">
                     <View className="w-8 h-8 mr-3">
-                      <MaterialIcons name="lightbulb" size={24} color="#8A3FFC" />
+                      <MaterialIcons
+                        name="lightbulb"
+                        size={24}
+                        color="#8A3FFC"
+                      />
                     </View>
                     <Text className="text-gray-700 text-sm flex-1 font-[PoppinsMedium]">
                       {aiInsight}

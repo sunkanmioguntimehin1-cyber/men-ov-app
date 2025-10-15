@@ -75,3 +75,13 @@ export const getCycleTrackingApi = async (data: any) => {
     throw error;
   }
 };
+
+export const getCycleTrackinglatestApi = async (data: any) => {
+  try {
+    const res = await axiosInstance.get(`/cycle-track/latest`, data);
+    return res.data;
+  } catch (error) {
+    console.error("getCycleTrackinglatestApi", error);
+    throw error;
+  }
+};

@@ -7,7 +7,7 @@ const CurrentStatus = ({
   setMenopauseStage,
   getIntakeDetails,
 }: any) => {
-  console.log("getIntakeDetails", getIntakeDetails?.data);
+  // console.log("getIntakeDetails", getIntakeDetails?.data);
 
   const menopauseStageData = [
     { label: "Premenopause", value: "premenopause" },

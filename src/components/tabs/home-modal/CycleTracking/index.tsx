@@ -1,4 +1,5 @@
 import { useCreateCycleTrackingApi } from "@/src/api_services/logApi/logMutation";
+import { useCycleTrackingLatest } from "@/src/api_services/logApi/logQuery";
 import { useGetIntakeDetails } from "@/src/api_services/userApi/userQuery";
 import BottomSheetScreen from "@/src/custom-components/BottomSheetScreen";
 import CustomButton from "@/src/custom-components/CustomButton";
@@ -22,10 +23,9 @@ const CycleTracking = ({ onCancel }: any) => {
 
   const [notePublicUrls, setNotePublicUrls] = React.useState<string[]>([]);
 
-    const getIntakeDetails = useGetIntakeDetails();
+  const getIntakeDetails = useGetIntakeDetails();
   const createCycleTracking = useCreateCycleTrackingApi(onCancel);
-
-  
+  const getCycleTrackingLatest = useCycleTrackingLatest();
 
   console.log("notePublicUrls111", notePublicUrls);
   const formMethods = useForm({
@@ -41,6 +41,21 @@ const CycleTracking = ({ onCancel }: any) => {
     formState: { errors, isValid },
   } = formMethods;
 
+  React.useEffect(() => {
+    if (getCycleTrackingLatest?.data) {
+      const formattedDateValue = format(
+        getCycleTrackingLatest?.data?.start,
+        "dd-MM-yyy"
+      );
+      // setSelectedDate(formattedDateValue);
+      // setSelectedDate(getCycleTrackingLatest?.data?.start);
+      setDurationData(getCycleTrackingLatest?.data?.duration);
+      reset({
+        notes: getCycleTrackingLatest?.data?.note,
+      });
+    }
+  }, [getCycleTrackingLatest?.data, reset]);
+
   // Function to handle Next/Submit button click
   const handleButtonClick = () => {
     if (currentIndex < 1) {
@@ -55,9 +70,9 @@ const CycleTracking = ({ onCancel }: any) => {
   const getButtonText = () => {
     return currentIndex === 1 ? "Submit" : "Next";
   };
- // formatting Date
+  // formatting Date
   const dateValue = selectedDate ? format(selectedDate, "dd-MM-yyy") : "";
-  const onSubmit = (data:any) => {
+  const onSubmit = (data: any) => {
     const requestPayload = {
       start: selectedDate,
       duration: Number(durationData),
@@ -68,7 +83,6 @@ const CycleTracking = ({ onCancel }: any) => {
     console.log("CycleTracking requestPayload:", requestPayload);
     createCycleTracking.mutate(requestPayload);
   };
-
 
   console.log("menopauseStage1111", menopauseStage);
 

@@ -41,7 +41,7 @@ export const useUpdateLogApi = (onCancel:any) => {
   });
 };
 
-export const useCloseLogApi = (onCancel:any) => {
+export const useCloseLogApi = (handleIsDone: any) => {
   const router = useRouter();
   const queryClient = useQueryClient();
   return useMutation({
@@ -51,7 +51,7 @@ export const useCloseLogApi = (onCancel:any) => {
       //   message: data.message,
       // });
       queryClient.invalidateQueries({ queryKey: ["get-log"] });
-      onCancel()
+      handleIsDone()
     },
     onError(error: any) {
       handleAxiosError(error);

@@ -1,18 +1,17 @@
+import { useSaveRecommendationApi } from "@/src/api_services/recommendationApi/recommendationMutation";
 import { useGetRecommendationApi } from "@/src/api_services/recommendationApi/recommendationQuery";
 import { useGetUser } from "@/src/api_services/userApi/userQuery";
 import SafeScreen from "@/src/components/SafeScreen";
 import LoadingOverlay from "@/src/custom-components/LoadingOverlay";
 import { Feather, Ionicons, MaterialIcons } from "@expo/vector-icons";
-import { format } from "date-fns";
+import { differenceInYears, format, parseISO } from "date-fns";
 import { Image } from "expo-image";
 import { useRouter } from "expo-router";
 import {
-  Alert,
-  Linking,
   ScrollView,
   Text,
   TouchableOpacity,
-  View,
+  View
 } from "react-native";
 // import SafeScreen from "../../../components/SafeScreen";
 
@@ -20,28 +19,34 @@ export default function ProfilePage() {
   const router = useRouter();
   const getUserData = useGetUser();
   const getRecommendationData = useGetRecommendationApi();
+  const saveRecommendation = useSaveRecommendationApi();
 
-  console.log("getUserData", getUserData.data);
 
-  const handleOpenArticle = async (itemUrl: string) => {
-    try {
-      const uri = itemUrl;
 
-      if (!uri) {
-        Alert.alert("No transfer URl found.");
-        return;
-      }
+  console.log("getUserData", getUserData?.data);
 
-      const supported = await Linking.canOpenURL(uri);
-      if (supported) {
-        await Linking.openURL(uri);
-      } else {
-        Alert.alert("Can't open this URL:", uri);
-      }
-    } catch (error) {
-      Alert.alert("Failed to fetch Url.");
-    }
-  };
+    const openWebView = (itemUrl: string) => {
+      router.push({
+        pathname: "/profilepage/profile-screen/recommendations-webview",
+        params: { item: JSON.stringify(itemUrl) },
+      });
+    };
+
+      const handleSaveRecommadation = (itemId: string) => {
+        console.log(itemId, "itemId");
+        saveRecommendation.mutate({
+          isSaved: true,
+          id: itemId,
+        });
+      };
+
+      const birthDate = getUserData.data?.dob;
+;
+      const date = parseISO(birthDate);
+      const now = new Date();
+
+      const age = differenceInYears(now, date);
+
 
   return (
     <SafeScreen className="bg-white">
@@ -87,7 +92,7 @@ export default function ProfilePage() {
 
           {/* Demographics */}
           <Text className="text-sm text-gray-600 mb-6">
-            45 years old - {getUserData.data?.gender}
+            {age} years old - {getUserData.data?.gender}
           </Text>
 
           {/* Health Tags */}
@@ -146,7 +151,11 @@ export default function ProfilePage() {
             const date = new Date(item?.article?.updatedAt);
             const formattedDate = format(date, "do MMMM yyyy");
             return (
-              <View key={item.id} className="px-6 ">
+              <TouchableOpacity
+                key={item.id}
+                className="px-6 "
+                onPress={() => openWebView(item.article?.url)}
+              >
                 {/* Recommendation Header */}
                 <View className="flex-row items-center justify-between mb-4">
                   <View className="flex-row items-center">
@@ -170,15 +179,17 @@ export default function ProfilePage() {
                     </View>
                   </View>
 
-                  <TouchableOpacity>
-                    {item.article?.isSaved ? (
+                  <TouchableOpacity
+                    onPress={() => handleSaveRecommadation(item.id)}
+                  >
+                    {item.isSaved ? (
+                      <Ionicons name="bookmark" size={20} color="gray" />
+                    ) : (
                       <Ionicons
                         name="bookmark-outline"
                         size={24}
                         color="gray"
                       />
-                    ) : (
-                      <Ionicons name="bookmark" size={20} color="gray" />
                     )}
                   </TouchableOpacity>
                 </View>
@@ -209,7 +220,7 @@ export default function ProfilePage() {
                 {/* Embedded Image */}
                 <TouchableOpacity
                   className="w-full h-48 bg-gray-200 rounded-lg mb-4 items-center justify-center"
-                  onPress={() => handleOpenArticle(item.article?.url)}
+                  onPress={() => openWebView(item.article?.url)}
                 >
                   <Image
                     source={item.article?.images[0]}
@@ -228,7 +239,9 @@ export default function ProfilePage() {
                 <View className="flex-row items-center justify-between">
                   <View className="flex-row items-center">
                     <View className="flex-row items-center mr-6">
-                      <Feather name="thumbs-up" size={16} color="gray" />
+                      <TouchableOpacity>
+                        <Feather name="thumbs-up" size={16} color="gray" />
+                      </TouchableOpacity>
                       <Text className="text-xs text-gray-600 ml-1">
                         {item?.article?.likes} likes
                       </Text>
@@ -248,7 +261,7 @@ export default function ProfilePage() {
                     </Text>
                   </View>
                 </View>
-              </View>
+              </TouchableOpacity>
             );
           })
         )}

@@ -52,7 +52,7 @@ const ImageUploadedDetails = ({
       </Text>
       <View className=" ">
         {imageSelected || selectedLastSymptom?.symptomImages.length > 0 ? (
-          <View className="w-full h-56  bg-white items-center justify-center rounded-2xl">
+          <View className="w-full h-56 border border-primary   items-center justify-center rounded-2xl">
             {/* {imageSelected ? (
               <View>
                 <ActivityIndicator size={40} />

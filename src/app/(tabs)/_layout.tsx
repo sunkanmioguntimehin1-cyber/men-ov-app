@@ -15,6 +15,7 @@ function getTabBarVisibility(route: any) {
     "profile-screen",
     "summary-screen",
     "chat-with-ai",
+    "chat-webview-ai"
   ];
 
   // Check if the current route or any part of it matches hidden routes
