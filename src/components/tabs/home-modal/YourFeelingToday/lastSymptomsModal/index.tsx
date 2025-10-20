@@ -23,6 +23,7 @@ import {
 } from "react-native";
 import ImageUploadedDetails from "./ImageUploadedDetails";
 import Note from "./Note";
+import NoteImageDetails from "./NoteImageDetails";
 import Triggers from "./Trigger";
 
 interface Item {
@@ -43,6 +44,8 @@ const LastSymptomsModal = ({ onCancel, selectedLastSymptom }: any) => {
   const [storeData, setStoreData] = React.useState<string | any>(null);
   const [imageSelected, setImageSelected] = React.useState<any>(null);
   const [isDone, setIsDone] = React.useState(false);
+
+  console.log("selectedLastSymptom234", selectedLastSymptom);
 
   const toggleTrigger = (trigger: string) => {
     setSelectedTriggers((prev) =>
@@ -169,7 +172,7 @@ const LastSymptomsModal = ({ onCancel, selectedLastSymptom }: any) => {
         <View className=" h-[600px] w-96 p-5 bg-white rounded-lg  shadow-lg overflow-hidden">
           <View className=" flex-row items-center justify-between">
             <Text className=" font-[PoppinsSemiBold] text-base">
-              Are you well now?{" "}
+              Are you well now?
             </Text>
             <TouchableOpacity onPress={onCancel}>
               <MaterialIcons name="close" size={24} color="black" />
@@ -234,6 +237,14 @@ const LastSymptomsModal = ({ onCancel, selectedLastSymptom }: any) => {
             />
             <Note errors={errors} control={formMethods.control} />
             <ImageUploadedDetails
+              imageSelected={imageSelected}
+              setImageSelected={setImageSelected}
+              imageUploadedSelected={imageUploadedSelected}
+              selectedLastSymptom={selectedLastSymptom}
+              resetImageData={resetImageData}
+            />
+
+            <NoteImageDetails
               imageSelected={imageSelected}
               setImageSelected={setImageSelected}
               imageUploadedSelected={imageUploadedSelected}

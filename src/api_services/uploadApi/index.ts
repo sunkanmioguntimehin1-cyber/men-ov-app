@@ -2,6 +2,7 @@ import axiosInstance from "@/src/lib/axiosInstance";
 import axios from "axios";
 
 export const getUploadUrl = async (data: any) => {
+  console.log("dataFilname:", data);
   try {
     const res = await axiosInstance.post(`/user/presigned-url`, data);
     return res.data;
@@ -11,75 +12,50 @@ export const getUploadUrl = async (data: any) => {
   }
 };
 
-export const uploadImageApi2 = async (data: any) => {
-  console.log("dataVVV", data);
+export const uploadImageApi = async (data: any) => {
+  console.log("Starting binary upload to S3", data);
 
-  try {
-    const res = await axiosInstance.put(`${data?.uploadUrl}`, data?.formData, {
-      headers: {
-        "Content-Type": "multipart/form-data", // This is important for form data
-      },
-      transformRequest: () => {
-        // Return the form data as it is
-
-        return data;
-      },
-    });
-
-    return res.data;
-  } catch (error) {
-    console.error("Error upload Image Transaction :", error);
-    throw error;
-  }
-};
-
-export const uploadImageApi23 = async (data: any) => {
-  console.log("datazNew3000", data);
   try {
     // Fetch the file from the URI and convert to blob
     const response = await fetch(data.fileUri);
     const blob = await response.blob();
 
-    console.log("blob1111", blob);
-    console.log("response999999", response);
-
-    const headers = {
-      "Content-Type": "application/octet-stream",
+    // Get the file extension to determine content type
+    const getContentType = (uri: string) => {
+      const extension = uri.split(".").pop()?.toLowerCase();
+      const mimeTypes: { [key: string]: string } = {
+        jpg: "image/jpeg",
+        jpeg: "image/jpeg",
+        png: "image/png",
+        gif: "image/gif",
+        webp: "image/webp",
+        heic: "image/heic",
+        heif: "image/heif",
+      };
+      return mimeTypes[extension || ""] || "image/jpeg";
     };
 
-    console.log("headers400", headers);
+    const contentType = getContentType(data.fileUri);
 
-    // Upload to S3 using raw binary data (NOT FormData)
-    const res = await axios.put(data.uploadUrl, blob, { headers });
+    // Upload the blob directly to S3
+    const res = await axios.put(data.uploadUrl, blob, {
+      headers: {
+        "Content-Type": contentType,
+      },
+      // Important: Don't let axios transform the data
+      transformRequest: [(data) => data],
+    });
+
+    console.log("Upload status:", res.status);
+    console.log("Upload response:", res.data);
 
     return res.data;
   } catch (error) {
-    console.error("Error upload Image Transaction:", error);
-    throw error;
-  }
-};
-
-export const uploadImageApi = async (data: any) => {
-  console.log("datazNew3000", data);
-  try {
-    // Fetch the file from the URI and convert to blob
-
-    let fileInfo = {
-      uri: data,
-      type: "*/*",
-      name: "icon.png",
-    };
-    const headers = {
-      "Content-Type": "application/octet-stream",
-    };
-
-    console.log("headers400", headers);
-
-    const res = await axios.put(data.uploadUrl, fileInfo, { headers });
-
-    return res.data;
-  } catch (error) {
-    console.error("Error upload Image Transaction:", error);
+    console.error("Error uploading image:", error);
+    if (axios.isAxiosError(error)) {
+      console.error("Response:", error.response?.data);
+      console.error("Status:", error.response?.status);
+    }
     throw error;
   }
 };

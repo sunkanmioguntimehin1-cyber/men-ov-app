@@ -31,9 +31,15 @@ const YourFeelingToday = ({ onCancel }: any) => {
   const [notePublicUrls, setNotePublicUrls] = React.useState<string[]>([]);
   const [publicUrls, setPublicUrls] = React.useState<string[]>([]);
 
-  // console.log("notePublicUrls111", notePublicUrls);
+  
+
   const publicUrl = useSymtomsStore().symtomsDataList.publicUrl;
   const notePublicUrl = useSymtomsStore().symtomsDataList.notePublicUrl;
+
+  console.log("notePublicUrls3000", notePublicUrls);
+  console.log("publicUrls3000", publicUrls);
+  console.log("publicUrlBBBB", publicUrl);
+
 
   const formMethods = useForm({
     mode: "onChange",
@@ -83,7 +89,10 @@ const YourFeelingToday = ({ onCancel }: any) => {
     switch (activeIndex) {
       case 0: // Symptoms step
         return (
-          selectedList && selectedSeverityLevel && selectedDate && durationData
+          selectedList &&
+          selectedSeverityLevel &&
+          selectedDate &&
+          durationData 
         );
       case 1: // Triggers step
       return selectedTriggers.length > 0
@@ -117,7 +126,7 @@ const YourFeelingToday = ({ onCancel }: any) => {
     durationBottomSheetRef.current?.close();
 
   // formatting Date
-  const dateValue = selectedDate ? format(selectedDate, "dd-MM-yyy") : "";
+  const dateValue = selectedDate ? format(selectedDate, "dd-MM-yyyy") : "";
 
  
 
@@ -130,8 +139,8 @@ const YourFeelingToday = ({ onCancel }: any) => {
       severityLevel: selectedSeverityLevel,
       triggers: selectedTriggers,
       startDate: selectedDate,
-      symptomImages: publicUrl,
-      images: notePublicUrl,
+      symptomImages: publicUrls,
+      images: notePublicUrls,
       notes: data.notes,
       duration: durationData,
       recommendation: "Drink More Water",

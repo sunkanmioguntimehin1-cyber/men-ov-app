@@ -1,7 +1,5 @@
 import { useGetArticleApi } from "@/src/api_services/articleApi/articleQuery";
-import {
-  useCycleTrackingLatest
-} from "@/src/api_services/logApi/logQuery";
+import { useCycleTrackingLatest } from "@/src/api_services/logApi/logQuery";
 import FloatingAiButton from "@/src/components/tabs/FloatingAiButton";
 import CycleTracking from "@/src/components/tabs/home-modal/CycleTracking";
 import YourFeelingToday from "@/src/components/tabs/home-modal/YourFeelingToday";
@@ -13,6 +11,7 @@ import CustomSelectData from "@/src/custom-components/CustomSelectData";
 import LoadingOverlay from "@/src/custom-components/LoadingOverlay";
 import Screen from "@/src/layout/Screen";
 import { AntDesign, Ionicons } from "@expo/vector-icons";
+import { formatDistanceToNow } from "date-fns";
 import { Image } from "expo-image";
 import { useRouter } from "expo-router";
 import React from "react";
@@ -29,9 +28,30 @@ export default function HomePage() {
 
   const insets = useSafeAreaInsets();
 
-
-
   const router = useRouter();
+
+  //date calculation with proper validation
+  const getFormattedDate = () => {
+    if (!getCycleTrackingLatest?.data?.start) {
+      return null;
+    }
+
+    const date = new Date(getCycleTrackingLatest?.data?.start);
+
+    // Check if the date is valid
+    if (isNaN(date.getTime())) {
+      return null;
+    }
+
+    try {
+      return formatDistanceToNow(date, { addSuffix: true });
+    } catch (error) {
+      console.error("Error formatting date:", error);
+      return null;
+    }
+  };
+
+  const result = getFormattedDate();
 
   const handleOpenmodal = () => {
     setModelVisible(true);
@@ -97,7 +117,7 @@ export default function HomePage() {
             <TouchableOpacity
               className=" mx-3"
               onPress={() => {
-                router.push("/profilepage/notifications");
+                router.push("/(tabs)/profilepage/notifications");
               }}
             >
               <Ionicons name="notifications-outline" size={20} color="black" />
@@ -148,8 +168,8 @@ export default function HomePage() {
                 primary
                 label="Cycle Tracking"
                 placeholder={
-                  getCycleTrackingLatest?.data
-                    ? getCycleTrackingLatest?.data?.note
+                  getCycleTrackingLatest?.data && result
+                    ? `${getCycleTrackingLatest?.data?.note} ${result} ago`
                     : "Add your last cycle"
                 }
                 icon={

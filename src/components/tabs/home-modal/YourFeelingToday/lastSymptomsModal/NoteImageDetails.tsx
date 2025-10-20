@@ -6,7 +6,7 @@ import React, { useState } from "react";
 import { Text, TouchableOpacity, View } from "react-native";
 import { ICarouselInstance } from "react-native-reanimated-carousel";
 
-const ImageUploadedDetails = ({
+const NoteImageDetails = ({
   imageSelected,
   setImageSelected,
   selectedLastSymptom,
@@ -47,11 +47,11 @@ const ImageUploadedDetails = ({
   };
   return (
     <View>
-      <Text className="font-[PoppinsMedium] " style={{ fontSize: rS(12) }}>
-        symptom Images
+      <Text className="font-[PoppinsMedium] my-2 " style={{ fontSize: rS(12) }}>
+        Note Image
       </Text>
       <View className=" ">
-        {imageSelected || selectedLastSymptom?.symptomImages.length > 0 ? (
+        {imageSelected || selectedLastSymptom?.images?.length > 0 ? (
           <View className="w-full h-56 border border-primary   items-center justify-center rounded-2xl">
             {/* {imageSelected ? (
               <View>
@@ -62,7 +62,7 @@ const ImageUploadedDetails = ({
               <View className=" w-80 h-56 p-3">
                 <Image
                   source={{
-                    uri: selectedLastSymptom?.symptomImages[0],
+                    uri: selectedLastSymptom?.images[0],
                   }}
                   style={{ width: "100%", height: "100%" }}
                   contentFit="cover"
@@ -95,7 +95,8 @@ const ImageUploadedDetails = ({
                 /> */}
               </View>
 
-              {/* close button */}
+
+{/* close button */}
               {/* <TouchableOpacity onPress={handleCloseImage} className="">
                 <AntDesign name="close" size={18} color="black" />
               </TouchableOpacity> */}
@@ -122,4 +123,4 @@ const ImageUploadedDetails = ({
   );
 };
 
-export default ImageUploadedDetails;
+export default NoteImageDetails;

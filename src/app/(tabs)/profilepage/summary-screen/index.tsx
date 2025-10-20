@@ -2,6 +2,7 @@ import {
   useCycleTrackingApi,
   useGetLogApi,
 } from "@/src/api_services/logApi/logQuery";
+import { useGetIntakeDetails } from "@/src/api_services/userApi/userQuery";
 import SafeScreen from "@/src/components/SafeScreen";
 import { MaterialIcons } from "@expo/vector-icons";
 import { formatDistance, parseISO } from "date-fns";
@@ -14,6 +15,7 @@ const SummaryScreen = () => {
   const router = useRouter();
   const getAllLog = useGetLogApi();
   const getCycleTracking = useCycleTrackingApi();
+  const getIntakeDetails = useGetIntakeDetails();
 
   const SeverityLevelData = [
     { level: "lvl 1", levelColor: "#20D72A", badgeColor: "#D7CE20" },
@@ -23,27 +25,6 @@ const SummaryScreen = () => {
   ];
 
   const logs = getAllLog?.data || [];
-
-  // console.log("logs234:", logs);
-  // console.log("getCycleTracking:", getCycleTracking?.data?.data);
-
-  // Mock data for demonstration - replace with actual data
-  // const symptomsData = [
-  //   {
-  //     id: 1,
-  //     name: "Back Pain",
-  //     icon: require("@/assets/images/backpain.png"),
-  //     recommendation: "Don't forget to hydrate.",
-  //     severityLevel: 2,
-  //   },
-  //   {
-  //     id: 2,
-  //     name: "Heart Palpitations",
-  //     icon: require("@/assets/images/heart_palpitations.png"),
-  //     recommendation: "Don't forget to hydrate.",
-  //     severityLevel: 3,
-  //   },
-  // ];
 
   const symptomsData = [
     {
@@ -74,8 +55,6 @@ const SummaryScreen = () => {
     );
     return symptom?.img || require("@/assets/images/general.png");
   };
-
-
 
   const aiInsight = "Your back pain often occurs on days with elevated stress";
 
@@ -191,7 +170,8 @@ const SummaryScreen = () => {
                       key={item.id}
                     >
                       <Text className="text-white font-[PoppinsSemiBold] text-base">
-                        {item.note}
+                        {/* {item.note} */}{" "}
+                        {getIntakeDetails?.data?.menopauseStage}
                       </Text>
                       <Text className="text-white text-sm mt-1">
                         Last period {distance}

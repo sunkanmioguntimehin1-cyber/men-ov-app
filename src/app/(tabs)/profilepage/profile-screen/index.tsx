@@ -7,12 +7,7 @@ import { Feather, Ionicons, MaterialIcons } from "@expo/vector-icons";
 import { differenceInYears, format, parseISO } from "date-fns";
 import { Image } from "expo-image";
 import { useRouter } from "expo-router";
-import {
-  ScrollView,
-  Text,
-  TouchableOpacity,
-  View
-} from "react-native";
+import { ScrollView, Text, TouchableOpacity, View } from "react-native";
 // import SafeScreen from "../../../components/SafeScreen";
 
 export default function ProfilePage() {
@@ -21,32 +16,25 @@ export default function ProfilePage() {
   const getRecommendationData = useGetRecommendationApi();
   const saveRecommendation = useSaveRecommendationApi();
 
+  const openWebView = (itemUrl: string) => {
+    router.push({
+      pathname: "/profilepage/profile-screen/recommendations-webview",
+      params: { item: JSON.stringify(itemUrl) },
+    });
+  };
 
+  const handleSaveRecommadation = (itemId: string) => {
+    saveRecommendation.mutate({
+      isSaved: true,
+      id: itemId,
+    });
+  };
 
-  console.log("getUserData", getUserData?.data);
+  const birthDate = getUserData.data?.dob;
+  const date = parseISO(birthDate);
+  const now = new Date();
 
-    const openWebView = (itemUrl: string) => {
-      router.push({
-        pathname: "/profilepage/profile-screen/recommendations-webview",
-        params: { item: JSON.stringify(itemUrl) },
-      });
-    };
-
-      const handleSaveRecommadation = (itemId: string) => {
-        console.log(itemId, "itemId");
-        saveRecommendation.mutate({
-          isSaved: true,
-          id: itemId,
-        });
-      };
-
-      const birthDate = getUserData.data?.dob;
-;
-      const date = parseISO(birthDate);
-      const now = new Date();
-
-      const age = differenceInYears(now, date);
-
+  const age = differenceInYears(now, date);
 
   return (
     <SafeScreen className="bg-white">

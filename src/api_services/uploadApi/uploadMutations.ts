@@ -6,9 +6,11 @@ export const useGetUploadUrl = (handleStoreData: (data: any) => void) => {
   return useMutation({
     mutationFn: getUploadUrl,
     onSuccess(data: any) {
+      console.log("daata0999:", data);
+
       if (data) {
         handleStoreData(data);
-        console.log("daata:", data);
+        console.log("daata0111:", data);
       }
     },
     onError(error: any) {
@@ -51,7 +53,6 @@ export const useImageUpload2 = (storeData: any) => {
     resetImageData,
   };
 };
-
 
 export const useImageUpload = (storeData: any) => {
   const { mutate, data, isPending, isError, reset, status } = useMutation({

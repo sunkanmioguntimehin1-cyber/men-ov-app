@@ -66,6 +66,20 @@ export const createCycleTrackingApi = async (data: any) => {
   }
 };
 
+export const updateCycleTrackingApi = async (data: any) => {
+  // console.log("data5660", data);
+  const { id, ...rest } = data;
+  try {
+    const res = await axiosInstance.put(`cycle-track/${id}`, rest);
+    return res.data;
+  } catch (error) {
+    console.error("updateCycleTrackingApi", error);
+    throw error;
+  }
+};
+
+
+
 export const getCycleTrackingApi = async (data: any) => {
   try {
     const res = await axiosInstance.get(`/cycle-track`, data);

@@ -25,7 +25,6 @@ const RemommendationWebview = () => {
   };
 
   const onNavigationStateChange = (navState: NavState) => {
-    console.log(navState, "navStatenavState");
     setIsLoading(navState.loading ?? false);
     // const { url } = navState;
 
