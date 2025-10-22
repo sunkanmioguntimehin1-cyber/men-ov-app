@@ -46,8 +46,7 @@ export const uploadImageApi = async (data: any) => {
       transformRequest: [(data) => data],
     });
 
-    console.log("Upload status:", res.status);
-    console.log("Upload response:", res.data);
+   
 
     return res.data;
   } catch (error) {

@@ -59,12 +59,14 @@ const CycleTracking = ({ onCancel }: any) => {
 
   // Function to handle Next/Submit button click
   const handleButtonClick = () => {
-    if (currentIndex < 1) {
+    if (getCycleTrackingLatest?.data) {
       // Move to next step
-      setCurrentIndex(currentIndex + 1);
-    } else if (getCycleTrackingLatest?.data) {
-      // Submit the form
       handleSubmit(onSubmit)();
+
+    } else if (currentIndex < 1) {
+      // Submit the form
+      setCurrentIndex(currentIndex + 1);
+
     } else {
       handleSubmit(onSubmit)();
     }

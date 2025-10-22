@@ -1,20 +1,29 @@
 import { useSaveRecommendationApi } from "@/src/api_services/recommendationApi/recommendationMutation";
 import { useGetRecommendationApi } from "@/src/api_services/recommendationApi/recommendationQuery";
-import { useGetUser } from "@/src/api_services/userApi/userQuery";
+import {
+  useGetIntakeDetails,
+  useGetUser,
+} from "@/src/api_services/userApi/userQuery";
 import SafeScreen from "@/src/components/SafeScreen";
 import LoadingOverlay from "@/src/custom-components/LoadingOverlay";
 import { Feather, Ionicons, MaterialIcons } from "@expo/vector-icons";
 import { differenceInYears, format, parseISO } from "date-fns";
 import { Image } from "expo-image";
-import { useRouter } from "expo-router";
+import { useFocusEffect, useRouter } from "expo-router";
+import React from "react";
 import { ScrollView, Text, TouchableOpacity, View } from "react-native";
 // import SafeScreen from "../../../components/SafeScreen";
 
 export default function ProfilePage() {
   const router = useRouter();
+  const firstTimeRef = React.useRef(true);
+
+  const [modelVisible1, setModelVisible1] = React.useState(false);
+
   const getUserData = useGetUser();
   const getRecommendationData = useGetRecommendationApi();
   const saveRecommendation = useSaveRecommendationApi();
+  const getIntakeDetails = useGetIntakeDetails();
 
   const openWebView = (itemUrl: string) => {
     router.push({
@@ -30,14 +39,50 @@ export default function ProfilePage() {
     });
   };
 
-  const birthDate = getUserData.data?.dob;
-  const date = parseISO(birthDate);
-  const now = new Date();
+  // const birthDate = getUserData?.data?.dob;
+  // const date = parseISO(birthDate);
+  // const now = new Date();
 
-  const age = differenceInYears(now, date);
+  // console.log("birthDate", birthDate);
+
+  // const age = differenceInYears(now, date);
+
+  const birthDate = getUserData?.data?.dob;
+  let age = null;
+  if (birthDate) {
+    const date = parseISO(birthDate);
+    const now = new Date();
+    age = differenceInYears(now, date);
+  }
+
+  // //USEFOCUSEFFECT
+  useFocusEffect(
+    React.useCallback(() => {
+      if (firstTimeRef.current) {
+        firstTimeRef.current = false;
+        return;
+      }
+
+      if (!getIntakeDetails.data) {
+        setModelVisible1(true);
+      }
+
+      // getIntakeDetails.refetch();
+    }, [getIntakeDetails])
+  );
+
+  const onCancel2 = () => {
+    setModelVisible1(false);
+  };
 
   return (
     <SafeScreen className="bg-white">
+      {/* <CustomModel
+        modelVisible={modelVisible1}
+        setModelVisible={setModelVisible1}
+        closeOnOutsideClick={false}
+        message={<InTakeModal onCancel={onCancel2} />}
+      /> */}
       <LoadingOverlay
         isOpen={getUserData.isPending} // Required: Controls visibility
         // message="Login..." // Optional: Loading text
@@ -185,17 +230,17 @@ export default function ProfilePage() {
                 {/* Title */}
                 <Text className="text-lg font-[PoppinsSemiBold] text-black mb-3">
                   {/* My Recommendations */}
-                  {item.article?.title}
+                  {item?.article?.title}
                 </Text>
 
                 {/* Description */}
                 <Text className="text-sm text-gray-600 mb-4 leading-5">
-                  {item.article?.summary}
+                  {item?.article?.summary}
                 </Text>
 
                 {/* Hashtags */}
                 <View className="flex-row mb-4">
-                  {item.article?.tags.map((tag: any) => (
+                  {item.article?.tags?.map((tag: any) => (
                     <View
                       key={tag}
                       className="bg-gray-200 rounded-full px-3 py-1 mr-2"

@@ -26,6 +26,8 @@ export default function HomePage() {
   const getArticles = useGetArticleApi();
   const getCycleTrackingLatest = useCycleTrackingLatest();
 
+  console.log("getCycleTrackingLatest", getCycleTrackingLatest?.data);
+
   const insets = useSafeAreaInsets();
 
   const router = useRouter();
