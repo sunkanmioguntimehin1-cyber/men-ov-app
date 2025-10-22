@@ -9,9 +9,9 @@ import LoadingOverlay from "@/src/custom-components/LoadingOverlay";
 import { Feather, Ionicons, MaterialIcons } from "@expo/vector-icons";
 import { differenceInYears, format, parseISO } from "date-fns";
 import { Image } from "expo-image";
-import { useFocusEffect, useRouter } from "expo-router";
+import { useRouter } from "expo-router";
 import React from "react";
-import { ScrollView, Text, TouchableOpacity, View } from "react-native";
+import { Alert, ScrollView, Text, TouchableOpacity, View } from "react-native";
 // import SafeScreen from "../../../components/SafeScreen";
 
 export default function ProfilePage() {
@@ -25,12 +25,29 @@ export default function ProfilePage() {
   const saveRecommendation = useSaveRecommendationApi();
   const getIntakeDetails = useGetIntakeDetails();
 
-  const openWebView = (itemUrl: string) => {
-    router.push({
-      pathname: "/profilepage/profile-screen/recommendations-webview",
-      params: { item: JSON.stringify(itemUrl) },
-    });
-  };
+  // const openWebView = (itemUrl: string) => {
+  //   router.push({
+  //     pathname: "/profilepage/profile-screen/recommendations-webview",
+  //     params: { item: JSON.stringify(itemUrl) },
+  //   });
+  // };
+
+   const openWebView = (itemUrl:string) => {
+       try {
+         const uri = itemUrl;
+  
+         if (!uri) {
+           Alert.alert("No  article Url found");
+           return;
+         }
+          router.push({
+            pathname: "/profilepage/profile-screen/recommendations-webview",
+            params: { item: JSON.stringify(uri) },
+          });
+       } catch (error) {
+         Alert.alert("Failed to fetch article Url");
+       }
+     };
 
   const handleSaveRecommadation = (itemId: string) => {
     saveRecommendation.mutate({
@@ -55,25 +72,7 @@ export default function ProfilePage() {
     age = differenceInYears(now, date);
   }
 
-  // //USEFOCUSEFFECT
-  useFocusEffect(
-    React.useCallback(() => {
-      if (firstTimeRef.current) {
-        firstTimeRef.current = false;
-        return;
-      }
-
-      if (!getIntakeDetails.data) {
-        setModelVisible1(true);
-      }
-
-      // getIntakeDetails.refetch();
-    }, [getIntakeDetails])
-  );
-
-  const onCancel2 = () => {
-    setModelVisible1(false);
-  };
+ 
 
   return (
     <SafeScreen className="bg-white">

@@ -192,14 +192,20 @@ const SymptomsDescriptions = ({
               </View>
             ) : (
               <View className=" flex-row ">
-                <View className=" w-80 h-56 p-3">
-                  <Image
-                    // source={{ uri: imageSelected.uri || storeData.publicUrl }}
-                    source={{ uri: storeData?.publicUrl }}
-                    style={{ width: "100%", height: "100%" }}
-                    contentFit="cover"
-                  />
-                </View>
+                {ImgIsError ? (
+                  <View className="text-red-500">
+                    <Text>Upload Failed. Try Again.</Text>
+                  </View>
+                ) : (
+                  <View className=" w-80 h-56 p-3">
+                    <Image
+                      // source={{ uri: imageSelected.uri || storeData.publicUrl }}
+                      source={{ uri: storeData?.publicUrl }}
+                      style={{ width: "100%", height: "100%" }}
+                      contentFit="cover"
+                    />
+                  </View>
+                )}
 
                 <TouchableOpacity onPress={handleCloseImage} className="">
                   <AntDesign name="close" size={18} color="black" />

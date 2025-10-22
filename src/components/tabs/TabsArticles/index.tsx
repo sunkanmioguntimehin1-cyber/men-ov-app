@@ -6,6 +6,7 @@ import { Image } from "expo-image";
 import { useRouter } from "expo-router";
 import React from "react";
 import {
+  Alert,
   ScrollView,
   Text,
   TouchableOpacity,
@@ -17,12 +18,30 @@ const TabsArticles = () => {
   const getArticles = useGetArticleApi();
 
 
-  const openWebView = (itemUrl: string) => {
-    router.push({
-      pathname: "/homepage/articles-webview",
-      params: { item: JSON.stringify(itemUrl) },
-    });
-  };
+  // const openWebView = (itemUrl: string) => {
+  //   console.log("itemUrl", itemUrl);
+  //   router.push({
+  //     pathname: "/homepage/articles-webview",
+  //     params: { item: JSON.stringify(itemUrl) },
+  //   });
+  // };
+
+   const openWebView = (itemUrl:string) => {
+     try {
+       const uri = itemUrl;
+
+       if (!uri) {
+         Alert.alert("No  article Url found");
+         return;
+       }
+       router.push({
+         pathname: "/homepage/articles-webview",
+         params: { item: JSON.stringify(uri) },
+       });
+     } catch (error) {
+       Alert.alert("Failed to fetch article Url");
+     }
+   };
 
   return (
     <View className="">

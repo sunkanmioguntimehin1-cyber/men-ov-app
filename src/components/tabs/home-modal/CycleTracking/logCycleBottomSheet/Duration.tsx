@@ -1,6 +1,7 @@
 import CustomRadio from "@/src/custom-components/CustomRadio";
+import { AntDesign } from "@expo/vector-icons";
 import React from "react";
-import { Text, View } from "react-native";
+import { Text, TouchableOpacity, View } from "react-native";
 
 const Duration = ({
   handleDurationBottomSheetClose,
@@ -15,10 +16,16 @@ const Duration = ({
 
   return (
     <View className=" p-8">
-      <View className=" items-center">
-        <Text className=" text-lg font-[PoppinsSemiBold]">
-          Duration?
-        </Text>
+      <View className=" items-center justify-between flex-row mb-4">
+        <View />
+        <Text className=" text-lg font-[PoppinsSemiBold]">Duration?</Text>
+
+        <TouchableOpacity
+          className="  p-2"
+          onPress={handleDurationBottomSheetClose}
+        >
+          <AntDesign name="close" size={24} color="black" />
+        </TouchableOpacity>
       </View>
       <View>
         <View className=" my-3">

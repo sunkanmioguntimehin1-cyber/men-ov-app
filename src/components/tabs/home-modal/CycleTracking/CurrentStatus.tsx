@@ -18,11 +18,11 @@ const CurrentStatus = ({
     { label: "Postmenopause", value: "postmenopause" },
   ];
 
-  React.useEffect(() => {
-    if (getIntakeDetails?.data) {
-      setMenopauseStage(getIntakeDetails?.data?.menopauseStage || "");
-    }
-  }, [getIntakeDetails?.data, setMenopauseStage]);
+  // React.useEffect(() => {
+  //   if (getIntakeDetails?.data) {
+  //     setMenopauseStage(getIntakeDetails?.data?.menopauseStage || "");
+  //   }
+  // }, [getIntakeDetails?.data, setMenopauseStage]);
   return (
     <View>
       <View className=" my-3">

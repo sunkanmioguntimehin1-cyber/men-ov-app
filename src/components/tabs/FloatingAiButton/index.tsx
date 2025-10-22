@@ -13,14 +13,12 @@ import {
   View,
 } from "react-native";
 
-
 const FloatingAiButton = () => {
   const router = useRouter();
   const bounceAnim = useRef(new Animated.Value(0)).current;
   const pulseAnim = useRef(new Animated.Value(0)).current;
 
   const getUserChatAi = useGetUserChat();
-
 
   const openReceiptInBrowser = async () => {
     try {
@@ -45,12 +43,21 @@ const FloatingAiButton = () => {
   };
 
   const openWebView = () => {
-   
-     router.push({
-       pathname: "/homepage/chat-webview-ai",
-       params: { item: JSON.stringify(getUserChatAi.data?.chatUrl) },
+    console.log("getUserChatAi.data", getUserChatAi.data);
+    try {
+      const uri = getUserChatAi.data?.chatUrl;
 
-     });
+      if (!uri) {
+        Alert.alert("No  chat Url found");
+        return;
+      }
+      router.push({
+        pathname: "/homepage/chat-webview-ai",
+        params: { item: JSON.stringify(uri) },
+      });
+    } catch (error) {
+      Alert.alert("Failed to fetch chat Url");
+    }
   };
 
   useEffect(() => {
@@ -105,13 +112,13 @@ const FloatingAiButton = () => {
   });
 
   const handleOpenPrivacyPolicy = async () => {
-      const uri = "https://menoviahealth.com/privacy.html";
-      try {
-        await WebBrowser.openBrowserAsync(uri);
-      } catch (error) {
-        Alert.alert("Failed to fetch receipt.");
-      }
-    };
+    const uri = "https://menoviahealth.com/privacy.html";
+    try {
+      await WebBrowser.openBrowserAsync(uri);
+    } catch (error) {
+      Alert.alert("Failed to fetch receipt.");
+    }
+  };
 
   return (
     <View>

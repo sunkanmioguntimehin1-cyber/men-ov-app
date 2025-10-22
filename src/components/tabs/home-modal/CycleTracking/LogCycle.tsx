@@ -14,10 +14,6 @@ const LogCycle = ({
   notePublicUrls,
   setNotePublicUrls,
 }: any) => {
-   
-  
-
-   
   return (
     <View className="my-3">
       <Text

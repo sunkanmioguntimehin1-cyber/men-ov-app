@@ -6,10 +6,6 @@ import {
   useCloseLogApi,
   useUpdateLogApi,
 } from "@/src/api_services/logApi/logMutation";
-import {
-  useGetUploadUrl,
-  useImageUpload,
-} from "@/src/api_services/uploadApi/uploadMutations";
 import { rMS } from "@/src/lib/responsivehandler";
 import { Image } from "expo-image";
 import React from "react";
@@ -39,13 +35,13 @@ const LastSymptomsModal = ({ onCancel, selectedLastSymptom }: any) => {
   const [selectedTriggers, setSelectedTriggers] = React.useState<string[]>(
     selectedLastSymptom?.triggers || []
   );
+  const [notePublicUrls, setNotePublicUrls] = React.useState<string[]>([]);
+  const [symptomImgPublicUrls, setSymptomImgPublicUrls] = React.useState<
+    string[]
+  >([]);
 
   const [customTrigger, setCustomTrigger] = React.useState("");
-  const [storeData, setStoreData] = React.useState<string | any>(null);
-  const [imageSelected, setImageSelected] = React.useState<any>(null);
   const [isDone, setIsDone] = React.useState(false);
-
-  console.log("selectedLastSymptom234", selectedLastSymptom);
 
   const toggleTrigger = (trigger: string) => {
     setSelectedTriggers((prev) =>
@@ -116,20 +112,10 @@ const LastSymptomsModal = ({ onCancel, selectedLastSymptom }: any) => {
     }
   }, [selectedLastSymptom, reset]);
 
-  const handleStoreData = (data: any) => {
-    setStoreData(data);
-  };
+  
 
-  const getUploadUrlData = useGetUploadUrl(handleStoreData);
 
-  //UPLOADING
-  const {
-    uploadImage: imageUploadedSelected,
-    imageData: itemImgData,
-    isImageUploadPending: ImgIsPending,
-    isImageUploadError: ImgIsError,
-    resetImageData,
-  } = useImageUpload(storeData);
+
 
   const onSubmit = (data: any) => {
     const payload = {
@@ -137,10 +123,9 @@ const LastSymptomsModal = ({ onCancel, selectedLastSymptom }: any) => {
       severityLevel: selectedSeverityLevel || selectedLastSymptom.severityLevel,
       triggers: selectedTriggers || selectedLastSymptom.triggers,
       notes: data.notes || selectedLastSymptom.notes,
-      symptomImages: itemImgData
-        ? [itemImgData]
-        : selectedLastSymptom?.symptomImages || [],
-      images: selectedLastSymptom?.images || [],
+      symptomImages:
+        symptomImgPublicUrls || selectedLastSymptom?.symptomImages || [],
+      images: notePublicUrls || selectedLastSymptom?.images || [],
       id: selectedLastSymptom._id,
     };
     updateLogDetails.mutate(payload);
@@ -152,10 +137,9 @@ const LastSymptomsModal = ({ onCancel, selectedLastSymptom }: any) => {
       severityLevel: selectedSeverityLevel || selectedLastSymptom.severityLevel,
       triggers: selectedTriggers || selectedLastSymptom.triggers,
       notes: data.notes || selectedLastSymptom.notes,
-      symptomImages: itemImgData
-        ? [itemImgData]
-        : selectedLastSymptom?.symptomImages || [],
-      images: selectedLastSymptom?.images || [],
+      symptomImages:
+        symptomImgPublicUrls || selectedLastSymptom?.symptomImages || [],
+      images: notePublicUrls || selectedLastSymptom?.images || [],
       id: selectedLastSymptom._id,
     };
     closeLog.mutate(payload);
@@ -236,20 +220,16 @@ const LastSymptomsModal = ({ onCancel, selectedLastSymptom }: any) => {
               setCustomTrigger={setCustomTrigger}
             />
             <Note errors={errors} control={formMethods.control} />
+
             <ImageUploadedDetails
-              imageSelected={imageSelected}
-              setImageSelected={setImageSelected}
-              imageUploadedSelected={imageUploadedSelected}
+              setSymptomImgPublicUrls={setSymptomImgPublicUrls}
               selectedLastSymptom={selectedLastSymptom}
-              resetImageData={resetImageData}
             />
 
+          
             <NoteImageDetails
-              imageSelected={imageSelected}
-              setImageSelected={setImageSelected}
-              imageUploadedSelected={imageUploadedSelected}
               selectedLastSymptom={selectedLastSymptom}
-              resetImageData={resetImageData}
+              setNotePublicUrls={setNotePublicUrls}
             />
           </ScrollView>
 

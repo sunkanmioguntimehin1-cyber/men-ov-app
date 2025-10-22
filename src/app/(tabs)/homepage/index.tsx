@@ -1,7 +1,6 @@
 import { useGetArticleApi } from "@/src/api_services/articleApi/articleQuery";
 import { useCycleTrackingLatest } from "@/src/api_services/logApi/logQuery";
 import { useGetIntakeDetails } from "@/src/api_services/userApi/userQuery";
-import InTakeModal from "@/src/components/profile/InTakeModal";
 import FloatingAiButton from "@/src/components/tabs/FloatingAiButton";
 import CycleTracking from "@/src/components/tabs/home-modal/CycleTracking";
 import YourFeelingToday from "@/src/components/tabs/home-modal/YourFeelingToday";
@@ -47,13 +46,13 @@ export default function HomePage() {
 
     const date = new Date(getCycleTrackingLatest?.data?.start);
 
-    // Check if the date is valid
     if (isNaN(date.getTime())) {
       return null;
     }
 
     try {
-      return formatDistanceToNow(date, { addSuffix: true });
+      const distance = formatDistanceToNow(date, { addSuffix: false });
+      return `${distance} ago`;
     } catch (error) {
       console.error("Error formatting date:", error);
       return null;
@@ -61,6 +60,8 @@ export default function HomePage() {
   };
 
   const result = getFormattedDate();
+
+  console.log("result", result);
 
   const handleOpenmodal = () => {
     setModelVisible(true);
@@ -80,12 +81,16 @@ export default function HomePage() {
   };
 
   const handleOpenmodal2 = () => {
-    if (!getIntakeDetails.data) {
-      setModelVisible3(true);
-    } else {
+    // if (!getIntakeDetails.data) {
+    //   setModelVisible3(true);
+    // } else {
+    //   setModelVisible2(true);
+    // }
       setModelVisible2(true);
-    }
+
   };
+
+  console.log("getIntakeDetailsError6001", getIntakeDetails.data);
 
   const onCancel2 = () => {
     setModelVisible2(false);
@@ -130,12 +135,12 @@ export default function HomePage() {
             message={<CycleTracking onCancel={onCancel2} />}
           />
 
-          <CustomModel
+          {/* <CustomModel
             modelVisible={modelVisible3}
             setModelVisible={setModelVisible3}
             // closeOnOutsideClick={false}
             message={<InTakeModal onCancel={onCancel3} />}
-          />
+          /> */}
 
           <View className="p-8 flex-row items-center justify-end">
             <TouchableOpacity
@@ -193,7 +198,7 @@ export default function HomePage() {
                 label="Cycle Tracking"
                 placeholder={
                   getCycleTrackingLatest?.data && result
-                    ? `${getCycleTrackingLatest?.data?.note} ${result} ago`
+                    ? `${getCycleTrackingLatest?.data?.note} ${result}`
                     : "Add your last cycle"
                 }
                 icon={

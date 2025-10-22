@@ -1,20 +1,42 @@
+import {
+  useGetUploadUrl,
+  useImageUpload,
+} from "@/src/api_services/uploadApi/uploadMutations";
 import { rS } from "@/src/lib/responsivehandler";
-import { Entypo } from "@expo/vector-icons";
+import { AntDesign, Entypo } from "@expo/vector-icons";
 import { Image } from "expo-image";
 import * as ImagePicker from "expo-image-picker";
-import React, { useState } from "react";
-import { Text, TouchableOpacity, View } from "react-native";
-import { ICarouselInstance } from "react-native-reanimated-carousel";
+import React from "react";
+import { ActivityIndicator, Text, TouchableOpacity, View } from "react-native";
 
-const NoteImageDetails = ({
-  imageSelected,
-  setImageSelected,
-  selectedLastSymptom,
-  imageUploadedSelected,
-  resetImageData,
-}: any) => {
-  const [openDropDown, setOpenDropDown] = useState(false);
-  const ref = React.useRef<ICarouselInstance>(null);
+const NoteImageDetails = ({ selectedLastSymptom, setNotePublicUrls }: any) => {
+  const [storeData, setStoreData] = React.useState<string | any>(null);
+  const [imageSelected, setImageSelected] = React.useState<any>(null);
+
+  const handleStoreData = (data: any) => {
+    setStoreData(data);
+    if (data?.publicUrl) {
+      setNotePublicUrls((prev: any) => [...prev, data.publicUrl]);
+    }
+    // keep track of only URLs
+  };
+
+  //UPLOADING
+  const {
+    uploadImage: imageUploadedSelected,
+    imageData: itemImgData,
+    isImageUploadPending: ImgIsPending,
+    isImageUploadError: ImgIsError,
+    resetImageData,
+  } = useImageUpload(storeData);
+
+  const getUploadUrlData = useGetUploadUrl(handleStoreData);
+
+  React.useEffect(() => {
+    if (storeData?.uploadUrl && imageSelected?.uri) {
+      imageUploadedSelected(imageSelected.uri);
+    }
+  }, [storeData]);
 
   const handleImagePick = async () => {
     try {
@@ -27,81 +49,64 @@ const NoteImageDetails = ({
       });
 
       if (!result.canceled) {
-        imageUploadedSelected(result.assets[0].uri);
+        const selectedAsset = result.assets[0];
+        setImageSelected(selectedAsset);
 
-        setImageSelected(result.assets[0].uri);
+        // Request upload URL - this will trigger the useEffect above once complete
+        getUploadUrlData.mutate({
+          fileName: selectedAsset.fileName,
+        });
       }
     } catch (error) {
       console.log("error from image upload", error);
     }
   };
 
-  console.log(
-    "selectedLastSymptom?.symptomImages[0]",
-    selectedLastSymptom?.symptomImages[0]
-  );
-
   const handleCloseImage = () => {
     setImageSelected(null);
     resetImageData();
+    setNotePublicUrls([]);
   };
   return (
     <View>
       <Text className="font-[PoppinsMedium] my-2 " style={{ fontSize: rS(12) }}>
         Note Image
       </Text>
+
       <View className=" ">
         {imageSelected || selectedLastSymptom?.images?.length > 0 ? (
           <View className="w-full h-56 border border-primary   items-center justify-center rounded-2xl">
-            {/* {imageSelected ? (
+            {ImgIsPending ? (
               <View>
                 <ActivityIndicator size={40} />
               </View>
-            ) : ( */}
-            <View className=" flex-row ">
-              <View className=" w-80 h-56 p-3">
-                <Image
-                  source={{
-                    uri: selectedLastSymptom?.images[0],
-                  }}
-                  style={{ width: "100%", height: "100%" }}
-                  contentFit="cover"
-                  onError={(error) => console.log("Image error:", error)}
-                />
-
-                {/* <Carousel
-                  ref={ref}
-                  width={300}
-                  height={220}
-                  data={selectedLastSymptom?.symptomImages}
-                  renderItem={({ item }) => (
-                    <View
-                      style={{
-                        flex: 1,
-                        borderWidth: 1,
-                        justifyContent: "center",
+            ) : (
+              <View className=" flex-row ">
+                {ImgIsError ? (
+                  <View className="text-red-500">
+                    <Text>Upload Failed. Try Again.</Text>
+                  </View>
+                ) : (
+                  <View className=" w-80 h-56 p-3">
+                    <Image
+                      source={{
+                        uri:
+                          storeData?.publicUrl ||
+                          selectedLastSymptom?.images[0],
                       }}
-                    >
-                      <Image
-                        source={{
-                          uri: item,
-                        }}
-                        style={{ width: "100%", height: "100%" }}
-                        contentFit="contain"
-                        onError={(error) => console.log("Image error:", error)}
-                      />
-                    </View>
-                  )}
-                /> */}
+                      style={{ width: "100%", height: "100%" }}
+                      contentFit="cover"
+                    />
+                  </View>
+                )}
+
+                {selectedLastSymptom?.images?.length > 0 ? null : (
+                  <TouchableOpacity onPress={handleCloseImage} className="">
+                    <AntDesign name="close" size={18} color="black" />
+                  </TouchableOpacity>
+                )}
               </View>
-
-
-{/* close button */}
-              {/* <TouchableOpacity onPress={handleCloseImage} className="">
-                <AntDesign name="close" size={18} color="black" />
-              </TouchableOpacity> */}
-            </View>
-            {/* )} */}
+            )}
           </View>
         ) : (
           <View>
@@ -109,12 +114,12 @@ const NoteImageDetails = ({
               className="my-3 w-[131px] flex-row items-center ml-2 bg-[#F9F5FF] rounded-full px-4 py-3 "
               onPress={handleImagePick}
             >
-              {/* <View className=" my-3 w-[131px] flex-row items-center ml-2 bg-[#F9F5FF] rounded-full px-4 py-3"> */}
               <View className="">
-                <Entypo name="image-inverted" size={20} color="#8A3FFC" />
+                <Entypo name="image-inverted" size={15} color="#8A3FFC" />
               </View>
-              <Text className="font-[PoppinsMedium] mx-2">Add image</Text>
-              {/* </View> */}
+              <Text className=" text-sm font-[PoppinsMedium] mx-2">
+                Add image
+              </Text>
             </TouchableOpacity>
           </View>
         )}
@@ -124,3 +129,4 @@ const NoteImageDetails = ({
 };
 
 export default NoteImageDetails;
+

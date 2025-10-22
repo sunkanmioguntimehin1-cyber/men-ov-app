@@ -157,7 +157,7 @@ const SummaryScreen = () => {
                   Cycle summary
                 </Text>
 
-                {getCycleTracking?.data?.data.map((item: any) => {
+                {getCycleTracking?.data?.data?.slice(0,4)?.map((item: any) => {
                   const dateString = item?.start;
                   const date = parseISO(dateString);
                   const now = new Date();
@@ -170,8 +170,7 @@ const SummaryScreen = () => {
                       key={item.id}
                     >
                       <Text className="text-white font-[PoppinsSemiBold] text-base">
-                        {/* {item.note} */}{" "}
-                        {getIntakeDetails?.data?.menopauseStage}
+                        {item.menopauseStage}
                       </Text>
                       <Text className="text-white text-sm mt-1">
                         Last period {distance}

@@ -82,6 +82,12 @@ const CalenderModal: React.FC = ({
 
   return (
     <View style={styles.container}>
+      <TouchableOpacity
+        className=" items-center justify-center p-2 bg-primary rounded-md  w-20 self-end"
+        onPress={handleDateBottomSheetClose}
+      >
+        <Text className=" text-white font-semibold ">Close</Text>
+      </TouchableOpacity>
       <View style={styles.header}>
         <TouchableOpacity onPress={handlePrevMonth}>
           <AntDesign name="left" size={24} color="black" />
