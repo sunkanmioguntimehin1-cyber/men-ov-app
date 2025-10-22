@@ -1,5 +1,7 @@
 import { useGetArticleApi } from "@/src/api_services/articleApi/articleQuery";
 import { useCycleTrackingLatest } from "@/src/api_services/logApi/logQuery";
+import { useGetIntakeDetails } from "@/src/api_services/userApi/userQuery";
+import InTakeModal from "@/src/components/profile/InTakeModal";
 import FloatingAiButton from "@/src/components/tabs/FloatingAiButton";
 import CycleTracking from "@/src/components/tabs/home-modal/CycleTracking";
 import YourFeelingToday from "@/src/components/tabs/home-modal/YourFeelingToday";
@@ -22,11 +24,16 @@ export default function HomePage() {
   const [modelVisible, setModelVisible] = React.useState(false);
   const [modelVisible1, setModelVisible1] = React.useState(false);
   const [modelVisible2, setModelVisible2] = React.useState(false);
+  const [modelVisible3, setModelVisible3] = React.useState(false);
+
   const [selectedLastSymptom, setSelectedLastSymptom] = React.useState(null);
+
+  const firstTimeRef = React.useRef(true);
   const getArticles = useGetArticleApi();
   const getCycleTrackingLatest = useCycleTrackingLatest();
+  const getIntakeDetails = useGetIntakeDetails();
 
-  console.log("getCycleTrackingLatest", getCycleTrackingLatest?.data);
+  console.log("getCycleTrackingLatest5001", getCycleTrackingLatest?.data);
 
   const insets = useSafeAreaInsets();
 
@@ -73,11 +80,19 @@ export default function HomePage() {
   };
 
   const handleOpenmodal2 = () => {
-    setModelVisible2(true);
+    if (!getIntakeDetails.data) {
+      setModelVisible3(true);
+    } else {
+      setModelVisible2(true);
+    }
   };
 
   const onCancel2 = () => {
     setModelVisible2(false);
+  };
+
+  const onCancel3 = () => {
+    setModelVisible3(false);
   };
 
   return (
@@ -115,11 +130,18 @@ export default function HomePage() {
             message={<CycleTracking onCancel={onCancel2} />}
           />
 
+          <CustomModel
+            modelVisible={modelVisible3}
+            setModelVisible={setModelVisible3}
+            // closeOnOutsideClick={false}
+            message={<InTakeModal onCancel={onCancel3} />}
+          />
+
           <View className="p-8 flex-row items-center justify-end">
             <TouchableOpacity
               className=" mx-3"
               onPress={() => {
-                router.push("/(tabs)/profilepage/notifications");
+                router.push("/(tabs)/profilepage");
               }}
             >
               <Ionicons name="notifications-outline" size={20} color="black" />

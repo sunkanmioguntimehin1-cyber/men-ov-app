@@ -10,8 +10,11 @@ const CurrentStatus = ({
   // console.log("getIntakeDetails", getIntakeDetails?.data);
 
   const menopauseStageData = [
-    { label: "Premenopause", value: "premenopause" },
+    // { label: "Premenopause", value: "premenopause" },
+    // { label: "Perimenopause", value: "perimenopause" },
+    // { label: "Postmenopause", value: "postmenopause" },
     { label: "Perimenopause", value: "perimenopause" },
+    { label: "Menopause", value: "menopause" },
     { label: "Postmenopause", value: "postmenopause" },
   ];
 

@@ -4,12 +4,14 @@ import AccountDeletionModal from "@/src/components/profile/AccountDeletionModal"
 import InTakeModal from "@/src/components/profile/InTakeModal";
 import CustomModel from "@/src/custom-components/CustomModel";
 import useAuthStore from "@/src/store/authStore";
+import useSymtomsStore from "@/src/store/symtomsStore";
 import {
   AntDesign,
   Feather,
   MaterialIcons,
-  SimpleLineIcons
+  SimpleLineIcons,
 } from "@expo/vector-icons";
+import { useQueryClient } from "@tanstack/react-query";
 import { useFocusEffect, useRouter } from "expo-router";
 import React from "react";
 import { Alert, Text, TouchableOpacity, View } from "react-native";
@@ -17,12 +19,13 @@ import SafeScreen from "../../../components/SafeScreen";
 
 export default function ProfilePage() {
   const router = useRouter();
+  const queryClient = useQueryClient();
   const firstTimeRef = React.useRef(true);
 
   const deleteUserDetails = useDeleteUserApi();
   const getIntakeDetails = useGetIntakeDetails();
 
-  console.log("getIntakeDetailsError234", !getIntakeDetails.data);
+  console.log("getIntakeDetailsError6000", !getIntakeDetails.data);
   const [modelVisible, setModelVisible] = React.useState(false);
   const [modelVisible1, setModelVisible1] = React.useState(false);
 
@@ -97,8 +100,9 @@ export default function ProfilePage() {
       {
         text: "Ok",
         onPress: async () => {
-          // Use the auth store's logout method
-          useAuthStore.getState().clearAuthState();
+          // Clear all cached data and auth state
+          useAuthStore.getState().clearAuthState(queryClient);
+          useSymtomsStore.getState().clearAllData();
           router.replace("/(auth)/login");
         },
       },
@@ -126,11 +130,17 @@ export default function ProfilePage() {
         setModelVisible1(true);
       }
 
-      getIntakeDetails.refetch();
+      // getIntakeDetails.refetch();
     }, [getIntakeDetails])
   );
 
- 
+  // Open intake modal when query resolves and there's no data
+  React.useEffect(() => {
+    if (!getIntakeDetails.data) {
+      setModelVisible1(true);
+    }
+  }, [getIntakeDetails.data]);
+
   const onCancel2 = () => {
     setModelVisible1(false);
   };

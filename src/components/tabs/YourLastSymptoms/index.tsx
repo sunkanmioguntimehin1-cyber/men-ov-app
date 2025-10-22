@@ -179,7 +179,7 @@ const YourLastSymptoms = ({ handleOpenLastSymptoms }: any) => {
         >
           Your last symptoms
         </Text>
-        <TouchableOpacity
+        {/* <TouchableOpacity
           onPress={() => {
             router.push("/profilepage/summary-screen");
           }}
@@ -190,7 +190,7 @@ const YourLastSymptoms = ({ handleOpenLastSymptoms }: any) => {
           >
             View
           </Text>
-        </TouchableOpacity>
+        </TouchableOpacity> */}
       </View>
 
       <ScrollView horizontal className="">
