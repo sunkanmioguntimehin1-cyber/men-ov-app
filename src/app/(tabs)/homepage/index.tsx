@@ -16,7 +16,7 @@ import { formatDistanceToNow } from "date-fns";
 import { Image } from "expo-image";
 import { useRouter } from "expo-router";
 import React from "react";
-import { Platform, TouchableOpacity, View } from "react-native";
+import { ImageBackground, Platform, TouchableOpacity, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 export default function HomePage() {
@@ -109,109 +109,122 @@ export default function HomePage() {
       />
       <View className="flex-1 relative">
         <Screen scroll={true}>
-          <CustomModel
-            modelVisible={modelVisible}
-            setModelVisible={setModelVisible}
-            closeOnOutsideClick={false}
-            message={<YourFeelingToday onCancel={onCancel} />}
-          />
+          <ImageBackground
+            source={require("@/assets/images/background.png")}
+            style={{
+              height: "58%",
+              width: "100%",
+            }}
+            resizeMode="contain"
+          >
+            <CustomModel
+              modelVisible={modelVisible}
+              setModelVisible={setModelVisible}
+              closeOnOutsideClick={false}
+              message={<YourFeelingToday onCancel={onCancel} />}
+            />
 
-          <CustomModel
-            modelVisible={modelVisible1}
-            setModelVisible={setModelVisible1}
-            closeOnOutsideClick={false}
-            message={
-              <LastSymptomsModal
-                selectedLastSymptom={selectedLastSymptom}
-                onCancel={onCancel1}
-              />
-            }
-          />
+            <CustomModel
+              modelVisible={modelVisible1}
+              setModelVisible={setModelVisible1}
+              closeOnOutsideClick={false}
+              message={
+                <LastSymptomsModal
+                  selectedLastSymptom={selectedLastSymptom}
+                  onCancel={onCancel1}
+                />
+              }
+            />
 
-          <CustomModel
-            modelVisible={modelVisible2}
-            setModelVisible={setModelVisible2}
-            closeOnOutsideClick={false}
-            message={<CycleTracking onCancel={onCancel2} />}
-          />
+            <CustomModel
+              modelVisible={modelVisible2}
+              setModelVisible={setModelVisible2}
+              closeOnOutsideClick={false}
+              message={<CycleTracking onCancel={onCancel2} />}
+            />
 
-          {/* <CustomModel
+            {/* <CustomModel
             modelVisible={modelVisible3}
             setModelVisible={setModelVisible3}
             // closeOnOutsideClick={false}
             message={<InTakeModal onCancel={onCancel3} />}
           /> */}
 
-          <View className="p-8 flex-row items-center justify-end">
-            <TouchableOpacity
-              className=" mx-3"
-              onPress={() => {
-                router.push("/(tabs)/profilepage");
-              }}
-            >
-              <Ionicons name="notifications-outline" size={20} color="black" />
-            </TouchableOpacity>
-
-            <TouchableOpacity
-              className=" w-6 h-6 "
-              onPress={() => {
-                router.push("/(tabs)/profilepage");
-              }}
-            >
-              <Image
-                source={require("@/assets/images/profile-image.png")}
-                style={{
-                  height: "100%",
-                  width: "100%",
-                  borderRadius: 100,
+            <View className="p-8 flex-row items-center justify-end">
+              <TouchableOpacity
+                className=" mx-3"
+                onPress={() => {
+                  router.push("/(tabs)/profilepage");
                 }}
-                contentFit="contain"
-                onError={(error) => console.log("Image error:", error)}
-              />
-            </TouchableOpacity>
-          </View>
+              >
+                <Ionicons
+                  name="notifications-outline"
+                  size={20}
+                  color="black"
+                />
+              </TouchableOpacity>
 
-          <View className="px-8 pb-32">
-            {/* Increased bottom padding to ensure content isn't hidden */}
-            <View className="my-3">
-              <YourLastSymptoms
-                handleOpenLastSymptoms={handleOpenLastSymptoms}
-              />
+              <TouchableOpacity
+                className=" w-6 h-6 "
+                onPress={() => {
+                  router.push("/(tabs)/profilepage");
+                }}
+              >
+                <Image
+                  source={require("@/assets/images/profile-image.png")}
+                  style={{
+                    height: "100%",
+                    width: "100%",
+                    borderRadius: 100,
+                  }}
+                  contentFit="contain"
+                  onError={(error) => console.log("Image error:", error)}
+                />
+              </TouchableOpacity>
             </View>
-            <View>
-              <CustomSelectData
-                onPress={handleOpenmodal}
-                primary
-                label="How do you Feel today?"
-                placeholder="Log "
-                icon={
-                  <TouchableOpacity onPress={handleOpenmodal}>
-                    <AntDesign name="right" size={24} color="black" />
-                  </TouchableOpacity>
-                }
-              />
+
+            <View className="px-8 pb-32">
+              {/* Increased bottom padding to ensure content isn't hidden */}
+              <View className="my-3">
+                <YourLastSymptoms
+                  handleOpenLastSymptoms={handleOpenLastSymptoms}
+                />
+              </View>
+              <View>
+                <CustomSelectData
+                  onPress={handleOpenmodal}
+                  primary
+                  label="How do you Feel today?"
+                  placeholder="Log "
+                  icon={
+                    <TouchableOpacity onPress={handleOpenmodal}>
+                      <AntDesign name="right" size={24} color="black" />
+                    </TouchableOpacity>
+                  }
+                />
+              </View>
+              <View className="my-5">
+                <CustomSelectData
+                  onPress={handleOpenmodal2}
+                  primary
+                  label="Cycle Tracking"
+                  placeholder={
+                    getCycleTrackingLatest?.data && result
+                      ? `${getCycleTrackingLatest?.data?.note} ${result}`
+                      : "Add your last cycle"
+                  }
+                  icon={
+                    <TouchableOpacity onPress={handleOpenmodal2}>
+                      <AntDesign name="right" size={24} color="black" />
+                    </TouchableOpacity>
+                  }
+                />
+              </View>
+              <View className="">
+                <TabsArticles />
+              </View>
             </View>
-            <View className="my-5">
-              <CustomSelectData
-                onPress={handleOpenmodal2}
-                primary
-                label="Cycle Tracking"
-                placeholder={
-                  getCycleTrackingLatest?.data && result
-                    ? `${getCycleTrackingLatest?.data?.note} ${result}`
-                    : "Add your last cycle"
-                }
-                icon={
-                  <TouchableOpacity onPress={handleOpenmodal2}>
-                    <AntDesign name="right" size={24} color="black" />
-                  </TouchableOpacity>
-                }
-              />
-            </View>
-            <View className="">
-              <TabsArticles />
-            </View>
-          </View>
+          </ImageBackground>
         </Screen>
 
         {/* Floating button with proper positioning for all screen sizes */}

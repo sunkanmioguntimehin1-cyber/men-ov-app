@@ -67,7 +67,7 @@ export default function TabsLayout() {
               }),
         })}
       />
-      {/* <Tabs.Screen
+      <Tabs.Screen
         name="explorepage/index"
         options={{
           title: "Explore",
@@ -79,8 +79,8 @@ export default function TabsLayout() {
             />
           ),
         }}
-      /> */}
-      {/* <Tabs.Screen
+      />
+      <Tabs.Screen
         name="communitypage/index"
         options={{
           title: "Community",
@@ -92,7 +92,7 @@ export default function TabsLayout() {
             />
           ),
         }}
-      /> */}
+      /> 
       <Tabs.Screen
         name="profilepage"
         options={({ route }) => ({
