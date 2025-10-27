@@ -37,7 +37,6 @@ const ViewSearchResult = () => {
     return params.item ? JSON.parse(params.item as string) : null;
   }, [params.item]);
 
-
   const getSearchResult = useGetSearchResult(newData);
 
   React.useEffect(() => {
@@ -55,7 +54,7 @@ const ViewSearchResult = () => {
         return;
       }
       router.push({
-        pathname: "/profilepage/profile-screen/recommendations-webview",
+        pathname: "/(tabs)/explorepage/explore-webview",
         params: { item: JSON.stringify(uri) },
       });
     } catch (error) {
