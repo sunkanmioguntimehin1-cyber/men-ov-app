@@ -40,7 +40,7 @@ const CustomSelectData = ({
 
   const getBgColor = () => {
     if (primary)
-      return `border border-[#EAEAEA] text-black ${
+      return `border bg-white border-[#EAEAEA] text-black ${
         error ? "border-red" : "border-divider"
       }`;
     if (whiteBg)

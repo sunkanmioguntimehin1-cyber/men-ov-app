@@ -112,10 +112,10 @@ export default function HomePage() {
           <ImageBackground
             source={require("@/assets/images/background.png")}
             style={{
-              height: "58%",
+              height: "55%",
               width: "100%",
             }}
-            resizeMode="contain"
+            resizeMode="cover"
           >
             <CustomModel
               modelVisible={modelVisible}
@@ -190,7 +190,7 @@ export default function HomePage() {
                   handleOpenLastSymptoms={handleOpenLastSymptoms}
                 />
               </View>
-              <View>
+              <View className="">
                 <CustomSelectData
                   onPress={handleOpenmodal}
                   primary

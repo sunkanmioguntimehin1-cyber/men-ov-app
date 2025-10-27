@@ -68,7 +68,7 @@ export default function TabsLayout() {
         })}
       />
       <Tabs.Screen
-        name="explorepage/index"
+        name="explorepage"
         options={{
           title: "Explore",
           tabBarIcon: ({ color, focused }) => (

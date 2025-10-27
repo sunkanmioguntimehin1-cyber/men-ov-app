@@ -1,16 +1,21 @@
+import {
+  useGetAllToics,
+  useGetExplore,
+} from "@/src/api_services/exploreApi/exploreQuery";
+import LoadingOverlay from "@/src/custom-components/LoadingOverlay";
 import Screen from "@/src/layout/Screen";
-import { rS } from "@/src/lib/responsivehandler";
-import { Feather, Ionicons } from "@expo/vector-icons";
+import { EvilIcons, Fontisto, Ionicons } from "@expo/vector-icons";
 import { BlurView } from "expo-blur";
 import { Image } from "expo-image";
+import { useRouter } from "expo-router";
 // import { Image, ImageBackground } from 'expo-image'
 import React from "react";
 import {
   Dimensions,
+  FlatList,
   ImageBackground,
   ScrollView,
   Text,
-  TextInput,
   TouchableOpacity,
   View,
 } from "react-native";
@@ -18,65 +23,28 @@ import {
 const { width } = Dimensions.get("window");
 
 const ExplorePage = () => {
-  // Mock data for posts
-  const trendingPosts = [
-    {
-      id: 1,
-      title: "My Recommendations",
-      author: "Olivia Rhye",
-      date: "20 Jan 2025",
-      likes: 4,
-      comments: 4,
-      shares: 3,
-      image: require("@/assets/images/profile-image.png"),
-    },
-    {
-      id: 2,
-      title: "My Rec",
-      author: "Olivia",
-      date: "20 Jan 2025",
-      likes: 4,
-      comments: 4,
-      shares: 0,
-      image: require("@/assets/images/profile-image.png"),
-    },
-  ];
+  const router = useRouter();
 
-  const relatedPosts = [
-    {
-      id: 1,
-      title: "Body changes in perimenopause",
-      author: "Olivia Rhye",
-      date: "20 Jan 2025",
-      likes: 4,
-      comments: 4,
-      shares: 3,
-      image: require("@/assets/images/profile-image.png"),
-    },
-    {
-      id: 2,
-      title: "My Rec",
-      author: "Olivia",
-      date: "20 Jan 2025",
-      likes: 4,
-      comments: 4,
-      shares: 0,
-      image: require("@/assets/images/profile-image.png"),
-    },
-  ];
+  const getAllExploreToics = useGetAllToics();
+  const getExploreData = useGetExplore();
 
-  const renderPostCard = (post: any) => (
+  const renderPostCard = (post: any, item: any) => (
     <TouchableOpacity
       key={post.id}
-      className="mr-4 bg-[#F4EBFF]"
+      // style={{ backgroundColor: item.background }}
+      className="mr-4 bg-[#F4EBFF] rounded-xl"
       style={{ width: width * 0.75 }}
     >
-      <View className="bg-[#F4EBFF] p-4 overflow-hidden shadow-sm">
-        <Text className="my-2">My Recommendations</Text>
+      <View className=" p-4 overflow-hidden shadow-sm">
+        <Text className="my-2">{post.title}</Text>
 
         <View className="h-60">
           <ImageBackground
-            source={post.image}
+            source={{
+              uri:
+                post?.images[0] ||
+                "https://www.sleepfoundation.org/wp-content/uploads/2024/01/image-16.png",
+            }}
             style={{
               height: "100%",
               width: "100%",
@@ -94,8 +62,8 @@ const ExplorePage = () => {
                 // justifyContent: "center",
               }}
             >
-              <Text className=" text-lg">Olivia Rhye</Text>
-              <Text className=" text-lg">20 Jan 2025</Text>
+              <Text className=" text-base">{post.author}</Text>
+              {/* <Text className=" text-lg">20 Jan 2025</Text> */}
             </BlurView>
           </ImageBackground>
         </View>
@@ -105,19 +73,18 @@ const ExplorePage = () => {
         <View className=" flex-row justify-between">
           <View className="flex-row">
             <View className="flex-row items-center mr-4">
-              <Ionicons name="thumbs-up-outline" size={16} color="#6B7280" />
-              <Text className="text-gray-500 text-xs ml-1">{post.likes}</Text>
+              <EvilIcons name="like" size={20} color="black" />
+              <Text className="text-gray-500 text-xs">{post.likes}</Text>
             </View>
             <View className="flex-row items-center mr-4">
               <Ionicons name="chatbubble-outline" size={16} color="#6B7280" />
-              <Text className="text-gray-500 text-xs ml-1">
-                {post.comments}
-              </Text>
+              <Text className="text-gray-500 text-xs">{post.comments}</Text>
             </View>
           </View>
 
           <View className="flex-row items-center">
-            <Feather name="share-2" size={16} color="#6B7280" />
+            {/* <Feather name="share-2" size={16} color="#6B7280" /> */}
+            <Fontisto name="share-a" size={16} color="black" />
             <Text className="text-gray-500 text-xs ml-1">{post.shares}</Text>
           </View>
         </View>
@@ -126,147 +93,101 @@ const ExplorePage = () => {
   );
 
   return (
-    <Screen scroll={true} className="bg-[#FCFCFD]">
-      <ImageBackground
-        source={require("@/assets/images/background.png")}
-        style={{
-          height: "56%",
-          width: "100%",
-        }}
-        resizeMode="cover"
-      >
-        <View className="px-6 pt-4 pb-6">
-          {/* Search Bar */}
+    <>
+      <LoadingOverlay
+        isOpen={getAllExploreToics.isPending || getExploreData.isLoading} // Required: Controls visibility
+        // message="Login..." // Optional: Loading text
+        animationType="pulse" // Optional: "spin" | "pulse" | "bounce" | "fade"
+        backdropClassName="..." // Optional: Additional backdrop styling
+      />
+      <Screen scroll={true} className="bg-[#FCFCFD]">
+        <ImageBackground
+          source={require("@/assets/images/background.png")}
+          style={{
+            height: "43%",
+            width: "100%",
+          }}
+          resizeMode="cover"
+        >
+          <View className="px-6 pt-4 pb-6">
+            {/* Search Bar */}
 
-          <View className="bg-white rounded-2xl px-4 py-3 flex-row items-center mb-6 shadow-sm">
-            <Ionicons name="search" size={20} color="#9B9B9B" />
-            <TextInput
-              placeholder="Search symptoms, tips, community posts"
-              placeholderTextColor="#9B9B9B"
-              className="flex-1 ml-3 text-base"
-              style={{ fontSize: rS(14) }}
-            />
-          </View>
+            <TouchableOpacity
+              className="bg-white rounded-2xl px-4 py-3 flex-row items-center mb-6 shadow-sm"
+              onPress={() => {
+                router.push("/explorepage/searchpage");
+              }}
+            >
+              <Ionicons name="search" size={20} color="#9B9B9B" />
+              <Text className="text-[#9B9B9B] mx-2">
+                Search symptoms, tips, community posts
+              </Text>
+            </TouchableOpacity>
 
-          {/* Feature Topics */}
-          <View className="mb-6">
-            <Text className="font-[PoppinsSemiBold] text-lg mb-4 text-black">
-              Feature Topics
-            </Text>
+            {/* Feature Topics */}
+            <View className="mb-6">
+              <Text className="font-[PoppinsSemiBold] text-lg mb-4 text-black">
+                Feature Topics
+              </Text>
 
-            <View>
-              <View className=" flex-row gap-3">
-                <TouchableOpacity className="flex-1 h-20 bg-[#FD832D] rounded-2xl px-4 py-3 flex-row items-center">
-                  <View className="w-6 h-6">
-                    <Image
-                      source={require("@/assets/images/explore1.png")}
-                      style={{
-                        height: "100%",
-                        width: "100%",
-                        borderRadius: 100,
-                      }}
-                      contentFit="contain"
-                      onError={(error) => console.log("Image error:", error)}
-                    />
-                  </View>
+              <View>
+                <FlatList
+                  data={getAllExploreToics?.data?.data}
+                  numColumns={2}
+                  columnWrapperStyle={{ gap: 12, marginBottom: 12 }}
+                  renderItem={({ item }) => (
+                    <TouchableOpacity
+                      style={{ backgroundColor: item.background }}
+                      className="flex-1 h-20 rounded-2xl px-4 py-3 flex-row items-center"
+                    >
+                      <View className="w-6 h-6">
+                        <Image
+                          source={{ uri: item.icon }}
+                          style={{
+                            height: "100%",
+                            width: "100%",
+                            borderRadius: 100,
+                          }}
+                          contentFit="contain"
+                          onError={(error) =>
+                            console.log("Image error:", error)
+                          }
+                        />
+                      </View>
 
-                  <Text className="text-white text-lg mx-2 font-[PoppinsRegular]">
-                    Managing Hot flashes
-                  </Text>
-                </TouchableOpacity>
-
-                <TouchableOpacity className="flex-1 h-20 bg-[#75B458] rounded-2xl px-4 py-3 flex-row items-center">
-                  <View className="w-6 h-6">
-                    <Image
-                      source={require("@/assets/images/explore2.png")}
-                      style={{
-                        height: "100%",
-                        width: "100%",
-                        borderRadius: 100,
-                      }}
-                      contentFit="contain"
-                      onError={(error) => console.log("Image error:", error)}
-                    />
-                  </View>
-
-                  <Text className="text-white text-lg mx-2 font-[PoppinsRegular]">
-                    Hormone Therapy
-                  </Text>
-                </TouchableOpacity>
-              </View>
-
-              <View className=" my-3 flex-row gap-3">
-                <TouchableOpacity className="flex-1 h-20 bg-[#7FCAFF] rounded-2xl px-4 py-3 flex-row items-center">
-                  <View className="w-6 h-6">
-                    <Image
-                      source={require("@/assets/images/explore3.png")}
-                      style={{
-                        height: "100%",
-                        width: "100%",
-                        borderRadius: 100,
-                      }}
-                      contentFit="contain"
-                      onError={(error) => console.log("Image error:", error)}
-                    />
-                  </View>
-
-                  <Text className="text-white text-lg mx-2 font-[PoppinsRegular]">
-                    Sleep&Mood Support
-                  </Text>
-                </TouchableOpacity>
-
-                <TouchableOpacity className="flex-1 h-20 bg-[#A37EF6] rounded-2xl px-4 py-3 flex-row items-center">
-                  <View className="w-6 h-6">
-                    <Image
-                      source={require("@/assets/images/explore4.png")}
-                      style={{
-                        height: "100%",
-                        width: "100%",
-                        borderRadius: 100,
-                      }}
-                      contentFit="contain"
-                      onError={(error) => console.log("Image error:", error)}
-                    />
-                  </View>
-
-                  <Text className="text-white text-lg mx-2 font-[PoppinsRegular]">
-                    Pelvic Health & Sex
-                  </Text>
-                </TouchableOpacity>
+                      <Text className="text-white text-base mx-2 font-[PoppinsRegular] flex-1">
+                        {item.title}
+                      </Text>
+                    </TouchableOpacity>
+                  )}
+                  keyExtractor={(item) => item.id}
+                />
               </View>
             </View>
-          </View>
 
-          {/* Trending Posts */}
-          <View className="mb-6">
-            <Text className="font-[PoppinsSemiBold] text-lg mb-4 text-black">
-              Trending Posts
-            </Text>
-            <ScrollView
-              horizontal
-              showsHorizontalScrollIndicator={false}
-              contentContainerStyle={{ paddingRight: 16 }}
-            >
-              {trendingPosts.map((post) => renderPostCard(post))}
-            </ScrollView>
+            {/* Trending Posts */}
+            {getExploreData?.data?.topics?.map((item: any, index: number) => {
+              return (
+                <View className="mb-6" key={item.id || index}>
+                  <Text className="font-[PoppinsSemiBold] text-lg mb-4 text-black">
+                    {item.title}
+                  </Text>
+                  <ScrollView
+                    horizontal
+                    showsHorizontalScrollIndicator={false}
+                    contentContainerStyle={{ paddingRight: 16 }}
+                  >
+                    {item.articles?.map((article: any, item: any) =>
+                      renderPostCard(article, item)
+                    )}
+                  </ScrollView>
+                </View>
+              );
+            })}
           </View>
-
-          {/* Related to your logged symptoms */}
-          <View className="mb-6">
-            <Text className="font-[PoppinsSemiBold] text-lg mb-4 text-black">
-              Related to your logged symptoms
-            </Text>
-            <ScrollView
-              horizontal
-              showsHorizontalScrollIndicator={false}
-              contentContainerStyle={{ paddingRight: 16 }}
-            >
-              {relatedPosts.map((post) => renderPostCard(post))}
-            </ScrollView>
-          </View>
-        </View>
-      </ImageBackground>
-    </Screen>
+        </ImageBackground>
+      </Screen>
+    </>
   );
 };
 
