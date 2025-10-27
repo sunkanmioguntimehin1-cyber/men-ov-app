@@ -1,6 +1,5 @@
 import { useSaveRecommendationApi } from "@/src/api_services/recommendationApi/recommendationMutation";
 import { useGetRecommendationApi } from "@/src/api_services/recommendationApi/recommendationQuery";
-import CustomInput from "@/src/custom-components/CustomInput";
 import Screen from "@/src/layout/Screen";
 import { Feather, Ionicons, MaterialIcons } from "@expo/vector-icons";
 import { format } from "date-fns";
@@ -41,18 +40,18 @@ const Communitypage = () => {
     };
   return (
     <Screen className="p-4">
-      <TouchableOpacity className="">
-        <CustomInput
-          primary
-          placeholder="What’s on your thoughs?"
-          iconPostion="left"
-          icon={
-            <View className="mx-3 bg-slate-400 h-10 w-10 items-center justify-center rounded-full">
-              <Text>US</Text>
-            </View>
-          }
-        />
+      <TouchableOpacity className=" flex-row items-center" onPress={()=>{
+        router.push("/(tabs)/communitypage/create-post")
+      }}>
+        <View className="mx-3 bg-slate-400 h-10 w-10 items-center justify-center rounded-full">
+          <Text>US</Text>
+        </View>
+        <View>
+          <Text>What’s on your thoughs?</Text>
+        </View>
       </TouchableOpacity>
+      <View className=" h-0.5 bg-slate-200 my-2" />
+
       <ScrollView className=" my-10">
         {getRecommendationData.data?.length === 0 ? (
           // 👉 Empty State UI

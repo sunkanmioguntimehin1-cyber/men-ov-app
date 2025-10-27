@@ -37,7 +37,6 @@ const ViewSearchResult = () => {
     return params.item ? JSON.parse(params.item as string) : null;
   }, [params.item]);
 
-  console.log("newData", newData);
 
   const getSearchResult = useGetSearchResult(newData);
 

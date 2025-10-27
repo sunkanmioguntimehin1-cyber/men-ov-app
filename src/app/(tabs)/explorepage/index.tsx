@@ -11,6 +11,7 @@ import { useRouter } from "expo-router";
 // import { Image, ImageBackground } from 'expo-image'
 import React from "react";
 import {
+  Alert,
   Dimensions,
   FlatList,
   ImageBackground,
@@ -28,12 +29,39 @@ const ExplorePage = () => {
   const getAllExploreToics = useGetAllToics();
   const getExploreData = useGetExplore();
 
+  const handleSearchResult = (item: string) => {
+    router.push({
+      pathname: "/(tabs)/explorepage/view-search-result",
+      params: { item: JSON.stringify(item) },
+    });
+  };
+
+  const openWebView = (itemUrl: string) => {
+    try {
+      const uri = itemUrl;
+
+      if (!uri) {
+        Alert.alert("No  article Url found");
+        return;
+      }
+      router.push({
+        pathname: "/(tabs)/explorepage/explore-webview",
+        params: { item: JSON.stringify(uri) },
+      });
+    } catch (error) {
+      Alert.alert("Failed to fetch article Url");
+    }
+  };
+
   const renderPostCard = (post: any, item: any) => (
     <TouchableOpacity
       key={post.id}
       // style={{ backgroundColor: item.background }}
       className="mr-4 bg-[#F4EBFF] rounded-xl"
       style={{ width: width * 0.75 }}
+      onPress={() => {
+        openWebView(post?.url);
+      }}
     >
       <View className=" p-4 overflow-hidden shadow-sm">
         <Text className="my-2">{post.title}</Text>
@@ -139,6 +167,9 @@ const ExplorePage = () => {
                     <TouchableOpacity
                       style={{ backgroundColor: item.background }}
                       className="flex-1 h-20 rounded-2xl px-4 py-3 flex-row items-center"
+                      onPress={() => {
+                        handleSearchResult(item?.title);
+                      }}
                     >
                       <View className="w-6 h-6">
                         <Image
