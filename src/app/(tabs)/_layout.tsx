@@ -16,7 +16,11 @@ function getTabBarVisibility(route: any) {
     "summary-screen",
     "chat-with-ai",
     "chat-webview-ai",
-    "recommendations-webview"
+    "recommendations-webview",
+    "searchpage",
+    "view-search-result",
+    "explore-webview",
+    "create-post"
   ];
 
   // Check if the current route or any part of it matches hidden routes
@@ -69,7 +73,7 @@ export default function TabsLayout() {
       />
       <Tabs.Screen
         name="explorepage"
-        options={{
+        options={({ route }) => ({
           title: "Explore",
           tabBarIcon: ({ color, focused }) => (
             <Ionicons
@@ -78,11 +82,19 @@ export default function TabsLayout() {
               color={focused ? "black" : "#E4D9F7"}
             />
           ),
-        }}
+          tabBarStyle: getTabBarVisibility(route)
+            ? { display: "none" }
+            : Platform.select({
+                ios: {
+                  position: "absolute",
+                },
+                default: {},
+              }),
+        })}
       />
       <Tabs.Screen
         name="communitypage"
-        options={{
+        options={({ route }) => ({
           title: "Community",
           tabBarIcon: ({ color, focused }) => (
             <Ionicons
@@ -91,8 +103,16 @@ export default function TabsLayout() {
               color={focused ? "black" : "#E4D9F7"}
             />
           ),
-        }}
-      /> 
+          tabBarStyle: getTabBarVisibility(route)
+            ? { display: "none" }
+            : Platform.select({
+                ios: {
+                  position: "absolute",
+                },
+                default: {},
+              }),
+        })}
+      />
       <Tabs.Screen
         name="profilepage"
         options={({ route }) => ({

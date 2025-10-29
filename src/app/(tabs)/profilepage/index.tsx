@@ -24,7 +24,6 @@ export default function ProfilePage() {
   const deleteUserDetails = useDeleteUserApi();
   const getIntakeDetails = useGetIntakeDetails();
 
-  console.log("getIntakeDetailsError6000", !getIntakeDetails.data);
   const [modelVisible, setModelVisible] = React.useState(false);
   const [modelVisible1, setModelVisible1] = React.useState(false);
 
@@ -144,83 +143,78 @@ export default function ProfilePage() {
     setModelVisible1(false);
   };
   return (
-     <SafeScreen className=" p-8">
-     
-       
-          <CustomModel
-            modelVisible={modelVisible}
-            setModelVisible={setModelVisible}
-            message={
-              <AccountDeletionModal onDelete={onDelete} onCancel={onCancel} />
-            }
-          />
-          {/* <CustomModel
+    <SafeScreen className=" p-8">
+      <CustomModel
+        modelVisible={modelVisible}
+        setModelVisible={setModelVisible}
+        message={
+          <AccountDeletionModal onDelete={onDelete} onCancel={onCancel} />
+        }
+      />
+      {/* <CustomModel
         modelVisible={modelVisible1}
         setModelVisible={setModelVisible1}
         closeOnOutsideClick={false}
         message={<InTakeModal onCancel={onCancel2} />}
       /> */}
+      <View>
+        <View className=" flex-row items-center justify-between">
+          <TouchableOpacity
+            onPress={() => {
+              router.back();
+            }}
+          >
+            <MaterialIcons name="arrow-back-ios" size={24} color="black" />
+          </TouchableOpacity>
+
           <View>
+            <Text className=" text-base font-[PoppinsSemiBold]">Profile</Text>
+          </View>
+
+          <View />
+        </View>
+      </View>
+      <View className=" my-5">
+        <Text className=" font-[PoppinsSemiBold]">General</Text>
+        {generalData.map((item, index) => (
+          <TouchableOpacity
+            key={index}
+            className=" my-3 border border-[#ECE3ED] flex-row justify-between items-center p-5 rounded-3xl"
+            onPress={item.onPress}
+          >
             <View className=" flex-row items-center justify-between">
-              <TouchableOpacity
-                onPress={() => {
-                  router.back();
-                }}
-              >
-                <MaterialIcons name="arrow-back-ios" size={24} color="black" />
-              </TouchableOpacity>
-
-              <View>
-                <Text className=" text-base font-[PoppinsSemiBold]">
-                  Profile
-                </Text>
+              <View>{item.img}</View>
+              <View className=" mx-5">
+                <Text className=" font-[PoppinsRegular]">{item.title}</Text>
               </View>
-
-              <View />
             </View>
-          </View>
-          <View className=" my-5">
-            <Text className=" font-[PoppinsSemiBold]">General</Text>
-            {generalData.map((item, index) => (
-              <TouchableOpacity
-                key={index}
-                className=" my-3 border border-[#ECE3ED] flex-row justify-between items-center p-5 rounded-3xl"
-                onPress={item.onPress}
-              >
-                <View className=" flex-row items-center justify-between">
-                  <View>{item.img}</View>
-                  <View className=" mx-5">
-                    <Text className=" font-[PoppinsRegular]">{item.title}</Text>
-                  </View>
-                </View>
 
-                <View>{item.icon}</View>
-              </TouchableOpacity>
-            ))}
-          </View>
+            <View>{item.icon}</View>
+          </TouchableOpacity>
+        ))}
+      </View>
 
-          <View className=" my-5">
-            <Text className=" font-[PoppinsSemiBold]">Settings</Text>
-            {settingData.map((item, index) => (
-              <TouchableOpacity
-                key={index}
-                className=" my-3 border border-[#ECE3ED] flex-row justify-between items-center p-5 rounded-3xl"
-                onPress={() => {
-                  handleRouter(item.title);
-                }}
-              >
-                <View className=" flex-row items-center justify-between">
-                  <View>{item.img}</View>
-                  <View className=" mx-5">
-                    <Text className=" font-[PoppinsRegular]">{item.title}</Text>
-                  </View>
-                </View>
+      <View className=" my-5">
+        <Text className=" font-[PoppinsSemiBold]">Settings</Text>
+        {settingData.map((item, index) => (
+          <TouchableOpacity
+            key={index}
+            className=" my-3 border border-[#ECE3ED] flex-row justify-between items-center p-5 rounded-3xl"
+            onPress={() => {
+              handleRouter(item.title);
+            }}
+          >
+            <View className=" flex-row items-center justify-between">
+              <View>{item.img}</View>
+              <View className=" mx-5">
+                <Text className=" font-[PoppinsRegular]">{item.title}</Text>
+              </View>
+            </View>
 
-                <View>{item.icon}</View>
-              </TouchableOpacity>
-            ))}
-          </View>
-       
+            <View>{item.icon}</View>
+          </TouchableOpacity>
+        ))}
+      </View>
     </SafeScreen>
   );
 }

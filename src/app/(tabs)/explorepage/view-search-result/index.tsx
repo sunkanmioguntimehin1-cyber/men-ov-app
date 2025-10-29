@@ -27,7 +27,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { Image, ImageBackground } from "expo-image";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import React, { useMemo } from "react";
-import { Alert, Text, TouchableOpacity, View } from "react-native";
+import { Alert, ScrollView, Text, TouchableOpacity, View } from "react-native";
 
 const ViewSearchResult = () => {
   const router = useRouter();
@@ -63,29 +63,29 @@ const ViewSearchResult = () => {
   };
 
   return (
-    <Screen scroll={true} className="bg-[#FCFCFD]">
+    <Screen scroll={false} className="bg-[#FCFCFD]">
       {/* Header */}
+
+      <View className="flex-row items-center justify-center py-4 px-4 bg-white">
+        <TouchableOpacity
+          className="absolute left-4"
+          onPress={() => router.back()}
+        >
+          <Ionicons name="chevron-back" size={24} color="black" />
+        </TouchableOpacity>
+        <Text className="font-[PoppinsSemiBold] text-lg text-black">
+          {getSearchResult?.data?.query}
+        </Text>
+      </View>
       <ImageBackground
         source={require("@/assets/images/background.png")}
         style={{
-          height: "20%",
+          height: "100%",
           width: "100%",
         }}
         contentFit="cover"
       >
-        <View className="flex-row items-center justify-center py-4 px-4 bg-white">
-          <TouchableOpacity
-            className="absolute left-4"
-            onPress={() => router.back()}
-          >
-            <Ionicons name="chevron-back" size={24} color="black" />
-          </TouchableOpacity>
-          <Text className="font-[PoppinsSemiBold] text-lg text-black">
-            {getSearchResult?.data?.query}
-          </Text>
-        </View>
-
-        <View className="flex-1">
+        <ScrollView className="flex-1">
           {searchResult?.map((post: any, index: number) => (
             <TouchableOpacity
               key={post.id}
@@ -126,7 +126,7 @@ const ViewSearchResult = () => {
               </View>
             </TouchableOpacity>
           ))}
-        </View>
+        </ScrollView>
       </ImageBackground>
     </Screen>
   );

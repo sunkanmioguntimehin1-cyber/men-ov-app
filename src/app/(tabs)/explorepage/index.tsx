@@ -7,7 +7,9 @@ import Screen from "@/src/layout/Screen";
 import { EvilIcons, Fontisto, Ionicons } from "@expo/vector-icons";
 import { BlurView } from "expo-blur";
 import { Image } from "expo-image";
+import { LinearGradient } from "expo-linear-gradient";
 import { useRouter } from "expo-router";
+
 // import { Image, ImageBackground } from 'expo-image'
 import React from "react";
 import {
@@ -162,35 +164,52 @@ const ExplorePage = () => {
                 <FlatList
                   data={getAllExploreToics?.data?.data}
                   numColumns={2}
-                  columnWrapperStyle={{ gap: 12, marginBottom: 12 }}
-                  renderItem={({ item }) => (
-                    <TouchableOpacity
-                      style={{ backgroundColor: item.background }}
-                      className="flex-1 h-20 rounded-2xl px-4 py-3 flex-row items-center"
-                      onPress={() => {
-                        handleSearchResult(item?.title);
-                      }}
-                    >
-                      <View className="w-6 h-6">
-                        <Image
-                          source={{ uri: item.icon }}
-                          style={{
-                            height: "100%",
-                            width: "100%",
-                            borderRadius: 100,
-                          }}
-                          contentFit="contain"
-                          onError={(error) =>
-                            console.log("Image error:", error)
-                          }
-                        />
-                      </View>
+                  columnWrapperStyle={{ gap: 10, marginBottom: 12 }}
+                  renderItem={({ item }) => {
+                    // Split the background string into an array of colors
+                    const colors = item.background.split(",");
 
-                      <Text className="text-white text-base mx-2 font-[PoppinsRegular] flex-1">
-                        {item.title}
-                      </Text>
-                    </TouchableOpacity>
-                  )}
+                    return (
+                      <TouchableOpacity
+                        onPress={() => handleSearchResult(item?.title)}
+                        style={{ flex: 1 }}
+                      >
+                        <LinearGradient
+                          colors={colors}
+                          start={{ x: 0, y: 0 }}
+                          end={{ x: 1, y: 1 }}
+                          style={{
+                            height: 80,
+                            flexDirection: "row",
+                            alignItems: "center",
+                            justifyContent: "space-between",
+                            borderRadius: 20,
+                            padding: 16,
+                          }}
+                          // className=" rounded-full"
+                        >
+                          <View className="w-6 h-6">
+                            <Image
+                              source={{ uri: item.icon }}
+                              style={{
+                                height: "100%",
+                                width: "100%",
+                                borderRadius: 100,
+                              }}
+                              contentFit="contain"
+                              onError={(error) =>
+                                console.log("Image error:", error)
+                              }
+                            />
+                          </View>
+
+                          <Text className="text-white text-base mx-2 font-[PoppinsRegular] flex-1">
+                            {item.title}
+                          </Text>
+                        </LinearGradient>
+                      </TouchableOpacity>
+                    );
+                  }}
                   keyExtractor={(item) => item.id}
                 />
               </View>

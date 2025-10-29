@@ -32,7 +32,6 @@ export default function HomePage() {
   const getCycleTrackingLatest = useCycleTrackingLatest();
   const getIntakeDetails = useGetIntakeDetails();
 
-  console.log("getCycleTrackingLatest5001", getCycleTrackingLatest?.data);
 
   const insets = useSafeAreaInsets();
 
@@ -61,7 +60,6 @@ export default function HomePage() {
 
   const result = getFormattedDate();
 
-  console.log("result", result);
 
   const handleOpenmodal = () => {
     setModelVisible(true);
@@ -90,7 +88,6 @@ export default function HomePage() {
 
   };
 
-  console.log("getIntakeDetailsError6001", getIntakeDetails.data);
 
   const onCancel2 = () => {
     setModelVisible2(false);

@@ -32,12 +32,7 @@ export default function ProfilePage() {
   const saveRecommendation = useSaveRecommendationApi();
   const getIntakeDetails = useGetIntakeDetails();
 
-  // const openWebView = (itemUrl: string) => {
-  //   router.push({
-  //     pathname: "/profilepage/profile-screen/recommendations-webview",
-  //     params: { item: JSON.stringify(itemUrl) },
-  //   });
-  // };
+  
 
   const openWebView = (itemUrl: string) => {
     try {
@@ -131,7 +126,7 @@ export default function ProfilePage() {
 
             {/* Demographics */}
             <Text className="text-sm text-gray-600 mb-6">
-              {age} years old - {getUserData.data?.gender}
+              {age ? `${age} years old` : "—"}- {getUserData.data?.gender}
             </Text>
 
             {/* Health Tags */}
