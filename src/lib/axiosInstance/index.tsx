@@ -194,7 +194,7 @@ const ROOT_URL = process.env.EXPO_PUBLIC_API_URL;
 // Create an axios instance
 const axiosInstance: AxiosInstance = axios.create({
   baseURL: ROOT_URL,
-  timeout: 10000,
+  // timeout: 10000,
   headers: {
     "Content-Type": "application/json",
   },

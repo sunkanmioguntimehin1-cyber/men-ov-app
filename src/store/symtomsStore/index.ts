@@ -11,6 +11,7 @@ interface SymptomsStore {
   symtomsDataList: SymptomsData;
   setSymtomsDataList: (data: Partial<SymptomsData>) => void;
   clearPublicUrls: () => void;
+  clearAllData: () => void;
 }
 
 const symtomsStore = (set: any): SymptomsStore => ({
@@ -33,6 +34,18 @@ const symtomsStore = (set: any): SymptomsStore => ({
       ...state,
       symtomsDataList: {
         ...state.symtomsDataList,
+        publicUrl: [],
+        notePublicUrl: [],
+      },
+    }));
+  },
+
+  clearAllData: () => {
+    set((state: any) => ({
+      ...state,
+      symtomsDataList: {
+        symptomslist: "",
+        uploadUrl: "",
         publicUrl: [],
         notePublicUrl: [],
       },

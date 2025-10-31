@@ -56,7 +56,7 @@ export const useDeleteUserApi = () => {
       // });
 
       // queryClient.invalidateQueries({ queryKey: ["get-user"] });
-      useAuthStore.getState().clearAuthState();
+      useAuthStore.getState().clearAuthState(queryClient);
       router.replace("/(auth)/login");
     },
     onError(error: any) {

@@ -1,4 +1,5 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { QueryClient } from "@tanstack/react-query";
 import { create } from "zustand";
 
 const authStore = (set: any) => ({
@@ -43,9 +44,15 @@ const authStore = (set: any) => ({
       isAuthenticated: loggedIn,
     }));
   },
-  clearAuthState: async () => {
+  clearAuthState: async (queryClient?: QueryClient) => {
     await AsyncStorage.removeItem("token");
     await AsyncStorage.removeItem("refresh_token");
+    
+    // Clear React Query cache to prevent data persistence between users
+    if (queryClient) {
+      queryClient.clear();
+    }
+    
     set({ authToken: null, refreshToken: null, isAuthenticated: false, isLoggedIn: false });
   },
  

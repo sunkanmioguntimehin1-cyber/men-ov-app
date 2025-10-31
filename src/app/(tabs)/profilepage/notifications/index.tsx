@@ -283,6 +283,8 @@ const NotificationsScreen = () => {
     });
   };
 
+  console.log("router34", router);
+
   return (
     <SafeScreen className="bg-white">
       <LoadingOverlay

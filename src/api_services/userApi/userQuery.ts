@@ -12,9 +12,8 @@ export const useGetUser = () => {
 
 export const useGetIntakeDetails = () => {
   return useQuery({
-    queryKey: ["get-user"],
+    queryKey: ["get-intakes"],
     queryFn: getIntakeDetailsApi,
-    // enabled: false,
   });
 };
 

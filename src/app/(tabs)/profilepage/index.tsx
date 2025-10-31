@@ -1,23 +1,31 @@
 import { useDeleteUserApi } from "@/src/api_services/userApi/userMutation";
+import { useGetIntakeDetails } from "@/src/api_services/userApi/userQuery";
 import AccountDeletionModal from "@/src/components/profile/AccountDeletionModal";
+import SafeScreen from "@/src/components/SafeScreen";
 import CustomModel from "@/src/custom-components/CustomModel";
 import useAuthStore from "@/src/store/authStore";
+import useSymtomsStore from "@/src/store/symtomsStore";
 import {
   AntDesign,
   Feather,
   MaterialIcons,
-  SimpleLineIcons
+  SimpleLineIcons,
 } from "@expo/vector-icons";
+import { useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "expo-router";
 import React from "react";
 import { Alert, Text, TouchableOpacity, View } from "react-native";
-import SafeScreen from "../../../components/SafeScreen";
 
 export default function ProfilePage() {
   const router = useRouter();
-   const deleteUserDetails = useDeleteUserApi();
+  const queryClient = useQueryClient();
+  const firstTimeRef = React.useRef(true);
+
+  const deleteUserDetails = useDeleteUserApi();
+  const getIntakeDetails = useGetIntakeDetails();
 
   const [modelVisible, setModelVisible] = React.useState(false);
+  const [modelVisible1, setModelVisible1] = React.useState(false);
 
   const generalData = [
     {
@@ -69,13 +77,13 @@ export default function ProfilePage() {
 
   const handleRouter = (item: string) => {
     if (item === "Notifications") {
-       router.push( "/profilepage/notifications" );
+      router.push("/profilepage/notifications");
     } else if (item === "Contact Us") {
       //  router.push({ pathname: "/settings/privacy-policy" });
     } else if (item === "Share App") {
       //  router.push({ pathname: "/settings/about" });
     } else if (item === "Delete Account") {
-       setModelVisible(true);
+      setModelVisible(true);
     } else if (item === "Log Out") {
       handlelogout();
     }
@@ -90,21 +98,49 @@ export default function ProfilePage() {
       {
         text: "Ok",
         onPress: async () => {
-          // Use the auth store's logout method
-          useAuthStore.getState().clearAuthState();
+          // Clear all cached data and auth state
+          useAuthStore.getState().clearAuthState(queryClient);
+          useSymtomsStore.getState().clearAllData();
           router.replace("/(auth)/login");
         },
       },
     ]);
   };
 
-   const onDelete = () => {
-     deleteUserDetails.mutate();
-     setModelVisible(false);
-   };
+  const onDelete = () => {
+    deleteUserDetails.mutate();
+    setModelVisible(false);
+  };
 
   const onCancel = () => {
     setModelVisible(false);
+  };
+
+  // //USEFOCUSEFFECT
+  // useFocusEffect(
+  //   React.useCallback(() => {
+  //     if (firstTimeRef.current) {
+  //       firstTimeRef.current = false;
+  //       return;
+  //     }
+
+  //     if (!getIntakeDetails.data) {
+  //       setModelVisible1(true);
+  //     }
+
+  //     // getIntakeDetails.refetch();
+  //   }, [getIntakeDetails])
+  // );
+
+  // Open intake modal when query resolves and there's no data
+  // React.useEffect(() => {
+  //   if (!getIntakeDetails.data) {
+  //     setModelVisible1(true);
+  //   }
+  // }, [getIntakeDetails.data]);
+
+  const onCancel2 = () => {
+    setModelVisible1(false);
   };
   return (
     <SafeScreen className=" p-8">
@@ -115,11 +151,19 @@ export default function ProfilePage() {
           <AccountDeletionModal onDelete={onDelete} onCancel={onCancel} />
         }
       />
+      {/* <CustomModel
+        modelVisible={modelVisible1}
+        setModelVisible={setModelVisible1}
+        closeOnOutsideClick={false}
+        message={<InTakeModal onCancel={onCancel2} />}
+      /> */}
       <View>
         <View className=" flex-row items-center justify-between">
-          <TouchableOpacity onPress={()=>{
-            router.back()
-          }}>
+          <TouchableOpacity
+            onPress={() => {
+              router.back();
+            }}
+          >
             <MaterialIcons name="arrow-back-ios" size={24} color="black" />
           </TouchableOpacity>
 

@@ -15,6 +15,12 @@ function getTabBarVisibility(route: any) {
     "profile-screen",
     "summary-screen",
     "chat-with-ai",
+    "chat-webview-ai",
+    "recommendations-webview",
+    "searchpage",
+    "view-search-result",
+    "explore-webview",
+    "create-post"
   ];
 
   // Check if the current route or any part of it matches hidden routes
@@ -65,9 +71,9 @@ export default function TabsLayout() {
               }),
         })}
       />
-      {/* <Tabs.Screen
-        name="explorepage/index"
-        options={{
+      <Tabs.Screen
+        name="explorepage"
+        options={({ route }) => ({
           title: "Explore",
           tabBarIcon: ({ color, focused }) => (
             <Ionicons
@@ -76,11 +82,19 @@ export default function TabsLayout() {
               color={focused ? "black" : "#E4D9F7"}
             />
           ),
-        }}
-      /> */}
-      {/* <Tabs.Screen
-        name="communitypage/index"
-        options={{
+          tabBarStyle: getTabBarVisibility(route)
+            ? { display: "none" }
+            : Platform.select({
+                ios: {
+                  position: "absolute",
+                },
+                default: {},
+              }),
+        })}
+      />
+      <Tabs.Screen
+        name="communitypage"
+        options={({ route }) => ({
           title: "Community",
           tabBarIcon: ({ color, focused }) => (
             <Ionicons
@@ -89,8 +103,16 @@ export default function TabsLayout() {
               color={focused ? "black" : "#E4D9F7"}
             />
           ),
-        }}
-      /> */}
+          tabBarStyle: getTabBarVisibility(route)
+            ? { display: "none" }
+            : Platform.select({
+                ios: {
+                  position: "absolute",
+                },
+                default: {},
+              }),
+        })}
+      />
       <Tabs.Screen
         name="profilepage"
         options={({ route }) => ({
@@ -102,27 +124,15 @@ export default function TabsLayout() {
               color={focused ? "black" : "#E4D9F7"}
             />
           ),
-          // Hide tab bar for profilepage and its nested routes
-          tabBarStyle: (() => {
-            const routeName = getFocusedRouteNameFromRoute(route) ?? "index";
-            const hiddenRoutes = ["personal-info", "personal-info-form", "notifications", "profile-screen","summary-screen"];
-            const shouldHide = hiddenRoutes.some((hiddenRoute) => 
-              routeName.includes(hiddenRoute) || 
-              (route?.params as any)?.screen?.includes(hiddenRoute)
-            );
-            
-            // Also hide when on the main profilepage route
-            const isProfilePage = routeName === "profilepage" || routeName === "index";
-            
-            return (shouldHide || isProfilePage) 
-              ? { display: "none" } 
-              : Platform.select({
-                  ios: {
-                    position: "absolute",
-                  },
-                  default: {},
-                });
-          })(),
+          // Use the same tab bar visibility logic as homepage
+          tabBarStyle: getTabBarVisibility(route)
+            ? { display: "none" }
+            : Platform.select({
+                ios: {
+                  position: "absolute",
+                },
+                default: {},
+              }),
         })}
       />
     </Tabs>

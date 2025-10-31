@@ -1,4 +1,8 @@
-import { useCreateCycleTrackingApi } from "@/src/api_services/logApi/logMutation";
+import {
+  useCreateCycleTrackingApi,
+  useUpdateCycleTrackingApi,
+} from "@/src/api_services/logApi/logMutation";
+import { useCycleTrackingLatest } from "@/src/api_services/logApi/logQuery";
 import { useGetIntakeDetails } from "@/src/api_services/userApi/userQuery";
 import BottomSheetScreen from "@/src/custom-components/BottomSheetScreen";
 import CustomButton from "@/src/custom-components/CustomButton";
@@ -9,6 +13,7 @@ import React, { useMemo } from "react";
 import { useForm } from "react-hook-form";
 import { Text, TouchableOpacity, View } from "react-native";
 import CurrentStatus from "./CurrentStatus";
+import LastCycleHistory from "./LastCycleHistory";
 import LogCycle from "./LogCycle";
 import Duration from "./logCycleBottomSheet/Duration";
 import StartDateBottomSheet from "./logCycleBottomSheet/StartDateBottomSheet";
@@ -20,14 +25,13 @@ const CycleTracking = ({ onCancel }: any) => {
   const [selectedDate, setSelectedDate] = React.useState(null);
   const [durationData, setDurationData] = React.useState("");
 
-  const [notePublicUrls, setNotePublicUrls] = React.useState<string[]>([]);
+  const [notePublicUrls, setNotePublicUrls] = React.useState<string>("");
 
-    const getIntakeDetails = useGetIntakeDetails();
+  const getIntakeDetails = useGetIntakeDetails();
   const createCycleTracking = useCreateCycleTrackingApi(onCancel);
+  const getCycleTrackingLatest = useCycleTrackingLatest();
+  const updateCycleTracking = useUpdateCycleTrackingApi(onCancel);
 
-  
-
-  console.log("notePublicUrls111", notePublicUrls);
   const formMethods = useForm({
     mode: "onChange",
     defaultValues: {
@@ -41,36 +45,74 @@ const CycleTracking = ({ onCancel }: any) => {
     formState: { errors, isValid },
   } = formMethods;
 
+  React.useEffect(() => {
+    if (getCycleTrackingLatest?.data) {
+      setMenopauseStage(getCycleTrackingLatest?.data?.menopauseStage);
+    }
+  }, [getCycleTrackingLatest?.data, reset]);
+
   // Function to handle Next/Submit button click
   const handleButtonClick = () => {
-    if (currentIndex < 1) {
+    if (getCycleTrackingLatest?.data && currentIndex < 1) {
       // Move to next step
+      // handleSubmit(onSubmit)();
+      setCurrentIndex(currentIndex + 1);
+    } else if (currentIndex < 1) {
+      // Submit the form
       setCurrentIndex(currentIndex + 1);
     } else {
-      // Submit the form
       handleSubmit(onSubmit)();
     }
   };
   // Determine button text and state
   const getButtonText = () => {
-    return currentIndex === 1 ? "Submit" : "Next";
+    if (getCycleTrackingLatest?.data) {
+      if (currentIndex === 1) {
+        return "Submit";
+      }
+      return "Next";
+    } else {
+      if (currentIndex === 1) {
+        return "Submit";
+      }
+      return "Next";
+    }
   };
- // formatting Date
+  // formatting Date
   const dateValue = selectedDate ? format(selectedDate, "dd-MM-yyy") : "";
-  const onSubmit = (data:any) => {
+
+  console.log("menopauseStage", menopauseStage);
+  //onSubmit
+  const onSubmit = (data: any) => {
     const requestPayload = {
+      menopauseStage: menopauseStage,
       start: selectedDate,
       duration: Number(durationData),
       note: data.notes,
       image: notePublicUrls,
     };
 
-    console.log("CycleTracking requestPayload:", requestPayload);
-    createCycleTracking.mutate(requestPayload);
+    console.log("requestPayload5001", requestPayload);
+
+    // createCycleTracking.mutate(requestPayload);
+
+    // const requestUpdatePayload = {
+    //   start: selectedDate,
+    //   duration: Number(durationData),
+    //   note: data.notes || getCycleTrackingLatest?.data?.note,
+    //   image: getCycleTrackingLatest?.data?.image,
+    //   user: getCycleTrackingLatest?.data?.user,
+    //   id: getCycleTrackingLatest?.data?.id,
+    // };
+
+    if (getCycleTrackingLatest?.data) {
+      // updateCycleTracking.mutate(requestUpdatePayload);
+
+      createCycleTracking.mutate(requestPayload);
+    } else {
+      createCycleTracking.mutate(requestPayload);
+    }
   };
-
-
-  console.log("menopauseStage1111", menopauseStage);
 
   // all the bottom sheet handler
   const snapPoints = useMemo(() => ["30%", "50%"], []);
@@ -96,24 +138,51 @@ const CycleTracking = ({ onCancel }: any) => {
           </TouchableOpacity>
         </View>
         <View>
-          {currentIndex === 0 && (
-            <CurrentStatus
-              menopauseStage={menopauseStage}
-              setMenopauseStage={setMenopauseStage}
-              getIntakeDetails={getIntakeDetails}
-            />
-          )}
-          {currentIndex === 1 && (
-            <LogCycle
-              errors={errors}
-              control={formMethods.control}
-              notePublicUrls={notePublicUrls}
-              setNotePublicUrls={setNotePublicUrls}
-              handleDateBottomSheetOpen={handleDateBottomSheetOpen}
-              handleDurationBottomSheetOpen={handleDurationBottomSheetOpen}
-              durationData={durationData}
-              selectedDate={dateValue}
-            />
+          {getCycleTrackingLatest?.data ? (
+            <>
+              {currentIndex === 0 && (
+                <CurrentStatus
+                  menopauseStage={menopauseStage}
+                  setMenopauseStage={setMenopauseStage}
+                  getIntakeDetails={getIntakeDetails}
+                />
+              )}
+              {currentIndex === 1 && (
+                <LastCycleHistory
+                  errors={errors}
+                  getCycleTrackingLatest={getCycleTrackingLatest}
+                  control={formMethods.control}
+                  notePublicUrls={notePublicUrls}
+                  setNotePublicUrls={setNotePublicUrls}
+                  handleDateBottomSheetOpen={handleDateBottomSheetOpen}
+                  handleDurationBottomSheetOpen={handleDurationBottomSheetOpen}
+                  durationData={durationData}
+                  selectedDate={dateValue}
+                />
+              )}
+            </>
+          ) : (
+            <>
+              {currentIndex === 0 && (
+                <CurrentStatus
+                  menopauseStage={menopauseStage}
+                  setMenopauseStage={setMenopauseStage}
+                  getIntakeDetails={getIntakeDetails}
+                />
+              )}
+              {currentIndex === 1 && (
+                <LogCycle
+                  errors={errors}
+                  control={formMethods.control}
+                  notePublicUrls={notePublicUrls}
+                  setNotePublicUrls={setNotePublicUrls}
+                  handleDateBottomSheetOpen={handleDateBottomSheetOpen}
+                  handleDurationBottomSheetOpen={handleDurationBottomSheetOpen}
+                  durationData={durationData}
+                  selectedDate={dateValue}
+                />
+              )}
+            </>
           )}
         </View>
         <View className="">
@@ -121,9 +190,16 @@ const CycleTracking = ({ onCancel }: any) => {
             primary
             title={getButtonText()}
             onPress={handleButtonClick}
-            disabled={getIntakeDetails.isLoading || !menopauseStage}
+            disabled={
+              getCycleTrackingLatest.isLoading ||
+              !menopauseStage ||
+              (currentIndex === 1 && (!selectedDate || !durationData)) ||
+              createCycleTracking.isPending ||
+              updateCycleTracking.isPending ||
+              createCycleTracking.isPending
+            }
             loading={
-              createCycleTracking.isPending || getIntakeDetails.isLoading
+              createCycleTracking.isPending || updateCycleTracking.isPending
             }
           />
         </View>

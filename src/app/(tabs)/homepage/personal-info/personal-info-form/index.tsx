@@ -154,7 +154,7 @@ const PersonalInfoForm = () => {
         fullname: data.fullname || getUserData?.data?.fullname,
         gender: selected?.value || getUserData?.data?.gender,
         address: data.address || getUserData?.data?.address,
-        dob: dateValue,
+        dob: selectedDate,
       });
       // The handleEditProfileSuccess callback will handle moving to next step
     }
