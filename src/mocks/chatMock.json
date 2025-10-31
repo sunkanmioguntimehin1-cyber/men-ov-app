@@ -1,0 +1,68 @@
+{
+  "page": 1,
+  "limit": 10,
+  "total": 4,
+  "pages": 1,
+  "data": [
+    {
+      "user": {
+        "email": "sample@gmail.com",
+        "id": "68b8e2c6ccbb7a0bc2479bf5"
+      },
+      "message": "Hello",
+      "reply": "Hi there! 👋 How’s your day going so far?  \n\nDo you want to continue from where we last left off, or start something new today?",
+      "attachments": [],
+      "messageType": "text",
+      "role": "user",
+      "isRead": true,
+      "createdAt": "2025-10-29T22:17:01.458Z",
+      "updatedAt": "2025-10-29T22:37:41.208Z",
+      "id": "6902925dcdeac298531fbec8"
+    },
+    {
+      "user": {
+        "email": "sample@gmail.com",
+        "id": "68b8e2c6ccbb7a0bc2479bf5"
+      },
+      "message": "start something new today",
+      "reply": "I focus on supporting menopause and women's health. If you'd like, we can explore a new healthy habit or routine you could start today to help with your symptoms. What area would you like to work on—nutrition, exercise, or stress relief?",
+      "attachments": [],
+      "messageType": "text",
+      "role": "user",
+      "isRead": false,
+      "createdAt": "2025-10-29T22:28:57.332Z",
+      "updatedAt": "2025-10-29T22:28:57.332Z",
+      "id": "690295291d61bdf01318a9ec"
+    },
+    {
+      "user": {
+        "email": "sample@gmail.com",
+        "id": "68b8e2c6ccbb7a0bc2479bf5"
+      },
+      "message": "How can i stay healthy?",
+      "reply": "I focus on menopause and women's health, so I can give you tips tailored to that stage of life. If you'd like, we can talk about ways to support your overall health during menopause—such as balanced nutrition, regular exercise, and stress management. Would you like me to share some specific strategies?",
+      "attachments": [],
+      "messageType": "text",
+      "role": "user",
+      "isRead": false,
+      "createdAt": "2025-10-29T22:29:40.655Z",
+      "updatedAt": "2025-10-29T22:29:40.655Z",
+      "id": "690295541d61bdf01318a9f0"
+    },
+    {
+      "user": {
+        "email": "sample@gmail.com",
+        "id": "68b8e2c6ccbb7a0bc2479bf5"
+      },
+      "message": "How much exercise should i be doing?",
+      "reply": "I’ve been listening to your concerns and looking at your recent logs, and I see you’ve been dealing with persistent hot flashes alongside some back pain that’s often linked to stress, caffeine, and weather changes. You’re in menopause and currently using hormone therapy, so we can build on the cooling, diet, and exercise strategies we discussed before with a few new, targeted ideas.  \n\nHere are some fresh tips for you:  \n\n1. **Fine‑tune your caffeine intake** – Your logs show caffeine as a trigger for back pain and possibly hot flashes. Try switching to herbal teas or decaf options, especially in the afternoon, to see if symptoms ease.  \n\n2. **Layer your clothing strategically** – Since hot flashes can strike suddenly, wear breathable fabrics and light layers you can remove quickly. This helps your body cool down faster without waiting for the episode to pass.  \n\n3. **Integrate short stress‑reset breaks** – Stress appears in most of your symptom logs. Even 5‑minute mindfulness or breathing sessions, spaced through the day, can lower cortisol and reduce hot flash frequency.  \n\n4. **Hydration with electrolytes during high‑sweat days** – On days with more hot flashes or warmer weather, add an electrolyte‑infused drink to your usual water intake to help maintain fluid balance and prevent fatigue.  \n\n5. **Evening cool‑down routine** – Since nighttime hot flashes can disrupt sleep, try a cool shower before bed, use breathable bedding, and avoid caffeine or alcohol after 6 pm to support deeper rest.  \n\nNext steps:  \n- Track whether reducing caffeine and adding stress‑reset breaks changes your hot flash frequency over the next week.  \n- Let’s review your logs together to see if these tweaks make a difference.  \n\nWould you like me to help you set up a quick daily tracker for triggers and relief methods so we can see what’s working? 🌸",
+      "attachments": [],
+      "messageType": "text",
+      "role": "user",
+      "isRead": false,
+      "createdAt": "2025-10-29T22:47:25.662Z",
+      "updatedAt": "2025-10-29T22:47:25.662Z",
+      "id": "6902997d64050e3ce6a3e225"
+    }
+  ]
+}

@@ -60,6 +60,12 @@ const FloatingAiButton = () => {
     }
   };
 
+  const openChai=()=>{
+    router.push({
+      pathname: "/(tabs)/homepage/chat-with-ai",
+    });
+  }
+
   useEffect(() => {
     Animated.loop(
       Animated.sequence([
@@ -173,10 +179,10 @@ const FloatingAiButton = () => {
 
               {/* Send button */}
               <TouchableOpacity
-                // onPress={() => {
-                //   router.push("/(tabs)/homepage/chat-with-ai");
-                // }}
-                onPress={openWebView}
+                onPress={() => {
+                  router.push("/(tabs)/homepage/chat-with-ai");
+                }}
+                // onPress={openWebView}
               >
                 <MaterialIcons name="send" size={26} color="#8A3FFC" />
               </TouchableOpacity>

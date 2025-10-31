@@ -70,9 +70,14 @@ const CalenderModal: React.FC = ({
     </>
   );
 
+  // const years = Array.from(
+  //   { length: 101 },
+  //   (_, i) => new Date().getFullYear() - 50 + i
+  // );
+
   const years = Array.from(
-    { length: 101 },
-    (_, i) => new Date().getFullYear() - 50 + i
+    { length: new Date().getFullYear() - 1900 + 1 },
+    (_, i) => 1900 + i
   );
 
   const timeRanges = Array.from({ length: 24 }, (_, i) => ({
