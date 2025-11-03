@@ -166,8 +166,10 @@ const FloatingAiButton = () => {
 
             <TouchableOpacity
               className="flex-row items-center justify-between"
-              // onPress={openReceiptInBrowser}
-              onPress={openWebView}
+              // onPress={openWebView}
+              onPress={() => {
+                router.push("/(tabs)/homepage/chat-with-ai");
+              }}
             >
               <AntDesign name="adduser" size={26} color="#8A3FFC" />
 

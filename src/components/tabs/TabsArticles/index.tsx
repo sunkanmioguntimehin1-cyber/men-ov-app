@@ -47,7 +47,7 @@ const TabsArticles = () => {
     <View className="">
       <Text className=" my-3 font-[PoppinsSemiBold] text-base">Articles</Text>
 
-      <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+      <ScrollView horizontal showsHorizontalScrollIndicator={false} className=" pb-40">
         {getArticles.data?.data
           ?.reduce((rows: any[][], item: any, index: number) => {
             if (index % 2 === 0) rows.push([item]);

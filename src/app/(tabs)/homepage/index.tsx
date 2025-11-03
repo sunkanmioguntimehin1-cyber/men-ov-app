@@ -16,7 +16,13 @@ import { formatDistanceToNow } from "date-fns";
 import { Image } from "expo-image";
 import { useRouter } from "expo-router";
 import React from "react";
-import { ImageBackground, Platform, TouchableOpacity, View } from "react-native";
+import {
+  ImageBackground,
+  Platform,
+  ScrollView,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 export default function HomePage() {
@@ -31,7 +37,6 @@ export default function HomePage() {
   const getArticles = useGetArticleApi();
   const getCycleTrackingLatest = useCycleTrackingLatest();
   const getIntakeDetails = useGetIntakeDetails();
-
 
   const insets = useSafeAreaInsets();
 
@@ -60,7 +65,6 @@ export default function HomePage() {
 
   const result = getFormattedDate();
 
-
   const handleOpenmodal = () => {
     setModelVisible(true);
   };
@@ -84,10 +88,8 @@ export default function HomePage() {
     // } else {
     //   setModelVisible2(true);
     // }
-      setModelVisible2(true);
-
+    setModelVisible2(true);
   };
-
 
   const onCancel2 = () => {
     setModelVisible2(false);
@@ -105,49 +107,60 @@ export default function HomePage() {
         backdropClassName="..."
       />
       <View className="flex-1 relative">
-        <Screen scroll={true}>
-          <ImageBackground
-            source={require("@/assets/images/background.png")}
-            style={{
-              height: "55%",
-              width: "100%",
-            }}
-            resizeMode="cover"
-          >
-            <CustomModel
-              modelVisible={modelVisible}
-              setModelVisible={setModelVisible}
-              closeOnOutsideClick={false}
-              message={<YourFeelingToday onCancel={onCancel} />}
-            />
+        <Screen>
+          <CustomModel
+            modelVisible={modelVisible}
+            setModelVisible={setModelVisible}
+            closeOnOutsideClick={false}
+            message={<YourFeelingToday onCancel={onCancel} />}
+          />
 
-            <CustomModel
-              modelVisible={modelVisible1}
-              setModelVisible={setModelVisible1}
-              closeOnOutsideClick={false}
-              message={
-                <LastSymptomsModal
-                  selectedLastSymptom={selectedLastSymptom}
-                  onCancel={onCancel1}
-                />
-              }
-            />
+          <CustomModel
+            modelVisible={modelVisible1}
+            setModelVisible={setModelVisible1}
+            closeOnOutsideClick={false}
+            message={
+              <LastSymptomsModal
+                selectedLastSymptom={selectedLastSymptom}
+                onCancel={onCancel1}
+              />
+            }
+          />
 
-            <CustomModel
-              modelVisible={modelVisible2}
-              setModelVisible={setModelVisible2}
-              closeOnOutsideClick={false}
-              message={<CycleTracking onCancel={onCancel2} />}
-            />
+          <CustomModel
+            modelVisible={modelVisible2}
+            setModelVisible={setModelVisible2}
+            closeOnOutsideClick={false}
+            message={<CycleTracking onCancel={onCancel2} />}
+          />
 
-            {/* <CustomModel
+          {/* <CustomModel
             modelVisible={modelVisible3}
             setModelVisible={setModelVisible3}
             // closeOnOutsideClick={false}
             message={<InTakeModal onCancel={onCancel3} />}
           /> */}
 
-            <View className="p-8 flex-row items-center justify-end">
+          <View className="px-8 flex-row items-center justify-between ">
+            <TouchableOpacity
+              className=" w-40 h-20 "
+              onPress={() => {
+                // router.push("/(tabs)/profilepage");
+              }}
+            >
+              <Image
+                source={require("@/assets/images/m-logo.png")}
+                style={{
+                  height: "100%",
+                  width: "100%",
+                  borderRadius: 100,
+                }}
+                contentFit="contain"
+                onError={(error) => console.log("Image error:", error)}
+              />
+            </TouchableOpacity>
+
+            <View className="flex-row items-center">
               <TouchableOpacity
                 className=" mx-3"
                 onPress={() => {
@@ -179,49 +192,59 @@ export default function HomePage() {
                 />
               </TouchableOpacity>
             </View>
-
-            <View className="px-8 pb-32">
-              {/* Increased bottom padding to ensure content isn't hidden */}
-              <View className="my-3">
-                <YourLastSymptoms
-                  handleOpenLastSymptoms={handleOpenLastSymptoms}
-                />
+          </View>
+          <ScrollView showsVerticalScrollIndicator={false}>
+            <ImageBackground
+              source={require("@/assets/images/background.png")}
+              style={{
+                height: "55%",
+                width: "100%",
+              }}
+              resizeMode="cover"
+            >
+              <View className="px-8 pb-32">
+                {/* Increased bottom padding to ensure content isn't hidden */}
+                <View className="my-3">
+                  <YourLastSymptoms
+                    handleOpenLastSymptoms={handleOpenLastSymptoms}
+                  />
+                </View>
+                <View className="">
+                  <CustomSelectData
+                    onPress={handleOpenmodal}
+                    primary
+                    label="How do you Feel today?"
+                    placeholder="Log "
+                    icon={
+                      <TouchableOpacity onPress={handleOpenmodal}>
+                        <AntDesign name="right" size={24} color="black" />
+                      </TouchableOpacity>
+                    }
+                  />
+                </View>
+                <View className="my-5">
+                  <CustomSelectData
+                    onPress={handleOpenmodal2}
+                    primary
+                    label="Cycle Tracking"
+                    placeholder={
+                      getCycleTrackingLatest?.data && result
+                        ? `${getCycleTrackingLatest?.data?.note} ${result}`
+                        : "Add your last cycle"
+                    }
+                    icon={
+                      <TouchableOpacity onPress={handleOpenmodal2}>
+                        <AntDesign name="right" size={24} color="black" />
+                      </TouchableOpacity>
+                    }
+                  />
+                </View>
+                <View className="">
+                  <TabsArticles />
+                </View>
               </View>
-              <View className="">
-                <CustomSelectData
-                  onPress={handleOpenmodal}
-                  primary
-                  label="How do you Feel today?"
-                  placeholder="Log "
-                  icon={
-                    <TouchableOpacity onPress={handleOpenmodal}>
-                      <AntDesign name="right" size={24} color="black" />
-                    </TouchableOpacity>
-                  }
-                />
-              </View>
-              <View className="my-5">
-                <CustomSelectData
-                  onPress={handleOpenmodal2}
-                  primary
-                  label="Cycle Tracking"
-                  placeholder={
-                    getCycleTrackingLatest?.data && result
-                      ? `${getCycleTrackingLatest?.data?.note} ${result}`
-                      : "Add your last cycle"
-                  }
-                  icon={
-                    <TouchableOpacity onPress={handleOpenmodal2}>
-                      <AntDesign name="right" size={24} color="black" />
-                    </TouchableOpacity>
-                  }
-                />
-              </View>
-              <View className="">
-                <TabsArticles />
-              </View>
-            </View>
-          </ImageBackground>
+            </ImageBackground>
+          </ScrollView>
         </Screen>
 
         {/* Floating button with proper positioning for all screen sizes */}
