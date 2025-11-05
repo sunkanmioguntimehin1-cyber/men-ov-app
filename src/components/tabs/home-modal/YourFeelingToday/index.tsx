@@ -36,9 +36,9 @@ const YourFeelingToday = ({ onCancel }: any) => {
   const publicUrl = useSymtomsStore().symtomsDataList.publicUrl;
   const notePublicUrl = useSymtomsStore().symtomsDataList.notePublicUrl;
 
-  console.log("notePublicUrls3000", notePublicUrls);
-  console.log("publicUrls3000", publicUrls);
-  console.log("publicUrlBBBB", publicUrl);
+  // console.log("notePublicUrls3000", notePublicUrls);
+  // console.log("publicUrls3000", publicUrls);
+  // console.log("publicUrlBBBB", publicUrl);
 
 
   const formMethods = useForm({

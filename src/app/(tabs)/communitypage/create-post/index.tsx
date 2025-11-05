@@ -12,36 +12,49 @@
 
 // export default CreatePost
 
-
+import { useGetHashtag } from "@/src/api_services/postsApi/postQuery";
+import { useCreatePostApi } from "@/src/api_services/postsApi/postsMutation";
+import { useGetUser } from "@/src/api_services/userApi/userQuery";
+import CommUploadImage from "@/src/components/community/CommUploadImage";
+import CustomInput from "@/src/custom-components/CustomInput";
 import Screen from "@/src/layout/Screen";
 import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import React from "react";
+import { Controller, useForm } from "react-hook-form";
 import {
-    Image,
-    Switch,
-    Text,
-    TextInput,
-    TouchableOpacity,
-    View,
+  ActivityIndicator,
+  Image,
+  Switch,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
 } from "react-native";
 
 const CreatePost = () => {
   const router = useRouter();
-  const [isAnonymous, setIsAnonymous] = React.useState(true);
-  const [title, setTitle] = React.useState("");
-  const [content, setContent] = React.useState("");
+  const [isAnonymous, setIsAnonymous] = React.useState(false);
   const [selectedTags, setSelectedTags] = React.useState<string[]>([]);
+  const [notePublicUrls, setNotePublicUrls] = React.useState<string[]>([]);
 
-  const tags = [
-    "#hotflash",
-    "#anxiety",
-    "#hotflash",
-    "#hotflash",
-    "#sleep",
-    "#anxiety",
-    "#hotflash",
-  ];
+  const getUserData = useGetUser();
+  const createPostMutation = useCreatePostApi();
+  const getHashtagList = useGetHashtag();
+
+  const {
+    control,
+    handleSubmit,
+    formState: { errors, isValid },
+  } = useForm({
+    mode: "onChange",
+    defaultValues: {
+      title: "",
+      content: "",
+    },
+  });
+
+  const tags = getHashtagList?.data;
 
   const toggleTag = (tag: string) => {
     if (selectedTags.includes(tag)) {
@@ -51,8 +64,24 @@ const CreatePost = () => {
     }
   };
 
+  const onSubmit = (data: any) => {
+    const requestedPayload = {
+      title: data?.title,
+      content: data?.content,
+      tags: selectedTags,
+      images: notePublicUrls,
+      isAnon: isAnonymous,
+    };
+
+    createPostMutation.mutate(requestedPayload);
+
+    console.log("requestedPayload", requestedPayload);
+  };
+
+  console.log("getUserData", getHashtagList?.data);
+
   return (
-    <Screen scroll={true} className="bg-white">
+    <Screen scroll={true} className=" px-4 bg-white">
       {/* Header */}
       <View className="flex-row items-center justify-between py-4 px-4 border-b border-gray-200">
         <TouchableOpacity onPress={() => router.back()}>
@@ -61,14 +90,36 @@ const CreatePost = () => {
         <Text className="font-[PoppinsSemiBold] text-lg text-black">
           Creat post
         </Text>
-        <TouchableOpacity>
-          <Text className="font-[PoppinsMedium] text-base text-gray-400">
-            Next
-          </Text>
+        <TouchableOpacity
+          onPress={handleSubmit(onSubmit)}
+          disabled={
+            !isValid || selectedTags.length === 0 || notePublicUrls.length === 0
+          }
+          className={`${
+            !isValid || selectedTags.length === 0 || notePublicUrls.length === 0
+              ? "opacity-50"
+              : "opacity-100"
+          }`}
+        >
+          {createPostMutation.isPending ? (
+            <ActivityIndicator />
+          ) : (
+            <Text
+              className={`font-[PoppinsMedium] text-base ${
+                !isValid ||
+                selectedTags.length === 0 ||
+                notePublicUrls.length === 0
+                  ? "text-gray-400"
+                  : "text-[#8553F3]"
+              }`}
+            >
+              Next
+            </Text>
+          )}
         </TouchableOpacity>
       </View>
 
-      <View className="px-4 pt-4">
+      <View className="px-4">
         {/* User Info */}
         <View className="flex-row items-center justify-between mb-4">
           <View className="flex-row items-center">
@@ -80,22 +131,74 @@ const CreatePost = () => {
                 borderRadius: 20,
               }}
             />
+            {/* <View>UE</View> */}
             <View className="ml-3">
               <Text className="font-[PoppinsSemiBold] text-base text-black">
-                Olivia Rhye
+                {getUserData?.data?.fullname}
               </Text>
-              <Text className="font-[PoppinsRegular] text-xs text-gray-500">
+              {/* <Text className="font-[PoppinsRegular] text-xs text-gray-500">
                 20 Jan 2025 8:30 AM
-              </Text>
+              </Text> */}
             </View>
           </View>
-          <TouchableOpacity>
+          {/* <TouchableOpacity>
             <Ionicons name="bookmark-outline" size={24} color="black" />
-          </TouchableOpacity>
+          </TouchableOpacity> */}
         </View>
 
+        {/* Title Input */}
+        {/* <TextInput
+          placeholder="What's topic on your mind?"
+          placeholderTextColor="#9CA3AF"
+          value={title}
+          onChangeText={setTitle}
+          className="font-[PoppinsRegular] text-base text-black border border-gray-300 rounded-xl px-4 py-3 mb-4"
+        /> */}
+        <View className="mb-4">
+          <Controller
+            control={control}
+            name="title"
+            rules={{
+              required: "title  is required",
+            }}
+            render={({ field: { onChange, onBlur, value } }) => (
+              <CustomInput
+                primary
+                placeholder="What's topic on your mind?"
+                onChangeText={onChange}
+                onBlur={onBlur}
+                value={value}
+                error={errors.title?.message}
+              />
+            )}
+          />
+        </View>
+
+        {/* Content Input */}
+        <Controller
+          control={control}
+          name="content"
+          rules={{
+            required: "content is required",
+          }}
+          render={({ field: { onChange, onBlur, value } }) => (
+            <TextInput
+              placeholder="Anyone else dealing with brain fog lately?"
+              placeholderTextColor="#9CA3AF"
+              value={value}
+              onChangeText={onChange}
+              onBlur={onBlur}
+              multiline
+              numberOfLines={8}
+              textAlignVertical="top"
+              className="font-[PoppinsRegular] text-base text-black border border-gray-300 rounded-xl px-4 py-3 "
+              style={{ height: 150 }}
+            />
+          )}
+        />
+
         {/* Anonymous Toggle */}
-        <View className="flex-row items-center justify-between mb-6">
+        <View className="flex-row items-center justify-between my-3">
           <Text className="font-[PoppinsRegular] text-base text-black">
             Participate as anonymous
           </Text>
@@ -109,35 +212,15 @@ const CreatePost = () => {
         </View>
 
         {/* Image Upload Button */}
-        <TouchableOpacity className="w-10 h-10 bg-[#8553F3] rounded-lg items-center justify-center mb-4">
-          <Ionicons name="image" size={20} color="white" />
-        </TouchableOpacity>
 
-        {/* Title Input */}
-        <TextInput
-          placeholder="What's topic on your mind?"
-          placeholderTextColor="#9CA3AF"
-          value={title}
-          onChangeText={setTitle}
-          className="font-[PoppinsRegular] text-base text-black border border-gray-300 rounded-xl px-4 py-3 mb-4"
-        />
-
-        {/* Content Input */}
-        <TextInput
-          placeholder="Anyone else dealing with brain fog lately?"
-          placeholderTextColor="#9CA3AF"
-          value={content}
-          onChangeText={setContent}
-          multiline
-          numberOfLines={8}
-          textAlignVertical="top"
-          className="font-[PoppinsRegular] text-base text-black border border-gray-300 rounded-xl px-4 py-3 mb-4"
-          style={{ height: 200 }}
+        <CommUploadImage
+          notePublicUrls={notePublicUrls}
+          setNotePublicUrls={setNotePublicUrls}
         />
 
         {/* Tags */}
         <View className="flex-row flex-wrap gap-2">
-          {tags.map((tag, index) => {
+          {tags?.map((tag: any, index: number) => {
             const isSelected = selectedTags.includes(tag);
             return (
               <TouchableOpacity

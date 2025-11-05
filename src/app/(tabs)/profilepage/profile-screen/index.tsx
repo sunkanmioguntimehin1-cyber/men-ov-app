@@ -144,19 +144,21 @@ export default function ProfilePage() {
             </View>
 
             {/* Action Buttons */}
-            {/* <View className="flex-row w-full justify-between">
-            <TouchableOpacity className="bg-[#8A3FFC] rounded-xl px-6 py-4 flex-1 mr-2">
-              <Text className="text-white font-[PoppinsMedium] text-center">
-                Health Information
-              </Text>
-            </TouchableOpacity>
+            <View className="flex-row w-full gap-4 justify-between">
+              <TouchableOpacity className="border border-[#8A3FFC] rounded-xl items-center justify-center flex-1" onPress={()=>{
+                router.push("/(tabs)/homepage/personal-info")
+              }}>
+                <Text className="text-[#8A3FFC] font-[PoppinsMedium] text-center p-4">
+                  Health Information
+                </Text>
+              </TouchableOpacity>
 
-            <TouchableOpacity className="bg-white border border-[#8A3FFC] rounded-xl px-6 py-4 flex-1 ml-2">
-              <Text className="text-[#8A3FFC] font-[PoppinsMedium] text-center">
-                Your Meds
-              </Text>
-            </TouchableOpacity>
-          </View> */}
+              <TouchableOpacity className="bg-white border border-[#8A3FFC] rounded-xl  flex-1 items-center justify-center">
+                <Text className="text-[#8A3FFC] font-[PoppinsMedium] text-center p-4">
+                  Your Meds
+                </Text>
+              </TouchableOpacity>
+            </View>
           </View>
 
           {getRecommendationData.data?.length === 0 ? (

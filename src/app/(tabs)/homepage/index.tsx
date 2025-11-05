@@ -11,6 +11,7 @@ import CustomModel from "@/src/custom-components/CustomModel";
 import CustomSelectData from "@/src/custom-components/CustomSelectData";
 import LoadingOverlay from "@/src/custom-components/LoadingOverlay";
 import Screen from "@/src/layout/Screen";
+import { truncateSimple } from "@/src/lib/truncateSimple";
 import { AntDesign, Ionicons } from "@expo/vector-icons";
 import { formatDistanceToNow } from "date-fns";
 import { Image } from "expo-image";
@@ -229,7 +230,7 @@ export default function HomePage() {
                     label="Cycle Tracking"
                     placeholder={
                       getCycleTrackingLatest?.data && result
-                        ? `${getCycleTrackingLatest?.data?.note} ${result}`
+                        ? `${truncateSimple(getCycleTrackingLatest?.data?.summary, 25)} ${result}`
                         : "Add your last cycle"
                     }
                     icon={
