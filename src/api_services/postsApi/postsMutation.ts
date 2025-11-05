@@ -103,6 +103,8 @@ export const useCommentPostApi = () => {
       //   message: data.message,
       // });
       queryClient.invalidateQueries({ queryKey: ["get-comment"] });
+      queryClient.invalidateQueries({ queryKey: ["get-all-posts"] });
+
     },
     onError(error: any) {
       handleAxiosError(error);

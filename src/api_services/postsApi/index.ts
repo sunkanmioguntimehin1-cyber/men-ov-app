@@ -125,8 +125,12 @@ export const getCommentPostApi = async (data: any) => {
 };
 
 export const commentPostApi = async (data: any) => {
+  console.log("data111", data)
+  const payload ={
+    text:data.text
+  }
   try {
-    const res = await axiosInstance.post(`/post/${data.id}/comment`);
+    const res = await axiosInstance.post(`/post/${data.id}/comment`, payload);
     return res.data;
   } catch (error) {
     console.error("commentPostApi", error);

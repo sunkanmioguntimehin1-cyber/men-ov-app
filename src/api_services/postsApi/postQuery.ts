@@ -26,7 +26,7 @@ export const useGetMyPosts = () => {
 
 export const useGetTrendingPost = () => {
   return useQuery({
-    queryKey: ["get-my-posts"],
+    queryKey: ["get-trending-post"],
     queryFn: getTrendingPost,
   });
 };

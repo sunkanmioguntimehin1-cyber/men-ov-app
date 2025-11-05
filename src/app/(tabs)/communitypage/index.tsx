@@ -61,7 +61,6 @@ const Communitypage = () => {
   };
 
   const handleLikeAndUnLike = (item: any) => {
-    console.log(item, "5555");
     if (item.isLiked) {
       unLikePostApi.mutate({
         id: item._id,
@@ -72,6 +71,13 @@ const Communitypage = () => {
       });
     }
   };
+
+   const handleViewPost = (postId: string) => {
+     router.push({
+       pathname: `/(tabs)/communitypage/view-post`,
+       params: { item: JSON.stringify(postId) },
+     });
+   };
 
    const handleComments = (postId: string) => {
      router.push({
@@ -132,7 +138,7 @@ const Communitypage = () => {
               <TouchableOpacity
                 key={item._id}
                 className=" my-2"
-                // onPress={() => openWebView(item.article?.url)}
+                onPress={() => handleViewPost(item._id)}
               >
                 {/* Recommendation Header */}
                 <View className="flex-row items-center justify-between mb-4">
