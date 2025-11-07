@@ -1,8 +1,8 @@
 import axiosInstance from "@/src/lib/axiosInstance";
 
-export const getAllPosts = async () => {
+export const getAllPosts = async (page: 1) => {
   try {
-    const res = await axiosInstance.get(`/post`);
+    const res = await axiosInstance.get(`/post?limit=10&page=${page}`);
     return res.data;
   } catch (error) {
     console.error("getAllPosts", error);
@@ -22,7 +22,6 @@ export const viewAPost = async (data:any) => {
 
 
 export const createPostApi = async (data:any) => {
-  console.log(data, "databb");
   try {
     const res = await axiosInstance.post(`/post`, data);
     return res.data;

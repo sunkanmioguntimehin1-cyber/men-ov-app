@@ -35,7 +35,7 @@ const CustomButton = ({
     if (disabled) return "bg-primaryLight";
     if (primary) return "bg-primary";
     if (danger) return "bg-red-500";
-    if (whiteBg && borderBn) return "bg-white border border-gray-300";
+    if ( borderBn) return "bg-white border border-gray-300";
     if (whiteBg) return "bg-white shadow-lg";
     return "bg-gray-200";
   };

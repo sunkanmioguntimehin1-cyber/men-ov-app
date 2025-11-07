@@ -31,7 +31,7 @@ const CurrentStatus = ({ menopauseStage, setMenopauseStage }:any) => {
             className="mb-2 font-[PoppinsMedium] text-[#101828] "
             style={{ fontSize: rS(12) }}
           >
-            Current menopause stage
+            Current menstrual status
           </Text>
           <CustomRadio
             options={menopauseStageData}

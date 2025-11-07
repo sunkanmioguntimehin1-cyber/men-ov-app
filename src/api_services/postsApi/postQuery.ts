@@ -1,10 +1,23 @@
-import { useQuery } from "@tanstack/react-query";
+import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
 import { getAllPosts, getCommentPostApi, getHashtag, getMyPost, getTrendingPost, viewAPost } from ".";
 
+// export const useGetAllPosts = () => {
+//   return useQuery({
+//     queryKey: ["get-all-posts"],
+//     queryFn: getAllPosts,
+//   });
+// };
+
 export const useGetAllPosts = () => {
-  return useQuery({
+  return useInfiniteQuery({
     queryKey: ["get-all-posts"],
-    queryFn: getAllPosts,
+    initialPageParam: 1,
+    queryFn: ({ pageParam }) => getAllPosts(pageParam as any),
+    getNextPageParam: (lastPage) => {
+      // Use the metadata from the server response
+      if (lastPage?.page >= lastPage.total) return undefined;
+      return lastPage?.page + 1;
+    },
   });
 };
 

@@ -146,7 +146,7 @@ export default function LoadingOverlay({
             {/* Logo in center */}
             <View className="relative h-16 w-16 m-4 items-center justify-center">
               <Image
-                source={require("@/assets/images/logo.png")} // Adjust path as needed
+                source={require("@/assets/images/Menovia-Logo-Icon.png")} // Adjust path as needed
                 className={`h-full w-full object-contain ${getAnimationClass()}`}
                 resizeMode="contain"
               />

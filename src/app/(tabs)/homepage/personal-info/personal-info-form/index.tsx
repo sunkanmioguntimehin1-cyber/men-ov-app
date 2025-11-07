@@ -13,6 +13,7 @@ import PersonalForm from "@/src/components/PersonalInfoForm/PersonalForm";
 import SurgicalAndReproductiveHistory from "@/src/components/PersonalInfoForm/SurgicalAndReproductiveHistory";
 import BottomSheetScreen from "@/src/custom-components/BottomSheetScreen";
 import { useLocationSearch } from "@/src/hooks/useLocationSearch";
+import KeyboardAwareScreen from "@/src/layout/KeyboardAwareScreen";
 import Screen from "@/src/layout/Screen";
 import { Ionicons, MaterialIcons } from "@expo/vector-icons";
 import BottomSheet from "@gorhom/bottom-sheet";
@@ -235,172 +236,178 @@ const PersonalInfoForm = () => {
   return (
     <>
       <Screen scroll={true} className="">
-        <FormProvider {...formMethods}>
-          <TouchableOpacity
-            className="px-8 my-4"
-            onPress={() => {
-              router.back();
-            }}
-          >
-            <MaterialIcons name="arrow-back-ios" size={24} color="black" />
-          </TouchableOpacity>
+        <KeyboardAwareScreen
+          scroll={true}
+          keyboardAware={true}
+          extraScrollHeight={50}
+        >
+          <FormProvider {...formMethods}>
+            <TouchableOpacity
+              className="px-8 my-4"
+              onPress={() => {
+                router.back();
+              }}
+            >
+              <MaterialIcons name="arrow-back-ios" size={24} color="black" />
+            </TouchableOpacity>
 
-          {/* Form Steps Progress */}
-          <View className="px-8 flex-1">
-            <View className="flex-row px-4 pt-4">
-              {formsStep.map((form, index) => (
-                <React.Fragment key={form}>
-                  <TouchableOpacity className="flex-1 items-center">
-                    <View
-                      className={`border-t-4 w-full h-1 ${
-                        index === currentIndex
-                          ? "border-primary"
-                          : index < currentIndex
-                          ? "border-primary"
-                          : "border-[#D0D5DD]"
-                      }`}
-                    />
-                  </TouchableOpacity>
-                  {index < formsStep.length - 1 && <View className="w-4" />}
-                </React.Fragment>
-              ))}
+            {/* Form Steps Progress */}
+            <View className="px-8 flex-1">
+              <View className="flex-row px-4 pt-4">
+                {formsStep.map((form, index) => (
+                  <React.Fragment key={form}>
+                    <TouchableOpacity className="flex-1 items-center">
+                      <View
+                        className={`border-t-4 w-full h-1 ${
+                          index === currentIndex
+                            ? "border-primary"
+                            : index < currentIndex
+                            ? "border-primary"
+                            : "border-[#D0D5DD]"
+                        }`}
+                      />
+                    </TouchableOpacity>
+                    {index < formsStep.length - 1 && <View className="w-4" />}
+                  </React.Fragment>
+                ))}
+              </View>
+
+              {/* Render current form step */}
+              {currentIndex === 0 && (
+                <PersonalForm
+                  selectedDate={dateValue}
+                  setSelected={setSelected}
+                  selected={selected}
+                  errors={errors}
+                  control={formMethods.control}
+                  reset={reset}
+                  handleDateBottomSheetOpen={handleDateBottomSheetOpen}
+                  handleAddressSelect={handleAddressSelect}
+                  handleLocationChange={handleLocationChange}
+                  dataItem={dataItem}
+                  getSearchOptionQuery={getSearchOptionQuery}
+                  option={option}
+                  term={term}
+                />
+              )}
+              {currentIndex === 1 && (
+                <MenstrualHistory
+                  handleFirstPeriodBottomSheetOpen={
+                    handleFirstPeriodBottomSheetOpen
+                  }
+                  handleLastPeriodOpen={handleLastPeriodOpen}
+                  selectedDate={lastDateValue}
+                  setSelected={setSelectedLastMenstrualDate}
+                  firstPeriod={firstPeriod}
+                  setFirstPeriod={setFirstPeriod}
+                  periodsStoppedAnswer={periodsStoppedAnswer}
+                  setPeriodsStoppedAnswer={setPeriodsStoppedAnswer}
+                />
+              )}
+              {currentIndex === 2 && (
+                <SurgicalAndReproductiveHistory
+                  isHysterectomy={isHysterectomy}
+                  setIsHysterectomy={setIsHysterectomy}
+                  isAvariesRemoved={isAvariesRemoved}
+                  setIsAvariesRemoved={setIsAvariesRemoved}
+                />
+              )}
+              {currentIndex === 3 && (
+                <CurrentStatus
+                  menopauseStage={menopauseStage}
+                  setMenopauseStage={setMenopauseStage}
+                />
+              )}
+              {currentIndex === 4 && (
+                <HormonalTreatment
+                  isOnHormoneTherapy={isOnHormoneTherapy}
+                  setIsOnHormoneTherapy={setIsOnHormoneTherapy}
+                />
+              )}
             </View>
 
-            {/* Render current form step */}
-            {currentIndex === 0 && (
-              <PersonalForm
-                selectedDate={dateValue}
-                setSelected={setSelected}
-                selected={selected}
-                errors={errors}
-                control={formMethods.control}
-                reset={reset}
-                handleDateBottomSheetOpen={handleDateBottomSheetOpen}
-                handleAddressSelect={handleAddressSelect}
-                handleLocationChange={handleLocationChange}
-                dataItem={dataItem}
-                getSearchOptionQuery={getSearchOptionQuery}
-                option={option}
-                term={term}
-              />
-            )}
-            {currentIndex === 1 && (
-              <MenstrualHistory
-                handleFirstPeriodBottomSheetOpen={
-                  handleFirstPeriodBottomSheetOpen
+            {/* Navigation Buttons */}
+            <View className="p-8 my-5 flex-row items-center justify-between">
+              {/* Previous Button - Hidden on first step */}
+              {!isFirstStep && (
+                <TouchableOpacity
+                  className="items-center justify-center w-14 h-14 rounded-full border border-primary"
+                  onPress={handlePrev}
+                >
+                  <Ionicons name="arrow-back" size={24} color="#8A3FFC" />
+                </TouchableOpacity>
+              )}
+
+              {/* Spacer to keep Next button on right when Prev is hidden */}
+              {isFirstStep && <View className="w-14 h-14" />}
+
+              {/* Next Button */}
+              <TouchableOpacity
+                onPress={
+                  currentIndex === 0
+                    ? handleSubmit(handleNext)
+                    : () => handleNext({})
                 }
-                handleLastPeriodOpen={handleLastPeriodOpen}
-                selectedDate={lastDateValue}
-                setSelected={setSelectedLastMenstrualDate}
+                disabled={isNextButtonDisabled()}
+                className={`items-center justify-center w-14 h-14 rounded-full ${
+                  isNextButtonDisabled() ? "bg-primaryLight" : "bg-primary"
+                }`}
+              >
+                <Ionicons
+                  name="arrow-forward"
+                  size={24}
+                  color={isNextButtonDisabled() ? "#B0B0B0" : "#fff"}
+                />
+              </TouchableOpacity>
+            </View>
+          </FormProvider>
+
+          {/* Bottom Sheets */}
+          <BottomSheetScreen
+            snapPoints={snapPoints}
+            ref={datebottomSheetRef}
+            isBackdropComponent={true}
+            enablePanDownToClose={true}
+            index={-1}
+            message={
+              <SetPersonalInfoCalender
+                selectedDate={selectedDate}
+                setSelectedDate={setSelectedDate}
+                handleDateBottomSheetClose={handleDateBottomSheetClose}
+              />
+            }
+          />
+          <BottomSheetScreen
+            snapPoints={snapPoints}
+            ref={firstPeriodBottomSheetRef}
+            isBackdropComponent={true}
+            enablePanDownToClose={true}
+            index={-1}
+            message={
+              <AgeOfFirstPeriod
+                handleFirstPeriodBottomSheetClose={
+                  handleFirstPeriodBottomSheetClose
+                }
                 firstPeriod={firstPeriod}
                 setFirstPeriod={setFirstPeriod}
-                periodsStoppedAnswer={periodsStoppedAnswer}
-                setPeriodsStoppedAnswer={setPeriodsStoppedAnswer}
               />
-            )}
-            {currentIndex === 2 && (
-              <SurgicalAndReproductiveHistory
-                isHysterectomy={isHysterectomy}
-                setIsHysterectomy={setIsHysterectomy}
-                isAvariesRemoved={isAvariesRemoved}
-                setIsAvariesRemoved={setIsAvariesRemoved}
+            }
+          />
+          <BottomSheetScreen
+            snapPoints={snapPoints}
+            ref={lastMenstrualPeriodRef}
+            isBackdropComponent={true}
+            enablePanDownToClose={true}
+            index={-1}
+            message={
+              <LastMenstrualPeriod
+                selectedDate={selectedLastMenstrualDate}
+                setSelectedDate={setSelectedLastMenstrualDate}
+                handleDateBottomSheetClose={handleLastPeriodClose}
               />
-            )}
-            {currentIndex === 3 && (
-              <CurrentStatus
-                menopauseStage={menopauseStage}
-                setMenopauseStage={setMenopauseStage}
-              />
-            )}
-            {currentIndex === 4 && (
-              <HormonalTreatment
-                isOnHormoneTherapy={isOnHormoneTherapy}
-                setIsOnHormoneTherapy={setIsOnHormoneTherapy}
-              />
-            )}
-          </View>
-
-          {/* Navigation Buttons */}
-          <View className="p-8 my-5 flex-row items-center justify-between">
-            {/* Previous Button - Hidden on first step */}
-            {!isFirstStep && (
-              <TouchableOpacity
-                className="items-center justify-center w-14 h-14 rounded-full border border-primary"
-                onPress={handlePrev}
-              >
-                <Ionicons name="arrow-back" size={24} color="#8A3FFC" />
-              </TouchableOpacity>
-            )}
-
-            {/* Spacer to keep Next button on right when Prev is hidden */}
-            {isFirstStep && <View className="w-14 h-14" />}
-
-            {/* Next Button */}
-            <TouchableOpacity
-              onPress={
-                currentIndex === 0
-                  ? handleSubmit(handleNext)
-                  : () => handleNext({})
-              }
-              disabled={isNextButtonDisabled()}
-              className={`items-center justify-center w-14 h-14 rounded-full ${
-                isNextButtonDisabled() ? "bg-primaryLight" : "bg-primary"
-              }`}
-            >
-              <Ionicons
-                name="arrow-forward"
-                size={24}
-                color={isNextButtonDisabled() ? "#B0B0B0" : "#fff"}
-              />
-            </TouchableOpacity>
-          </View>
-        </FormProvider>
-
-        {/* Bottom Sheets */}
-        <BottomSheetScreen
-          snapPoints={snapPoints}
-          ref={datebottomSheetRef}
-          isBackdropComponent={true}
-          enablePanDownToClose={true}
-          index={-1}
-          message={
-            <SetPersonalInfoCalender
-              selectedDate={selectedDate}
-              setSelectedDate={setSelectedDate}
-              handleDateBottomSheetClose={handleDateBottomSheetClose}
-            />
-          }
-        />
-        <BottomSheetScreen
-          snapPoints={snapPoints}
-          ref={firstPeriodBottomSheetRef}
-          isBackdropComponent={true}
-          enablePanDownToClose={true}
-          index={-1}
-          message={
-            <AgeOfFirstPeriod
-              handleFirstPeriodBottomSheetClose={
-                handleFirstPeriodBottomSheetClose
-              }
-              firstPeriod={firstPeriod}
-              setFirstPeriod={setFirstPeriod}
-            />
-          }
-        />
-        <BottomSheetScreen
-          snapPoints={snapPoints}
-          ref={lastMenstrualPeriodRef}
-          isBackdropComponent={true}
-          enablePanDownToClose={true}
-          index={-1}
-          message={
-            <LastMenstrualPeriod
-              selectedDate={selectedLastMenstrualDate}
-              setSelectedDate={setSelectedLastMenstrualDate}
-              handleDateBottomSheetClose={handleLastPeriodClose}
-            />
-          }
-        />
+            }
+          />
+        </KeyboardAwareScreen>
       </Screen>
     </>
   );

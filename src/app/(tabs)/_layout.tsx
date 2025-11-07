@@ -21,7 +21,8 @@ function getTabBarVisibility(route: any) {
     "view-search-result",
     "explore-webview",
     "create-post",
-    "comments"
+    "comments",
+    "contact-us"
   ];
 
   // Check if the current route or any part of it matches hidden routes

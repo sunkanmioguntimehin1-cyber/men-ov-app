@@ -146,9 +146,9 @@ const LoginScreen = () => {
         backdropClassName="..." // Optional: Additional backdrop styling
       />
       <View className="items-center mb-20">
-        <View className="w-16 h-14">
+        <View className="w-20 h-14">
           <Image
-            source={require("@/assets/images/logo.png")}
+            source={require("@/assets/images/Menovia-Logo-Icon.png")}
             style={{
               height: "100%",
               width: "100%",

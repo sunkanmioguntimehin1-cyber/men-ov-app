@@ -1,3 +1,4 @@
+import { useLikeArticleApi, useUnLikeArticleApi } from "@/src/api_services/articleApi/articleMutation";
 import {
   useGetAllToics,
   useGetExplore,
@@ -30,6 +31,22 @@ const ExplorePage = () => {
 
   const getAllExploreToics = useGetAllToics();
   const getExploreData = useGetExplore();
+  const likeArticleApi =  useLikeArticleApi()
+  const unLikeArticleApi = useUnLikeArticleApi();
+
+
+  //!  working in porgress...
+   const handleLikeAndUnLike = (item: any) => {
+     if (item.isLiked) {
+       unLikeArticleApi.mutate({
+         id: item._id,
+       });
+     } else {
+       likeArticleApi.mutate({
+         id: item._id,
+       });
+     }
+   };
 
   const handleSearchResult = (item: string) => {
     router.push({

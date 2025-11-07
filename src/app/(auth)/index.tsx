@@ -45,9 +45,9 @@ export default function GetStarted() {
     <>
       <Screen className="  pt-safe">
         <View className=" items-center flex-1">
-          <View className=" w-52 h-56 ">
+          <View className=" w-80 h-56 ">
             <Image
-              source={require("@/assets/images/signin-logo.png")}
+              source={require("@/assets/images/Menovia-Logo-Vertical.png")}
               style={{
                 height: "100%",
                 width: "100%",

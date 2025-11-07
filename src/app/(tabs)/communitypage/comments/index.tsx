@@ -45,8 +45,8 @@ const CommentsScreen = () => {
         </TouchableOpacity>
         <View>
           <Text
-            className="font-[PoppinsSemiBold] text-primary"
-            style={{ fontSize: rS(15) }}
+            className="font-[PoppinsSemiBold] "
+            style={{ fontSize: rS(12) }}
           >
             Comments
           </Text>

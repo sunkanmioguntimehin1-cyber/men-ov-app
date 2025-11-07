@@ -1,11 +1,11 @@
 import {
-    useViewAPost
+  useViewAPost
 } from "@/src/api_services/postsApi/postQuery";
 import Screen from "@/src/layout/Screen";
 import { rS } from "@/src/lib/responsivehandler";
 import {
-    Ionicons,
-    MaterialCommunityIcons
+  Ionicons,
+  MaterialCommunityIcons
 } from "@expo/vector-icons";
 import { Image } from "expo-image";
 import { useLocalSearchParams, useRouter } from "expo-router";
@@ -48,8 +48,8 @@ const CommentsScreen = () => {
         </TouchableOpacity>
         <View>
           <Text
-            className="font-[PoppinsSemiBold] text-primary"
-            style={{ fontSize: rS(15) }}
+            className="font-[PoppinsSemiBold]"
+            style={{ fontSize: rS(12) }}
           >
             View Post
           </Text>

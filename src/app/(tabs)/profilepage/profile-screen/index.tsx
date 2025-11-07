@@ -7,7 +7,7 @@ import {
 import SafeScreen from "@/src/components/SafeScreen";
 import LoadingOverlay from "@/src/custom-components/LoadingOverlay";
 import { Feather, Ionicons, MaterialIcons } from "@expo/vector-icons";
-import { differenceInYears, format, parseISO } from "date-fns";
+import { format } from "date-fns";
 import { Image } from "expo-image";
 import { useRouter } from "expo-router";
 import React from "react";
@@ -31,6 +31,10 @@ export default function ProfilePage() {
   const getRecommendationData = useGetRecommendationApi();
   const saveRecommendation = useSaveRecommendationApi();
   const getIntakeDetails = useGetIntakeDetails();
+
+
+  console.log("getUserData11", getUserData?.data?.dob);
+  console.log("getIntakeDetails", getIntakeDetails?.data);
 
   
 
@@ -58,21 +62,33 @@ export default function ProfilePage() {
     });
   };
 
+  
+
   // const birthDate = getUserData?.data?.dob;
-  // const date = parseISO(birthDate);
-  // const now = new Date();
-
-  // console.log("birthDate", birthDate);
-
-  // const age = differenceInYears(now, date);
+  // let age = null;
+  // if (birthDate) {
+  //   const date = parseISO(birthDate);
+  //   const now = new Date();
+  //   age = differenceInYears(now, date);
+  // }
 
   const birthDate = getUserData?.data?.dob;
   let age = null;
+
   if (birthDate) {
-    const date = parseISO(birthDate);
-    const now = new Date();
-    age = differenceInYears(now, date);
+    const d = new Date(birthDate);
+    const today = new Date();
+
+    age = today.getFullYear() - d.getFullYear();
+    const hasHadBirthday =
+      today.getMonth() > d.getMonth() ||
+      (today.getMonth() === d.getMonth() && today.getDate() >= d.getDate());
+
+    if (!hasHadBirthday) age--;
   }
+
+
+
 
   return (
     <SafeScreen className="bg-white">
@@ -105,8 +121,10 @@ export default function ProfilePage() {
               Profile
             </Text>
 
-            <TouchableOpacity>
-              <MaterialIcons name="more-vert" size={24} color="black" />
+            <TouchableOpacity onPress={()=>{
+              router.push("/profilepage/profile-screen/edit-profile")
+            }}>
+              <Feather name="edit" size={24} color="black" />
             </TouchableOpacity>
           </View>
 
@@ -126,7 +144,8 @@ export default function ProfilePage() {
 
             {/* Demographics */}
             <Text className="text-sm text-gray-600 mb-6">
-              {age ? `${age} years old` : "—"}- {getUserData.data?.gender}
+              {age !== null ? `${age} years old` : "—"}-{" "}
+              {getUserData.data?.gender}
             </Text>
 
             {/* Health Tags */}
@@ -145,9 +164,12 @@ export default function ProfilePage() {
 
             {/* Action Buttons */}
             <View className="flex-row w-full gap-4 justify-between">
-              <TouchableOpacity className="border border-[#8A3FFC] rounded-xl items-center justify-center flex-1" onPress={()=>{
-                router.push("/(tabs)/homepage/personal-info")
-              }}>
+              <TouchableOpacity
+                className="border border-[#8A3FFC] rounded-xl items-center justify-center flex-1"
+                onPress={() => {
+                  router.push("/(tabs)/homepage/personal-info");
+                }}
+              >
                 <Text className="text-[#8A3FFC] font-[PoppinsMedium] text-center p-4">
                   Health Information
                 </Text>

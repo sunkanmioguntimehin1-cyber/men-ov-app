@@ -1077,7 +1077,7 @@ const ChatWithAi = () => {
   const { data: chatData, isLoading, isError, error } = getChatHistory;
   const sendMessage = useTalkToChatAi();
 
-  console.log("error", error);
+  
 
   const flatListRef = useRef<FlatList>(null);
   const insets = useSafeAreaInsets();
@@ -1303,7 +1303,7 @@ const ChatWithAi = () => {
     }
   };
 
-  console.log("sendMessage500", sendMessage);
+  // console.log("sendMessage500", sendMessage);
 
   const renderMessage = ({ item, index }: { item: Message; index: number }) => {
     const prevMessage = index > 0 ? messages[index - 1] : null;
@@ -1459,7 +1459,7 @@ const ChatWithAi = () => {
             }}
           >
             <View className="flex-row items-center space-x-2">
-              <View className="flex-1">
+              <View className="flex-1 mx-2">
                 <CustomInput
                   placeholder="Type a message..."
                   value={message}
@@ -1474,7 +1474,7 @@ const ChatWithAi = () => {
               <TouchableOpacity
                 onPress={handleSend}
                 disabled={!message.trim() || isLoading || sendMessage.isPending}
-                className={`w-12 h-12 rounded-full items-center justify-center ${
+                className={`w-12 h-12  rounded-full items-center justify-center ${
                   message.trim() && !isLoading && !sendMessage.isPending
                     ? "bg-primary"
                     : "bg-primaryLight"

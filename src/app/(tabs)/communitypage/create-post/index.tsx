@@ -42,6 +42,8 @@ const CreatePost = () => {
   const createPostMutation = useCreatePostApi();
   const getHashtagList = useGetHashtag();
 
+  // console.log("selectedTags", selectedTags);
+
   const {
     control,
     handleSubmit,
@@ -68,17 +70,16 @@ const CreatePost = () => {
     const requestedPayload = {
       title: data?.title,
       content: data?.content,
-      tags: selectedTags,
+      hashtags: selectedTags,
       images: notePublicUrls,
       isAnon: isAnonymous,
     };
 
     createPostMutation.mutate(requestedPayload);
 
-    console.log("requestedPayload", requestedPayload);
   };
 
-  console.log("getUserData", getHashtagList?.data);
+  // console.log("getUserData", getHashtagList?.data);
 
   return (
     <Screen scroll={true} className=" px-4 bg-white">
@@ -93,10 +94,10 @@ const CreatePost = () => {
         <TouchableOpacity
           onPress={handleSubmit(onSubmit)}
           disabled={
-            !isValid || selectedTags.length === 0 || notePublicUrls.length === 0
+            !isValid || selectedTags.length === 0 
           }
           className={`${
-            !isValid || selectedTags.length === 0 || notePublicUrls.length === 0
+            !isValid || selectedTags.length === 0 
               ? "opacity-50"
               : "opacity-100"
           }`}
@@ -107,9 +108,7 @@ const CreatePost = () => {
             <Text
               className={`font-[PoppinsMedium] text-base ${
                 !isValid ||
-                selectedTags.length === 0 ||
-                notePublicUrls.length === 0
-                  ? "text-gray-400"
+                selectedTags.length === 0 ? "text-gray-400"
                   : "text-[#8553F3]"
               }`}
             >
@@ -141,19 +140,11 @@ const CreatePost = () => {
               </Text> */}
             </View>
           </View>
-          {/* <TouchableOpacity>
-            <Ionicons name="bookmark-outline" size={24} color="black" />
-          </TouchableOpacity> */}
+         
         </View>
 
         {/* Title Input */}
-        {/* <TextInput
-          placeholder="What's topic on your mind?"
-          placeholderTextColor="#9CA3AF"
-          value={title}
-          onChangeText={setTitle}
-          className="font-[PoppinsRegular] text-base text-black border border-gray-300 rounded-xl px-4 py-3 mb-4"
-        /> */}
+        
         <View className="mb-4">
           <Controller
             control={control}

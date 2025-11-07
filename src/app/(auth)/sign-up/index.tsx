@@ -92,9 +92,9 @@ const SignUp = () => {
       </TouchableOpacity>
 
       <View className="items-center">
-        <View className="w-16 h-14">
+        <View className="w-20 h-14">
           <Image
-            source={require("@/assets/images/logo.png")}
+            source={require("@/assets/images/Menovia-Logo-Icon.png")}
             style={{
               height: "100%",
               width: "100%",
