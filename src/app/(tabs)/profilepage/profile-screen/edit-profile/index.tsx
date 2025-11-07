@@ -1,21 +1,27 @@
-import { useGetUser } from '@/src/api_services/userApi/userQuery';
-import SetPersonalInfoCalender from '@/src/components/PersonalInfoForm/BottomSheetComp/SetPersonalInfoCalender';
-import ProfileUploadImage from '@/src/components/profile/ProfileUploadImage';
-import BottomSheetScreen from '@/src/custom-components/BottomSheetScreen';
-import CustomButton from '@/src/custom-components/CustomButton';
-import CustomInput from '@/src/custom-components/CustomInput';
-import CustomSelect from '@/src/custom-components/CustomSelect';
-import CustomSelectData from '@/src/custom-components/CustomSelectData';
-import { useLocationSearch } from '@/src/hooks/useLocationSearch';
-import KeyboardAwareScreen from '@/src/layout/KeyboardAwareScreen';
-import { AntDesign, MaterialIcons } from '@expo/vector-icons';
-import BottomSheet from '@gorhom/bottom-sheet';
-import { format } from 'date-fns';
-import { useRouter } from 'expo-router';
-import React, { useMemo } from 'react';
-import { Controller, useForm } from 'react-hook-form';
-import { ImageBackground, ScrollView, Text, TouchableOpacity, View } from 'react-native';
-
+import { useEditUser } from "@/src/api_services/userApi/userMutation";
+import { useGetUser } from "@/src/api_services/userApi/userQuery";
+import SetPersonalInfoCalender from "@/src/components/PersonalInfoForm/BottomSheetComp/SetPersonalInfoCalender";
+import ProfileUploadImage from "@/src/components/profile/ProfileUploadImage";
+import BottomSheetScreen from "@/src/custom-components/BottomSheetScreen";
+import CustomButton from "@/src/custom-components/CustomButton";
+import CustomInput from "@/src/custom-components/CustomInput";
+import CustomSelect from "@/src/custom-components/CustomSelect";
+import CustomSelectData from "@/src/custom-components/CustomSelectData";
+import { useLocationSearch } from "@/src/hooks/useLocationSearch";
+import KeyboardAwareScreen from "@/src/layout/KeyboardAwareScreen";
+import { AntDesign, MaterialIcons } from "@expo/vector-icons";
+import BottomSheet from "@gorhom/bottom-sheet";
+import { format } from "date-fns";
+import { useRouter } from "expo-router";
+import React, { useMemo } from "react";
+import { Controller, useForm } from "react-hook-form";
+import {
+  ImageBackground,
+  ScrollView,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
 
 interface Item {
   title: string;
@@ -30,14 +36,15 @@ const dataItem = [
 ];
 
 const EditProfile = () => {
-  const router = useRouter()
-    const [selectedDate, setSelectedDate] = React.useState<Date | any>(null);
-    const [selected, setSelected] = React.useState<Item | null>(null);
-    const [notePublicUrls, setNotePublicUrls] = React.useState<string[]>([]);
-  
-    const [openDropDown, setOpenDropDown] = React.useState(false);
+  const router = useRouter();
+  const [selectedDate, setSelectedDate] = React.useState<Date | null>(null);
+  const [selected, setSelected] = React.useState<Item | null>(null);
+  const [notePublicUrls, setNotePublicUrls] = React.useState<string[]>([]);
 
- const getUserData = useGetUser();
+  const [openDropDown, setOpenDropDown] = React.useState(false);
+
+  const getUserData = useGetUser();
+  const editUserProfile = useEditUser();
 
   const {
     control,
@@ -49,52 +56,58 @@ const EditProfile = () => {
     defaultValues: {
       address: "",
       fullname: "",
-      dob: "",
     },
   });
-     const {
-        term,
-        option,
-        city,
-        handleLocationChange,
-        onOptionSelect,
-        getSearchOptionQuery,
-      } = useLocationSearch();
-    
-      const handleAddressSelect = (
-        item: any,
-        onChange: (value: string) => void
-      ) => {
-        onChange(item.description);
-        onOptionSelect(item);
-      };
-    
-      React.useEffect(() => {
-        if (getUserData?.data) {
-          const userGender = getUserData.data.gender;
-          reset({
-            fullname: getUserData?.data?.fullname,
-            address: getUserData?.data?.address,
-            dob: getUserData?.data?.dob,
-          });
-          const matchingGender = dataItem.find((item) => item.value === userGender);
-          setSelected(matchingGender || null);
-        }
-      }, [getUserData?.data, reset]);
+  const {
+    term,
+    option,
+    city,
+    handleLocationChange,
+    onOptionSelect,
+    getSearchOptionQuery,
+  } = useLocationSearch();
 
+  const handleAddressSelect = (
+    item: any,
+    onChange: (value: string) => void
+  ) => {
+    onChange(item.description);
+    onOptionSelect(item);
+  };
 
-      const dateValue = selectedDate ? format(selectedDate, "yyyy-MM-dd") : "";
+  React.useEffect(() => {
+    if (getUserData?.data) {
+      const userGender = getUserData.data.gender;
+      const updateDateValue = getUserData?.data?.dob;
+      reset({
+        fullname: getUserData?.data?.fullname,
+        address: getUserData?.data?.address,
+        // dob: getUserData?.data?.dob,
+      });
+      const matchingGender = dataItem.find((item) => item.value === userGender);
+      setSelected(matchingGender || null);
+      const parsedDob = updateDateValue ? new Date(updateDateValue) : null;
+      setSelectedDate(parsedDob);
+    }
+  }, [getUserData?.data, reset]);
+
+  const dateValue = selectedDate ? format(selectedDate, "yyyy-MM-dd") : "";
 
   const snapPoints = useMemo(() => ["30%", "50%"], []);
 
+  const datebottomSheetRef = React.useRef<BottomSheet>(null);
+  const handleDateBottomSheetOpen = () => datebottomSheetRef.current?.expand();
+  const handleDateBottomSheetClose = () => datebottomSheetRef.current?.close();
 
-       const datebottomSheetRef = React.useRef<BottomSheet>(null);
-       const handleDateBottomSheetOpen = () =>
-         datebottomSheetRef.current?.expand();
-       const handleDateBottomSheetClose = () =>
-         datebottomSheetRef.current?.close();
-      
-  
+  const onSubmit = (data: any) => {
+    editUserProfile.mutate({
+      fullname: data.fullname || getUserData?.data?.fullname,
+      gender: selected?.value || getUserData?.data?.gender,
+      address: data.address || getUserData?.data?.address,
+      dob: selectedDate,
+    });
+  };
+
   return (
     <KeyboardAwareScreen
       scroll={true}
@@ -128,7 +141,6 @@ const EditProfile = () => {
 
         <View className="p-8">
           <View className=" ">
-            
             <ProfileUploadImage
               notePublicUrls={notePublicUrls}
               setNotePublicUrls={setNotePublicUrls}
@@ -176,7 +188,7 @@ const EditProfile = () => {
                 primary
                 placeholder="Pick a date"
                 label="Date of birth"
-                value={selectedDate}
+                value={dateValue}
                 icon={
                   <TouchableOpacity onPress={handleDateBottomSheetOpen}>
                     <AntDesign name="down" size={20} color="#1E1D2F" />
@@ -197,7 +209,6 @@ const EditProfile = () => {
                     <CustomInput
                       primary
                       label="Address"
-                      normalize={false} // Normalize input
                       placeholder="Enter your address"
                       value={term?.description || value}
                       onChangeText={(text) => {
@@ -240,7 +251,12 @@ const EditProfile = () => {
           </View>
 
           <View>
-            <CustomButton primary title="Edit Profile" />
+            <CustomButton
+              primary
+              title="Save"
+              onPress={handleSubmit(onSubmit)}
+              loading={editUserProfile.isPending}
+            />
           </View>
         </View>
       </ImageBackground>
@@ -261,6 +277,6 @@ const EditProfile = () => {
       />
     </KeyboardAwareScreen>
   );
-}
+};
 
-export default EditProfile
+export default EditProfile;

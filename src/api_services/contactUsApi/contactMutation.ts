@@ -12,7 +12,7 @@ export const useContactUsApi = () => {
       showSuccessToast({
         message: data.message,
       });
-     router.push("/(tabs)/profilepage")
+     router.back()
     },
     onError(error: any) {
       handleAxiosError(error);

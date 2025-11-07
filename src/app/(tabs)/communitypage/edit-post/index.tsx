@@ -1,3 +1,17 @@
+// import Screen from '@/src/layout/Screen'
+// import React from 'react'
+// import { Text } from 'react-native'
+
+// const CreatePost = () => {
+//   return (
+//     <Screen>
+//       <Text>CreatePost</Text>
+//     </Screen>
+//   )
+// }
+
+// export default CreatePost
+
 import { useGetHashtag } from "@/src/api_services/postsApi/postQuery";
 import { useCreatePostApi } from "@/src/api_services/postsApi/postsMutation";
 import { useGetUser } from "@/src/api_services/userApi/userQuery";
@@ -9,16 +23,16 @@ import { useRouter } from "expo-router";
 import React from "react";
 import { Controller, useForm } from "react-hook-form";
 import {
-  ActivityIndicator,
-  Image,
-  Switch,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  View,
+    ActivityIndicator,
+    Image,
+    Switch,
+    Text,
+    TextInput,
+    TouchableOpacity,
+    View,
 } from "react-native";
 
-const CreatePost = () => {
+const EditPost = () => {
   const router = useRouter();
   const [isAnonymous, setIsAnonymous] = React.useState(false);
   const [selectedTags, setSelectedTags] = React.useState<string[]>([]);
@@ -64,6 +78,8 @@ const CreatePost = () => {
     createPostMutation.mutate(requestedPayload);
   };
 
+  // console.log("getUserData", getHashtagList?.data);
+
   return (
     <Screen scroll={true} className=" px-4 bg-white">
       {/* Header */}
@@ -74,11 +90,23 @@ const CreatePost = () => {
         <Text className="font-[PoppinsSemiBold] text-lg text-black">
           Creat post
         </Text>
-        <TouchableOpacity onPress={handleSubmit(onSubmit)}>
+        <TouchableOpacity
+          onPress={handleSubmit(onSubmit)}
+          disabled={!isValid || selectedTags.length === 0}
+          className={`${
+            !isValid || selectedTags.length === 0 ? "opacity-50" : "opacity-100"
+          }`}
+        >
           {createPostMutation.isPending ? (
             <ActivityIndicator />
           ) : (
-            <Text className={`font-[PoppinsMedium] text-base text-primary `}>
+            <Text
+              className={`font-[PoppinsMedium] text-base ${
+                !isValid || selectedTags.length === 0
+                  ? "text-gray-400"
+                  : "text-[#8553F3]"
+              }`}
+            >
               Next
             </Text>
           )}
@@ -115,9 +143,9 @@ const CreatePost = () => {
           <Controller
             control={control}
             name="title"
-            // rules={{
-            //   required: "title  is required",
-            // }}
+            rules={{
+              required: "title  is required",
+            }}
             render={({ field: { onChange, onBlur, value } }) => (
               <CustomInput
                 primary
@@ -125,7 +153,7 @@ const CreatePost = () => {
                 onChangeText={onChange}
                 onBlur={onBlur}
                 value={value}
-                // error={errors.title?.message}
+                error={errors.title?.message}
               />
             )}
           />
@@ -153,11 +181,6 @@ const CreatePost = () => {
             />
           )}
         />
-        {errors.content && (
-          <Text className="text-red-500 font-[PoppinsRegular] text-xs mt-1">
-            {errors.content.message}
-          </Text>
-        )}
 
         {/* Anonymous Toggle */}
         <View className="flex-row items-center justify-between my-3">
@@ -210,4 +233,4 @@ const CreatePost = () => {
   );
 };
 
-export default CreatePost;
+export default EditPost;

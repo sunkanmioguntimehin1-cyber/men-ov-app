@@ -5,15 +5,20 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "expo-router";
 import { deleteUser, editUserDetails, intakeDetailsApi, updateNotificationSettings } from ".";
 
-export const useEditUser = (handleNextBtn: any) => {
+export const useEditUser = (handleNextBtn?: any) => {
   const queryClient = useQueryClient();
+   const router = useRouter();
   return useMutation({
     mutationFn: editUserDetails,
     onSuccess(data: any) {
       showSuccessToast({
         message: data.message,
       });
-      handleNextBtn();
+      if (handleNextBtn) {
+        handleNextBtn();
+      } else {
+        router.back();
+      }
       queryClient.invalidateQueries({ queryKey: ["get-user"] });
     },
     onError(error: any) {

@@ -152,6 +152,6 @@ const ContactUs = () => {
       </View>
     </KeyboardAwareScreen>
   );
-};
+}; 
 
 export default ContactUs;

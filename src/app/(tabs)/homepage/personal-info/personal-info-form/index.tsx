@@ -14,7 +14,6 @@ import SurgicalAndReproductiveHistory from "@/src/components/PersonalInfoForm/Su
 import BottomSheetScreen from "@/src/custom-components/BottomSheetScreen";
 import { useLocationSearch } from "@/src/hooks/useLocationSearch";
 import KeyboardAwareScreen from "@/src/layout/KeyboardAwareScreen";
-import Screen from "@/src/layout/Screen";
 import { Ionicons, MaterialIcons } from "@expo/vector-icons";
 import BottomSheet from "@gorhom/bottom-sheet";
 import { format } from "date-fns";
@@ -223,6 +222,7 @@ const PersonalInfoForm = () => {
   React.useEffect(() => {
     if (getUserData?.data) {
       const userGender = getUserData.data.gender;
+      const updateDateValue = getUserData?.data?.dob;
       reset({
         fullname: getUserData?.data?.fullname,
         address: getUserData?.data?.address,
@@ -230,12 +230,15 @@ const PersonalInfoForm = () => {
       });
       const matchingGender = dataItem.find((item) => item.value === userGender);
       setSelected(matchingGender || null);
+
+      const parsedDob = updateDateValue ? new Date(updateDateValue) : null;
+      setSelectedDate(parsedDob);
     }
   }, [getUserData?.data, reset]);
 
   return (
     <>
-      <Screen scroll={true} className="">
+      {/* <Screen scroll={true} className=""> */}
         <KeyboardAwareScreen
           scroll={true}
           keyboardAware={true}
@@ -408,7 +411,7 @@ const PersonalInfoForm = () => {
             }
           />
         </KeyboardAwareScreen>
-      </Screen>
+      {/* </Screen> */}
     </>
   );
 };

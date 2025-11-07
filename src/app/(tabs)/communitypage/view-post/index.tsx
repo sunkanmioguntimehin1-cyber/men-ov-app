@@ -1,16 +1,11 @@
-import {
-  useViewAPost
-} from "@/src/api_services/postsApi/postQuery";
+import { useViewAPost } from "@/src/api_services/postsApi/postQuery";
 import Screen from "@/src/layout/Screen";
 import { rS } from "@/src/lib/responsivehandler";
-import {
-  Ionicons,
-  MaterialCommunityIcons
-} from "@expo/vector-icons";
+import { Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
 import { Image } from "expo-image";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import React, { useMemo } from "react";
-import { Text, TouchableOpacity, View } from "react-native";
+import { ScrollView, Text, TouchableOpacity, View } from "react-native";
 
 const CommentsScreen = () => {
   const router = useRouter();
@@ -29,35 +24,33 @@ const CommentsScreen = () => {
     if (newData) {
       console.log("View Product Data:", viewUserPosts.data);
       viewUserPosts.refetch();
-    
     }
   }, [newData]);
 
-   const handleComments = (postId: string) => {
-     router.push({
-       pathname: `/(tabs)/communitypage/comments`,
-       params: { item: JSON.stringify(postId) },
-     });
-   };
+  const handleComments = (postId: string) => {
+    router.push({
+      pathname: `/(tabs)/communitypage/comments`,
+      params: { item: JSON.stringify(postId) },
+    });
+  };
 
   return (
-    <Screen className="p-6">
+    <Screen  className="p-6">
       <View className="flex-row items-center justify-between my-2  bg-white">
         <TouchableOpacity onPress={() => router.back()}>
           <Ionicons name="chevron-back" size={24} color="#2E6939" />
         </TouchableOpacity>
         <View>
-          <Text
-            className="font-[PoppinsSemiBold]"
-            style={{ fontSize: rS(12) }}
-          >
+          <Text className="font-[PoppinsSemiBold]" style={{ fontSize: rS(12) }}>
             View Post
           </Text>
         </View>
-        <View />
+        {/* <TouchableOpacity>
+          <Feather name="edit" size={18} color="black" />
+        </TouchableOpacity> */}
       </View>
 
-      <View className="">
+      <ScrollView className="">
         <View className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden mb-4">
           {/* Post Header */}
           <View className="flex-row items-center py-2">
@@ -97,19 +90,21 @@ const CommentsScreen = () => {
           </View>
 
           {/* Post Image */}
-          <View className="w-full h-48">
-            <Image
-              source={{
-                // uri: item.images[0],
-                uri: viewUserPosts.data?.images[0],
-              }}
-              style={{
-                height: "100%",
-                width: "100%",
-              }}
-              contentFit="cover"
-            />
-          </View>
+          {viewUserPosts.data?.images[0] &&  (
+            <View className="w-full h-48">
+              <Image
+                source={{
+                  // uri: item.images[0],
+                  uri: viewUserPosts.data?.images[0],
+                }}
+                style={{
+                  height: "100%",
+                  width: "100%",
+                }}
+                contentFit="cover"
+              />
+            </View>
+          )}
 
           {/* Action Bar */}
           <View className="flex-row items-center justify-between p-4">
@@ -149,7 +144,7 @@ const CommentsScreen = () => {
             </View>
           </View>
         </View>
-      </View>
+      </ScrollView>
     </Screen>
   );
 };
