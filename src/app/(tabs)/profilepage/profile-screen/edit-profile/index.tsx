@@ -39,7 +39,9 @@ const EditProfile = () => {
   const router = useRouter();
   const [selectedDate, setSelectedDate] = React.useState<Date | null>(null);
   const [selected, setSelected] = React.useState<Item | null>(null);
-  const [notePublicUrls, setNotePublicUrls] = React.useState<string[]>([]);
+  const [notePublicUrls, setNotePublicUrls] = React.useState<string | any>(
+    null
+  );
 
   const [openDropDown, setOpenDropDown] = React.useState(false);
 
@@ -105,6 +107,7 @@ const EditProfile = () => {
       gender: selected?.value || getUserData?.data?.gender,
       address: data.address || getUserData?.data?.address,
       dob: selectedDate,
+      picture: notePublicUrls,
     });
   };
 

@@ -161,7 +161,8 @@ const ProfileUploadImage: React.FC<ProfileUploadImageProps> = ({
   const handleStoreData = (data: any) => {
     setStoreData(data);
     if (data?.publicUrl) {
-      setNotePublicUrls((prev: any) => [...prev, data.publicUrl]);
+      // setNotePublicUrls((prev: any) => [...prev, data.publicUrl]);
+       setNotePublicUrls(data.publicUrl);
     }
   };
 
@@ -212,7 +213,7 @@ const ProfileUploadImage: React.FC<ProfileUploadImageProps> = ({
     setImageSelected(null);
     resetImageData();
     setStoreData(null);
-    setNotePublicUrls([]);
+    setNotePublicUrls("");
   };
 
   return (
