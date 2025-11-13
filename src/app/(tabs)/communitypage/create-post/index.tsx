@@ -90,7 +90,7 @@ const CreatePost = () => {
         <View className="flex-row items-center justify-between mb-4">
           <View className="flex-row items-center">
             <Image
-              source={require("@/assets/images/profile-image.png")}
+              source={{ uri: getUserData?.data?.picture }}
               style={{
                 width: 40,
                 height: 40,

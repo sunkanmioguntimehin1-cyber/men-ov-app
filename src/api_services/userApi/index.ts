@@ -62,6 +62,17 @@ export const updateNotificationSettings = async (data: any) => {
   }
 };
 
+export const pushNotificationSyncDevice = async (data: any) => {
+  console.log("dataTokenExpo", data);
+  try {
+    const res = await axiosInstance.patch(`/user/me/sync-device`, data);
+    return res.data;
+  } catch (error) {
+    console.error("pushNotificationSyncDevice:", error);
+    throw error;
+  }
+};
+
 export const getUserChat = async () => {
   try {
     const res = await axiosInstance.get(`/user/chat?mode=chat-only`);

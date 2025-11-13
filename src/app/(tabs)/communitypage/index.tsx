@@ -5,6 +5,7 @@ import {
   useUnLikePostApi,
   useUnSavePostApi,
 } from "@/src/api_services/postsApi/postsMutation";
+import { useGetUser } from "@/src/api_services/userApi/userQuery";
 import LoadingOverlay from "@/src/custom-components/LoadingOverlay";
 import Screen from "@/src/layout/Screen";
 import {
@@ -17,40 +18,45 @@ import { format } from "date-fns";
 import { Image } from "expo-image";
 import { useRouter } from "expo-router";
 import React from "react";
-import { ActivityIndicator, Alert, FlatList, Text, TouchableOpacity, View } from "react-native";
+import {
+  ActivityIndicator,
+  Alert,
+  FlatList,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
 
 const Communitypage = () => {
   const router = useRouter();
 
   // const getPosts = useGetAllPosts();
+  const getUserData = useGetUser();
   const savePost = useSavePostApi();
   const unSavePost = useUnSavePostApi();
   const likePostApi = useLikePostApi();
   const unLikePostApi = useUnLikePostApi();
 
-   const {
-     data,
-     isLoading,
-     refetch,
-     isError,
-     error,
-     hasNextPage,
-     isFetchingNextPage,
-     fetchNextPage,
-   } = useGetAllPosts();
+  const {
+    data,
+    isLoading,
+    refetch,
+    isError,
+    error,
+    hasNextPage,
+    isFetchingNextPage,
+    fetchNextPage,
+  } = useGetAllPosts();
 
-     const getPosts = React.useMemo(() => {
-       return data?.pages.flatMap((page) => page.data) || [];
-     }, [data]);
+  const getPosts = React.useMemo(() => {
+    return data?.pages.flatMap((page) => page.data) || [];
+  }, [data]);
 
-
-
-      const _onReachEnd = () => {
-        if (hasNextPage && !isLoading) {
-          fetchNextPage();
-        }
-      };
-
+  const _onReachEnd = () => {
+    if (hasNextPage && !isLoading) {
+      fetchNextPage();
+    }
+  };
 
   const openWebView = (itemUrl: string) => {
     try {
@@ -94,19 +100,19 @@ const Communitypage = () => {
     }
   };
 
-   const handleViewPost = (postId: string) => {
-     router.push({
-       pathname: `/(tabs)/communitypage/view-post`,
-       params: { item: JSON.stringify(postId) },
-     });
-   };
+  const handleViewPost = (postId: string) => {
+    router.push({
+      pathname: `/(tabs)/communitypage/view-post`,
+      params: { item: JSON.stringify(postId) },
+    });
+  };
 
-   const handleComments = (postId: string) => {
-     router.push({
-       pathname: `/(tabs)/communitypage/comments`,
-       params: { item: JSON.stringify(postId) },
-     });
-   };
+  const handleComments = (postId: string) => {
+    router.push({
+      pathname: `/(tabs)/communitypage/comments`,
+      params: { item: JSON.stringify(postId) },
+    });
+  };
   return (
     <Screen className="px-4 py-3">
       <LoadingOverlay
@@ -123,7 +129,14 @@ const Communitypage = () => {
       >
         <View className="flex-row items-center">
           <View className="mx-3 bg-slate-400 h-10 w-10 items-center justify-center rounded-full">
-            <Text>US</Text>
+            <Image
+              source={{ uri: getUserData?.data?.picture }}
+              style={{
+                width: 40,
+                height: 40,
+                borderRadius: 20,
+              }}
+            />
           </View>
           <View>
             <Text>What’s on your thoughs?</Text>
@@ -145,7 +158,6 @@ const Communitypage = () => {
         ListFooterComponent={
           isFetchingNextPage ? <ActivityIndicator size="small" /> : null
         }
-        
         ListEmptyComponent={() => (
           <View className="items-center justify-center mt-20">
             <Text className="text-gray-500 text-base mt-4 font-[PoppinsMedium]">
@@ -283,7 +295,6 @@ const Communitypage = () => {
 };
 
 export default Communitypage;
-
 
 // import { useGetAllPosts } from "@/src/api_services/postsApi/postQuery";
 // import {
@@ -666,7 +677,6 @@ export default Communitypage;
 // };
 
 // export default Communitypage;
-
 
 // import { useGetAllPosts } from "@/src/api_services/postsApi/postQuery";
 // import {

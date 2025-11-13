@@ -32,11 +32,8 @@ export default function ProfilePage() {
   const saveRecommendation = useSaveRecommendationApi();
   const getIntakeDetails = useGetIntakeDetails();
 
-
   console.log("getUserData11", getUserData?.data?.dob);
   console.log("getIntakeDetails", getIntakeDetails?.data);
-
-  
 
   const openWebView = (itemUrl: string) => {
     try {
@@ -62,8 +59,6 @@ export default function ProfilePage() {
     });
   };
 
-  
-
   // const birthDate = getUserData?.data?.dob;
   // let age = null;
   // if (birthDate) {
@@ -86,9 +81,6 @@ export default function ProfilePage() {
 
     if (!hasHadBirthday) age--;
   }
-
-
-
 
   return (
     <SafeScreen className="bg-white">
@@ -121,9 +113,11 @@ export default function ProfilePage() {
               Profile
             </Text>
 
-            <TouchableOpacity onPress={()=>{
-              router.push("/profilepage/profile-screen/edit-profile")
-            }}>
+            <TouchableOpacity
+              onPress={() => {
+                router.push("/profilepage/profile-screen/edit-profile");
+              }}
+            >
               <Feather name="edit" size={24} color="black" />
             </TouchableOpacity>
           </View>
@@ -133,7 +127,15 @@ export default function ProfilePage() {
             {/* Avatar */}
             <View className="w-32 h-32 rounded-full bg-purple-200 items-center justify-center mb-4">
               <View className="w-28 h-28 rounded-full bg-pink-300 items-center justify-center">
-                <MaterialIcons name="person" size={60} color="#8A3FFC" />
+                {/* <MaterialIcons name="person" size={60} color="#8A3FFC" /> */}
+                <Image
+                  source={{ uri: getUserData?.data?.picture }}
+                  style={{
+                    width: "100%",
+                    height: "100%",
+                    borderRadius: 100,
+                  }}
+                />
               </View>
             </View>
 

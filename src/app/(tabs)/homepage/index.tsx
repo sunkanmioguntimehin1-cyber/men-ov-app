@@ -1,6 +1,7 @@
 import { useGetArticleApi } from "@/src/api_services/articleApi/articleQuery";
 import { useCycleTrackingLatest } from "@/src/api_services/logApi/logQuery";
-import { useGetIntakeDetails } from "@/src/api_services/userApi/userQuery";
+import { useGetNotificationsCountApi } from "@/src/api_services/notificationApi/notificationQuery";
+import { useGetUser } from "@/src/api_services/userApi/userQuery";
 import FloatingAiButton from "@/src/components/tabs/FloatingAiButton";
 import CycleTracking from "@/src/components/tabs/home-modal/CycleTracking";
 import YourFeelingToday from "@/src/components/tabs/home-modal/YourFeelingToday";
@@ -10,6 +11,7 @@ import YourLastSymptoms from "@/src/components/tabs/YourLastSymptoms";
 import CustomModel from "@/src/custom-components/CustomModel";
 import CustomSelectData from "@/src/custom-components/CustomSelectData";
 import LoadingOverlay from "@/src/custom-components/LoadingOverlay";
+import { usePushNotifications } from "@/src/hooks/usePushNotifications";
 import Screen from "@/src/layout/Screen";
 import { truncateSimple } from "@/src/lib/truncateSimple";
 import { AntDesign, Ionicons } from "@expo/vector-icons";
@@ -31,13 +33,18 @@ export default function HomePage() {
   const [modelVisible1, setModelVisible1] = React.useState(false);
   const [modelVisible2, setModelVisible2] = React.useState(false);
   const [modelVisible3, setModelVisible3] = React.useState(false);
+  const { expoPushToken, notification } = usePushNotifications();
+  const data = JSON.stringify(notification, undefined, 2);
+  const trigger = notification?.request?.trigger as any;
+  console.log("expoPushToken:", expoPushToken);
 
   const [selectedLastSymptom, setSelectedLastSymptom] = React.useState(null);
 
   const firstTimeRef = React.useRef(true);
+  const getUserData = useGetUser();
   const getArticles = useGetArticleApi();
   const getCycleTrackingLatest = useCycleTrackingLatest();
-  const getIntakeDetails = useGetIntakeDetails();
+  const getNotificationsCount = useGetNotificationsCountApi();
 
   const insets = useSafeAreaInsets();
 
@@ -163,16 +170,21 @@ export default function HomePage() {
 
             <View className="flex-row items-center">
               <TouchableOpacity
-                className=" mx-3"
+                className="mx-3"
                 onPress={() => {
-                  router.push("/(tabs)/profilepage");
+                  router.push("/(tabs)/homepage/notification-screen");
                 }}
               >
-                <Ionicons
-                  name="notifications-outline"
-                  size={20}
-                  color="black"
-                />
+                <View className="relative">
+                  <Ionicons
+                    name="notifications-outline"
+                    size={20}
+                    color="black"
+                  />
+                  {getNotificationsCount?.data?.unread > 0 && (
+                    <View className="absolute -top-1 -right-0 w-2 h-2 rounded-full bg-red-500" />
+                  )}
+                </View>
               </TouchableOpacity>
 
               <TouchableOpacity
@@ -182,13 +194,13 @@ export default function HomePage() {
                 }}
               >
                 <Image
-                  source={require("@/assets/images/profile-image.png")}
+                  source={{ uri: getUserData?.data?.picture }}
                   style={{
                     height: "100%",
                     width: "100%",
                     borderRadius: 100,
                   }}
-                  contentFit="contain"
+                  contentFit="cover"
                   onError={(error) => console.log("Image error:", error)}
                 />
               </TouchableOpacity>
@@ -230,7 +242,10 @@ export default function HomePage() {
                     label="Cycle Tracking"
                     placeholder={
                       getCycleTrackingLatest?.data && result
-                        ? `${truncateSimple(getCycleTrackingLatest?.data?.summary, 25)} ${result}`
+                        ? `${truncateSimple(
+                            getCycleTrackingLatest?.data?.summary,
+                            25
+                          )} ${result}`
                         : "Add your last cycle"
                     }
                     icon={
