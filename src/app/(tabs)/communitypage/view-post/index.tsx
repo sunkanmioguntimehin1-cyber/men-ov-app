@@ -1,6 +1,7 @@
 import { useViewAPost } from "@/src/api_services/postsApi/postQuery";
 import Screen from "@/src/layout/Screen";
 import { rS } from "@/src/lib/responsivehandler";
+import { getInitials } from "@/src/utils/getInitials";
 import { Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
 import { Image } from "expo-image";
 import { useLocalSearchParams, useRouter } from "expo-router";
@@ -35,7 +36,7 @@ const CommentsScreen = () => {
   };
 
   return (
-    <Screen  className="p-6">
+    <Screen className="p-6">
       <View className="flex-row items-center justify-between my-2  bg-white">
         <TouchableOpacity onPress={() => router.back()}>
           <Ionicons name="chevron-back" size={24} color="#2E6939" />
@@ -48,6 +49,7 @@ const CommentsScreen = () => {
         {/* <TouchableOpacity>
           <Feather name="edit" size={18} color="black" />
         </TouchableOpacity> */}
+        <View />
       </View>
 
       <ScrollView className="">
@@ -69,7 +71,7 @@ const CommentsScreen = () => {
             </View> */}
 
             <View className="w-10 h-10 rounded-full bg-slate-200 items-center justify-center ">
-              <Text>UE</Text>
+              <Text>{getInitials(viewUserPosts.data?.user?.fullname)}</Text>
             </View>
 
             <View className="mx-2">
@@ -90,7 +92,7 @@ const CommentsScreen = () => {
           </View>
 
           {/* Post Image */}
-          {viewUserPosts.data?.images[0] &&  (
+          {viewUserPosts.data?.images[0] && (
             <View className="w-full h-48">
               <Image
                 source={{

@@ -8,6 +8,7 @@ import {
 import { useGetUser } from "@/src/api_services/userApi/userQuery";
 import LoadingOverlay from "@/src/custom-components/LoadingOverlay";
 import Screen from "@/src/layout/Screen";
+import { getInitials } from "@/src/utils/getInitials";
 import {
   Feather,
   Ionicons,
@@ -129,14 +130,22 @@ const Communitypage = () => {
       >
         <View className="flex-row items-center">
           <View className="mx-3 bg-slate-400 h-10 w-10 items-center justify-center rounded-full">
-            <Image
-              source={{ uri: getUserData?.data?.picture }}
-              style={{
-                width: 40,
-                height: 40,
-                borderRadius: 20,
-              }}
-            />
+            {getUserData?.data?.picture ? (
+              <Image
+                source={{ uri: getUserData?.data?.picture }}
+                style={{
+                  width: 40,
+                  height: 40,
+                  borderRadius: 20,
+                }}
+              />
+            ) : (
+              <View className="w-full h-full bg-slate-300 rounded-full items-center justify-center">
+                <Text className="text-black font-bold text-sm">
+                  {getInitials(getUserData?.data?.fullname)}
+                </Text>
+              </View>
+            )}
           </View>
           <View>
             <Text>What’s on your thoughs?</Text>

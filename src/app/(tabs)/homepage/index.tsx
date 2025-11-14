@@ -14,6 +14,7 @@ import LoadingOverlay from "@/src/custom-components/LoadingOverlay";
 import { usePushNotifications } from "@/src/hooks/usePushNotifications";
 import Screen from "@/src/layout/Screen";
 import { truncateSimple } from "@/src/lib/truncateSimple";
+import { getInitials } from "@/src/utils/getInitials";
 import { AntDesign, Ionicons } from "@expo/vector-icons";
 import { formatDistanceToNow } from "date-fns";
 import { Image } from "expo-image";
@@ -23,8 +24,9 @@ import {
   ImageBackground,
   Platform,
   ScrollView,
+  Text,
   TouchableOpacity,
-  View,
+  View
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
@@ -107,6 +109,8 @@ export default function HomePage() {
     setModelVisible3(false);
   };
 
+ 
+
   return (
     <>
       <LoadingOverlay
@@ -178,7 +182,7 @@ export default function HomePage() {
                 <View className="relative">
                   <Ionicons
                     name="notifications-outline"
-                    size={20}
+                    size={24}
                     color="black"
                   />
                   {getNotificationsCount?.data?.unread > 0 && (
@@ -188,21 +192,25 @@ export default function HomePage() {
               </TouchableOpacity>
 
               <TouchableOpacity
-                className=" w-6 h-6 "
-                onPress={() => {
-                  router.push("/(tabs)/profilepage");
-                }}
+                className="w-9 h-9 rounded-full overflow-hidden"
+                onPress={() => router.push("/(tabs)/profilepage")}
               >
-                <Image
-                  source={{ uri: getUserData?.data?.picture }}
-                  style={{
-                    height: "100%",
-                    width: "100%",
-                    borderRadius: 100,
-                  }}
-                  contentFit="cover"
-                  onError={(error) => console.log("Image error:", error)}
-                />
+                {getUserData?.data?.picture ? (
+                  <Image
+                    source={{ uri: getUserData?.data?.picture }}
+                    style={{
+                      width: "100%",
+                      height: "100%",
+                      borderRadius: 100,
+                    }}
+                  />
+                ) : (
+                  <View className="w-full h-full bg-slate-300 rounded-full items-center justify-center">
+                    <Text className="text-black font-bold text-sm">
+                      {getInitials(getUserData?.data?.fullname)}
+                    </Text>
+                  </View>
+                )}
               </TouchableOpacity>
             </View>
           </View>

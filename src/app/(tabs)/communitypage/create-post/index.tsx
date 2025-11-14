@@ -4,6 +4,7 @@ import { useGetUser } from "@/src/api_services/userApi/userQuery";
 import CommUploadImage from "@/src/components/community/CommUploadImage";
 import CustomInput from "@/src/custom-components/CustomInput";
 import Screen from "@/src/layout/Screen";
+import { getInitials } from "@/src/utils/getInitials";
 import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import React from "react";
@@ -89,14 +90,23 @@ const CreatePost = () => {
         {/* User Info */}
         <View className="flex-row items-center justify-between mb-4">
           <View className="flex-row items-center">
-            <Image
-              source={{ uri: getUserData?.data?.picture }}
-              style={{
-                width: 40,
-                height: 40,
-                borderRadius: 20,
-              }}
-            />
+            {getUserData?.data?.picture ? (
+              <Image
+                source={{ uri: getUserData?.data?.picture }}
+                style={{
+                  width: 40,
+                  height: 40,
+                  borderRadius: 20,
+                }}
+              />
+            ) : (
+              <View className="my-2 w-9 h-9 bg-slate-300 rounded-full items-center justify-center">
+                <Text className="text-black font-bold text-sm">
+                  {getInitials(getUserData?.data?.fullname)}
+                </Text>
+              </View>
+            )}
+
             {/* <View>UE</View> */}
             <View className="ml-3">
               <Text className="font-[PoppinsSemiBold] text-base text-black">

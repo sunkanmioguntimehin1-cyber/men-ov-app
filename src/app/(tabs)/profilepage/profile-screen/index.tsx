@@ -6,6 +6,7 @@ import {
 } from "@/src/api_services/userApi/userQuery";
 import SafeScreen from "@/src/components/SafeScreen";
 import LoadingOverlay from "@/src/custom-components/LoadingOverlay";
+import { getInitials } from "@/src/utils/getInitials";
 import { Feather, Ionicons, MaterialIcons } from "@expo/vector-icons";
 import { format } from "date-fns";
 import { Image } from "expo-image";
@@ -128,14 +129,22 @@ export default function ProfilePage() {
             <View className="w-32 h-32 rounded-full bg-purple-200 items-center justify-center mb-4">
               <View className="w-28 h-28 rounded-full bg-pink-300 items-center justify-center">
                 {/* <MaterialIcons name="person" size={60} color="#8A3FFC" /> */}
-                <Image
-                  source={{ uri: getUserData?.data?.picture }}
-                  style={{
-                    width: "100%",
-                    height: "100%",
-                    borderRadius: 100,
-                  }}
-                />
+                {getUserData?.data?.picture ? (
+                  <Image
+                    source={{ uri: getUserData?.data?.picture }}
+                    style={{
+                      width: "100%",
+                      height: "100%",
+                      borderRadius: 100,
+                    }}
+                  />
+                ) : (
+                  <View className="w-full h-full  rounded-full items-center justify-center">
+                    <Text className="text-black font-bold text-sm">
+                      {getInitials(getUserData?.data?.fullname)}
+                    </Text>
+                  </View>
+                )}
               </View>
             </View>
 

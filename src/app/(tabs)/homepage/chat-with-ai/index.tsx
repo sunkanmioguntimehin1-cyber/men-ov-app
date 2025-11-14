@@ -1333,7 +1333,7 @@ const ChatWithAi = () => {
               <View className="flex-row space-x-1 py-1 items-center">
                 <ActivityIndicator size="small" color="#666" />
                 <Text className="text-base font-[PoppinsRegular] text-titleText ml-2">
-                  AI is typing
+                  Ziena Typing
                 </Text>
               </View>
             ) : (
@@ -1383,7 +1383,7 @@ const ChatWithAi = () => {
             </TouchableOpacity>
 
             <Text className="text-lg font-[PoppinsSemiBold] text-black">
-              Talk with AI
+              Chat with Ziena
             </Text>
 
             <View className="w-10" />
