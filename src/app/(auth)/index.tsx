@@ -1,58 +1,131 @@
-import CustomButton from "@/src/custom-components/CustomButton";
-import Screen from "@/src/layout/Screen";
-import {
-  GoogleSignin,
-  isErrorWithCode,
-  isSuccessResponse,
-  statusCodes,
-} from "@react-native-google-signin/google-signin";
-import { Image } from "expo-image";
+// import CustomButton from "@/src/custom-components/CustomButton";
+// import { Image, ImageBackground } from "expo-image";
+// import { useRouter } from "expo-router";
+// import { View } from "react-native";
+
+// export default function GetStarted() {
+//   const router = useRouter();
+
+//   return (
+//     <>
+      
+//         <View className="flex-1">
+//           <ImageBackground
+//             source={require("@/assets/images/getstarted.png")}
+//             style={{
+//               height: "50%",
+//               width: "100%",
+//             }}
+//             contentFit="cover"
+//           >
+//             <View className=" items-center flex-1">
+//               <View className=" w-52 h-64 ">
+//                 <Image
+//                   source={require("@/assets/images/Logo23.png")}
+//                   style={{
+//                     height: "100%",
+//                     width: "100%",
+//                     alignSelf: "center",
+//                     // borderRadius: 100,
+//                   }}
+//                   contentFit="fill"
+//                   onError={(error) => console.log("Image error:", error)}
+//                 />
+//               </View>
+//             </View>
+
+//             <View className=" p-8 ">
+//               <View>
+//                 <CustomButton
+//                   primary
+//                   title="Continue with email"
+//                   onPress={() => {
+//                     router.push("/(auth)/login");
+//                   }}
+//                 />
+//               </View>
+//               <View className="my-5">
+//                 <CustomButton
+//                   whiteBg
+//                   title="Continue with google"
+//                   // onPress={signIn}
+//                 />
+//               </View>
+//             </View>
+//           </ImageBackground>
+//         </View>
+     
+//     </>
+//   );
+// }
+
+
+// import { Image, ImageBackground } from "expo-image";
+// import { useRouter } from "expo-router";
+// import { Text, TouchableOpacity, View } from "react-native";
+
+// export default function GetStarted() {
+//   const router = useRouter();
+
+//   return (
+//     <View className="flex-1">
+//       <ImageBackground
+//         source={require("@/assets/images/getstarted.png")}
+//         style={{ flex: 1 }} // Use flex instead of height percentage
+//         contentFit="cover"
+//       >
+//         <View className=" mt-safe-or-28 items-center flex-1">
+//           <View className="w-64 h-48">
+//             <Image
+//               source={require("@/assets/images/Menovia-Logo-Vertical.png")}
+//               style={{
+//                 height: "100%",
+//                 width: "100%",
+//                 alignSelf: "center",
+//               }}
+//               contentFit="fill"
+//               onError={(error) => console.log("Image error:", error)}
+//             />
+//           </View>
+//         </View>
+//         <View className=" flex-1 mt-32 " />
+
+//         <View className="p-8 flex-1 ">
+         
+//           <TouchableOpacity className=" w-60 h-10  bg-primary items-center justify-center rounded-lg">
+//             <Text className=" text-white">Get started</Text>
+//           </TouchableOpacity>
+//         </View>
+//       </ImageBackground>
+//     </View>
+//   );
+// }
+
+
+
+import { Image, ImageBackground } from "expo-image";
+import { LinearGradient } from "expo-linear-gradient";
 import { useRouter } from "expo-router";
-import { View, } from "react-native";
+import { Text, TouchableOpacity, View } from "react-native";
 
 export default function GetStarted() {
   const router = useRouter();
 
-  // Somewhere in your code
-  const signIn = async () => {
-    try {
-      await GoogleSignin.hasPlayServices();
-      const response = await GoogleSignin.signIn();
-      if (isSuccessResponse(response)) {
-        // setState({ userInfo: response.data });
-        console.log("User Info --> ", response.data);
-      } else {
-        // sign in was cancelled by user
-      }
-    } catch (error) {
-      if (isErrorWithCode(error)) {
-        switch (error.code) {
-          case statusCodes.IN_PROGRESS:
-            // operation (eg. sign in) already in progress
-            break;
-          case statusCodes.PLAY_SERVICES_NOT_AVAILABLE:
-            // Android only, play services not available or outdated
-            break;
-          default:
-          // some other error happened
-        }
-      } else {
-        // an error that's not related to google sign in occurred
-      }
-    }
-  };
   return (
-    <>
-      <Screen className="  pt-safe">
-        <View className=" items-center flex-1">
-          <View className=" w-80 h-56 ">
+    <View className="flex-1">
+      <ImageBackground
+        source={require("@/assets/images/getstarted.png")}
+        style={{ flex: 1 }}
+        contentFit="cover"
+      >
+        <View className="mt-safe-or-28 items-center flex-1">
+          <View className="w-64 h-48">
             <Image
               source={require("@/assets/images/Menovia-Logo-Vertical.png")}
               style={{
                 height: "100%",
                 width: "100%",
                 alignSelf: "center",
-                // borderRadius: 100,
               }}
               contentFit="fill"
               onError={(error) => console.log("Image error:", error)}
@@ -60,29 +133,38 @@ export default function GetStarted() {
           </View>
         </View>
 
-        <View className=" p-8 ">
-          <View>
-            <CustomButton
-              primary
-              title="Continue with email"
-              onPress={() => {
-                router.push("/(auth)/login");
-              }}
-            />
-          </View>
-          <View className="my-5">
-            <CustomButton
-              whiteBg
-              title="Continue with google"
-              // onPress={signIn}
-            />
+        <View className="flex-1 mt-80" />
+
+        <View className="p-8 mt-20 flex-1 items-center ">
+          <TouchableOpacity
+            className="w-48 rounded-xl overflow-hidden"
+            onPress={() => router.push("/(auth)/welcome")}
+            activeOpacity={0.8}
+          >
+            <LinearGradient
+              colors={["#6B5591", "#6E3F8C", "#853385", "#9F3E83"]}
+              start={{ x: 0, y: 0 }}
+              end={{ x: 1, y: 1 }}
+              className="items-center justify-center py-4"
+            >
+              <Text className="text-white text-lg font-[PoppinsMedium]">
+                Get started
+              </Text>
+            </LinearGradient>
+          </TouchableOpacity>
+
+          <View className="flex-row justify-center items-center mt-4">
+            <Text className="text-white text-sm">
+              Already have an account?{" "}
+            </Text>
+            <TouchableOpacity onPress={() => router.push("/(auth)/login")}>
+              <Text className="text-[#712A87] font-[PoppinsMedium] text-sm underline">
+                Sign In
+              </Text>
+            </TouchableOpacity>
           </View>
         </View>
-      </Screen>
-    </>
+      </ImageBackground>
+    </View>
   );
 }
-
-
-
-

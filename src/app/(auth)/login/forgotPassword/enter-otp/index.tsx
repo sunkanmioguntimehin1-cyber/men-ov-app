@@ -46,7 +46,7 @@ const EnterOtp = () => {
           />
         </View>
         <View>
-          <Text className=" font-[PoppinsMedium] text-[#42307D] text-xl">
+          <Text className=" font-[PoppinsMedium] text-primary text-xl">
             Forgot Password
           </Text>
         </View>

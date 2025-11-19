@@ -13,17 +13,17 @@ const SurgicalAndReproductiveHistory = ({
   return (
     <View>
       <View className=" items-center my-5">
-        <Text className=" text-xl text-[#42307D] font-[PoppinsSemiBold]">
+        <Text className=" text-xl text-primary font-[PoppinsSemiBold]">
           Surgical & Reproductive History
         </Text>
-        <Text className=" text-base text-[#6941C6] font-[PoppinsRegular] my-2">
+        <Text className=" text-base text-primary font-[PoppinsRegular] my-2">
           Your data will be safe with us.
         </Text>
       </View>
       <View>
         <View className=" my-3">
           <Text
-            className="mb-2 font-[PoppinsMedium] text-[#101828] "
+            className="mb-2 font-[PoppinsMedium]  "
             style={{ fontSize: rS(12) }}
           >
             Have you had a hysterectomy?
@@ -31,7 +31,7 @@ const SurgicalAndReproductiveHistory = ({
           <YesNoSelector
             onSelectionChange={(value) => setIsHysterectomy(value)}
             selectedValue={isHysterectomy}
-            primaryColor="#6941C6" // Your brand purple
+            useGradient={true}
           />
         </View>
 
@@ -45,7 +45,7 @@ const SurgicalAndReproductiveHistory = ({
           <YesNoSelector
             onSelectionChange={(value) => setIsAvariesRemoved(value)}
             selectedValue={isAvariesRemoved}
-            primaryColor="#6941C6" // Your brand purple
+            useGradient={true}
           />
         </View>
       </View>

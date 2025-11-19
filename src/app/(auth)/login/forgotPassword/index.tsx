@@ -64,7 +64,7 @@ const EnterEmail = () => {
           />
         </View>
         <View>
-          <Text className=" font-[PoppinsMedium] text-[#42307D] text-xl">
+          <Text className=" font-[PoppinsMedium] text-primary text-xl">
             Forgot Password
           </Text>
         </View>
@@ -95,7 +95,7 @@ const EnterEmail = () => {
       <View className=" p-8 my-5 ">
         <View>
           <CustomButton
-            primary
+            gradient
             title="Submit"
             // onPress={() => {
             //   router.push("/(auth)/login/forgotPassword/enter-otp");

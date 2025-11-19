@@ -9,10 +9,10 @@ const HormonalTreatment = ({ isOnHormoneTherapy, setIsOnHormoneTherapy }:any) =>
   return (
     <View>
       <View className=" items-center my-5">
-        <Text className=" text-xl text-[#42307D] font-[PoppinsSemiBold]">
+        <Text className=" text-xl text-primary font-[PoppinsSemiBold]">
           Hormonal Treatment
         </Text>
-        <Text className=" text-base text-[#6941C6] font-[PoppinsRegular] my-2">
+        <Text className=" text-base text-primary font-[PoppinsRegular] my-2">
           Your data will be safe with us.
         </Text>
       </View>
@@ -28,7 +28,7 @@ const HormonalTreatment = ({ isOnHormoneTherapy, setIsOnHormoneTherapy }:any) =>
           <YesNoSelector
             onSelectionChange={(value) => setIsOnHormoneTherapy(value)}
             selectedValue={isOnHormoneTherapy}
-            primaryColor="#6941C6" // Your brand purple
+            useGradient={true}
           />
         </View>
       </View>

@@ -286,14 +286,14 @@ const styles = StyleSheet.create({
   closeButton: {
     marginTop: 20,
     padding: 10,
-    backgroundColor: "#8A3FFC",
+    backgroundColor: "#712A87",
     borderRadius: 5,
     alignItems: "center",
   },
   yearButton: {
     // marginTop: 20,
     padding: 10,
-    backgroundColor: "#8A3FFC",
+    backgroundColor: "#712A87",
     // borderRadius: 5,
     alignItems: "center",
   },

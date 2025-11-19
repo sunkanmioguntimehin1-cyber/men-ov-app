@@ -80,7 +80,7 @@ const PersonalInfo = () => {
               style={{
                 height: 200,
                 width: 250,
-                opacity:0.2,
+                opacity: 0.2,
               }}
               contentFit="fill"
             />
@@ -89,7 +89,7 @@ const PersonalInfo = () => {
           {/* Doctor image in front */}
           <View
             className="absolute inset-0 items-center justify-end"
-            style={{ top: 30, left: 0, }}
+            style={{ top: 30, left: 0 }}
           >
             <Image
               source={require("@/assets/images/bgimg2.png")}
@@ -107,7 +107,7 @@ const PersonalInfo = () => {
       <View className="my-5 p-8">
         <View>
           <CustomButton
-            primary
+            gradient
             title="Add your personal informations"
             onPress={() => {
               router.push("/homepage/personal-info/personal-info-form");
@@ -122,9 +122,9 @@ const PersonalInfo = () => {
           }}
         >
           <View>
-            <MaterialIcons name="arrow-back-ios" size={20} color="#6F649A" />
+            <MaterialIcons name="arrow-back-ios" size={20} color="#712A87" />
           </View>
-          <Text className="text-[#6F649A]">I will do this later</Text>
+          <Text className="text-primary">I will do this later</Text>
         </TouchableOpacity>
       </View>
     </Screen>

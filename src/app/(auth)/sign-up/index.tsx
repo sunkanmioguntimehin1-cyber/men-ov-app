@@ -104,7 +104,7 @@ const SignUp = () => {
           />
         </View>
         <View>
-          <Text className="font-[PoppinsMedium] text-[#42307D] text-xl">
+          <Text className="font-[PoppinsMedium] text-primary text-xl">
             Create App account!
           </Text>
         </View>
@@ -221,7 +221,7 @@ const SignUp = () => {
         </View>
         <View>
           <CustomButton
-            primary
+            gradient
             title="Sign up"
             disabled={registerUser.isPending}
             loading={registerUser.isPending}

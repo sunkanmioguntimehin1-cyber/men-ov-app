@@ -15,7 +15,7 @@ const ResetPassword = () => {
   const [comPassIsSecureEntry, setComPassIsSecureEntry] = React.useState(true);
   const userRegOtps = useAuthStore().userRegOtps;
 
-  console.log("userRegOtps", userRegOtps);
+ 
   const {
     control,
     handleSubmit,
@@ -159,7 +159,7 @@ const ResetPassword = () => {
       <View className=" p-8 my-5 ">
         <View>
           <CustomButton
-            primary
+            gradient
             title="Confirm password"
             // onPress={() => {
             //   router.push("/(auth)/login")

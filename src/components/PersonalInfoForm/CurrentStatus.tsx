@@ -17,10 +17,10 @@ const CurrentStatus = ({ menopauseStage, setMenopauseStage }:any) => {
   return (
     <View>
       <View className=" items-center my-5">
-        <Text className=" text-xl text-[#42307D] font-[PoppinsSemiBold]">
+        <Text className=" text-xl text-primary font-[PoppinsSemiBold]">
           Current Status
         </Text>
-        <Text className=" text-base text-[#6941C6] font-[PoppinsRegular] my-2">
+        <Text className=" text-base text-primary font-[PoppinsRegular] my-2">
           Your data will be safe with us.
         </Text>
       </View>

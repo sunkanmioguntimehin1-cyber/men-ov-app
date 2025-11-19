@@ -96,7 +96,7 @@ export default function ProfilePage() {
         <ImageBackground
           source={require("@/assets/images/background.png")}
           style={{
-            height: "80%",
+            height: "60%",
             width: "100%",
           }}
           resizeMode="cover"

@@ -247,7 +247,7 @@ const LoginScreen = () => {
       <View className="p-8">
         <View>
           <CustomButton
-            primary
+            gradient
             title="Log in"
             // onPress={() => {
             //   router.push("/(auth)/personal-info");
