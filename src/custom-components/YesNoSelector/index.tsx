@@ -32,7 +32,6 @@
 //   // const [internalSelected, setInternalSelected] = useState<"yes" | "no" | null>(
 //   //   null
 //   // );
-  
 
 // //   // Use controlled value if provided, otherwise use internal state
 // //   const selectedValue =
@@ -109,8 +108,6 @@
 
 // // export default YesNoSelector;
 
-
-
 // import { AntDesign } from "@expo/vector-icons";
 // import React, { useState } from "react";
 // import { Text, TouchableOpacity, View } from "react-native";
@@ -140,7 +137,7 @@
 //   unselectedTextColor = "#6B7280",
 //   iconSize = 20,
 // }: YesNoSelectorProps) => {
- 
+
 //   const [internalSelected, setInternalSelected] = useState<true | false | null>(
 //     null
 //   );
@@ -152,7 +149,6 @@
 //   const handleSelection = (value: true | false) => {
 //     if (disabled) return;
 
-    
 //     const newValue = selectedValue === value ? null : value;
 
 //     // Update internal state if not controlled
@@ -220,8 +216,6 @@
 // };
 
 // export default YesNoSelector;
-
-
 
 import { AntDesign } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
@@ -312,7 +306,14 @@ const YesNoSelector = ({
                   colors={gradientColors}
                   start={{ x: 0, y: 0 }}
                   end={{ x: 1, y: 1 }}
-                  className="h-14 flex-row items-center justify-center"
+                  // className="h-14 flex-row items-center justify-center"
+                  style={{
+                    minHeight: 50,
+                    flexDirection: "row",
+                    // padding: Platform.OS === "ios" ? 16 : 16,
+                    alignItems: "center",
+                    justifyContent: "center",
+                  }}
                 >
                   <Text className="mx-3 text-white">{item.title}</Text>
                   <AntDesign name={item.icon} size={iconSize} color="white" />

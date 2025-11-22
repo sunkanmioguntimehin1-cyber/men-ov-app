@@ -15,6 +15,8 @@ export const useSaveRecommendationApi = () => {
       // });
 
       queryClient.invalidateQueries({ queryKey: ["get-recommendation"] });
+      // queryClient.invalidateQueries({ queryKey: ["get-recommendation"] });
+
     },
     onError(error: any) {
       handleAxiosError(error);

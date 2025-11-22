@@ -104,7 +104,7 @@ const SignUp = () => {
           />
         </View>
         <View>
-          <Text className="font-[PoppinsMedium] text-primary text-xl">
+          <Text className="font-[PoppinsMedium] text-[#6E3F8C] text-xl">
             Create App account!
           </Text>
         </View>

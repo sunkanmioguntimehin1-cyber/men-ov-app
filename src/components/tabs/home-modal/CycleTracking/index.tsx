@@ -105,10 +105,18 @@ const CycleTracking = ({ onCancel }: any) => {
     //   id: getCycleTrackingLatest?.data?.id,
     // };
 
+    const requestUpdatePayload = {
+      menopauseStage: menopauseStage,
+      start: selectedDate,
+      // duration: Number(durationData),
+      note: data.notes,
+      image: notePublicUrls,
+    };
+
     if (getCycleTrackingLatest?.data) {
       // updateCycleTracking.mutate(requestUpdatePayload);
 
-      createCycleTracking.mutate(requestPayload);
+      createCycleTracking.mutate(requestUpdatePayload);
     } else {
       createCycleTracking.mutate(requestPayload);
     }
@@ -187,16 +195,16 @@ const CycleTracking = ({ onCancel }: any) => {
         </View>
         <View className="">
           <CustomButton
-            primary
+            gradient
             title={getButtonText()}
             onPress={handleButtonClick}
             disabled={
               getCycleTrackingLatest.isLoading ||
               !menopauseStage ||
-              (
-                getCycleTrackingLatest?.data && currentIndex === 0 &&
-                (!selectedDate || !durationData)
-              ) || (currentIndex === 1 && (!selectedDate || !durationData)) ||
+              (getCycleTrackingLatest?.data &&
+                currentIndex === 0 &&
+                (!selectedDate)) ||
+              (currentIndex === 1 && (!selectedDate || !durationData)) ||
               updateCycleTracking.isPending ||
               createCycleTracking.isPending
             }

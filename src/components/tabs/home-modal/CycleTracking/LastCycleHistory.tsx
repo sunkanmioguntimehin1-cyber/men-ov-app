@@ -1,5 +1,5 @@
 import CustomSelectData from "@/src/custom-components/CustomSelectData";
-import { AntDesign, Feather } from "@expo/vector-icons";
+import { Feather } from "@expo/vector-icons";
 import { format, isValid } from "date-fns";
 import React from "react";
 import { Text, TouchableOpacity, View } from "react-native";
@@ -67,7 +67,7 @@ const LastCycleHistory = ({
           }
         />
 
-        <View className="mt-3">
+        {/* <View className="mt-3">
           <CustomSelectData
             onPress={handleDurationBottomSheetOpen}
             primary
@@ -80,7 +80,7 @@ const LastCycleHistory = ({
               </TouchableOpacity>
             }
           />
-        </View>
+        </View> */}
 
         <View>
           <CycleTrackingAddnote

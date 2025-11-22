@@ -214,18 +214,18 @@ export default function HomePage() {
               </TouchableOpacity>
             </View>
           </View>
-          <ScrollView showsVerticalScrollIndicator={false}>
+          <ScrollView className="" showsVerticalScrollIndicator={false}>
             <ImageBackground
-              source={require("@/assets/images/background.png")}
+              source={require("@/assets/images/ai2.png")}
               style={{
-                height: "55%",
+                height: "100%",
                 width: "100%",
               }}
               resizeMode="cover"
             >
               <View className="px-8 pb-32">
                 {/* Increased bottom padding to ensure content isn't hidden */}
-                <View className="my-3">
+                <View className="">
                   <YourLastSymptoms
                     handleOpenLastSymptoms={handleOpenLastSymptoms}
                   />
@@ -238,12 +238,12 @@ export default function HomePage() {
                     placeholder="Log "
                     icon={
                       <TouchableOpacity onPress={handleOpenmodal}>
-                        <AntDesign name="right" size={24} color="black" />
+                        <AntDesign name="right" size={15} color="#712A87" />
                       </TouchableOpacity>
                     }
                   />
                 </View>
-                <View className="my-5">
+                <View className="">
                   <CustomSelectData
                     onPress={handleOpenmodal2}
                     primary
@@ -258,7 +258,7 @@ export default function HomePage() {
                     }
                     icon={
                       <TouchableOpacity onPress={handleOpenmodal2}>
-                        <AntDesign name="right" size={24} color="black" />
+                        <AntDesign name="right" size={15} color="#712A87" />
                       </TouchableOpacity>
                     }
                   />

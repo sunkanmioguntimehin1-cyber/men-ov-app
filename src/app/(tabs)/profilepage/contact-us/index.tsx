@@ -143,7 +143,7 @@ const ContactUs = () => {
       </View>
       <View className=" p-8 ">
         <CustomButton
-          primary
+          gradient
           title="Submit"
           onPress={handleSubmit(onSubmit)}
           disabled={!isValid || contactUsDetails.isPending}

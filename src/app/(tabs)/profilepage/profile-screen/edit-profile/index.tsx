@@ -119,9 +119,9 @@ const EditProfile = () => {
     >
       {/* Header */}
       <ImageBackground
-        source={require("@/assets/images/background.png")}
+        source={require("@/assets/images/AI.png")}
         style={{
-          height: "80%",
+          height: "100%",
           width: "100%",
         }}
         resizeMode="cover"
@@ -255,7 +255,7 @@ const EditProfile = () => {
 
           <View>
             <CustomButton
-              primary
+              gradient
               title="Save"
               onPress={handleSubmit(onSubmit)}
               loading={editUserProfile.isPending}

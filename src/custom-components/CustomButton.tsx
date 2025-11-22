@@ -75,7 +75,7 @@
 
 import { LinearGradient } from "expo-linear-gradient";
 import React from "react";
-import { ActivityIndicator, Text, TouchableOpacity, View } from "react-native";
+import { ActivityIndicator, Platform, Text, TouchableOpacity, View } from "react-native";
 
 type ButtonType = {
   title: string;
@@ -123,11 +123,11 @@ const CustomButton = ({
   };
 
   const buttonContent = (
-    <View className="flex-row items-center justify-center">
+    <View className="w-full flex-row items-center justify-center">
       {loading ? (
         <ActivityIndicator color={primary || gradient ? "white" : "#8A3FFC"} />
       ) : (
-        <Text className={`font-medium text-base ${getTextStyle()}`}>
+        <Text className={`text-center font-medium text-base ${getTextStyle()}`}>
           {title}
         </Text>
       )}
@@ -146,8 +146,13 @@ const CustomButton = ({
           colors={["#6B5591", "#6E3F8C", "#853385", "#9F3E83"]}
           start={{ x: 0, y: 0 }}
           end={{ x: 1, y: 1 }}
-          className="px-6 py-4 items-center justify-center"
-          style={{ minHeight: 56 }}
+          // className="w-full px-6 py-4 items-center justify-center"
+          style={{
+            minHeight: 56,
+            padding: Platform.OS === "ios" ? 16 : 16,
+            alignItems: "center",
+            justifyContent: "center",
+          }}
         >
           {buttonContent}
         </LinearGradient>

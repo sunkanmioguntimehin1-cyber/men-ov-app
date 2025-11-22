@@ -287,7 +287,6 @@
 
 // // export default ChatWithAi;
 
-
 // import { useTalkToChatAi } from "@/src/api_services/chatApi/chatMutation";
 // import { useGetChatHistory } from "@/src/api_services/chatApi/chatQuery";
 // import CustomInput from "@/src/custom-components/CustomInput";
@@ -649,9 +648,6 @@
 // };
 
 // export default ChatWithAi;
-
-
-
 
 // import { useTalkToChatAi } from "@/src/api_services/chatApi/chatMutation";
 // import { useGetChatHistory } from "@/src/api_services/chatApi/chatQuery";
@@ -1030,22 +1026,20 @@
 
 // export default ChatWithAi;
 
-
-
-
-
-
-
 import { useTalkToChatAi } from "@/src/api_services/chatApi/chatMutation";
 import { useGetChatHistory } from "@/src/api_services/chatApi/chatQuery";
 import CustomInput from "@/src/custom-components/CustomInput";
+import { TypingDots } from "@/src/custom-components/TypingDots";
 import Screen from "@/src/layout/Screen";
 import { MaterialIcons } from "@expo/vector-icons";
+import { Image } from "expo-image";
+import { LinearGradient } from "expo-linear-gradient";
 import { useRouter } from "expo-router";
 import React, { useEffect, useRef, useState } from "react";
 import {
   ActivityIndicator,
   FlatList,
+  ImageBackground,
   KeyboardAvoidingView,
   NativeScrollEvent,
   NativeSyntheticEvent,
@@ -1076,8 +1070,6 @@ const ChatWithAi = () => {
   const getChatHistory = useGetChatHistory();
   const { data: chatData, isLoading, isError, error } = getChatHistory;
   const sendMessage = useTalkToChatAi();
-
-  
 
   const flatListRef = useRef<FlatList>(null);
   const insets = useSafeAreaInsets();
@@ -1320,32 +1312,73 @@ const ChatWithAi = () => {
             </View>
           </View>
         )}
-        <View className={`mb-4 ${item.isAi ? "items-start" : "items-end"}`}>
+        {/* <View className={`mb-4 ${item.isAi ? "items-start" : "items-end"}`}>
           <View
             className={`px-4 py-3 rounded-2xl ${
               item.isAi
-                ? "bg-secondary rounded-tl-none"
-                : "bg-primary rounded-tr-none"
+                ? "bg-primary rounded-tl-none"
+                : "bg-secondary border border-[#FBC3F8] rounded-tr-none"
             }`}
             style={{ maxWidth: bubbleMaxWidth }}
           >
             {item.id === "typing-indicator" ? (
               <View className="flex-row space-x-1 py-1 items-center">
-                <ActivityIndicator size="small" color="#666" />
-                <Text className="text-base font-[PoppinsRegular] text-titleText ml-2">
-                  Ziena Typing
-                </Text>
+                <TypingDots />
               </View>
             ) : (
               <Text
                 className={`text-base font-[PoppinsRegular] ${
-                  item.isAi ? "text-titleText" : "text-white"
+                  item.isAi ? "text-white" : " text-titleText"
                 }`}
               >
                 {item.text}
               </Text>
             )}
           </View>
+          <Text className="text-xs text-gray-400 mt-1 px-2 font-[PoppinsRegular]">
+            {item.timestamp}
+          </Text>
+        </View> */}
+
+        <View className={`mb-4 ${item.isAi ? "items-start" : "items-end"}`}>
+          {item.isAi ? (
+            // AI message with gradient
+            <View
+              className="rounded-2xl rounded-tl-none overflow-hidden"
+              style={{ maxWidth: bubbleMaxWidth }}
+            >
+              <LinearGradient
+                colors={["#6B5591", "#6E3F8C", "#853385", "#9F3E83"]}
+                start={{ x: 0, y: 0 }}
+                end={{ x: 1, y: 1 }}
+                // className="px-4 py-3"
+                style={{
+                  padding: 16,
+                }}
+              >
+                {item.id === "typing-indicator" ? (
+                  <View className="flex-row space-x-1 py-1 items-center">
+                    <TypingDots />
+                  </View>
+                ) : (
+                  <Text className="text-base font-[PoppinsRegular] text-white">
+                    {item.text}
+                  </Text>
+                )}
+              </LinearGradient>
+            </View>
+          ) : (
+            // User message (regular)
+            <View
+              className="px-4 py-3 rounded-2xl bg-secondary border border-[#FBC3F8] rounded-tr-none"
+              style={{ maxWidth: bubbleMaxWidth }}
+            >
+              <Text className="text-base font-[PoppinsRegular] text-titleText">
+                {item.text}
+              </Text>
+            </View>
+          )}
+
           <Text className="text-xs text-gray-400 mt-1 px-2 font-[PoppinsRegular]">
             {item.timestamp}
           </Text>
@@ -1356,144 +1389,173 @@ const ChatWithAi = () => {
 
   return (
     <Screen className="bg-white">
-      <KeyboardAvoidingView
-        behavior={Platform.OS === "ios" ? "padding" : "height"}
-        style={{ flex: 1 }}
-        keyboardVerticalOffset={Platform.OS === "ios" ? insets.top : 0}
+      <ImageBackground
+        source={require("@/assets/images/AI.png")}
+        style={{
+          height: "100%",
+          width: "100%",
+        }}
+        resizeMode="cover"
       >
-        <View
-          className=" "
-          style={{
-            flex: 1,
-            alignSelf: "center",
-            width: "100%",
-            maxWidth: containerMaxWidth,
-          }}
+        <KeyboardAvoidingView
+          behavior={Platform.OS === "ios" ? "padding" : "height"}
+          style={{ flex: 1 }}
+          keyboardVerticalOffset={Platform.OS === "ios" ? insets.top : 0}
         >
-          {/* Header */}
           <View
-            className="flex-row items-center justify-between py-4 border-b border-[#EAEAEA]"
-            style={{ paddingHorizontal: horizontalPadding }}
-          >
-            <TouchableOpacity
-              onPress={() => router.back()}
-              className="w-10 h-10 items-center justify-center"
-            >
-              <MaterialIcons name="arrow-back-ios" size={24} color="black" />
-            </TouchableOpacity>
-
-            <Text className="text-lg font-[PoppinsSemiBold] text-black">
-              Chat with Ziena
-            </Text>
-
-            <View className="w-10" />
-          </View>
-
-          {/* Loading State */}
-          {isLoading && (
-            <View className="flex-1 items-center justify-center">
-              <ActivityIndicator size="large" color="#000" />
-              <Text className="mt-2 text-gray-500 font-[PoppinsRegular]">
-                Loading chat history...
-              </Text>
-            </View>
-          )}
-
-          {/* Error State */}
-          {isError && !isLoading && (
-            <View className="flex-1 items-center justify-center px-6">
-              <MaterialIcons name="error-outline" size={48} color="#EF4444" />
-              <Text className="mt-2 text-gray-700 font-[PoppinsSemiBold] text-center">
-                Failed to load chat history
-              </Text>
-              <Text className="mt-1 text-gray-500 font-[PoppinsRegular] text-center">
-                Please try again later
-              </Text>
-            </View>
-          )}
-
-          {/* Messages List */}
-          {!isLoading && !isError && (
-            <FlatList
-              ref={flatListRef}
-              data={messages}
-              renderItem={renderMessage}
-              keyExtractor={(item) => item.id}
-              contentContainerStyle={{
-                paddingVertical: 16,
-                paddingHorizontal: horizontalPadding,
-                flexGrow: 1,
-              }}
-              style={{ flex: 1 }}
-              showsVerticalScrollIndicator={false}
-              scrollEnabled={true}
-              nestedScrollEnabled={true}
-              onScroll={handleScroll}
-              scrollEventThrottle={16}
-              maintainVisibleContentPosition={{
-                minIndexForVisible: 0,
-              }}
-              ListEmptyComponent={
-                <View className="flex-1 items-center justify-center">
-                  <MaterialIcons
-                    name="chat-bubble-outline"
-                    size={64}
-                    color="#D1D5DB"
-                  />
-                  <Text className="mt-4 text-gray-500 font-[PoppinsRegular] text-center">
-                    No messages yet. Start a conversation!
-                  </Text>
-                </View>
-              }
-            />
-          )}
-
-          {/* Input Area */}
-          <View
-            className="border-t border-[#EAEAEA] bg-white"
+            className=" "
             style={{
-              paddingTop: 8,
-              paddingHorizontal: horizontalPadding,
-              paddingBottom:
-                Platform.OS === "ios" ? insets.bottom + 8 : insets.bottom + 6,
+              flex: 1,
+              alignSelf: "center",
+              width: "100%",
+              maxWidth: containerMaxWidth,
             }}
           >
-            <View className="flex-row items-center space-x-2">
-              <View className="flex-1 mx-2">
-                <CustomInput
-                  placeholder="Type a message..."
-                  value={message}
-                  onChangeText={setMessage}
-                  primary
-                  returnKeyType="send"
-                  onSubmitEditing={handleSend}
-                  autoCapitalize="sentences"
-                  editable={!isLoading && !sendMessage.isPending}
+            {/* Header */}
+            <View
+              className="flex-row items-center justify-between py-4 "
+              style={{ paddingHorizontal: horizontalPadding }}
+            >
+              <TouchableOpacity
+                onPress={() => router.back()}
+                className="w-10 h-10 items-center justify-center"
+              >
+                <MaterialIcons name="arrow-back-ios" size={24} color="black" />
+              </TouchableOpacity>
+
+              <Text className="text-lg font-[PoppinsSemiBold] text-black">
+                Chat with Ziena
+              </Text>
+
+              <View className="w-10" />
+            </View>
+
+            <View className="items-center px-6 ">
+              <View className=" w-40 h-40">
+                <Image
+                  source={require("@/assets/images/xena-1.png")}
+                  style={{
+                    width: "100%",
+                    height: "100%",
+                    borderRadius: 100,
+                  }}
                 />
               </View>
-              <TouchableOpacity
-                onPress={handleSend}
-                disabled={!message.trim() || isLoading || sendMessage.isPending}
-                className={`w-12 h-12  rounded-full items-center justify-center ${
-                  message.trim() && !isLoading && !sendMessage.isPending
-                    ? "bg-primary"
-                    : "bg-primaryLight"
-                }`}
-              >
-                {sendMessage.isPending ? (
-                  <ActivityIndicator size="small" color="white" />
-                ) : (
-                  <MaterialIcons
-                    name="send"
-                    size={20}
-                    color={message.trim() && !isLoading ? "white" : "#B0B0B0"}
+              <View className=" ml-3">
+                <Text className=" text-center text-xl font-[PoppinsBold] mb-2 text-[#101828]">
+                  Ziena™
+                </Text>
+              </View>
+            </View>
+
+            {/* Loading State */}
+            {isLoading && (
+              <View className="flex-1 items-center justify-center">
+                <ActivityIndicator size="large" color="#000" />
+                <Text className="mt-2 text-gray-500 font-[PoppinsRegular]">
+                  Loading chat history...
+                </Text>
+              </View>
+            )}
+
+            {/* Error State */}
+            {isError && !isLoading && (
+              <View className="flex-1 items-center justify-center px-6">
+                <MaterialIcons name="error-outline" size={48} color="#EF4444" />
+                <Text className="mt-2 text-gray-700 font-[PoppinsSemiBold] text-center">
+                  Failed to load chat history
+                </Text>
+                <Text className="mt-1 text-gray-500 font-[PoppinsRegular] text-center">
+                  Please try again later
+                </Text>
+              </View>
+            )}
+
+            {/* Messages List */}
+            {!isLoading && !isError && (
+              <FlatList
+                ref={flatListRef}
+                data={messages}
+                renderItem={renderMessage}
+                keyExtractor={(item) => item.id}
+                contentContainerStyle={{
+                  paddingVertical: 16,
+                  paddingHorizontal: horizontalPadding,
+                  flexGrow: 1,
+                }}
+                style={{ flex: 1 }}
+                showsVerticalScrollIndicator={false}
+                scrollEnabled={true}
+                nestedScrollEnabled={true}
+                onScroll={handleScroll}
+                scrollEventThrottle={16}
+                maintainVisibleContentPosition={{
+                  minIndexForVisible: 0,
+                }}
+                ListEmptyComponent={
+                  <View className="flex-1 items-center justify-center">
+                    <MaterialIcons
+                      name="chat-bubble-outline"
+                      size={64}
+                      color="#D1D5DB"
+                    />
+                    <Text className="mt-4 text-gray-500 font-[PoppinsRegular] text-center">
+                      No messages yet. Start a conversation!
+                    </Text>
+                  </View>
+                }
+              />
+            )}
+
+            {/* Input Area */}
+            <View
+              className="border-t border-[#EAEAEA] bg-white"
+              style={{
+                paddingTop: 8,
+                paddingHorizontal: horizontalPadding,
+                paddingBottom:
+                  Platform.OS === "ios" ? insets.bottom + 8 : insets.bottom + 6,
+              }}
+            >
+              <View className="flex-row items-center space-x-2">
+                <View className="flex-1 mx-2">
+                  <CustomInput
+                    placeholder="Type a message..."
+                    value={message}
+                    onChangeText={setMessage}
+                    primary
+                    returnKeyType="send"
+                    onSubmitEditing={handleSend}
+                    autoCapitalize="sentences"
+                    editable={!isLoading && !sendMessage.isPending}
                   />
-                )}
-              </TouchableOpacity>
+                </View>
+                <TouchableOpacity
+                  onPress={handleSend}
+                  disabled={
+                    !message.trim() || isLoading || sendMessage.isPending
+                  }
+                  className={`w-12 h-12  rounded-full items-center justify-center ${
+                    message.trim() && !isLoading && !sendMessage.isPending
+                      ? "bg-primary"
+                      : "bg-primaryLight"
+                  }`}
+                >
+                  {sendMessage.isPending ? (
+                    <ActivityIndicator size="small" color="white" />
+                  ) : (
+                    <MaterialIcons
+                      name="send"
+                      size={20}
+                      color={message.trim() && !isLoading ? "white" : "#B0B0B0"}
+                    />
+                  )}
+                </TouchableOpacity>
+              </View>
             </View>
           </View>
-        </View>
-      </KeyboardAvoidingView>
+        </KeyboardAvoidingView>
+      </ImageBackground>
     </Screen>
   );
 };

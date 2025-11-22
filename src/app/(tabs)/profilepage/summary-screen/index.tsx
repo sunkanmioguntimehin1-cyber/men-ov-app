@@ -4,9 +4,10 @@ import {
 } from "@/src/api_services/logApi/logQuery";
 import { useGetIntakeDetails } from "@/src/api_services/userApi/userQuery";
 import SafeScreen from "@/src/components/SafeScreen";
-import { MaterialIcons } from "@expo/vector-icons";
+import { MaterialCommunityIcons, MaterialIcons } from "@expo/vector-icons";
 import { formatDistance, parseISO } from "date-fns";
 import { Image } from "expo-image";
+import { LinearGradient } from "expo-linear-gradient";
 import { useRouter } from "expo-router";
 import React from "react";
 import { ScrollView, Text, TouchableOpacity, View } from "react-native";
@@ -105,48 +106,56 @@ const SummaryScreen = () => {
                 </Text>
 
                 {logs.map((symptom: any) => (
-                  <View
-                    key={symptom.id}
-                    className="bg-[#8A3FFC] rounded-xl p-4 mb-3"
-                  >
-                    <View className="flex-row items-center justify-between">
-                      <View className="flex-row items-center flex-1">
-                        <View className="w-8 h-8 mr-3">
-                          <Image
-                            source={getSymptomImage(symptom.icon)}
-                            style={{
-                              height: "100%",
-                              width: "100%",
-                            }}
-                            contentFit="contain"
-                          />
+                  <View key={symptom.id} className="">
+                    <LinearGradient
+                      colors={["#6B5591", "#6E3F8C", "#853385", "#9F3E83"]}
+                      start={{ x: 0, y: 0 }}
+                      end={{ x: 1, y: 1 }}
+                      style={{ borderRadius: 10, padding: 16 }}
+                      className="rounded-xl p-4 mb-3"
+                    >
+                      <View className="flex-row items-center justify-between">
+                        <View className="flex-row items-center flex-1">
+                          <View className="w-8 h-8 mr-3">
+                            <Image
+                              source={getSymptomImage(symptom.icon)}
+                              style={{
+                                height: "100%",
+                                width: "100%",
+                              }}
+                              contentFit="contain"
+                            />
+                          </View>
+                          <View className="flex-1">
+                            <Text className="text-white font-[PoppinsSemiBold] text-base">
+                              {symptom.symptoms}
+                            </Text>
+                            <Text className="text-white text-[8px] mt-1">
+                              {symptom.recommendation}
+                            </Text>
+                          </View>
                         </View>
-                        <View className="flex-1">
-                          <Text className="text-white font-[PoppinsSemiBold] text-base">
-                            {symptom.symptoms}
-                          </Text>
-                          <Text className="text-white text-sm mt-1">
-                            {symptom.recommendation}
-                          </Text>
-                        </View>
-                      </View>
 
-                      <View
-                        className="px-2 py-1 rounded-lg border"
-                        style={{
-                          backgroundColor:
-                            SeverityLevelData[symptom.severityLevel - 1]
-                              ?.badgeColor,
-                          borderColor:
-                            SeverityLevelData[symptom.severityLevel - 1]
-                              ?.badgeColor,
-                        }}
-                      >
-                        <Text className="text-black text-xs font-[PoppinsMedium]">
-                          {SeverityLevelData[symptom.severityLevel - 1]?.level}
-                        </Text>
+                        <View
+                          className="px-2 py-1 rounded-lg border"
+                          style={{
+                            backgroundColor:
+                              SeverityLevelData[symptom.severityLevel - 1]
+                                ?.badgeColor,
+                            borderColor:
+                              SeverityLevelData[symptom.severityLevel - 1]
+                                ?.badgeColor,
+                          }}
+                        >
+                          <Text className="text-black text-xs font-[PoppinsMedium]">
+                            {
+                              SeverityLevelData[symptom.severityLevel - 1]
+                                ?.level
+                            }
+                          </Text>
+                        </View>
                       </View>
-                    </View>
+                    </LinearGradient>
                   </View>
                 ))}
               </View>
@@ -157,7 +166,7 @@ const SummaryScreen = () => {
                   Cycle summary
                 </Text>
 
-                {getCycleTracking?.data?.data?.slice(0,4)?.map((item: any) => {
+                {getCycleTracking?.data?.data?.slice(0, 4)?.map((item: any) => {
                   const dateString = item?.start;
                   const date = parseISO(dateString);
                   const now = new Date();
@@ -165,16 +174,21 @@ const SummaryScreen = () => {
                     addSuffix: true,
                   });
                   return (
-                    <View
-                      className="bg-[#8A3FFC] rounded-xl p-4 mb-3"
-                      key={item.id}
-                    >
-                      <Text className="text-white font-[PoppinsSemiBold] text-base">
-                        {item.menopauseStage}
-                      </Text>
-                      <Text className="text-white text-sm mt-1">
-                        Last period {distance}
-                      </Text>
+                    <View className="" key={item.id}>
+                      <LinearGradient
+                        colors={["#6B5591", "#6E3F8C", "#853385", "#9F3E83"]}
+                        start={{ x: 0, y: 0 }}
+                        end={{ x: 1, y: 1 }}
+                        style={{ borderRadius: 10, padding: 16 }}
+                        className="rounded-xl p-4 mb-3"
+                      >
+                        <Text className="text-white font-[PoppinsSemiBold] text-base">
+                          {item.menopauseStage}
+                        </Text>
+                        <Text className="text-white text-[8px] mt-1">
+                          Last period {distance}
+                        </Text>
+                      </LinearGradient>
                     </View>
                   );
                 })}
@@ -189,10 +203,10 @@ const SummaryScreen = () => {
                 <View className="bg-white border border-gray-200 rounded-xl p-4">
                   <View className="flex-row items-center">
                     <View className="w-8 h-8 mr-3">
-                      <MaterialIcons
-                        name="lightbulb"
+                      <MaterialCommunityIcons
+                        name="lightbulb-on-outline"
                         size={24}
-                        color="#8A3FFC"
+                        color="#712A87"
                       />
                     </View>
                     <Text className="text-gray-700 text-sm flex-1 font-[PoppinsMedium]">

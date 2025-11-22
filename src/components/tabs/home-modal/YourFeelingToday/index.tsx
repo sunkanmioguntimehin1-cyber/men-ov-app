@@ -217,7 +217,7 @@ const YourFeelingToday = ({ onCancel }: any) => {
         </View>
         <View className="my-3">
           <CustomButton
-            primary
+            gradient
             title={getButtonText()}
             onPress={handleButtonClick}
             disabled={isButtonDisabled()}

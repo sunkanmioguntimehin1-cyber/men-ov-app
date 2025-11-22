@@ -1,115 +1,24 @@
-// import CustomButton from "@/src/custom-components/CustomButton";
-// import { Image, ImageBackground } from "expo-image";
-// import { useRouter } from "expo-router";
-// import { View } from "react-native";
-
-// export default function GetStarted() {
-//   const router = useRouter();
-
-//   return (
-//     <>
-      
-//         <View className="flex-1">
-//           <ImageBackground
-//             source={require("@/assets/images/getstarted.png")}
-//             style={{
-//               height: "50%",
-//               width: "100%",
-//             }}
-//             contentFit="cover"
-//           >
-//             <View className=" items-center flex-1">
-//               <View className=" w-52 h-64 ">
-//                 <Image
-//                   source={require("@/assets/images/Logo23.png")}
-//                   style={{
-//                     height: "100%",
-//                     width: "100%",
-//                     alignSelf: "center",
-//                     // borderRadius: 100,
-//                   }}
-//                   contentFit="fill"
-//                   onError={(error) => console.log("Image error:", error)}
-//                 />
-//               </View>
-//             </View>
-
-//             <View className=" p-8 ">
-//               <View>
-//                 <CustomButton
-//                   primary
-//                   title="Continue with email"
-//                   onPress={() => {
-//                     router.push("/(auth)/login");
-//                   }}
-//                 />
-//               </View>
-//               <View className="my-5">
-//                 <CustomButton
-//                   whiteBg
-//                   title="Continue with google"
-//                   // onPress={signIn}
-//                 />
-//               </View>
-//             </View>
-//           </ImageBackground>
-//         </View>
-     
-//     </>
-//   );
-// }
 
 
-// import { Image, ImageBackground } from "expo-image";
-// import { useRouter } from "expo-router";
-// import { Text, TouchableOpacity, View } from "react-native";
-
-// export default function GetStarted() {
-//   const router = useRouter();
-
-//   return (
-//     <View className="flex-1">
-//       <ImageBackground
-//         source={require("@/assets/images/getstarted.png")}
-//         style={{ flex: 1 }} // Use flex instead of height percentage
-//         contentFit="cover"
-//       >
-//         <View className=" mt-safe-or-28 items-center flex-1">
-//           <View className="w-64 h-48">
-//             <Image
-//               source={require("@/assets/images/Menovia-Logo-Vertical.png")}
-//               style={{
-//                 height: "100%",
-//                 width: "100%",
-//                 alignSelf: "center",
-//               }}
-//               contentFit="fill"
-//               onError={(error) => console.log("Image error:", error)}
-//             />
-//           </View>
-//         </View>
-//         <View className=" flex-1 mt-32 " />
-
-//         <View className="p-8 flex-1 ">
-         
-//           <TouchableOpacity className=" w-60 h-10  bg-primary items-center justify-center rounded-lg">
-//             <Text className=" text-white">Get started</Text>
-//           </TouchableOpacity>
-//         </View>
-//       </ImageBackground>
-//     </View>
-//   );
-// }
-
-
-
-import { Image, ImageBackground } from "expo-image";
+import { DisclaimerSheet } from "@/src/components/DisclaimerSheet";
+import BottomSheetScreen from "@/src/custom-components/BottomSheetScreen";
+import BottomSheet from "@gorhom/bottom-sheet";
+import { ImageBackground } from "expo-image";
 import { LinearGradient } from "expo-linear-gradient";
 import { useRouter } from "expo-router";
-import { Text, TouchableOpacity, View } from "react-native";
+import React, { useMemo } from "react";
+import { Platform, Text, TouchableOpacity, View } from "react-native";
 
 export default function GetStarted() {
   const router = useRouter();
+
+    const snapPoints = useMemo(() => ["30%", "50%", "90%"], []);
+  
+    const DisclaimerBottomSheetRef = React.useRef<BottomSheet>(null);
+    const handleDisclaimerBottomSheetOpen = () =>
+      DisclaimerBottomSheetRef.current?.expand();
+    const handleDisclaimerBottomSheetClose = () =>
+      DisclaimerBottomSheetRef.current?.close();
 
   return (
     <View className="flex-1">
@@ -118,8 +27,8 @@ export default function GetStarted() {
         style={{ flex: 1 }}
         contentFit="cover"
       >
-        <View className="mt-safe-or-28 items-center flex-1">
-          <View className="w-64 h-48">
+        <View className="mt-safe-or-10 items-center flex-1">
+          {/* <View className="w-64 h-48">
             <Image
               source={require("@/assets/images/Menovia-Logo-Vertical.png")}
               style={{
@@ -130,22 +39,29 @@ export default function GetStarted() {
               contentFit="fill"
               onError={(error) => console.log("Image error:", error)}
             />
-          </View>
+          </View> */}
         </View>
 
         <View className="flex-1 mt-80" />
 
         <View className="p-8 mt-20 flex-1 items-center ">
           <TouchableOpacity
-            className="w-48 rounded-xl overflow-hidden"
-            onPress={() => router.push("/(auth)/welcome")}
+            className=" w-60 rounded-xl overflow-hidden"
+            // onPress={() => router.push("/(auth)/welcome")}
+            onPress={handleDisclaimerBottomSheetOpen}
             activeOpacity={0.8}
           >
             <LinearGradient
               colors={["#6B5591", "#6E3F8C", "#853385", "#9F3E83"]}
               start={{ x: 0, y: 0 }}
               end={{ x: 1, y: 1 }}
-              className="items-center justify-center py-4"
+              // className="items-center justify-center py-4"
+              style={{
+                minHeight: 56,
+                padding: Platform.OS === "ios" ? 16 : 16,
+                alignItems: "center",
+                justifyContent: "center",
+              }}
             >
               <Text className="text-white text-lg font-[PoppinsMedium]">
                 Get started
@@ -165,6 +81,15 @@ export default function GetStarted() {
           </View>
         </View>
       </ImageBackground>
+      <BottomSheetScreen
+        snapPoints={snapPoints}
+        ref={DisclaimerBottomSheetRef}
+        isBackdropComponent={true}
+        enablePanDownToClose={true}
+        index={-1}
+        bgColor="#F0A29F"
+        message={<DisclaimerSheet />}
+      />
     </View>
   );
 }

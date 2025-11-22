@@ -148,7 +148,7 @@ const LastSymptomsModal = ({ onCancel, selectedLastSymptom }: any) => {
   const updateLogDetails = useUpdateLogApi(onCancel);
   const closeLog = useCloseLogApi(handleIsDone);
 
-  console.log("selectedLastSymptom", selectedLastSymptom);
+
 
   return (
     <>
@@ -226,7 +226,6 @@ const LastSymptomsModal = ({ onCancel, selectedLastSymptom }: any) => {
               selectedLastSymptom={selectedLastSymptom}
             />
 
-          
             <NoteImageDetails
               selectedLastSymptom={selectedLastSymptom}
               setNotePublicUrls={setNotePublicUrls}
@@ -234,7 +233,7 @@ const LastSymptomsModal = ({ onCancel, selectedLastSymptom }: any) => {
           </ScrollView>
 
           <View className="my-3 flex-row items-center justify-center gap-1 space-x-3">
-            <View className=" flex-1">
+            <View className=" w-44 ">
               <CustomButton
                 primary
                 title="I am feeling better"
@@ -248,9 +247,9 @@ const LastSymptomsModal = ({ onCancel, selectedLastSymptom }: any) => {
               />
             </View>
 
-            <View className=" ">
+            <View className="  w-40">
               <CustomButton
-                primary
+                gradient
                 title="Update"
                 disabled={updateLogDetails.isPending}
                 loading={updateLogDetails.isPending}
@@ -302,7 +301,7 @@ const LastSymptomsModal = ({ onCancel, selectedLastSymptom }: any) => {
 
             <View className="mt-5">
               <CustomButton
-                primary
+                gradient
                 title="Your welcome!"
                 onPress={handleWelconeBtn}
               />

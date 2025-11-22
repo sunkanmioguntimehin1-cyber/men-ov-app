@@ -149,9 +149,9 @@ const ExplorePage = () => {
       />
       <Screen scroll={true} className="bg-[#FCFCFD]">
         <ImageBackground
-          source={require("@/assets/images/background.png")}
+          source={require("@/assets/images/Exploreimg.png")}
           style={{
-            height: "43%",
+            height: "80%",
             width: "100%",
           }}
           resizeMode="cover"
