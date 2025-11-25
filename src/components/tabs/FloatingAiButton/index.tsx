@@ -1,5 +1,6 @@
 import { useGetUserChat } from "@/src/api_services/userApi/userQuery";
-import { AntDesign, MaterialIcons } from "@expo/vector-icons";
+import { GradientMaterialIcon } from "@/src/custom-components/GradientIcon";
+import { Image } from "expo-image";
 import { useRouter } from "expo-router";
 import * as WebBrowser from "expo-web-browser";
 import React, { useEffect, useRef } from "react";
@@ -60,11 +61,11 @@ const FloatingAiButton = () => {
     }
   };
 
-  const openChai=()=>{
+  const openChai = () => {
     router.push({
       pathname: "/(tabs)/homepage/chat-with-ai",
     });
-  }
+  };
 
   useEffect(() => {
     Animated.loop(
@@ -151,7 +152,7 @@ const FloatingAiButton = () => {
           <TouchableOpacity
             accessibilityLabel="Open AI assistant"
             activeOpacity={0.9}
-            className=" w-full  bg-white my-3 border border-[#EAEAEA] p-4 rounded-2xl"
+            className=" w-full  bg-white my-3 border border-[#EAEAEA] p-4 rounded-xl"
             style={{
               shadowColor: "#8A3FFC",
               shadowOpacity: 0.25,
@@ -161,30 +162,49 @@ const FloatingAiButton = () => {
             }}
           >
             <Text className=" text-[#101828] font-[PoppinsSemiBold] text-base">
-              AI-Powered Tool
+              Ziena™ —Your AI Companion
             </Text>
 
             <TouchableOpacity
               className="flex-row items-center justify-between"
-              // onPress={openReceiptInBrowser}
-              onPress={openWebView}
+              // onPress={openWebView}
+              onPress={() => {
+                router.push("/(tabs)/homepage/chat-with-ai");
+              }}
             >
-              <AntDesign name="adduser" size={26} color="#8A3FFC" />
+              <View className=" w-10 h-10 ">
+                <Image
+                  source={require("@/assets/images/xena-1.png")}
+                  style={{
+                    height: "100%",
+                    width: "100%",
+                    alignSelf: "center",
+                    // borderRadius: 100,
+                  }}
+                  contentFit="fill"
+                  onError={(error) => console.log("Image error:", error)}
+                />
+              </View>
 
-              <View className="flex-1 mx-3 bg-[#F4EBFF] border border-[#EAECF0] p-4 rounded-lg">
+              <View className="flex-1 my-2  border border-primary p-3 rounded-lg">
                 <Text className="text-base font-[PoppinsRegular]">
-                  Ask about your menopausal symptoms
+                  Ask Ziena™...
                 </Text>
               </View>
 
               {/* Send button */}
               <TouchableOpacity
+                className="mx-2"
                 onPress={() => {
                   router.push("/(tabs)/homepage/chat-with-ai");
                 }}
                 // onPress={openWebView}
               >
-                <MaterialIcons name="send" size={26} color="#8A3FFC" />
+                <GradientMaterialIcon
+                  name="send"
+                  size={26}
+                  gradientColors={["#6B5591", "#6E3F8C", "#853385", "#9F3E83"]}
+                />
               </TouchableOpacity>
             </TouchableOpacity>
 

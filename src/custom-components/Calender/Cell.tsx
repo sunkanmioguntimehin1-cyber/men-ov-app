@@ -59,11 +59,11 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
   today: {
-    backgroundColor: "#e6f2ff",
+    backgroundColor: "#F4EBFF",
   },
   todayText: {
     fontWeight: "bold",
-    color: "#007AFF",
+    color: "#712A87",
   },
   otherMonth: {
     backgroundColor: "#f9f9f9",
@@ -72,7 +72,7 @@ const styles = StyleSheet.create({
     color: "#bdbdbd",
   },
   selected: {
-    backgroundColor: "#8A3FFC",
+    backgroundColor: "#712A87",
   },
   selectedText: {
     color: "#ffffff",

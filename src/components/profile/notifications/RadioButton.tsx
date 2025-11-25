@@ -36,7 +36,7 @@ export const RadioButton = ({
       activeOpacity={0.8}
       style={[
         styles.outerCircle,
-        { borderColor: isSelected ? "#8A3FFC" : "#9CA3AF" }, // purple or gray
+        { borderColor: isSelected ? "#B33288" : "#9CA3AF" }, // purple or gray
       ]}
     >
       {isSelected && <View className="" style={styles.innerCircle} />}
@@ -57,6 +57,6 @@ const styles = StyleSheet.create({
     width: 10,
     height: 10,
     borderRadius: 5,
-    backgroundColor: "#8A3FFC", // purple fill
+    backgroundColor: "#B33288", // purple fill
   },
 });

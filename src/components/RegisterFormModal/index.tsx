@@ -1,4 +1,5 @@
 import { Entypo, Feather } from "@expo/vector-icons";
+import { LinearGradient } from "expo-linear-gradient";
 import React from "react";
 import { Text, TouchableOpacity, View } from "react-native";
 
@@ -22,7 +23,7 @@ const RegisterFormModal = ({ onCancel, onAgree }: any) => {
           To provide you with the best service, we require some personal
           information (full name and email). This helps us:
         </Text>
-       
+
         <View className="flex-row items-center">
           <Entypo name="dot-single" size={20} color="black" />
           <Text className="font-[PoppinsBold] text-sm">
@@ -57,10 +58,23 @@ const RegisterFormModal = ({ onCancel, onAgree }: any) => {
         <View className=" mx-1" />
 
         <TouchableOpacity
-          className="flex-1  bg-primary  items-center justify-center rounded-md"
+          className="flex-1   items-center justify-center rounded-md"
           onPress={onAgree}
         >
-          <Text className="font-[PoppinsBold] text-sm text-white">I Agree</Text>
+          <LinearGradient
+            colors={["#6B5591", "#6E3F8C", "#853385", "#9F3E83"]}
+            start={{ x: 0, y: 0 }}
+            end={{ x: 1, y: 1 }}
+            style={{
+             
+              borderRadius: 6,
+            }}
+            // className="items-center justify-center rounded-md"
+          >
+            <Text className="font-[PoppinsBold] p-4 text-sm text-white">
+              I Agree
+            </Text>
+          </LinearGradient>
         </TouchableOpacity>
       </View>
     </View>

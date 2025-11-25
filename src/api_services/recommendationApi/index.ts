@@ -11,7 +11,7 @@ export const getRecommendationApi = async () => {
 };
 
 export const saveRecommendationApi = async (data: any) => {
-  // console.log("data:", data);
+  // console.log("data21111:", data);
   
   try {
     const res = await axiosInstance.patch(`/recommendation/${data.id}/save`, data.isSaved);

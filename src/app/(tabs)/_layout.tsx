@@ -1,4 +1,4 @@
-import { FontAwesome5, Ionicons } from "@expo/vector-icons";
+import { Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
 import { getFocusedRouteNameFromRoute } from "@react-navigation/native";
 import { Tabs } from "expo-router";
 import { Platform } from "react-native";
@@ -20,7 +20,10 @@ function getTabBarVisibility(route: any) {
     "searchpage",
     "view-search-result",
     "explore-webview",
-    "create-post"
+    "create-post",
+    "comments",
+    "contact-us",
+    "notification-screen",
   ];
 
   // Check if the current route or any part of it matches hidden routes
@@ -58,7 +61,7 @@ export default function TabsLayout() {
             <Ionicons
               name={focused ? "home" : "home-outline"}
               size={24}
-              color={focused ? "black" : "#E4D9F7"}
+              color={focused ? "#712A87" : "#E4D9F7"}
             />
           ),
           tabBarStyle: getTabBarVisibility(route)
@@ -74,12 +77,12 @@ export default function TabsLayout() {
       <Tabs.Screen
         name="explorepage"
         options={({ route }) => ({
-          title: "Explore",
+          title: "Learn",
           tabBarIcon: ({ color, focused }) => (
             <Ionicons
-              name={focused ? "search" : "search-outline"}
+              name={focused ? "school-outline" : "school-outline"}
               size={24}
-              color={focused ? "black" : "#E4D9F7"}
+              color={focused ? "#712A87" : "#E4D9F7"}
             />
           ),
           tabBarStyle: getTabBarVisibility(route)
@@ -95,12 +98,12 @@ export default function TabsLayout() {
       <Tabs.Screen
         name="communitypage"
         options={({ route }) => ({
-          title: "Community",
+          title: "connect",
           tabBarIcon: ({ color, focused }) => (
             <Ionicons
-              name={focused ? "people" : "people-outline"}
+              name={focused ? "chatbubble-outline" : "chatbubble-outline"}
               size={24}
-              color={focused ? "black" : "#E4D9F7"}
+              color={focused ? "#712A87" : "#E4D9F7"}
             />
           ),
           tabBarStyle: getTabBarVisibility(route)
@@ -116,12 +119,12 @@ export default function TabsLayout() {
       <Tabs.Screen
         name="profilepage"
         options={({ route }) => ({
-          title: "Profile",
+          title: "Insights",
           tabBarIcon: ({ color, focused }) => (
-            <FontAwesome5
-              name={focused ? "user-alt" : "user"}
+            <MaterialCommunityIcons
+              name={focused ? "lightbulb-on-outline" : "lightbulb-on-outline"}
               size={24}
-              color={focused ? "black" : "#E4D9F7"}
+              color={focused ? "#712A87" : "#E4D9F7"}
             />
           ),
           // Use the same tab bar visibility logic as homepage

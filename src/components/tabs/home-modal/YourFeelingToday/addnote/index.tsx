@@ -148,11 +148,11 @@ const AddNote = ({
         ) : (
           <View>
             <TouchableOpacity
-              className="my-3 w-[131px] flex-row items-center ml-2 bg-[#F9F5FF] rounded-full px-4 py-3 "
+              className="my-3 w-[131px] flex-row items-center ml-2 bg-[#F4EBFF] rounded-full px-4 py-3 "
               onPress={handleImagePick}
             >
               <View className="">
-                <Entypo name="image-inverted" size={15} color="#8A3FFC" />
+                <Entypo name="image-inverted" size={15} color="#B33288" />
               </View>
               <Text className=" text-sm font-[PoppinsMedium] mx-2">
                 Add image

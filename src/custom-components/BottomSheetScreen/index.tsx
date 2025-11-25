@@ -1,6 +1,6 @@
 import BottomSheet, {
-    BottomSheetBackdrop,
-    BottomSheetView,
+  BottomSheetBackdrop,
+  BottomSheetView,
 } from "@gorhom/bottom-sheet";
 import React, { useCallback } from "react";
 import { StyleSheet } from "react-native";
@@ -12,6 +12,7 @@ type BottomType = {
   isBackdropComponent?: boolean;
   enablePanDownToClose?: boolean;
   pressBehavior?: "none" | "close" | "collapse"; // Define the allowed values
+  bgColor?: string;
 };
 const BottomSheetScreen = React.forwardRef(
   (
@@ -22,6 +23,7 @@ const BottomSheetScreen = React.forwardRef(
       isBackdropComponent,
       enablePanDownToClose,
       pressBehavior = "close", // Default value
+      bgColor,
     }: BottomType,
     ref
   ) => {
@@ -53,6 +55,7 @@ const BottomSheetScreen = React.forwardRef(
         snapPoints={snapPoints}
         enablePanDownToClose={enablePanDownToClose}
         backdropComponent={isBackdropComponent ? renderBackdrop : undefined}
+        backgroundStyle={{ backgroundColor: bgColor || "#FFFFFF" }}
       >
         <BottomSheetView>{message}</BottomSheetView>
       </BottomSheet>

@@ -3,7 +3,7 @@
     "name": "Menovia",
     "slug": "menovia",
     "owner": "menovia",
-    "version": "1.0.2",
+    "version": "1.0.3",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
     "scheme": "menoviaapp",
@@ -22,6 +22,7 @@
     },
     "android": {
       "userInterfaceStyle": "light",
+      "googleServicesFile": "./google-services2.json",
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
@@ -52,13 +53,26 @@
           "image": "./assets/images/splash-icon.png",
           "imageWidth": 200,
           "resizeMode": "contain",
-          "backgroundColor": "#ffffff"
+          "backgroundColor": "#171717",
+          "dark": {
+            "image": "./assets/images/splash-icon.png",
+            "backgroundColor": "#171717"
+          }
         }
       ],
       [
         "@react-native-google-signin/google-signin",
         {
           "iosUrlScheme": "com.googleusercontent.apps.759542327992-971ok5geank09ddh8kaeoglsk9mqg1fo"
+        }
+      ],
+      [
+        "expo-notifications",
+        {
+          "icon": "./assets/images/notification_icon.png",
+          "color": "#ffffff",
+          "defaultChannel": "default",
+          "enableBackgroundRemoteNotifications": false
         }
       ]
     ],

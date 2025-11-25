@@ -4,6 +4,7 @@ import { rS } from "@/src/lib/responsivehandler";
 import { AntDesign } from "@expo/vector-icons";
 import React from "react";
 import { Text, TouchableOpacity, View } from "react-native";
+import { GradientText } from "../GradientText";
 
 const MenstrualHistory = ({
   handleFirstPeriodBottomSheetOpen,
@@ -18,10 +19,12 @@ const MenstrualHistory = ({
   return (
     <View>
       <View className=" items-center my-5">
-        <Text className=" text-xl text-[#42307D] font-[PoppinsSemiBold]">
+      
+        <GradientText className="font-[PoppinsMedium] text-xl">
           Menstrual History
-        </Text>
-        <Text className=" text-base text-[#6941C6] font-[PoppinsRegular] my-2">
+        </GradientText>
+
+        <Text className="text-base font-[PoppinsRegular] my-2">
           Your data will be safe with us.
         </Text>
       </View>
@@ -68,13 +71,10 @@ const MenstrualHistory = ({
           <YesNoSelector
             onSelectionChange={(value) => setPeriodsStoppedAnswer(value)}
             selectedValue={periodsStoppedAnswer}
-            primaryColor="#6941C6" // Your brand purple
+            useGradient={true}
+            // gradientColors={["#6B5591", "#6E3F8C", "#853385", "#9F3E83"]}
           />
         </View>
-
-        {/* <View className=" my-3">
-          <CustomInput primary label="Estimated Date of Menopause Onset" />
-        </View> */}
       </View>
     </View>
   );

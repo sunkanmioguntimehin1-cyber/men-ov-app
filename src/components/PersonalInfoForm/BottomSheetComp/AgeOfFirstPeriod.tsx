@@ -23,7 +23,7 @@ const AgeOfFirstPeriod = ({
   return (
     <View className=" p-8">
       <View className=" items-center">
-        <Text className=" text-lg font-[PoppinsSemiBold]">
+        <Text className=" text-lg text-primary font-[PoppinsSemiBold]">
           Age of first period
         </Text>
       </View>

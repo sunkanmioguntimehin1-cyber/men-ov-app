@@ -39,7 +39,7 @@ const CustomRadio = ({
             <MaterialIcons
               name={active ? "radio-button-checked" : "radio-button-unchecked"}
               size={24}
-              color={active ? "#6941C6" : "#EAEAEA"}
+              color={active ? "#712A87" : "#EAEAEA"}
             />
             <Text
               style={[styles.text, active && styles.activeText]}
@@ -76,7 +76,7 @@ const styles = StyleSheet.create({
     color: "#6b7280",
   },
   activeText: {
-    color: "#6941C6",
+    color: "#712A87",
   },
 });
 

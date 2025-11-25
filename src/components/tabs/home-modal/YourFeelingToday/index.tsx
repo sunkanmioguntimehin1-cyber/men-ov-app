@@ -1,5 +1,5 @@
-
 import { useCreateLogApi } from "@/src/api_services/logApi/logMutation";
+import { GradientText } from "@/src/components/GradientText";
 import BottomSheetScreen from "@/src/custom-components/BottomSheetScreen";
 import CustomButton from "@/src/custom-components/CustomButton";
 import useSymtomsStore from "@/src/store/symtomsStore";
@@ -31,15 +31,12 @@ const YourFeelingToday = ({ onCancel }: any) => {
   const [notePublicUrls, setNotePublicUrls] = React.useState<string[]>([]);
   const [publicUrls, setPublicUrls] = React.useState<string[]>([]);
 
-  
-
   const publicUrl = useSymtomsStore().symtomsDataList.publicUrl;
   const notePublicUrl = useSymtomsStore().symtomsDataList.notePublicUrl;
 
-  console.log("notePublicUrls3000", notePublicUrls);
-  console.log("publicUrls3000", publicUrls);
-  console.log("publicUrlBBBB", publicUrl);
-
+  // console.log("notePublicUrls3000", notePublicUrls);
+  // console.log("publicUrls3000", publicUrls);
+  // console.log("publicUrlBBBB", publicUrl);
 
   const formMethods = useForm({
     mode: "onChange",
@@ -82,20 +79,15 @@ const YourFeelingToday = ({ onCancel }: any) => {
     }
   };
 
-  
-
   // Check if current step is valid
   const isCurrentStepValid = () => {
     switch (activeIndex) {
       case 0: // Symptoms step
         return (
-          selectedList &&
-          selectedSeverityLevel &&
-          selectedDate &&
-          durationData 
+          selectedList && selectedSeverityLevel && selectedDate && durationData
         );
       case 1: // Triggers step
-      return selectedTriggers.length > 0
+        return selectedTriggers.length > 0;
       case 2: // Notes step
         return true; // Notes are optional, so always valid
       default:
@@ -128,8 +120,6 @@ const YourFeelingToday = ({ onCancel }: any) => {
   // formatting Date
   const dateValue = selectedDate ? format(selectedDate, "dd-MM-yyyy") : "";
 
- 
-
   const createLogApi = useCreateLogApi(onCancel);
 
   const onSubmit = (data: any) => {
@@ -147,10 +137,7 @@ const YourFeelingToday = ({ onCancel }: any) => {
     };
 
     createLogApi.mutate(requestedPayload);
-
-   
   };
-
 
   return (
     <>
@@ -173,13 +160,17 @@ const YourFeelingToday = ({ onCancel }: any) => {
                 handleSelectFeeling(item, index);
               }}
             >
-              <Text
-                className={`text-sm font-[PoppinsRegular]  ${
-                  activeIndex === index ? "text-[#42307D]" : "text-[#D6BBFB]"
-                }`}
-              >
-                {item}
-              </Text>
+              {activeIndex === index ? (
+                <GradientText className="text-sm font-[PoppinsRegular]">
+                  {item}
+                </GradientText>
+              ) : (
+                <Text
+                  className={`text-sm font-[PoppinsRegular] text-[#D6BBFB]`}
+                >
+                  {item}
+                </Text>
+              )}
             </TouchableOpacity>
           ))}
         </View>
@@ -217,7 +208,7 @@ const YourFeelingToday = ({ onCancel }: any) => {
         </View>
         <View className="my-3">
           <CustomButton
-            primary
+            gradient
             title={getButtonText()}
             onPress={handleButtonClick}
             disabled={isButtonDisabled()}

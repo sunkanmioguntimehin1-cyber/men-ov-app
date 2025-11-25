@@ -2,7 +2,7 @@ import axiosInstance from "@/src/lib/axiosInstance";
 
 export const getAllToics = async () => {
   try {
-    const res = await axiosInstance.get(`/topics`);
+    const res = await axiosInstance.get(`/topics?isFeatured=true`);
     return res.data;
   } catch (error) {
     console.error("getAllToics:", error);

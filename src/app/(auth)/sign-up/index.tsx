@@ -1,5 +1,3 @@
-
-
 import { useRegisterUser } from "@/src/api_services/authApi/authMutation";
 import RegisterFormModal from "@/src/components/RegisterFormModal";
 import TermsAndPrivacy from "@/src/components/TermsAndPrivacy";
@@ -13,54 +11,53 @@ import { Image } from "expo-image";
 import { useRouter } from "expo-router";
 import React from "react";
 import { Controller, useForm } from "react-hook-form";
-import { Text, TouchableOpacity, View } from "react-native";
+import { TouchableOpacity, View } from "react-native";
+import { GradientText } from "../../../components/GradientText";
 
 const SignUp = () => {
   const router = useRouter();
-    const [isSecureEntry, setIsSecureEntry] = React.useState(true);
-     const [modelVisible, setModelVisible] = React.useState(false);
-     const [hasAgreed, setHasAgreed] = React.useState(false);
-     const registerUser = useRegisterUser();
-  
+  const [isSecureEntry, setIsSecureEntry] = React.useState(true);
+  const [modelVisible, setModelVisible] = React.useState(false);
+  const [hasAgreed, setHasAgreed] = React.useState(false);
+  const registerUser = useRegisterUser();
 
-   const {
-     control,
-     handleSubmit,
-     formState: { errors, isValid },
-   } = useForm({
-     mode: "onChange",
-     defaultValues: {
+  const {
+    control,
+    handleSubmit,
+    formState: { errors, isValid },
+  } = useForm({
+    mode: "onChange",
+    defaultValues: {
       //  username: "",
-       password: "",
-       email: "",
-       fullname: "",
-      
-     },
-   });
+      password: "",
+      email: "",
+      fullname: "",
+    },
+  });
 
-   const onSubmit = (data: any) => {
-     if (data) {
-       registerUser.mutate(data);
+  const onSubmit = (data: any) => {
+    if (data) {
+      registerUser.mutate(data);
       //  setUserRegOtps({
       //    email: data.email.toLowerCase(),
       //  });
-       console.log("testing234: ", data);
-     }
-   };
+      console.log("testing234: ", data);
+    }
+  };
 
-     React.useEffect(() => {
-       setModelVisible(true);
-     }, []);
+  React.useEffect(() => {
+    setModelVisible(true);
+  }, []);
 
-    const handleAgree = () => {
-      setHasAgreed(true);
-      setModelVisible(false);
-    };
+  const handleAgree = () => {
+    setHasAgreed(true);
+    setModelVisible(false);
+  };
 
-    const onCancel = () => {
-      // router.push("/guess-home");
-      setModelVisible(false);
-    };
+  const onCancel = () => {
+    // router.push("/guess-home");
+    setModelVisible(false);
+  };
 
   return (
     <KeyboardAwareScreen
@@ -92,9 +89,9 @@ const SignUp = () => {
       </TouchableOpacity>
 
       <View className="items-center">
-        <View className="w-16 h-14">
+        <View className="w-20 h-14">
           <Image
-            source={require("@/assets/images/logo.png")}
+            source={require("@/assets/images/Menovia-Logo-Icon.png")}
             style={{
               height: "100%",
               width: "100%",
@@ -103,10 +100,10 @@ const SignUp = () => {
             onError={(error) => console.log("Image error:", error)}
           />
         </View>
-        <View>
-          <Text className="font-[PoppinsMedium] text-[#42307D] text-xl">
-            Create App account!
-          </Text>
+        <View className="mt-5">
+          <GradientText className="font-[PoppinsMedium] text-xl">
+            Join Menovia AI
+          </GradientText>
         </View>
       </View>
 
@@ -221,7 +218,7 @@ const SignUp = () => {
         </View>
         <View>
           <CustomButton
-            primary
+            gradient
             title="Sign up"
             disabled={registerUser.isPending}
             loading={registerUser.isPending}

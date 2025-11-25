@@ -1,7 +1,8 @@
+import { GradientText } from "@/src/components/GradientText";
 import useSymtomsStore from "@/src/store/symtomsStore";
 import { Image } from "expo-image";
 import React from "react";
-import { Text, TouchableOpacity, View } from "react-native";
+import { TouchableOpacity, View } from "react-native";
 
 type Prop = {
   setSelectedList: (value: string | null) => void;
@@ -60,9 +61,10 @@ const SymptomsList = ({ setSelectedList }: Prop) => {
                 onError={(error) => console.log("Image error:", error)}
               />
             </View>
-            <Text className=" text-sm mx-3 font-[PoppinsMedium]">
+        
+            <GradientText className="text-sm mx-3 font-[PoppinsMedium]">
               {item.name}
-            </Text>
+            </GradientText>
           </TouchableOpacity>
         </>
       ))}

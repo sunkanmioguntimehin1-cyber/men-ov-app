@@ -53,10 +53,10 @@ const CycleTracking = ({ onCancel }: any) => {
 
   // Function to handle Next/Submit button click
   const handleButtonClick = () => {
-    if (getCycleTrackingLatest?.data && currentIndex < 1) {
+    if (getCycleTrackingLatest?.data) {
       // Move to next step
-      // handleSubmit(onSubmit)();
-      setCurrentIndex(currentIndex + 1);
+      handleSubmit(onSubmit)();
+      // setCurrentIndex(currentIndex + 1);
     } else if (currentIndex < 1) {
       // Submit the form
       setCurrentIndex(currentIndex + 1);
@@ -67,10 +67,10 @@ const CycleTracking = ({ onCancel }: any) => {
   // Determine button text and state
   const getButtonText = () => {
     if (getCycleTrackingLatest?.data) {
-      if (currentIndex === 1) {
-        return "Submit";
-      }
-      return "Next";
+      // if (currentIndex === 0) {
+      //   return "Submit";
+      // }
+      return "Add";
     } else {
       if (currentIndex === 1) {
         return "Submit";
@@ -81,7 +81,6 @@ const CycleTracking = ({ onCancel }: any) => {
   // formatting Date
   const dateValue = selectedDate ? format(selectedDate, "dd-MM-yyy") : "";
 
-  console.log("menopauseStage", menopauseStage);
   //onSubmit
   const onSubmit = (data: any) => {
     const requestPayload = {
@@ -92,7 +91,7 @@ const CycleTracking = ({ onCancel }: any) => {
       image: notePublicUrls,
     };
 
-    console.log("requestPayload5001", requestPayload);
+    // console.log("requestPayload5001", requestPayload);
 
     // createCycleTracking.mutate(requestPayload);
 
@@ -105,10 +104,18 @@ const CycleTracking = ({ onCancel }: any) => {
     //   id: getCycleTrackingLatest?.data?.id,
     // };
 
+    const requestUpdatePayload = {
+      menopauseStage: menopauseStage,
+      start: selectedDate,
+      // duration: Number(durationData),
+      note: data.notes,
+      image: notePublicUrls,
+    };
+
     if (getCycleTrackingLatest?.data) {
       // updateCycleTracking.mutate(requestUpdatePayload);
 
-      createCycleTracking.mutate(requestPayload);
+      createCycleTracking.mutate(requestUpdatePayload);
     } else {
       createCycleTracking.mutate(requestPayload);
     }
@@ -140,14 +147,14 @@ const CycleTracking = ({ onCancel }: any) => {
         <View>
           {getCycleTrackingLatest?.data ? (
             <>
-              {currentIndex === 0 && (
+              {/* {currentIndex === 0 && (
                 <CurrentStatus
                   menopauseStage={menopauseStage}
                   setMenopauseStage={setMenopauseStage}
                   getIntakeDetails={getIntakeDetails}
                 />
-              )}
-              {currentIndex === 1 && (
+              )} */}
+              {currentIndex === 0 && (
                 <LastCycleHistory
                   errors={errors}
                   getCycleTrackingLatest={getCycleTrackingLatest}
@@ -187,14 +194,16 @@ const CycleTracking = ({ onCancel }: any) => {
         </View>
         <View className="">
           <CustomButton
-            primary
+            gradient
             title={getButtonText()}
             onPress={handleButtonClick}
             disabled={
               getCycleTrackingLatest.isLoading ||
               !menopauseStage ||
+              (getCycleTrackingLatest?.data &&
+                currentIndex === 0 &&
+                (!selectedDate)) ||
               (currentIndex === 1 && (!selectedDate || !durationData)) ||
-              createCycleTracking.isPending ||
               updateCycleTracking.isPending ||
               createCycleTracking.isPending
             }

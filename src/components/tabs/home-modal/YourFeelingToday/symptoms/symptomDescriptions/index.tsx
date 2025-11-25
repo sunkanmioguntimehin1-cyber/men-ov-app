@@ -208,7 +208,7 @@ const SymptomsDescriptions = ({
                 )}
 
                 <TouchableOpacity onPress={handleCloseImage} className="">
-                  <AntDesign name="close" size={18} color="black" />
+                  <AntDesign name="close" size={18} color="#B33288" />
                 </TouchableOpacity>
               </View>
             )}
@@ -216,16 +216,16 @@ const SymptomsDescriptions = ({
         ) : (
           <View>
             <TouchableOpacity
-              className="my-3 w-[131px] flex-row items-center ml-2 bg-[#F9F5FF] rounded-full px-4 py-3 "
+              className="my-3 w-[131px] flex-row items-center ml-2 bg-[#F4EBFF] rounded-full px-4 py-3 "
               onPress={handleImagePick}
             >
               <View className="">
-                <Entypo name="image-inverted" size={15} color="#8A3FFC" />
+                <Entypo name="image-inverted" size={15} color="#B33288" />
               </View>
               <Text className="font-[PoppinsMedium] text-sm mx-2">
                 Add image
               </Text>
-              {/* </View> */}
+          
             </TouchableOpacity>
           </View>
         )}

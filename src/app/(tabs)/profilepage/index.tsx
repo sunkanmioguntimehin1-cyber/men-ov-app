@@ -52,11 +52,11 @@ export default function ProfilePage() {
       title: "Notifications",
       icon: <AntDesign name="right" size={24} color="black" />,
     },
-    // {
-    //   img: <AntDesign name="user" size={24} color="black" />,
-    //   title: "Contact Us",
-    //   icon: <AntDesign name="right" size={24} color="black" />,
-    // },
+    {
+      img: <AntDesign name="user" size={24} color="black" />,
+      title: "Contact Us",
+      icon: <AntDesign name="right" size={24} color="black" />,
+    },
     // {
     //   img: <Feather name="share-2" size={24} color="black" />,
     //   title: "Share App",
@@ -79,7 +79,7 @@ export default function ProfilePage() {
     if (item === "Notifications") {
       router.push("/profilepage/notifications");
     } else if (item === "Contact Us") {
-      //  router.push({ pathname: "/settings/privacy-policy" });
+       router.push({ pathname: "/profilepage/contact-us" });
     } else if (item === "Share App") {
       //  router.push({ pathname: "/settings/about" });
     } else if (item === "Delete Account") {

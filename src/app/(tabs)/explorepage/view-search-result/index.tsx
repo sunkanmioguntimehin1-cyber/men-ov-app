@@ -1,27 +1,8 @@
-// import Screen from '@/src/layout/Screen';
-// import React from 'react';
-// import { ImageBackground, Text } from 'react-native';
 
-// const ViewSearchResult = () => {
-//   return (
-//     <Screen scroll={true} className="bg-[#FCFCFD]">
-//   <ImageBackground
-//     source={require("@/assets/images/background.png")}
-//     style={{
-//       height: "60%",
-//       width: "100%",
-//     }}
-//     resizeMode="cover"
-//   >
-//         <Text>ViewSearchResult</Text>
-//       </ImageBackground>
-//     </Screen>
-//   );
-// }
-
-// export default ViewSearchResult
 
 import { useGetSearchResult } from "@/src/api_services/exploreApi/exploreQuery";
+import { GradientText } from "@/src/components/GradientText";
+import { GradientIoniconsIcon } from "@/src/custom-components/GradientIcon";
 import Screen from "@/src/layout/Screen";
 import { Ionicons } from "@expo/vector-icons";
 import { Image, ImageBackground } from "expo-image";
@@ -78,7 +59,7 @@ const ViewSearchResult = () => {
         </Text>
       </View>
       <ImageBackground
-        source={require("@/assets/images/background.png")}
+        source={require("@/assets/images/ai2.png")}
         style={{
           height: "100%",
           width: "100%",
@@ -118,10 +99,19 @@ const ViewSearchResult = () => {
                     openWebView(post.url);
                   }}
                 >
-                  <Text className="font-[PoppinsSemiBold] text-base text-[#8553F3] mr-2">
+                  <GradientText className="font-[PoppinsSemiBold] text-base mr-2">
                     Read post
-                  </Text>
-                  <Ionicons name="arrow-forward" size={20} color="#8553F3" />
+                  </GradientText>
+                  <GradientIoniconsIcon
+                    name="arrow-forward"
+                    size={20}
+                    gradientColors={[
+                      "#6B5591",
+                      "#6E3F8C",
+                      "#853385",
+                      "#9F3E83",
+                    ]}
+                  />
                 </TouchableOpacity>
               </View>
             </TouchableOpacity>
