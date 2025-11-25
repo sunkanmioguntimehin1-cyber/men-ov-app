@@ -1,4 +1,4 @@
-import { Ionicons } from "@expo/vector-icons";
+import { Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
 import { getFocusedRouteNameFromRoute } from "@react-navigation/native";
 import { Tabs } from "expo-router";
 import { Platform } from "react-native";
@@ -80,7 +80,7 @@ export default function TabsLayout() {
           title: "Learn",
           tabBarIcon: ({ color, focused }) => (
             <Ionicons
-              name={focused ? "school-sharp" : "school-outline"}
+              name={focused ? "school-outline" : "school-outline"}
               size={24}
               color={focused ? "#712A87" : "#E4D9F7"}
             />
@@ -101,7 +101,7 @@ export default function TabsLayout() {
           title: "connect",
           tabBarIcon: ({ color, focused }) => (
             <Ionicons
-              name={focused ? "chatbubble-sharp" : "chatbubble-outline"}
+              name={focused ? "chatbubble-outline" : "chatbubble-outline"}
               size={24}
               color={focused ? "#712A87" : "#E4D9F7"}
             />
@@ -121,8 +121,8 @@ export default function TabsLayout() {
         options={({ route }) => ({
           title: "Insights",
           tabBarIcon: ({ color, focused }) => (
-            <Ionicons
-              name={focused ? "bulb" : "bulb-outline"}
+            <MaterialCommunityIcons
+              name={focused ? "lightbulb-on-outline" : "lightbulb-on-outline"}
               size={24}
               color={focused ? "#712A87" : "#E4D9F7"}
             />

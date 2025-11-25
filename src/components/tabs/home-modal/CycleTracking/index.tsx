@@ -70,7 +70,7 @@ const CycleTracking = ({ onCancel }: any) => {
       // if (currentIndex === 0) {
       //   return "Submit";
       // }
-      return "Submit";
+      return "Add";
     } else {
       if (currentIndex === 1) {
         return "Submit";
@@ -81,7 +81,6 @@ const CycleTracking = ({ onCancel }: any) => {
   // formatting Date
   const dateValue = selectedDate ? format(selectedDate, "dd-MM-yyy") : "";
 
-  // console.log("menopauseStage", menopauseStage);
   //onSubmit
   const onSubmit = (data: any) => {
     const requestPayload = {

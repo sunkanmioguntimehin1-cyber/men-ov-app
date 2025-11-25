@@ -11,12 +11,21 @@ import { Platform, Text, TouchableOpacity, View } from "react-native";
 
 export default function GetStarted() {
   const router = useRouter();
+  const [storeData, setStoreData] = React.useState("");
 
     const snapPoints = useMemo(() => ["30%", "50%", "90%"], []);
   
     const DisclaimerBottomSheetRef = React.useRef<BottomSheet>(null);
-    const handleDisclaimerBottomSheetOpen = () =>
-      DisclaimerBottomSheetRef.current?.expand();
+    const handleDisclaimerBottomSheetOpen = (data:string) =>{
+      if(data === 'signin'){
+        setStoreData('signin');
+        DisclaimerBottomSheetRef.current?.expand();
+      }else{
+        setStoreData('signup');
+        DisclaimerBottomSheetRef.current?.expand();
+      }
+      
+    }
     const handleDisclaimerBottomSheetClose = () =>
       DisclaimerBottomSheetRef.current?.close();
 
@@ -47,8 +56,7 @@ export default function GetStarted() {
         <View className="p-8 mt-20 flex-1 items-center ">
           <TouchableOpacity
             className=" w-60 rounded-xl overflow-hidden"
-            // onPress={() => router.push("/(auth)/welcome")}
-            onPress={handleDisclaimerBottomSheetOpen}
+            onPress={() => handleDisclaimerBottomSheetOpen("signup")}
             activeOpacity={0.8}
           >
             <LinearGradient
@@ -73,7 +81,9 @@ export default function GetStarted() {
             <Text className="text-white text-sm">
               Already have an account?{" "}
             </Text>
-            <TouchableOpacity onPress={() => router.push("/(auth)/login")}>
+            <TouchableOpacity
+              onPress={() => handleDisclaimerBottomSheetOpen("signin")}
+            >
               <Text className="text-[#712A87] font-[PoppinsMedium] text-sm underline">
                 Sign In
               </Text>
@@ -88,7 +98,12 @@ export default function GetStarted() {
         enablePanDownToClose={true}
         index={-1}
         bgColor="#F0A29F"
-        message={<DisclaimerSheet />}
+        message={
+          <DisclaimerSheet
+            storeData={storeData}
+            handleDisclaimerBottomSheetClose={handleDisclaimerBottomSheetClose}
+          />
+        }
       />
     </View>
   );

@@ -71,7 +71,7 @@ const CustomSelectData = ({
       </>
 
       <TouchableOpacity
-        className={`rounded-2xl ${getBgColor()} px-3 ${getFlexDirection()}`}
+        className={`rounded-xl ${getBgColor()} px-3 ${getFlexDirection()}`}
         style={{ height: rV(40) }}
         onPress={onPress}
       >

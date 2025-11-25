@@ -30,11 +30,11 @@ const SummaryScreen = () => {
   const symptomsData = [
     {
       name: "Back Pain",
-      img: require("@/assets/images/backpain.png"),
+      img: require("@/assets/images/backpain2.png"),
     },
     {
       name: "Headache",
-      img: require("@/assets/images/headache.png"),
+      img: require("@/assets/images/headache2.png"),
     },
     {
       name: "Heart Palpitations",
@@ -147,7 +147,7 @@ const SummaryScreen = () => {
                                 ?.badgeColor,
                           }}
                         >
-                          <Text className="text-black text-xs font-[PoppinsMedium]">
+                          <Text className="text-white text-xs font-[PoppinsMedium]">
                             {
                               SeverityLevelData[symptom.severityLevel - 1]
                                 ?.level

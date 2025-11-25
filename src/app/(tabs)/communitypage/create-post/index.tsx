@@ -2,6 +2,7 @@ import { useGetHashtag } from "@/src/api_services/postsApi/postQuery";
 import { useCreatePostApi } from "@/src/api_services/postsApi/postsMutation";
 import { useGetUser } from "@/src/api_services/userApi/userQuery";
 import CommUploadImage from "@/src/components/community/CommUploadImage";
+import { GradientText } from "@/src/components/GradientText";
 import CustomInput from "@/src/custom-components/CustomInput";
 import Screen from "@/src/layout/Screen";
 import { getInitials } from "@/src/utils/getInitials";
@@ -79,9 +80,9 @@ const CreatePost = () => {
           {createPostMutation.isPending ? (
             <ActivityIndicator />
           ) : (
-            <Text className={`font-[PoppinsMedium] text-base text-primary `}>
+            <GradientText className="font-[PoppinsMedium] text-base">
               Next
-            </Text>
+            </GradientText>
           )}
         </TouchableOpacity>
       </View>
@@ -177,8 +178,8 @@ const CreatePost = () => {
           <Switch
             value={isAnonymous}
             onValueChange={setIsAnonymous}
-            trackColor={{ false: "#D1D5DB", true: "#A78BFA" }}
-            thumbColor={isAnonymous ? "#8553F3" : "#F3F4F6"}
+            trackColor={{ false: "#D1D5DB", true: "#B33288" }}
+            // thumbColor={isAnonymous ? "#8553F3" : "#F3F4F6"}
             ios_backgroundColor="#D1D5DB"
           />
         </View>
@@ -199,18 +200,20 @@ const CreatePost = () => {
                 key={`${tag}-${index}`}
                 onPress={() => toggleTag(tag)}
                 className={`px-4 py-2 rounded-full border ${
-                  isSelected
-                    ? "border-[#8553F3] bg-[#F3F0FF]"
-                    : "border-gray-300 bg-white"
+                  isSelected ? "border-[#B33288] " : "border-gray-300 bg-white"
                 }`}
               >
-                <Text
-                  className={`font-[PoppinsRegular] text-sm ${
-                    isSelected ? "text-[#8553F3]" : "text-gray-600"
-                  }`}
-                >
-                  {tag}
-                </Text>
+                {isSelected ? (
+                  <GradientText className="font-[PoppinsRegular] text-sm ">
+                    {tag}
+                  </GradientText>
+                ) : (
+                  <Text
+                    className={`font-[PoppinsRegular] text-sm text-gray-600 `}
+                  >
+                    {tag}
+                  </Text>
+                )}
               </TouchableOpacity>
             );
           })}

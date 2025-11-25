@@ -26,7 +26,7 @@ const CommUploadImage = ({ setNotePublicUrls, notePublicUrls }: any) => {
     // keep track of only URLs
   };
 
-  console.log("notePublicUrls", notePublicUrls);
+  // console.log("notePublicUrls", notePublicUrls);
 
   //UPLOADING
   const {
@@ -113,7 +113,7 @@ const CommUploadImage = ({ setNotePublicUrls, notePublicUrls }: any) => {
               onPress={handleImagePick}
             >
               <View className="">
-                <Entypo name="image-inverted" size={15} color="#8A3FFC" />
+                <Entypo name="image-inverted" size={15} color="#B33288" />
               </View>
               <Text className=" text-sm font-[PoppinsMedium] mx-2">
                 Add image

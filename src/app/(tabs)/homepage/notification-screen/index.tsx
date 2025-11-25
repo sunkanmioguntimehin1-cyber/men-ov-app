@@ -4,15 +4,15 @@ import { useUpdateNotificationDetails } from "@/src/api_services/notificationApi
 import { useGetNotificationsApi } from "@/src/api_services/notificationApi/notificationQuery";
 import SafeScreen from "@/src/components/SafeScreen";
 import { Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
-import { useRouter } from "expo-router";
 import { useNavigation } from "@react-navigation/native";
+import { useRouter } from "expo-router";
 import React from "react";
 import {
-    ActivityIndicator,
-    ScrollView,
-    Text,
-    TouchableOpacity,
-    View,
+  ActivityIndicator,
+  ScrollView,
+  Text,
+  TouchableOpacity,
+  View,
 } from "react-native";
 
 const NotificationScreen = () => {
@@ -20,7 +20,7 @@ const NotificationScreen = () => {
   const navigation = useNavigation();
 
   const getNotificationsDetails = useGetNotificationsApi();
-  const updateNotificationData = useUpdateNotificationDetails()
+  const updateNotificationData = useUpdateNotificationDetails();
 
   console.log("getNotificationsDetails", getNotificationsDetails?.data?.data);
 
@@ -60,9 +60,9 @@ const NotificationScreen = () => {
     return <MaterialCommunityIcons name={iconName} size={size} color={color} />;
   };
 
-  const handleUnread = (notificationId:string)=>{
-updateNotificationData.mutate(notificationId);
-  }
+  const handleUnread = (notificationId: string) => {
+    updateNotificationData.mutate(notificationId);
+  };
 
   return (
     <SafeScreen className="bg-white">
@@ -85,7 +85,14 @@ updateNotificationData.mutate(notificationId);
           Notification
         </Text>
 
-        <TouchableOpacity className="p-1">
+        <TouchableOpacity
+          className="p-1"
+          onPress={() =>
+            router.push(
+              "/(tabs)/homepage/notification-screen/notification-settings"
+            )
+          }
+        >
           <Ionicons name="options-outline" size={24} color="black" />
         </TouchableOpacity>
       </View>

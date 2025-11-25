@@ -81,7 +81,7 @@ export const ToggleSwitch = ({
       onPress={onToggle}
       style={[
         styles.container,
-        { backgroundColor: isOn ? "#8A3FFC" : "#D1D5DB" }, // purple vs gray
+        { backgroundColor: isOn ? "#B33288" : "#D1D5DB" }, // purple vs gray
       ]}
     >
       <Animated.View

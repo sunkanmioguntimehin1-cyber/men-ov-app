@@ -17,6 +17,7 @@ import KeyboardAwareScreen from "@/src/layout/KeyboardAwareScreen";
 import { Ionicons, MaterialIcons } from "@expo/vector-icons";
 import BottomSheet from "@gorhom/bottom-sheet";
 import { format } from "date-fns";
+import { LinearGradient } from "expo-linear-gradient";
 import { useRouter } from "expo-router";
 import React, { useMemo } from "react";
 import { FormProvider, useForm } from "react-hook-form";
@@ -39,6 +40,7 @@ const PersonalInfoForm = () => {
   const [currentIndex, setCurrentIndex] = React.useState<number>(0);
   const [selectedDate, setSelectedDate] = React.useState<Date | any>(null);
   const [selected, setSelected] = React.useState<Item | null>(null);
+  const [userAddress, setUserAddress] = React.useState<string>("");
 
   //menstrual states
   const [periodsStoppedAnswer, setPeriodsStoppedAnswer] = React.useState<
@@ -124,10 +126,16 @@ const PersonalInfoForm = () => {
 
   // Function to validate current step before proceeding
   const validateCurrentStep = () => {
+    const values = formMethods.getValues();
     switch (currentIndex) {
       case 0: // Personal Information
         // Check if required fields are filled for first step
-        return true; // Form validation will handle this
+        return (
+          !!selectedDate &&
+          !!selected &&
+          !!(values.fullname || getUserData?.data?.fullname) &&
+          !!(values.address || getUserData?.data?.address)
+        );// Form validation will handle this
       case 1: // Menstrual History
         return firstPeriod && lastDateValue && periodsStoppedAnswer !== null;
       case 2: // Surgical & Reproductive History
@@ -190,7 +198,7 @@ const PersonalInfoForm = () => {
   const isNextButtonDisabled = () => {
     // For first step, use form validation
     if (currentIndex === 0) {
-      return editUserProfile.isPending;
+      return editUserProfile.isPending || !validateCurrentStep();
     }
 
     // For last step, check if API call is pending
@@ -345,7 +353,56 @@ const PersonalInfoForm = () => {
             {isFirstStep && <View className="w-14 h-14" />}
 
             {/* Next Button */}
-            <TouchableOpacity
+            {isNextButtonDisabled() ? (
+              <TouchableOpacity
+                onPress={
+                  currentIndex === 0
+                    ? handleSubmit(handleNext)
+                    : () => handleNext({})
+                }
+                disabled={isNextButtonDisabled()}
+                className={`items-center justify-center w-14 h-14 rounded-full bg-primaryLight `}
+              >
+                <Ionicons
+                  name="arrow-forward"
+                  size={24}
+                  color={isNextButtonDisabled() ? "#B0B0B0" : "#fff"}
+                />
+              </TouchableOpacity>
+            ) : (
+              <TouchableOpacity
+                onPress={
+                  currentIndex === 0
+                    ? handleSubmit(handleNext)
+                    : () => handleNext({})
+                }
+                // disabled={isNextButtonDisabled()}
+                // className={`items-center justify-center w-14 h-14 rounded-full ${
+                //   isNextButtonDisabled() ? "bg-primaryLight" : "bg-primary"
+                // }`}
+              >
+                <LinearGradient
+                  colors={["#6B5591", "#6E3F8C", "#853385", "#9F3E83"]}
+                  start={{ x: 0, y: 0 }}
+                  end={{ x: 1, y: 1 }}
+                  // className="items-center justify-center py-4"
+                  style={{
+                    minHeight: 56,
+                    width: 56,
+                    alignItems: "center",
+                    justifyContent: "center",
+                    borderRadius: 100,
+                  }}
+                >
+                  <Ionicons
+                    name="arrow-forward"
+                    size={24}
+                    color={isNextButtonDisabled() ? "#B0B0B0" : "#fff"}
+                  />
+                </LinearGradient>
+              </TouchableOpacity>
+            )}
+            {/* <TouchableOpacity
               onPress={
                 currentIndex === 0
                   ? handleSubmit(handleNext)
@@ -356,12 +413,13 @@ const PersonalInfoForm = () => {
                 isNextButtonDisabled() ? "bg-primaryLight" : "bg-primary"
               }`}
             >
-              <Ionicons
-                name="arrow-forward"
-                size={24}
-                color={isNextButtonDisabled() ? "#B0B0B0" : "#fff"}
-              />
-            </TouchableOpacity>
+           
+                <Ionicons
+                  name="arrow-forward"
+                  size={24}
+                  color={isNextButtonDisabled() ? "#B0B0B0" : "#fff"}
+                />
+            </TouchableOpacity> */}
           </View>
         </FormProvider>
 

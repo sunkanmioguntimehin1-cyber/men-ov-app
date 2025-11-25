@@ -1,4 +1,5 @@
 import { useForgotPasswordApi } from "@/src/api_services/authApi/authMutation";
+import { GradientText } from "@/src/components/GradientText";
 import CustomButton from "@/src/custom-components/CustomButton";
 import CustomInput from "@/src/custom-components/CustomInput";
 import Screen from "@/src/layout/Screen";
@@ -8,7 +9,7 @@ import { Image } from "expo-image";
 import { router } from "expo-router";
 import React from "react";
 import { Controller, useForm } from "react-hook-form";
-import { Keyboard, Text, TouchableOpacity, View } from "react-native";
+import { Keyboard, TouchableOpacity, View } from "react-native";
 
 const EnterEmail = () => {
   const setUserRegOtps = useAuthStore().setUserRegOtps;
@@ -24,21 +25,19 @@ const EnterEmail = () => {
     },
   });
 
+  const onSubmit = (data: any) => {
+    if (data) {
+      Keyboard.dismiss();
+      forgotPasswordEmail.mutate({
+        email: data?.email.toLowerCase(),
+      });
+      setUserRegOtps({
+        email: data.email.toLowerCase(),
+      });
+    }
+  };
 
-
-    const onSubmit = (data: any) => {
-      if (data) {
-        Keyboard.dismiss();
-        forgotPasswordEmail.mutate({
-          email: data?.email.toLowerCase(),
-        });
-        setUserRegOtps({
-          email: data.email.toLowerCase(),
-        });
-      }
-    };
-
-    const forgotPasswordEmail = useForgotPasswordApi();
+  const forgotPasswordEmail = useForgotPasswordApi();
   return (
     <Screen className="">
       <TouchableOpacity
@@ -52,7 +51,7 @@ const EnterEmail = () => {
       <View className=" items-center mb-20">
         <View className=" w-16 h-14">
           <Image
-            source={require("@/assets/images/logo.png")}
+            source={require("@/assets/images/Menovia-Logo-Icon.png")}
             style={{
               height: "100%",
               width: "100%",
@@ -64,9 +63,9 @@ const EnterEmail = () => {
           />
         </View>
         <View>
-          <Text className=" font-[PoppinsMedium] text-primary text-xl">
+          <GradientText className="font-[PoppinsMedium] text-xl mt-5">
             Forgot Password
-          </Text>
+          </GradientText>
         </View>
       </View>
       <View className="p-8 flex-1">

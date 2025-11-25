@@ -1,8 +1,13 @@
-import { useLikeArticleApi, useUnLikeArticleApi } from "@/src/api_services/articleApi/articleMutation";
+import {
+  useLikeArticleApi,
+  useUnLikeArticleApi,
+} from "@/src/api_services/articleApi/articleMutation";
 import {
   useGetAllToics,
   useGetExplore,
 } from "@/src/api_services/exploreApi/exploreQuery";
+import { GradientText } from "@/src/components/GradientText";
+import { GradientIoniconsIcon } from "@/src/custom-components/GradientIcon";
 import LoadingOverlay from "@/src/custom-components/LoadingOverlay";
 import Screen from "@/src/layout/Screen";
 import { EvilIcons, Fontisto, Ionicons } from "@expo/vector-icons";
@@ -21,7 +26,7 @@ import {
   ScrollView,
   Text,
   TouchableOpacity,
-  View,
+  View
 } from "react-native";
 
 const { width } = Dimensions.get("window");
@@ -31,22 +36,21 @@ const ExplorePage = () => {
 
   const getAllExploreToics = useGetAllToics();
   const getExploreData = useGetExplore();
-  const likeArticleApi =  useLikeArticleApi()
+  const likeArticleApi = useLikeArticleApi();
   const unLikeArticleApi = useUnLikeArticleApi();
 
-
   //!  working in porgress...
-   const handleLikeAndUnLike = (item: any) => {
-     if (item.isLiked) {
-       unLikeArticleApi.mutate({
-         id: item._id,
-       });
-     } else {
-       likeArticleApi.mutate({
-         id: item._id,
-       });
-     }
-   };
+  const handleLikeAndUnLike = (item: any) => {
+    if (item.isLiked) {
+      unLikeArticleApi.mutate({
+        id: item._id,
+      });
+    } else {
+      likeArticleApi.mutate({
+        id: item._id,
+      });
+    }
+  };
 
   const handleSearchResult = (item: string) => {
     router.push({
@@ -109,8 +113,9 @@ const ExplorePage = () => {
                 // justifyContent: "center",
               }}
             >
-              <Text className=" text-base">{post.author}</Text>
-              {/* <Text className=" text-lg">20 Jan 2025</Text> */}
+              <GradientText className="text-base font-[PoppinsRegular]">
+                {post.author}
+              </GradientText>
             </BlurView>
           </ImageBackground>
         </View>
@@ -130,7 +135,7 @@ const ExplorePage = () => {
           </View>
 
           <View className="flex-row items-center">
-            {/* <Feather name="share-2" size={16} color="#6B7280" /> */}
+           
             <Fontisto name="share-a" size={16} color="black" />
             <Text className="text-gray-500 text-xs ml-1">{post.shares}</Text>
           </View>
@@ -160,12 +165,16 @@ const ExplorePage = () => {
             {/* Search Bar */}
 
             <TouchableOpacity
-              className="bg-white rounded-2xl px-4 py-3 flex-row items-center mb-6 shadow-sm"
+              className="bg-white rounded-2xl px-4 py-3 flex-row border border-[#B33288] items-center mb-6 shadow-sm"
               onPress={() => {
                 router.push("/explorepage/searchpage");
               }}
             >
-              <Ionicons name="search" size={20} color="#9B9B9B" />
+              <GradientIoniconsIcon
+                name="search"
+                size={20}
+                gradientColors={["#6B5591", "#6E3F8C", "#853385", "#9F3E83"]}
+              />
               <Text className="text-[#9B9B9B] mx-2">
                 Search symptoms, tips, community posts
               </Text>

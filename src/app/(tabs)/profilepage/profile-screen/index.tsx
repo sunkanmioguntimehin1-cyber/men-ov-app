@@ -5,6 +5,7 @@ import {
   useGetIntakeDetails,
   useGetUser,
 } from "@/src/api_services/userApi/userQuery";
+import { GradientText } from "@/src/components/GradientText";
 import LoadingOverlay from "@/src/custom-components/LoadingOverlay";
 import Screen from "@/src/layout/Screen";
 import { getInitials } from "@/src/utils/getInitials";
@@ -142,9 +143,12 @@ export default function ProfilePage() {
         </View>
 
         {/* Profile Section */}
-        <View className="items-center px-6" style={{
-          paddingVertical: Platform.OS === "ios" ? 40 : 70
-        }}>
+        <View
+          className="items-center px-6"
+          style={{
+            paddingVertical: Platform.OS === "ios" ? 40 : 70,
+          }}
+        >
           {/* Avatar */}
           <View className="w-32 h-32 rounded-full bg-purple-200 items-center justify-center mb-4">
             <View className="w-28 h-28 rounded-full bg-pink-300 items-center justify-center">
@@ -201,15 +205,16 @@ export default function ProfilePage() {
                 router.push("/(tabs)/homepage/personal-info");
               }}
             >
-              <Text className="text-primary font-[PoppinsMedium] text-center p-4">
+              <GradientText className="font-[PoppinsMedium] text-center p-4">
                 Health Information
-              </Text>
+              </GradientText>
             </TouchableOpacity>
 
             <TouchableOpacity className="bg-white border border-primary rounded-xl  flex-1 items-center justify-center">
-              <Text className="text-primary font-[PoppinsMedium] text-center p-4">
+             
+              <GradientText className="font-[PoppinsMedium] text-center p-4">
                 Your Meds
-              </Text>
+              </GradientText>
             </TouchableOpacity>
           </View>
         </View>
@@ -239,10 +244,12 @@ export default function ProfilePage() {
             const date = new Date(item?.article?.updatedAt);
             const formattedDate = format(date, "do MMMM yyyy");
 
-            //like icon 
-            const isLiked = item.article.likedBy.find((id:string)=>id===getUserData?.data?.id)
+            //like icon
+            const isLiked = item.article.likedBy.find(
+              (id: string) => id === getUserData?.data?.id
+            );
 
-            console.log('isLiked',isLiked)
+            console.log("isLiked", isLiked);
             return (
               <TouchableOpacity
                 key={item.id}

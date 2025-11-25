@@ -1029,6 +1029,7 @@
 import { useTalkToChatAi } from "@/src/api_services/chatApi/chatMutation";
 import { useGetChatHistory } from "@/src/api_services/chatApi/chatQuery";
 import CustomInput from "@/src/custom-components/CustomInput";
+import { GradientMaterialIcon } from "@/src/custom-components/GradientIcon";
 import { TypingDots } from "@/src/custom-components/TypingDots";
 import Screen from "@/src/layout/Screen";
 import { MaterialIcons } from "@expo/vector-icons";
@@ -1347,25 +1348,25 @@ const ChatWithAi = () => {
               className="rounded-2xl rounded-tl-none overflow-hidden"
               style={{ maxWidth: bubbleMaxWidth }}
             >
-              <LinearGradient
-                colors={["#6B5591", "#6E3F8C", "#853385", "#9F3E83"]}
-                start={{ x: 0, y: 0 }}
-                end={{ x: 1, y: 1 }}
-                // className="px-4 py-3"
-                style={{
-                  padding: 16,
-                }}
-              >
-                {item.id === "typing-indicator" ? (
-                  <View className="flex-row space-x-1 py-1 items-center">
-                    <TypingDots />
-                  </View>
-                ) : (
+              {item.id === "typing-indicator" ? (
+                <View className="flex-row space-x-1 py-1 items-center">
+                  <TypingDots />
+                </View>
+              ) : (
+                <LinearGradient
+                  colors={["#6B5591", "#6E3F8C", "#853385", "#9F3E83"]}
+                  start={{ x: 0, y: 0 }}
+                  end={{ x: 1, y: 1 }}
+                  // className="px-4 py-3"
+                  style={{
+                    padding: 16,
+                  }}
+                >
                   <Text className="text-base font-[PoppinsRegular] text-white">
                     {item.text}
                   </Text>
-                )}
-              </LinearGradient>
+                </LinearGradient>
+              )}
             </View>
           ) : (
             // User message (regular)
@@ -1424,21 +1425,22 @@ const ChatWithAi = () => {
               </TouchableOpacity>
 
               <Text className="text-lg font-[PoppinsSemiBold] text-black">
-                Chat with Ziena
+                Chat with Ziena™
               </Text>
 
               <View className="w-10" />
             </View>
 
             <View className="items-center px-6 ">
-              <View className=" w-40 h-40">
+              <View className=" w-32 h-32 border border-[#EAEAEA] rounded-full overflow-hidden">
                 <Image
-                  source={require("@/assets/images/xena-1.png")}
+                  source={require("@/assets/images/ziena-ai.png")}
                   style={{
                     width: "100%",
                     height: "100%",
                     borderRadius: 100,
                   }}
+                  contentFit="contain"
                 />
               </View>
               <View className=" ml-3">
@@ -1520,7 +1522,7 @@ const ChatWithAi = () => {
               <View className="flex-row items-center space-x-2">
                 <View className="flex-1 mx-2">
                   <CustomInput
-                    placeholder="Type a message..."
+                    placeholder="Ask Ziena™..."
                     value={message}
                     onChangeText={setMessage}
                     primary
@@ -1537,17 +1539,23 @@ const ChatWithAi = () => {
                   }
                   className={`w-12 h-12  rounded-full items-center justify-center ${
                     message.trim() && !isLoading && !sendMessage.isPending
-                      ? "bg-primary"
-                      : "bg-primaryLight"
+                      ? "bg-primaryLight"
+                      : " bg-[#F4EBFF]"
                   }`}
                 >
                   {sendMessage.isPending ? (
                     <ActivityIndicator size="small" color="white" />
                   ) : (
-                    <MaterialIcons
+                   
+                    <GradientMaterialIcon
                       name="send"
                       size={20}
-                      color={message.trim() && !isLoading ? "white" : "#B0B0B0"}
+                      gradientColors={[
+                        "#6B5591",
+                        "#6E3F8C",
+                        "#853385",
+                        "#9F3E83",
+                      ]}
                     />
                   )}
                 </TouchableOpacity>

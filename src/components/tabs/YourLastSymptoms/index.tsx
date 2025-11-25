@@ -114,6 +114,7 @@
 
 import { useGetLogApi } from "@/src/api_services/logApi/logQuery";
 import { rS } from "@/src/lib/responsivehandler";
+import { truncateSimple } from "@/src/lib/truncateSimple";
 import { Image } from "expo-image";
 import { LinearGradient } from "expo-linear-gradient";
 import { useRouter } from "expo-router";
@@ -133,11 +134,11 @@ const YourLastSymptoms = ({ handleOpenLastSymptoms }: any) => {
   const symptomsData = [
     {
       name: "Back Pain",
-      img: require("@/assets/images/backpain.png"),
+      img: require("@/assets/images/backpain2.png"),
     },
     {
       name: "Headache",
-      img: require("@/assets/images/headache.png"),
+      img: require("@/assets/images/headache2.png"),
     },
     {
       name: "Heart Palpitations",
@@ -233,7 +234,7 @@ const YourLastSymptoms = ({ handleOpenLastSymptoms }: any) => {
 
                 <Text className="text-center text-[8px] text-white font-[PoppinsMedium]">
                   {item.recommendation
-                    ? item.recommendation
+                    ? `${truncateSimple(item.recommendation, 22)}`
                     : "Don't forget to hydrate"}
                 </Text>
               </LinearGradient>

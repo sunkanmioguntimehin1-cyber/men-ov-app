@@ -1,6 +1,7 @@
 import CustomSelectData from "@/src/custom-components/CustomSelectData";
-import { Feather } from "@expo/vector-icons";
+import { GradientFeatherIcon } from "@/src/custom-components/GradientIcon";
 import { format, isValid } from "date-fns";
+import { LinearGradient } from "expo-linear-gradient";
 import React from "react";
 import { Text, TouchableOpacity, View } from "react-native";
 import CycleTrackingAddnote from "./cycleTrackingAddnote";
@@ -48,10 +49,21 @@ const LastCycleHistory = ({
       </Text>
       <View className="my-2">
         <Text>
-          Started: {result} - Lasted:{getCycleTrackingLatest.data?.duration} days
+          Started: {result} - Lasted:{getCycleTrackingLatest.data?.duration}{" "}
+          days
         </Text>
       </View>
-      <View className="h-[0.5] bg-slate-400 mb-3" />
+      {/* <View className="h-[0.5] bg-slate-400 mb-3" /> */}
+      <LinearGradient
+        colors={["#5B4591", "#B33288"]}
+        start={{ x: 0, y: 0 }}
+        end={{ x: 1, y: 1 }}
+        // className="items-center justify-center py-4"
+        style={{
+          minHeight: 0.5,
+          marginBottom: 12,
+        }}
+      ></LinearGradient>
 
       <View>
         <CustomSelectData
@@ -62,7 +74,12 @@ const LastCycleHistory = ({
           value={selectedDate}
           icon={
             <TouchableOpacity onPress={handleDateBottomSheetOpen}>
-              <Feather name="calendar" size={24} className="!text-primary" />
+              {/* <Feather name="calendar" size={24} className="!text-primary" /> */}
+              <GradientFeatherIcon
+                name="calendar"
+                size={24}
+                gradientColors={["#6B5591", "#6E3F8C", "#853385", "#9F3E83"]}
+              />
             </TouchableOpacity>
           }
         />

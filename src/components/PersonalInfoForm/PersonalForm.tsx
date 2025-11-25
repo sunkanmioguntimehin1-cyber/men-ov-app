@@ -5,10 +5,7 @@ import { AntDesign } from "@expo/vector-icons";
 import React from "react";
 import { Controller } from "react-hook-form";
 import { ScrollView, Text, TouchableOpacity, View } from "react-native";
-
-
-
-
+import { GradientText } from "../GradientText";
 
 const PersonalForm = ({
   handleDateBottomSheetOpen,
@@ -30,10 +27,11 @@ const PersonalForm = ({
     <>
       <View>
         <View className=" items-center my-5">
-          <Text className=" text-xl text-primary font-[PoppinsSemiBold]">
+          <GradientText className="font-[PoppinsMedium] text-xl">
             Personal Information
-          </Text>
-          <Text className=" text-base text-primary font-[PoppinsRegular] my-2">
+          </GradientText>
+
+          <Text className="text-base font-[PoppinsRegular] my-2">
             Your data will be safe with us.
           </Text>
         </View>
