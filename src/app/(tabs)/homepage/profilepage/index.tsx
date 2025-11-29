@@ -33,7 +33,7 @@ export default function ProfilePage() {
       title: "Profile",
       icon: <AntDesign name="right" size={24} color="black" />,
       onPress: () => {
-        router.push("/profilepage/profile-screen");
+        router.push("/homepage/profilepage/profile-screen");
       },
     },
     {
@@ -41,7 +41,7 @@ export default function ProfilePage() {
       title: "Summary",
       icon: <AntDesign name="right" size={24} color="black" />,
       onPress: () => {
-        router.push("/profilepage/summary-screen");
+        router.push("/homepage/profilepage/summary-screen");
       },
     },
   ];
@@ -77,9 +77,9 @@ export default function ProfilePage() {
 
   const handleRouter = (item: string) => {
     if (item === "Notifications") {
-      router.push("/profilepage/notifications");
+      router.push("/homepage/profilepage/notifications");
     } else if (item === "Contact Us") {
-       router.push({ pathname: "/profilepage/contact-us" });
+       router.push("/homepage/profilepage/contact-us");
     } else if (item === "Share App") {
       //  router.push({ pathname: "/settings/about" });
     } else if (item === "Delete Account") {

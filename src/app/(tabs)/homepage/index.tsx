@@ -193,7 +193,7 @@ export default function HomePage() {
 
               <TouchableOpacity
                 className="w-9 h-9 rounded-full overflow-hidden"
-                onPress={() => router.push("/(tabs)/profilepage")}
+                onPress={() => router.push("/(tabs)/homepage/profilepage")}
               >
                 {getUserData?.data?.picture ? (
                   <Image
