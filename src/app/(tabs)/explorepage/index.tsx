@@ -282,7 +282,7 @@ import { GradientText } from "@/src/components/GradientText";
 import { GradientIoniconsIcon } from "@/src/custom-components/GradientIcon";
 import LoadingOverlay from "@/src/custom-components/LoadingOverlay";
 import Screen from "@/src/layout/Screen";
-import { EvilIcons, Fontisto, Ionicons } from "@expo/vector-icons";
+import { EvilIcons, Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
 import { BlurView } from "expo-blur";
 import { Image } from "expo-image";
 import { LinearGradient } from "expo-linear-gradient";
@@ -293,6 +293,7 @@ import {
   Dimensions,
   FlatList,
   ImageBackground,
+  Platform,
   Text,
   TouchableOpacity,
   View,
@@ -390,17 +391,22 @@ const ExplorePage = () => {
         <View className="flex-row justify-between">
           <View className="flex-row">
             <View className="flex-row items-center mr-4">
-              <EvilIcons name="like" size={20} color="black" />
+              <EvilIcons name="like" size={20} color="#7B4287" />
               <Text className="text-gray-500 text-xs">{post.likes}</Text>
             </View>
             <View className="flex-row items-center mr-4">
-              <Ionicons name="chatbubble-outline" size={16} color="#6B7280" />
+              <Ionicons name="chatbubble-outline" size={16} color="#7B4287" />
               <Text className="text-gray-500 text-xs">{post.comments}</Text>
             </View>
           </View>
 
           <View className="flex-row items-center">
-            <Fontisto name="share-a" size={16} color="black" />
+            {/* <Fontisto name="share-a" size={16} color="black" /> */}
+            <MaterialCommunityIcons
+              name="repeat-variant"
+              size={20}
+              color="#7B4287"
+            />
             <Text className="text-gray-500 text-xs ml-1">{post.shares}</Text>
           </View>
         </View>
@@ -544,7 +550,7 @@ const ExplorePage = () => {
             source={require("@/assets/images/Exploreimg.png")}
             style={{
               // flex: 1,
-              height: "130%",
+              height: Platform.OS === "ios"? "118%": "125%",
               width: "100%",
             }}
             resizeMode="cover"
@@ -562,7 +568,7 @@ const ExplorePage = () => {
               keyExtractor={(item, index) => `${item.type}-${index}`}
               renderItem={renderItem}
               showsVerticalScrollIndicator={false}
-              contentContainerStyle={{ paddingBottom: 80 }}
+              contentContainerStyle={{ paddingBottom: 250 }}
             />
           </ImageBackground>
         </View>

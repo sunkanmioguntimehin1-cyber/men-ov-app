@@ -14,20 +14,16 @@ import {
 import LoadingOverlay from "@/src/custom-components/LoadingOverlay";
 import Screen from "@/src/layout/Screen";
 import { getInitials } from "@/src/utils/getInitials";
-import {
-  Feather
-} from "@expo/vector-icons";
 import { format } from "date-fns";
 import { Image } from "expo-image";
 import { useRouter } from "expo-router";
 import React from "react";
 import {
   ActivityIndicator,
-  Alert,
   FlatList,
   Text,
   TouchableOpacity,
-  View,
+  View
 } from "react-native";
 
 const Communitypage = () => {
@@ -62,22 +58,7 @@ const Communitypage = () => {
     }
   };
 
-  const openWebView = (itemUrl: string) => {
-    try {
-      const uri = itemUrl;
-
-      if (!uri) {
-        Alert.alert("No  article Url found");
-        return;
-      }
-      router.push({
-        pathname: "/profilepage/profile-screen/recommendations-webview",
-        params: { item: JSON.stringify(uri) },
-      });
-    } catch (error) {
-      Alert.alert("Failed to fetch article Url");
-    }
-  };
+ 
 
   const handleSaveAndUnsave = (item: any) => {
     console.log(item, "5555");
@@ -345,9 +326,19 @@ const Communitypage = () => {
                 </View>
 
                 <View className="flex-row items-center">
-                  <Feather name="share" size={16} color="gray" />
+                  {/* <Feather name="share" size={16} color="gray" /> */}
+                  <GradientMaterialCommunityIcons
+                    name="repeat-variant"
+                    size={16}
+                    gradientColors={[
+                      "#6B5591",
+                      "#6E3F8C",
+                      "#853385",
+                      "#9F3E83",
+                    ]}
+                  />
                   <Text className="text-xs text-gray-600 ml-1">
-                    {item?.shares} shares
+                    {item?.shares} reposts
                   </Text>
                 </View>
               </View>

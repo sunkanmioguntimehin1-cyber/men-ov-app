@@ -24,6 +24,7 @@ function getTabBarVisibility(route: any) {
     "comments",
     "contact-us",
     "notification-screen",
+    "profilepage",
   ];
 
   // Check if the current route or any part of it matches hidden routes
@@ -117,7 +118,7 @@ export default function TabsLayout() {
         })}
       />
       <Tabs.Screen
-        name="profilepage"
+        name="summarypage"
         options={({ route }) => ({
           title: "Insights",
           tabBarIcon: ({ color, focused }) => (
