@@ -1,9 +1,8 @@
-
-
 import { DisclaimerSheet } from "@/src/components/DisclaimerSheet";
+import { GradientText } from "@/src/components/GradientText";
 import BottomSheetScreen from "@/src/custom-components/BottomSheetScreen";
 import BottomSheet from "@gorhom/bottom-sheet";
-import { ImageBackground } from "expo-image";
+import { Image, ImageBackground } from "expo-image";
 import { LinearGradient } from "expo-linear-gradient";
 import { useRouter } from "expo-router";
 import React, { useMemo } from "react";
@@ -13,31 +12,31 @@ export default function GetStarted() {
   const router = useRouter();
   const [storeData, setStoreData] = React.useState("");
 
-    const snapPoints = useMemo(() => ["30%", "50%", "90%"], []);
-  
-    const DisclaimerBottomSheetRef = React.useRef<BottomSheet>(null);
-    const handleDisclaimerBottomSheetOpen = (data:string) =>{
-      if(data === 'signin'){
-        setStoreData('signin');
-        DisclaimerBottomSheetRef.current?.expand();
-      }else{
-        setStoreData('signup');
-        DisclaimerBottomSheetRef.current?.expand();
-      }
-      
+  const snapPoints = useMemo(() => ["30%", "50%", "90%"], []);
+
+  const DisclaimerBottomSheetRef = React.useRef<BottomSheet>(null);
+  const handleDisclaimerBottomSheetOpen = (data: string) => {
+    if (data === "signin") {
+      setStoreData("signin");
+      DisclaimerBottomSheetRef.current?.expand();
+    } else {
+      setStoreData("signup");
+      DisclaimerBottomSheetRef.current?.expand();
     }
-    const handleDisclaimerBottomSheetClose = () =>
-      DisclaimerBottomSheetRef.current?.close();
+  };
+  const handleDisclaimerBottomSheetClose = () =>
+    DisclaimerBottomSheetRef.current?.close();
 
   return (
     <View className="flex-1">
       <ImageBackground
-        source={require("@/assets/images/getstarted.png")}
+        source={require("@/assets/images/getstarted01.png")}
         style={{ flex: 1 }}
         contentFit="cover"
       >
-        <View className="mt-safe-or-10 items-center flex-1">
-          {/* <View className="w-64 h-48">
+        {/* <View className=" flex-1  " />
+        <View className=" items-center justify-center flex-1">
+          <View className="w-64 h-48">
             <Image
               source={require("@/assets/images/Menovia-Logo-Vertical.png")}
               style={{
@@ -48,12 +47,29 @@ export default function GetStarted() {
               contentFit="fill"
               onError={(error) => console.log("Image error:", error)}
             />
-          </View> */}
+          </View>
+        </View> */}
+        {/* Logo positioned at top-middle */}
+        <View className="items-center justify-center pt-24 ">
+          <View className="w-64 h-48">
+            <Image
+              source={require("@/assets/images/Menovia-Logo-Vertical.png")}
+              style={{
+                height: "100%",
+                width: "100%",
+                alignSelf: "center",
+              }}
+              contentFit="fill"
+              onError={(error) => console.log("Image error:", error)}
+            />
+          </View>
         </View>
 
-        <View className="flex-1 mt-80" />
+        {/* <View className="flex-1 mt-80" /> */}
+        {/* Spacer to push button to bottom */}
+        <View className="flex-1" />
 
-        <View className="p-8 mt-20 flex-1 items-center ">
+        <View className="px-8 pb-24 items-center">
           <TouchableOpacity
             className=" w-60 rounded-xl overflow-hidden"
             onPress={() => handleDisclaimerBottomSheetOpen("signup")}
@@ -77,16 +93,16 @@ export default function GetStarted() {
             </LinearGradient>
           </TouchableOpacity>
 
-          <View className="flex-row justify-center items-center mt-4">
+          <View className="flex-row my-2 justify-center items-center">
             <Text className="text-white text-sm">
               Already have an account?{" "}
             </Text>
             <TouchableOpacity
               onPress={() => handleDisclaimerBottomSheetOpen("signin")}
             >
-              <Text className="text-[#712A87] font-[PoppinsMedium] text-sm underline">
+              <GradientText className="font-[PoppinsMedium] text-base underline">
                 Sign In
-              </Text>
+              </GradientText>
             </TouchableOpacity>
           </View>
         </View>

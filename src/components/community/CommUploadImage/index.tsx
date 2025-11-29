@@ -8,6 +8,7 @@ import * as ImagePicker from "expo-image-picker";
 import React from "react";
 import {
   ActivityIndicator,
+
   ScrollView,
   Text,
   TouchableOpacity,
@@ -79,7 +80,7 @@ const CommUploadImage = ({ setNotePublicUrls, notePublicUrls }: any) => {
     <ScrollView>
       <View className="my-5 ">
         {imageSelected ? (
-          <View className="w-full h-56 border border-primary  items-center justify-center rounded-2xl p-4">
+          <View className="w-full h-80 border border-primary  items-center justify-center rounded-lg p-4">
             {ImgIsPending ? (
               <View>
                 <ActivityIndicator size={40} />
@@ -91,7 +92,7 @@ const CommUploadImage = ({ setNotePublicUrls, notePublicUrls }: any) => {
                     <Text>Upload Failed. Try Again.</Text>
                   </View>
                 ) : (
-                  <View className=" w-full h-56">
+                  <View className=" w-full h-80 relative overflow-hidden rounded-2xl ">
                     <Image
                       source={{ uri: storeData?.publicUrl }}
                       style={{ width: "100%", height: "100%" }}
