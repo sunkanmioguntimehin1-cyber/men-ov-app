@@ -9,15 +9,13 @@ import { useGetUser } from "@/src/api_services/userApi/userQuery";
 import {
   GradientFeatherIcon,
   GradientIoniconsIcon,
-  GradientMaterialCommunityIcons,
-  GradientMaterialIcon
+  GradientMaterialCommunityIcons
 } from "@/src/custom-components/GradientIcon";
 import LoadingOverlay from "@/src/custom-components/LoadingOverlay";
 import Screen from "@/src/layout/Screen";
 import { getInitials } from "@/src/utils/getInitials";
 import {
-  Feather,
-  MaterialIcons
+  Feather
 } from "@expo/vector-icons";
 import { format } from "date-fns";
 import { Image } from "expo-image";
@@ -157,9 +155,9 @@ const Communitypage = () => {
           </View>
         </View>
 
-        <TouchableOpacity className=" ">
+        {/* <TouchableOpacity className=" ">
           <MaterialIcons name="filter-list" size={24} color="black" />
-        </TouchableOpacity>
+        </TouchableOpacity> */}
       </TouchableOpacity>
       <View className=" h-0.5 bg-slate-200 my-2" />
 
@@ -189,6 +187,8 @@ const Communitypage = () => {
           const date = new Date(item?.updatedAt);
           const formattedDate = format(date, "do MMMM yyyy");
 
+          console.log(item, "itemmmm");
+
           return (
             <TouchableOpacity
               className="my-2"
@@ -197,17 +197,23 @@ const Communitypage = () => {
               {/* Recommendation Header */}
               <View className="flex-row items-center justify-between mb-4">
                 <View className="flex-row items-center">
-                  <View className="w-8 h-8 rounded-full bg-[#F4EBFF] items-center justify-center mr-3">
-                    <GradientMaterialIcon
-                      name="person"
-                      size={16}
-                      gradientColors={[
-                        "#6B5591",
-                        "#6E3F8C",
-                        "#853385",
-                        "#9F3E83",
-                      ]}
-                    />
+                  <View className="w-10 h-10 rounded-full bg-[#F4EBFF] items-center justify-center mr-3">
+                    {item.user?.picture ? (
+                      <Image
+                        source={{ uri: item?.user?.picture }}
+                        style={{
+                          width: 40,
+                          height: 40,
+                          borderRadius: 20,
+                        }}
+                      />
+                    ) : (
+                      <View className="w-full h-full bg-slate-300 rounded-full items-center justify-center">
+                        <Text className="text-black font-bold text-sm">
+                          {getInitials(item.user?.fullname)}
+                        </Text>
+                      </View>
+                    )}
                   </View>
                   <View>
                     <Text className="text-sm font-[PoppinsSemiBold] text-black">
@@ -270,7 +276,7 @@ const Communitypage = () => {
 
               {/* Embedded Image */}
               {item.images[0] && (
-                <TouchableOpacity className="w-full h-48 bg-gray-200 rounded-lg mb-4">
+                <TouchableOpacity className="w-full h-96 bg-gray-200 rounded-lg mb-4">
                   <Image
                     source={{ uri: item.images[0] }}
                     style={{
@@ -331,7 +337,7 @@ const Communitypage = () => {
                         "#9F3E83",
                       ]}
                     />
-                   
+
                     <Text className="text-xs text-gray-600 ml-1">
                       {item.commentCount} Comments
                     </Text>

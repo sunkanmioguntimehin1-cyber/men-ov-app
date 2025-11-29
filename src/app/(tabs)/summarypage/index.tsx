@@ -1,6 +1,6 @@
 import {
-  useCycleTrackingApi,
-  useGetLogApi,
+    useCycleTrackingApi,
+    useGetLogApi,
 } from "@/src/api_services/logApi/logQuery";
 import { useGetIntakeDetails } from "@/src/api_services/userApi/userQuery";
 import SafeScreen from "@/src/components/SafeScreen";
