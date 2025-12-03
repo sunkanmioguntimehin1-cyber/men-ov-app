@@ -44,7 +44,7 @@ export const getIntakeDetailsApi = async () => {
 
 export const deleteUser = async () => {
   try {
-    const res = await axiosInstance.delete(`/users/me`);
+    const res = await axiosInstance.delete(`/user/me`);
     return res.data;
   } catch (error) {
     console.error("DeleteUser:", error);

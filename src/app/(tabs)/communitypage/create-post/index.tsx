@@ -54,17 +54,20 @@ const CreatePost = () => {
     }
   };
 
-  const onSubmit = (data: any) => {
-    const requestedPayload = {
-      title: data?.title,
-      content: data?.content,
-      hashtags: selectedTags,
-      images: notePublicUrls,
-      isAnon: isAnonymous,
-    };
+ const onSubmit = (data: any) => {
+   const requestedPayload: any = {
+     content: data?.content,
+     hashtags: selectedTags,
+     images: notePublicUrls,
+     isAnon: isAnonymous,
+   };
 
-    createPostMutation.mutate(requestedPayload);
-  };
+   if (data?.title && data.title.length >= 3) {
+     requestedPayload.title = data.title;
+   }
+
+   createPostMutation.mutate(requestedPayload);
+ };
 
   return (
     <Screen scroll={true} className=" px-4 bg-white">
