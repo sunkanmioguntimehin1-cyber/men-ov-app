@@ -115,12 +115,12 @@ export default function ProfilePage() {
       <ImageBackground
         source={require("@/assets/images/AI.png")}
         style={{
-          height: "100%",
+          height: "110%",
           width: "100%",
         }}
         resizeMode="cover"
       >
-        <View className="flex-row items-center justify-between px-6">
+        <View className="flex-row items-center justify-between py-4 px-6">
           <TouchableOpacity
             onPress={() => {
               router.back();
@@ -135,7 +135,7 @@ export default function ProfilePage() {
 
           <TouchableOpacity
             onPress={() => {
-              router.push("/profilepage/profile-screen/edit-profile");
+              router.push("/homepage/profilepage/profile-screen/edit-profile");
             }}
           >
             <Feather name="edit" size={24} color="black" />
@@ -211,7 +211,6 @@ export default function ProfilePage() {
             </TouchableOpacity>
 
             <TouchableOpacity className="bg-white border border-primary rounded-xl  flex-1 items-center justify-center">
-             
               <GradientText className="font-[PoppinsMedium] text-center p-4">
                 Your Meds
               </GradientText>

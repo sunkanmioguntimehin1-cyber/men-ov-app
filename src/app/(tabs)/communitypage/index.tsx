@@ -61,7 +61,6 @@ const Communitypage = () => {
  
 
   const handleSaveAndUnsave = (item: any) => {
-    console.log(item, "5555");
     if (item.isSaved) {
       unSavePost.mutate({
         id: item._id,
@@ -168,7 +167,6 @@ const Communitypage = () => {
           const date = new Date(item?.updatedAt);
           const formattedDate = format(date, "do MMMM yyyy");
 
-          console.log(item, "itemmmm");
 
           return (
             <TouchableOpacity
@@ -234,9 +232,11 @@ const Communitypage = () => {
               </View>
 
               {/* Title */}
-              <Text className="text-lg font-[PoppinsSemiBold] text-black mb-3">
-                {item?.title}
-              </Text>
+              {item?.title && (
+                <Text className="text-lg font-[PoppinsSemiBold] text-black mb-3">
+                  {item?.title}
+                </Text>
+              )}
 
               {/* Description */}
               <Text className="text-sm text-gray-600 mb-4 leading-5">

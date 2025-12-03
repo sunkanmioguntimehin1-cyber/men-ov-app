@@ -506,7 +506,7 @@ const ExplorePage = () => {
               gradientColors={["#6B5591", "#6E3F8C", "#853385", "#9F3E83"]}
             />
             <Text className="text-[#9B9B9B] mx-2">
-              Search symptoms, tips, community posts
+              Search symptoms, tips and topics
             </Text>
           </TouchableOpacity>
 

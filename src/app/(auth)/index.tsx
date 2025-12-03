@@ -34,21 +34,7 @@ export default function GetStarted() {
         style={{ flex: 1 }}
         contentFit="cover"
       >
-        {/* <View className=" flex-1  " />
-        <View className=" items-center justify-center flex-1">
-          <View className="w-64 h-48">
-            <Image
-              source={require("@/assets/images/Menovia-Logo-Vertical.png")}
-              style={{
-                height: "100%",
-                width: "100%",
-                alignSelf: "center",
-              }}
-              contentFit="fill"
-              onError={(error) => console.log("Image error:", error)}
-            />
-          </View>
-        </View> */}
+       
         {/* Logo positioned at top-middle */}
         <View className="items-center justify-center pt-24 ">
           <View className="w-64 h-48">
@@ -65,11 +51,10 @@ export default function GetStarted() {
           </View>
         </View>
 
-        {/* <View className="flex-1 mt-80" /> */}
-        {/* Spacer to push button to bottom */}
+        
         <View className="flex-1" />
 
-        <View className="px-8 pb-24 items-center">
+        <View className="px-8 pb-[80px] items-center">
           <TouchableOpacity
             className=" w-60 rounded-xl overflow-hidden"
             onPress={() => handleDisclaimerBottomSheetOpen("signup")}

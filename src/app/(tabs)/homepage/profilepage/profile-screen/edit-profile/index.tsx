@@ -121,7 +121,7 @@ const EditProfile = () => {
       <ImageBackground
         source={require("@/assets/images/AI.png")}
         style={{
-          height: "100%",
+          height: "108%",
           width: "100%",
         }}
         resizeMode="cover"
