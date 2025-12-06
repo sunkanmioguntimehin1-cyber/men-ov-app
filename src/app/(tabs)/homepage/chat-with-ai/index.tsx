@@ -1443,11 +1443,11 @@ const ChatWithAi = () => {
                   contentFit="contain"
                 />
               </View>
-              <View className=" ml-3">
+             {/* <View className=" ml-3">
                 <Text className=" text-center text-xl font-[PoppinsBold] mb-2 text-[#101828]">
                   Ziena™
                 </Text>
-              </View>
+              </View> */}
             </View>
 
             {/* Loading State */}
