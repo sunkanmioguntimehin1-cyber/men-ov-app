@@ -235,7 +235,7 @@ const LastSymptomsModal = ({ onCancel, selectedLastSymptom }: any) => {
           <View className="my-3 flex-row items-center justify-center gap-1 space-x-3">
             <View className=" w-44 ">
               <CustomButton
-                primary
+                gradient
                 title="I am feeling better"
                 disabled={
                   (selectedSeverityLevel !== null &&

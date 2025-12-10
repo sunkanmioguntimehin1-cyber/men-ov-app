@@ -113,6 +113,7 @@ const API_KEY = process.env.EXPO_PUBLIC_API_KEY;
 const CUSTOM_BASE_URL =
   "https://menovia-backend-285086043355.us-central1.run.app";
 
+
 // Shared interceptor configuration function
 const setupInterceptors = (instance: AxiosInstance, baseURL: string) => {
   // Request interceptor for adding auth token
@@ -204,7 +205,7 @@ const customAxiosInstance: AxiosInstance = axios.create({
   baseURL: CUSTOM_BASE_URL,
   headers: {
     "Content-Type": "application/json",
-    "api-key": API_KEY,
+    "x-api-key": API_KEY,
   },
 });
 

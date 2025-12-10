@@ -16,6 +16,7 @@ import Screen from "@/src/layout/Screen";
 import { getInitials } from "@/src/utils/getInitials";
 import { format } from "date-fns";
 import { Image } from "expo-image";
+import { LinearGradient } from "expo-linear-gradient";
 import { useRouter } from "expo-router";
 import React from "react";
 import {
@@ -156,17 +157,32 @@ const Communitypage = () => {
               No Post found
             </Text>
 
-            <TouchableOpacity className="mt-6 bg-[#8A3FFC] px-6 py-3 rounded-full">
-              <Text className="text-white font-[PoppinsSemiBold]">
-                Create a post
-              </Text>
+            <TouchableOpacity className="mt-6  px-6 py-3 rounded-full" onPress={()=>{
+              router.push("/communitypage/create-post")
+            }}>
+              <LinearGradient
+                colors={["#6B5591", "#6E3F8C", "#853385", "#9F3E83"]}
+                start={{ x: 0, y: 0 }}
+                end={{ x: 1, y: 1 }}
+                // className="items-center justify-center py-4"
+                style={{
+                  minHeight: 56,
+                  padding:  16,
+                  alignItems: "center",
+                  justifyContent: "center",
+                  borderRadius: 10,
+                }}
+              >
+                <Text className="text-white font-[PoppinsSemiBold]">
+                  Create a post
+                </Text>
+              </LinearGradient>
             </TouchableOpacity>
           </View>
         )}
         renderItem={({ item }) => {
           const date = new Date(item?.updatedAt);
           const formattedDate = format(date, "do MMMM yyyy");
-
 
           return (
             <TouchableOpacity

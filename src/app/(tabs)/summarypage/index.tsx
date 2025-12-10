@@ -1,6 +1,6 @@
 import {
-    useCycleTrackingApi,
-    useGetLogApi,
+  useCycleTrackingApi,
+  useGetLogApi,
 } from "@/src/api_services/logApi/logQuery";
 import { useGetIntakeDetails } from "@/src/api_services/userApi/userQuery";
 import SafeScreen from "@/src/components/SafeScreen";
@@ -38,15 +38,15 @@ const SummaryScreen = () => {
     },
     {
       name: "Heart Palpitations",
-      img: require("@/assets/images/heart_palpitations.png"),
+      img: require("@/assets/images/heart_palpitations2.png"),
     },
     {
       name: "Anxiety",
-      img: require("@/assets/images/anxiety.png"),
+      img: require("@/assets/images/anxiety2.png"),
     },
     {
       name: "Describe how you feel",
-      img: require("@/assets/images/general.png"),
+      img: require("@/assets/images/anxiety2.png"),
     },
   ];
 
@@ -90,11 +90,25 @@ const SummaryScreen = () => {
 
               <TouchableOpacity
                 onPress={() => router.push("/(tabs)/homepage")}
-                className="mt-6 bg-[#8A3FFC] px-6 py-3 rounded-full"
+                className="mt-6 px-6 py-3 rounded-full"
               >
-                <Text className="text-white font-[PoppinsSemiBold]">
-                  Add Log
-                </Text>
+                <LinearGradient
+                  colors={["#6B5591", "#6E3F8C", "#853385", "#9F3E83"]}
+                  start={{ x: 0, y: 0 }}
+                  end={{ x: 1, y: 1 }}
+                  // className="items-center justify-center py-4"
+                  style={{
+                    minHeight: 56,
+                    padding: 16,
+                    alignItems: "center",
+                    justifyContent: "center",
+                    borderRadius: 10,
+                  }}
+                >
+                  <Text className="text-white font-[PoppinsSemiBold]">
+                    Add Log
+                  </Text>
+                </LinearGradient>
               </TouchableOpacity>
             </View>
           ) : (
@@ -111,7 +125,11 @@ const SummaryScreen = () => {
                       colors={["#6B5591", "#6E3F8C", "#853385", "#9F3E83"]}
                       start={{ x: 0, y: 0 }}
                       end={{ x: 1, y: 1 }}
-                      style={{ borderRadius: 10, padding: 16, marginBottom: 10 }}
+                      style={{
+                        borderRadius: 10,
+                        padding: 16,
+                        marginBottom: 10,
+                      }}
                       className="rounded-xl p-4 mb-3"
                     >
                       <View className="flex-row items-center justify-between">
@@ -179,7 +197,11 @@ const SummaryScreen = () => {
                         colors={["#6B5591", "#6E3F8C", "#853385", "#9F3E83"]}
                         start={{ x: 0, y: 0 }}
                         end={{ x: 1, y: 1 }}
-                        style={{ borderRadius: 10, padding: 16, marginBottom: 10 }}
+                        style={{
+                          borderRadius: 10,
+                          padding: 16,
+                          marginBottom: 10,
+                        }}
                         className="rounded-xl p-4 mb-3"
                       >
                         <Text className="text-white font-[PoppinsSemiBold] text-base">
