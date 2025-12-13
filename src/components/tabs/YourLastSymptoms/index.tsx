@@ -142,15 +142,15 @@ const YourLastSymptoms = ({ handleOpenLastSymptoms }: any) => {
     },
     {
       name: "Heart Palpitations",
-      img: require("@/assets/images/heart_palpitations.png"),
+      img: require("@/assets/images/heart_palpitations2.png"),
     },
     {
       name: "Anxiety",
-      img: require("@/assets/images/anxiety.png"),
+      img: require("@/assets/images/anxiety2.png"),
     },
     {
       name: "Describe how you feel",
-      img: require("@/assets/images/general.png"),
+      img: require("@/assets/images/anxiety2.png"),
     },
   ];
 

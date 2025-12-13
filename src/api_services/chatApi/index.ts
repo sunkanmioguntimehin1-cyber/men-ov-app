@@ -1,4 +1,4 @@
-import axiosInstance from "@/src/lib/axiosInstance";
+import axiosInstance, { customAxiosInstance } from "@/src/lib/axiosInstance";
 
 export const getChatHistory = async () => {
   try {
@@ -10,8 +10,7 @@ export const getChatHistory = async () => {
   }
 };
 
-
-export const talkToChatAi = async (data:any) => {
+export const talkToChatAi = async (data: any) => {
   console.log("datadatadata", data);
   try {
     const res = await axiosInstance.post(`/chat/message`, data);
@@ -21,3 +20,34 @@ export const talkToChatAi = async (data:any) => {
     throw error;
   }
 };
+
+export const talkToChatAiwithStream = async (data: any) => {
+  console.log("datadatadata60000700", data);
+  try {
+    const res = await customAxiosInstance.post(`/api/v1/chat/stream`, data);
+    return res.data;
+  } catch (error) {
+    console.error("talkToChatAiwithStream", error);
+    throw error;
+  }
+};
+
+
+
+
+export const getSessionWithAiStream = async (data: any) => {
+  console.log("datada3000", data);
+  try {
+    const res = await axiosInstance.get(
+      `/chat/session/messages?content=${data}`,
+      data
+    );
+    return res.data;
+  } catch (error) {
+    console.error("getSessionWithAiStream", error);
+    throw error;
+  }
+};
+
+
+
