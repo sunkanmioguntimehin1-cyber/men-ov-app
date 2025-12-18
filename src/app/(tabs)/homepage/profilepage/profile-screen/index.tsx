@@ -12,6 +12,7 @@ import { getInitials } from "@/src/utils/getInitials";
 import { Feather, Ionicons, MaterialIcons } from "@expo/vector-icons";
 import { format } from "date-fns";
 import { Image } from "expo-image";
+import { LinearGradient } from "expo-linear-gradient";
 import { useRouter } from "expo-router";
 import React from "react";
 import {
@@ -49,7 +50,7 @@ export default function ProfilePage() {
         return;
       }
       router.push({
-        pathname: "/profilepage/profile-screen/recommendations-webview",
+        pathname: "/(tabs)/homepage/profilepage/profile-screen/recommendations-webview",
         params: { item: JSON.stringify(uri) },
       });
     } catch (error) {
@@ -230,11 +231,19 @@ export default function ProfilePage() {
 
             <TouchableOpacity
               onPress={() => router.push("/(tabs)/homepage")}
-              className="mt-6 bg-primary px-6 py-3 rounded-full"
+              // className="mt-6 bg-primary px-6 py-3 rounded-full"
             >
-              <Text className="text-white font-[PoppinsSemiBold]">
-                Back to Home page
-              </Text>
+              <LinearGradient
+                colors={["#6B5591", "#6E3F8C", "#853385", "#9F3E83"]}
+                start={{ x: 0, y: 0 }}
+                end={{ x: 1, y: 1 }}
+                style={{ borderRadius: 10, padding: 16, marginBottom: 10 }}
+                // className="rounded-xl p-4 mb-3"
+              >
+                <Text className="text-white font-[PoppinsSemiBold]">
+                  Back to Home page
+                </Text>
+              </LinearGradient>
             </TouchableOpacity>
           </View>
         ) : (
