@@ -434,7 +434,7 @@ const ExplorePage = () => {
   const renderFeatureTopicsGrid = () => (
     <View className="mb-6">
       <Text className="font-[PoppinsSemiBold] text-lg mb-4 text-black">
-        Feature Topics
+        Featured Topics
       </Text>
       <View
         style={{
@@ -465,7 +465,7 @@ const ExplorePage = () => {
                   marginBottom: 12,
                 }}
               >
-                <View className="w-6 h-6">
+                <View style={{ width: 24, height: 24 }} className="w-6 h-6">
                   <Image
                     source={{ uri: item.icon }}
                     style={{
@@ -473,7 +473,7 @@ const ExplorePage = () => {
                       width: "100%",
                       borderRadius: 100,
                     }}
-                    contentFit="contain"
+                    contentFit="cover"
                     onError={(error) => console.log("Image error:", error)}
                   />
                 </View>
@@ -495,7 +495,7 @@ const ExplorePage = () => {
         <View className="px-6 pt-4 pb-6">
           {/* Search Bar */}
           <TouchableOpacity
-            className="bg-white rounded-2xl px-4 py-3 flex-row border border-[#B33288] items-center mb-6 shadow-sm"
+            className="bg-white rounded-2xl px-4 py-3 flex-row border border-[#9F3E83] items-center mb-6 shadow-sm"
             onPress={() => {
               router.push("/explorepage/searchpage");
             }}

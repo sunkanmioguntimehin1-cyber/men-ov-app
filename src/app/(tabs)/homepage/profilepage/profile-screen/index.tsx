@@ -116,7 +116,7 @@ export default function ProfilePage() {
       <ImageBackground
         source={require("@/assets/images/AI.png")}
         style={{
-          height: "110%",
+          height: "109%",
           width: "100%",
         }}
         resizeMode="cover"
@@ -222,7 +222,7 @@ export default function ProfilePage() {
         {getRecommendationData.data?.length === 0 ? (
           // 👉 Empty State UI
           <View className="items-center justify-center mt-20">
-            <Text className="text-gray-500 text-base mt-4 font-[PoppinsMedium]">
+            <Text className="text-gray-500 text-base mt-4 font-[PoppinsMedium]  mb-5">
               No Recommendations found
             </Text>
             {/* <Text className="text-gray-400 text-sm mt-2 text-center px-6">
@@ -240,7 +240,7 @@ export default function ProfilePage() {
                 style={{ borderRadius: 10, padding: 16, marginBottom: 10 }}
                 // className="rounded-xl p-4 mb-3"
               >
-                <Text className="text-white font-[PoppinsSemiBold]">
+                <Text className="text-white font-[PoppinsSemiBold] ">
                   Back to Home page
                 </Text>
               </LinearGradient>

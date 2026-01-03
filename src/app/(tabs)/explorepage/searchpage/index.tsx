@@ -46,7 +46,7 @@ const SearchPage = () => {
             gradientColors={["#6B5591", "#6E3F8C", "#853385", "#9F3E83"]}
           />
           <TextInput
-            placeholder="Search symptoms, tips, community posts"
+            placeholder="Search symptoms, tips and topics"
             placeholderTextColor="#9B9B9B"
             onChangeText={(text) => {
               setSearchText(text);

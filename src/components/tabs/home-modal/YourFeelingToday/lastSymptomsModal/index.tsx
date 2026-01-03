@@ -302,7 +302,7 @@ const LastSymptomsModal = ({ onCancel, selectedLastSymptom }: any) => {
             <View className="mt-5">
               <CustomButton
                 gradient
-                title="Your welcome!"
+                title="You're welcome!"
                 onPress={handleWelconeBtn}
               />
             </View>

@@ -8,8 +8,7 @@ import useSymtomsStore from "@/src/store/symtomsStore";
 import {
   AntDesign,
   Feather,
-  MaterialIcons,
-  SimpleLineIcons,
+  MaterialIcons
 } from "@expo/vector-icons";
 import { useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "expo-router";
@@ -36,14 +35,14 @@ export default function ProfilePage() {
         router.push("/homepage/profilepage/profile-screen");
       },
     },
-    {
-      img: <SimpleLineIcons name="chart" size={24} color="black" />,
-      title: "Summary",
-      icon: <AntDesign name="right" size={24} color="black" />,
-      onPress: () => {
-        router.push("/homepage/profilepage/summary-screen");
-      },
-    },
+    // {
+    //   img: <SimpleLineIcons name="chart" size={24} color="black" />,
+    //   title: "Summary",
+    //   icon: <AntDesign name="right" size={24} color="black" />,
+    //   onPress: () => {
+    //     router.push("/homepage/profilepage/summary-screen");
+    //   },
+    // },
   ];
 
   const settingData = [

@@ -42,7 +42,8 @@ export default function TabsLayout() {
     <Tabs
       initialRouteName="homepage"
       screenOptions={{
-        tabBarActiveTintColor: "#8A3FFC",
+        tabBarActiveTintColor: "#712A87",
+        tabBarInactiveTintColor: "#E4D9F7",
         headerShown: false,
         tabBarStyle: Platform.select({
           ios: {
@@ -99,7 +100,7 @@ export default function TabsLayout() {
       <Tabs.Screen
         name="communitypage"
         options={({ route }) => ({
-          title: "connect",
+          title: "community",
           tabBarIcon: ({ color, focused }) => (
             <Ionicons
               name={focused ? "chatbubble-outline" : "chatbubble-outline"}
