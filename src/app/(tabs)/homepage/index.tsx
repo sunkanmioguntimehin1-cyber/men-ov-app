@@ -48,6 +48,12 @@ export default function HomePage() {
   const getCycleTrackingLatest = useCycleTrackingLatest();
   const getNotificationsCount = useGetNotificationsCountApi();
 
+const isMenopause =
+  getCycleTrackingLatest?.data?.menopauseStage === "menopause";
+
+ 
+
+
   const insets = useSafeAreaInsets();
 
   const router = useRouter();
@@ -244,6 +250,7 @@ export default function HomePage() {
                   />
                 </View>
                 <View className="">
+                  {/* {isMenopause?():()} */}
                   <CustomSelectData
                     onPress={handleOpenmodal2}
                     primary

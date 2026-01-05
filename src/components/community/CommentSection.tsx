@@ -1,16 +1,17 @@
 // CommentSection.tsx
 import { useCommentPostApi } from "@/src/api_services/postsApi/postsMutation";
+import CustomInput from "@/src/custom-components/CustomInput";
+import { GradientMaterialIcon } from "@/src/custom-components/GradientIcon";
 import React, { useState } from "react";
 import {
   ActivityIndicator,
   FlatList,
-  KeyboardAvoidingView,
   Platform,
   Text,
-  TextInput,
   TouchableOpacity,
   View,
 } from "react-native";
+import { KeyboardAvoidingView } from "react-native-keyboard-controller";
 
 interface Comment {
   _id: string;
@@ -67,7 +68,7 @@ const CommentSection = ({
       <View className={`mb-3 ${isOwn ? "items-end" : "items-start"}`}>
         <View
           className={`max-w-[80%] rounded-2xl px-4 py-2.5 ${
-            isOwn ? "bg-primary" : "bg-white"
+            isOwn ? "bg-primary" : " bg-secondary border border-[#FBC3F8]"
           }`}
           style={
             !isOwn && {
@@ -137,8 +138,8 @@ const CommentSection = ({
   return (
     <KeyboardAvoidingView
       className="flex-1 bg-gray-50"
-      behavior={Platform.OS === "ios" ? "padding" : "height"}
-      keyboardVerticalOffset={Platform.OS === "ios" ? 90 : 0}
+      behavior={"padding"}
+      keyboardVerticalOffset={Platform.OS === "ios" ? 100 : 0}
     >
       <FlatList
         data={[{ key: "comments" }]}
@@ -158,32 +159,39 @@ const CommentSection = ({
         keyExtractor={(item) => item.key}
         showsVerticalScrollIndicator={false}
         contentContainerStyle={{ flexGrow: 1 }}
+        keyboardShouldPersistTaps="handled"
       />
 
       <View className="flex-row items-end px-3 py-2 bg-white border-t border-gray-200">
-        <TextInput
-          value={newComment}
-          onChangeText={setNewComment}
-          placeholder="Type a message..."
-          placeholderTextColor="#999"
-          className="flex-1 bg-gray-100 rounded-3xl px-4 py-2.5 text-[15px] mr-2 max-h-[100px]"
-          multiline
-          maxLength={500}
-          blurOnSubmit={false}
-        />
+        <View className="flex-1 mx-2">
+          <CustomInput
+            placeholder="Comment as user name "
+            value={newComment}
+            onChangeText={setNewComment}
+            primary
+            returnKeyType="send"
+            // onSubmitEditing={handleSend}
+            autoCapitalize="sentences"
+            // editable={!isLoading && !sendMessage.isPending && !isStreaming}
+          />
+        </View>
         <TouchableOpacity
           onPress={handleSubmitComment}
           disabled={!newComment.trim() || commentOnProduct.isPending}
-          className={`rounded-3xl px-5 py-2.5 ${
+          className={`w-12 h-12 rounded-full items-center justify-center ${
             !newComment.trim() || commentOnProduct.isPending
-              ? "bg-gray-300"
-              : "bg-[#2E6939]"
+              ? "bg-primaryLight opacity-50"
+              : "bg-[#F4EBFF]"
           }`}
         >
           {commentOnProduct.isPending ? (
             <ActivityIndicator color="#fff" size="small" />
           ) : (
-            <Text className="text-white font-semibold">Send</Text>
+            <GradientMaterialIcon
+              name="send"
+              size={20}
+              gradientColors={["#6B5591", "#6E3F8C", "#853385", "#9F3E83"]}
+            />
           )}
         </TouchableOpacity>
       </View>
