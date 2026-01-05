@@ -1,7 +1,7 @@
 import { handleAxiosError } from "@/src/lib/handleAxiosError";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "expo-router";
-import { commentPostApi, createPostApi, likePostApi, savePostApi, unLikePostApi, unSavePostApi } from ".";
+import { commentPostApi, createPostApi, deleteAPostApi, likePostApi, savePostApi, unLikePostApi, unSavePostApi, updateAPost } from ".";
 
 // Mutation api call
 export const useCreatePostApi = () => {
@@ -15,7 +15,8 @@ export const useCreatePostApi = () => {
       // });
 
       queryClient.invalidateQueries({ queryKey: ["get-all-posts"] });
-      router.push("/(tabs)/communitypage")
+      // router.push("/(tabs)/communitypage")
+       router.back();
     },
     onError(error: any) {
       handleAxiosError(error);
@@ -23,6 +24,44 @@ export const useCreatePostApi = () => {
   });
 };
 
+// Mutation api call
+export const useUpdateAPost = () => {
+  const router = useRouter();
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: updateAPost,
+    async onSuccess(data: any) {
+      // showSuccessToast({
+      //   message: data.message,
+      // });
+
+      queryClient.invalidateQueries({ queryKey: ["get-all-posts"] });
+      router.back();
+    },
+    onError(error: any) {
+      handleAxiosError(error);
+    },
+  });
+};
+
+export const useDeleteAPostApi = () => {
+  const router = useRouter();
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: deleteAPostApi,
+    async onSuccess(data: any) {
+      // showSuccessToast({
+      //   message: data.message,
+      // });
+
+      queryClient.invalidateQueries({ queryKey: ["get-all-posts"] });
+    },
+    onError(error: any) {
+      handleAxiosError(error);
+    },
+  });
+};
+;
 export const useSavePostApi = () => {
   const router = useRouter();
   const queryClient = useQueryClient();

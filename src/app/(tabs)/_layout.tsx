@@ -1,4 +1,4 @@
-import { Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
+import { FontAwesome6, Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
 import { getFocusedRouteNameFromRoute } from "@react-navigation/native";
 import { Tabs } from "expo-router";
 import { Platform } from "react-native";
@@ -100,13 +100,19 @@ export default function TabsLayout() {
       <Tabs.Screen
         name="communitypage"
         options={({ route }) => ({
-          title: "community",
+          title: "Community",
           tabBarIcon: ({ color, focused }) => (
-            <Ionicons
-              name={focused ? "chatbubble-outline" : "chatbubble-outline"}
-              size={24}
+            // <Ionicons
+            //   name={focused ? "chatbubble-outline" : "chatbubble-outline"}
+            //   size={24}
+            //   color={focused ? "#712A87" : "#E4D9F7"}
+            // />
+            <FontAwesome6
+              name={focused ? "users" : "users"}
+              size={20}
               color={focused ? "#712A87" : "#E4D9F7"}
             />
+           
           ),
           tabBarStyle: getTabBarVisibility(route)
             ? { display: "none" }
