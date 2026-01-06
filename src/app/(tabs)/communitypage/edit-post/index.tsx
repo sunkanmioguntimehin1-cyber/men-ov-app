@@ -58,9 +58,8 @@ const EditPost = () => {
 
   const getAPost = useGetAPost(newData);
 
-  console.log("getAPost", getAPost?.data);
-  console.log("updateAPostMutation", updateAPostMutation);
-
+  // console.log("getAPost", getAPost?.data);
+  // console.log("updateAPostMutation", updateAPostMutation);
 
   //  useEffect(()=>{
   //   if(newData){
@@ -123,7 +122,7 @@ const EditPost = () => {
   // console.log("getUserData", getHashtagList?.data);
 
   return (
-    <Screen scroll={true} className=" px-4 bg-white">
+    <Screen scroll={true} className=" px-4 bg-white pb-10">
       {/* Header */}
       <View className="flex-row items-center justify-between py-4 px-4 border-b border-gray-200">
         <TouchableOpacity onPress={() => router.back()}>
@@ -160,7 +159,7 @@ const EditPost = () => {
                 }}
               />
             ) : (
-              <View className="ml-3">
+              <View className=" bg-slate-200 w-10 h-10 rounded-full items-center justify-center">
                 <Text className="font-[PoppinsSemiBold] text-base text-black">
                   {getInitials(getAPost?.data?.user?.fullname)}
                 </Text>
@@ -176,7 +175,6 @@ const EditPost = () => {
               </Text> */}
             </View>
           </View>
-         
         </View>
 
         {/* Title Input */}
@@ -191,7 +189,7 @@ const EditPost = () => {
             render={({ field: { onChange, onBlur, value } }) => (
               <CustomInput
                 primary
-                placeholder="What's topic on your mind?"
+                placeholder={`Add a short topic (optional)`}
                 onChangeText={onChange}
                 onBlur={onBlur}
                 value={value}
@@ -210,7 +208,8 @@ const EditPost = () => {
           // }}
           render={({ field: { onChange, onBlur, value } }) => (
             <TextInput
-              placeholder="Anyone else dealing with brain fog lately?"
+              placeholder={`Share what you’re experiencing—and what kind of support you’d like.
+You can ask a question, share a win, or simply vent.`}
               placeholderTextColor="#9CA3AF"
               value={value}
               onChangeText={onChange}
@@ -232,8 +231,8 @@ const EditPost = () => {
           <Switch
             value={isAnonymous}
             onValueChange={setIsAnonymous}
-            trackColor={{ false: "#D1D5DB", true: "#A78BFA" }}
-            thumbColor={isAnonymous ? "#8553F3" : "#F3F4F6"}
+            trackColor={{ false: "#D1D5DB", true: "#B33288" }}
+            thumbColor="#fff"
             ios_backgroundColor="#D1D5DB"
           />
         </View>
@@ -254,18 +253,22 @@ const EditPost = () => {
                 key={`${tag}-${index}`}
                 onPress={() => toggleTag(tag)}
                 className={`px-4 py-2 rounded-full border ${
-                  isSelected
-                    ? "border-[#8553F3] bg-[#F3F0FF]"
-                    : "border-gray-300 bg-white"
+                  isSelected ? "border-[#B33288]" : "border-gray-300 bg-white"
                 }`}
               >
-                <Text
-                  className={`font-[PoppinsRegular] text-sm ${
-                    isSelected ? "text-[#8553F3]" : "text-gray-600"
-                  }`}
-                >
-                  {tag}
-                </Text>
+               
+
+                {isSelected ? (
+                  <GradientText className="font-[PoppinsRegular] text-sm ">
+                    {tag}
+                  </GradientText>
+                ) : (
+                  <Text
+                    className={`font-[PoppinsRegular] text-sm text-gray-600 `}
+                  >
+                    {tag}
+                  </Text>
+                )}
               </TouchableOpacity>
             );
           })}

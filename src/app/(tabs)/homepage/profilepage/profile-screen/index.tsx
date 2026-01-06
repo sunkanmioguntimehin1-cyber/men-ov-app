@@ -203,7 +203,7 @@ export default function ProfilePage() {
             <TouchableOpacity
               className="border border-primary rounded-xl items-center justify-center flex-1"
               onPress={() => {
-                router.push("/(tabs)/homepage/personal-info");
+                router.push("/(tabs)/homepage/profilepage/profile-screen/intake-info");
               }}
             >
               <GradientText className="font-[PoppinsMedium] text-center p-4">

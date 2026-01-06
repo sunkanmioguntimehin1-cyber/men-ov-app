@@ -1,26 +1,31 @@
-
-
-import { useViewAPost } from "@/src/api_services/postsApi/postQuery";
+import {
+  useGetHashtag,
+  useViewAPost,
+} from "@/src/api_services/postsApi/postQuery";
 import { useGetUser } from "@/src/api_services/userApi/userQuery";
+import { GradientText } from "@/src/components/GradientText";
+import {
+  GradientEntypoIcon,
+  GradientFeatherIcon,
+  GradientMaterialCommunityIcons,
+} from "@/src/custom-components/GradientIcon";
 import Popover from "@/src/custom-components/Popover";
 import Screen from "@/src/layout/Screen";
 import { rS } from "@/src/lib/responsivehandler";
 import { getInitials } from "@/src/utils/getInitials";
-import {
-  Entypo,
-  Feather,
-  Ionicons,
-  MaterialCommunityIcons,
-} from "@expo/vector-icons";
+import { Ionicons } from "@expo/vector-icons";
 import { Image } from "expo-image";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import React, { useMemo, useState } from "react";
-import { ScrollView, Text, TouchableOpacity, View } from "react-native";
+import { ScrollView, Switch, Text, TouchableOpacity, View } from "react-native";
 
 const ViewPostScreen = () => {
   const router = useRouter();
   const params = useLocalSearchParams();
   const [showPopover, setShowPopover] = useState(false);
+  const [isAnonymous, setIsAnonymous] = React.useState(false);
+  const [selectedTags, setSelectedTags] = React.useState<string[]>([]);
+
   const [popoverPosition, setPopoverPosition] = useState({ x: 0, y: 0 });
 
   const newData = useMemo(() => {
@@ -29,12 +34,24 @@ const ViewPostScreen = () => {
 
   const getUserData = useGetUser();
   const viewUserPosts = useViewAPost(newData);
+  const getHashtagList = useGetHashtag();
+
+  const tags = getHashtagList?.data;
 
   React.useEffect(() => {
     if (newData) {
       viewUserPosts.refetch();
     }
   }, [newData]);
+
+  React.useEffect(() => {
+    if (viewUserPosts.data) {
+      setIsAnonymous(viewUserPosts.data.isAnonymous);
+      setSelectedTags(viewUserPosts.data.hashtags || []);
+    }
+  }, [viewUserPosts.data]);
+
+  console.log("viewUserPosts", viewUserPosts.data);
 
   const handleComments = (postId: string) => {
     router.push({
@@ -78,7 +95,13 @@ const ViewPostScreen = () => {
   const popoverItems = [
     {
       label: "Edit",
-      icon: <Feather name="edit" size={18} color="#2E6939" />,
+      icon: (
+        <GradientFeatherIcon
+          name="edit"
+          size={18}
+          gradientColors={["#6B5591", "#6E3F8C", "#853385", "#9F3E83"]}
+        />
+      ),
       onPress: handleEdit,
       textColor: "#374151",
     },
@@ -91,10 +114,10 @@ const ViewPostScreen = () => {
   ];
 
   return (
-    <Screen className="p-6">
+    <Screen className="px-6 pt-3 pb-10">
       <View className="flex-row items-center justify-between my-2 bg-white">
         <TouchableOpacity onPress={() => router.back()}>
-          <Ionicons name="chevron-back" size={24} color="#2E6939" />
+          <Ionicons name="chevron-back" size={24} color="black" />
         </TouchableOpacity>
         <View>
           <Text className="font-[PoppinsSemiBold]" style={{ fontSize: rS(12) }}>
@@ -133,16 +156,13 @@ const ViewPostScreen = () => {
                 className=""
                 onPress={(e) => handleOpenPopover(e)}
               >
-                <Entypo name="dots-three-vertical" size={20} color="black" />
+                <GradientEntypoIcon
+                  name="dots-three-vertical"
+                  size={20}
+                  gradientColors={["#6B5591", "#6E3F8C", "#853385", "#9F3E83"]}
+                />
               </TouchableOpacity>
             ) : null}
-
-            {/* <TouchableOpacity
-              className="mr-4"
-              onPress={(e) => handleOpenPopover(e)}
-            >
-              <Entypo name="dots-three-vertical" size={24} color="black" />
-            </TouchableOpacity> */}
           </View>
 
           {/* Post Description */}
@@ -153,6 +173,20 @@ const ViewPostScreen = () => {
             <Text className="text-gray-700 text-sm leading-5">
               {viewUserPosts.data?.content}
             </Text>
+          </View>
+
+          {/* Anonymous Toggle */}
+          <View className="flex-row items-center justify-between my-3">
+            <Text className="font-[PoppinsRegular] text-base text-black">
+              Share anonymously
+            </Text>
+            <Switch
+              value={isAnonymous}
+              onValueChange={setIsAnonymous}
+              trackColor={{ false: "#D1D5DB", true: "#B33288" }}
+              thumbColor="#fff"
+              ios_backgroundColor="#D1D5DB"
+            />
           </View>
 
           {/* Post Image */}
@@ -172,20 +206,30 @@ const ViewPostScreen = () => {
           )}
 
           {/* Action Bar */}
-          <View className="flex-row items-center justify-between p-4">
+          <View className="flex-row items-center justify-between py-3">
             <View className="flex-row items-center space-x-4">
               <TouchableOpacity className="flex-row items-center justify-center">
                 {viewUserPosts.data?.isLiked ? (
-                  <MaterialCommunityIcons
+                  <GradientMaterialCommunityIcons
                     name="thumb-up"
                     size={20}
-                    color="black"
+                    gradientColors={[
+                      "#6B5591",
+                      "#6E3F8C",
+                      "#853385",
+                      "#9F3E83",
+                    ]}
                   />
                 ) : (
-                  <MaterialCommunityIcons
+                  <GradientMaterialCommunityIcons
                     name="thumb-up-outline"
                     size={20}
-                    color="black"
+                    gradientColors={[
+                      "#6B5591",
+                      "#6E3F8C",
+                      "#853385",
+                      "#9F3E83",
+                    ]}
                   />
                 )}
                 <Text className="mx-2 text-lg">
@@ -197,12 +241,44 @@ const ViewPostScreen = () => {
                 className="mx-2 flex-row items-center"
                 onPress={() => handleComments(viewUserPosts.data._id)}
               >
-                <Ionicons name="chatbubble-outline" size={20} color="#666" />
+                <GradientFeatherIcon
+                  name="message-circle"
+                  size={20}
+                  gradientColors={["#6B5591", "#6E3F8C", "#853385", "#9F3E83"]}
+                />
                 <Text className="text-xs text-gray-600 ml-1">
                   {viewUserPosts.data?.commentCount} Comments
                 </Text>
               </TouchableOpacity>
             </View>
+          </View>
+
+          {/* Tags */}
+          <View className="flex-row flex-wrap gap-2">
+            {tags?.map((tag: any, index: number) => {
+              const isSelected = selectedTags.includes(tag);
+              return (
+                <TouchableOpacity
+                  key={`${tag}-${index}`}
+                  // onPress={() => toggleTag(tag)}
+                  className={`px-4 py-2 rounded-full border ${
+                    isSelected ? "border-[#B33288]" : "border-gray-300 bg-white"
+                  }`}
+                >
+                  {isSelected ? (
+                    <GradientText className="font-[PoppinsRegular] text-sm ">
+                      {tag}
+                    </GradientText>
+                  ) : (
+                    <Text
+                      className={`font-[PoppinsRegular] text-sm text-gray-600 `}
+                    >
+                      {tag}
+                    </Text>
+                  )}
+                </TouchableOpacity>
+              );
+            })}
           </View>
         </View>
       </ScrollView>

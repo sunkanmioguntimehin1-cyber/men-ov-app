@@ -70,7 +70,7 @@ const CreatePost = () => {
   };
 
   return (
-    <Screen scroll={true} className=" px-4 bg-white">
+    <Screen scroll={true} className=" px-4 bg-white pb-10">
       {/* Header */}
       <View className="flex-row items-center justify-between py-4 px-4 border-b border-gray-200">
         <TouchableOpacity onPress={() => router.back()}>
@@ -84,7 +84,7 @@ const CreatePost = () => {
             <ActivityIndicator />
           ) : (
             <GradientText className="font-[PoppinsMedium] text-base">
-              Next
+              Post
             </GradientText>
           )}
         </TouchableOpacity>
@@ -154,7 +154,7 @@ const CreatePost = () => {
           }}
           render={({ field: { onChange, onBlur, value } }) => (
             <TextInput
-              placeholder={`Share what you’re experiencing—and what kind of support you’d like. 
+              placeholder={`Share what you’re experiencing—and what kind of support you’d like.
 You can ask a question, share a win, or simply vent.`}
               placeholderTextColor="#9CA3AF"
               value={value}

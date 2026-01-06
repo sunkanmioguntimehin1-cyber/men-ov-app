@@ -21,7 +21,7 @@ export const editUserDetails = async (data: any) => {
 };
 
 export const intakeDetailsApi = async (data: any) => {
-  console.log("data22", data)
+  // console.log("data22", data)
   try {
     const res = await axiosInstance.post(`/user/intake`, data);
     return res.data;

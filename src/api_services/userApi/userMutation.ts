@@ -38,10 +38,15 @@ export const useIntakeDetailsApi = () => {
       //   message: data.message,
       // });
       
-      console.log("data300", data)
+      // console.log("data300", data)
       
       router.push("/(tabs)/homepage");
-      // queryClient.invalidateQueries({ queryKey: ["get-user"] });
+      queryClient.invalidateQueries({ queryKey: ["get-user"] });
+      queryClient.invalidateQueries({ queryKey: ["get-intakes"] });
+      queryClient.invalidateQueries({
+        queryKey: ["get-cycle-tracking-latest"],
+      });
+
     },
     onError(error: any) {
       handleAxiosError(error);

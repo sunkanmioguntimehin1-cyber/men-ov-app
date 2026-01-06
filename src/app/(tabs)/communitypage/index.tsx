@@ -1,5 +1,3 @@
-
-
 import { useGetAllPosts } from "@/src/api_services/postsApi/postQuery";
 import {
   useLikePostApi,
@@ -11,6 +9,7 @@ import { useGetUser } from "@/src/api_services/userApi/userQuery";
 import DeletePostModal from "@/src/components/community/DeletePostModal";
 import CustomModel from "@/src/custom-components/CustomModel";
 import {
+  GradientEntypoIcon,
   GradientFeatherIcon,
   GradientIoniconsIcon,
   GradientMaterialCommunityIcons,
@@ -19,7 +18,7 @@ import LoadingOverlay from "@/src/custom-components/LoadingOverlay";
 import Popover, { PopoverMenuItem } from "@/src/custom-components/Popover";
 import Screen from "@/src/layout/Screen";
 import { getInitials } from "@/src/utils/getInitials";
-import { Entypo, Feather } from "@expo/vector-icons";
+import { Feather } from "@expo/vector-icons";
 import { format } from "date-fns";
 import { Image } from "expo-image";
 import { LinearGradient } from "expo-linear-gradient";
@@ -144,7 +143,13 @@ const Communitypage = () => {
   const getPopoverItems = (postId: string): PopoverMenuItem[] => [
     {
       label: "Edit",
-      icon: <Feather name="edit" size={18} color="#2E6939" />,
+      icon: (
+        <GradientFeatherIcon
+          name="edit"
+          size={18}
+          gradientColors={["#6B5591", "#6E3F8C", "#853385", "#9F3E83"]}
+        />
+      ),
       onPress: () => handleEdit(postId),
       textColor: "#374151",
     },
@@ -292,10 +297,15 @@ const Communitypage = () => {
                     className=""
                     onPress={(e) => handleOpenPopover(item._id, e)}
                   >
-                    <Entypo
+                    <GradientEntypoIcon
                       name="dots-three-vertical"
                       size={20}
-                      color="black"
+                      gradientColors={[
+                        "#6B5591",
+                        "#6E3F8C",
+                        "#853385",
+                        "#9F3E83",
+                      ]}
                     />
                   </TouchableOpacity>
                 ) : null}
