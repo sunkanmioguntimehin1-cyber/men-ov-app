@@ -30,6 +30,16 @@ export const intakeDetailsApi = async (data: any) => {
     throw error;
   }
 };
+export const editIntakeDetailsApi = async (data: any) => {
+  // console.log("data22", data)
+  try {
+    const res = await axiosInstance.put(`/user/intake`, data);
+    return res.data;
+  } catch (error) {
+    console.error("editIntakeDetailsApi", error);
+    throw error;
+  }
+};
 
 export const getIntakeDetailsApi = async () => {
   try {

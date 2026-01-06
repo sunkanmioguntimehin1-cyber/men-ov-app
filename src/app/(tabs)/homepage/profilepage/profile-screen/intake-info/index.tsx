@@ -489,8 +489,8 @@
 
 
 import {
-  useEditUser,
-  useIntakeDetailsApi,
+  useEditIntakeDetailsApi,
+  useEditUser
 } from "@/src/api_services/userApi/userMutation";
 import {
   useGetIntakeDetails,
@@ -557,7 +557,8 @@ const PersonalInfoForm = () => {
   const editUserProfile = useEditUser(() =>
     setCurrentIndex((prev) => prev + 1)
   );
-  const intakeDetails = useIntakeDetailsApi();
+  
+  const editIntakeDetails = useEditIntakeDetailsApi();
 
   React.useEffect(() => {
     if (getIntakeDetails?.data) {
@@ -600,13 +601,20 @@ const PersonalInfoForm = () => {
   const isLastStep = currentIndex === formsStep.length - 1;
   const isDisabled = !validateCurrentStep();
 
-  const handleSave = () => {
+  const handleNext = () => {
     if (!isLastStep) {
       setCurrentIndex((prev) => prev + 1);
       return;
     }
+  }
 
-    intakeDetails.mutate({
+  const handleSave = () => {
+    // if (!isLastStep) {
+    //   setCurrentIndex((prev) => prev + 1);
+    //   return;
+    // }
+
+    editIntakeDetails.mutate({
       ageOfFirstPeriod: firstPeriod,
       dateOfLastPeriod: lastDateValue,
       isPeriodsStopped12Months: periodsStoppedAnswer,
@@ -636,11 +644,9 @@ const PersonalInfoForm = () => {
             <Ionicons name="arrow-back" size={20} color="#9F3E83" />
           </TouchableOpacity>
 
-         
-
           <TouchableOpacity
             disabled={isDisabled}
-            onPress={handleSave}
+            onPress={handleNext}
             className="h-11 w-11 rounded-full bg-[#9F3E83] items-center justify-center"
             style={{ opacity: isDisabled ? 0.4 : 1 }}
           >
@@ -708,7 +714,11 @@ const PersonalInfoForm = () => {
               className="flex-1 items-center justify-center"
               style={{ opacity: isDisabled ? 0.4 : 1 }}
             >
-              <Text className="text-white font-semibold">Save</Text>
+              {editIntakeDetails.isPending ? (
+                <Text className="text-white font-semibold">Saving...</Text>
+              ) : (
+                <Text className="text-white font-semibold">Save</Text>
+              )}
             </LinearGradient>
           </TouchableOpacity>
         </View>
