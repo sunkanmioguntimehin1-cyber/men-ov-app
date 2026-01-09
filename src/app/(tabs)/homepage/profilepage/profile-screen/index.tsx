@@ -1,4 +1,7 @@
-import { useLikeArticleApi, useUnLikeArticleApi } from "@/src/api_services/articleApi/articleMutation";
+import {
+  useLikeArticleApi,
+  useUnLikeArticleApi,
+} from "@/src/api_services/articleApi/articleMutation";
 import { useSaveRecommendationApi } from "@/src/api_services/recommendationApi/recommendationMutation";
 import { useGetRecommendationApi } from "@/src/api_services/recommendationApi/recommendationQuery";
 import {
@@ -21,7 +24,7 @@ import {
   Platform,
   Text,
   TouchableOpacity,
-  View
+  View,
 } from "react-native";
 // import SafeScreen from "../../../components/SafeScreen";
 
@@ -35,11 +38,48 @@ export default function ProfilePage() {
   const getRecommendationData = useGetRecommendationApi();
   const saveRecommendation = useSaveRecommendationApi();
   const getIntakeDetails = useGetIntakeDetails();
-    const likeArticleApi =  useLikeArticleApi()
-    const unLikeArticleApi = useUnLikeArticleApi();
+  const likeArticleApi = useLikeArticleApi();
+  const unLikeArticleApi = useUnLikeArticleApi();
 
   // console.log("getUserData11", getUserData?.data);
-  // console.log("getIntakeDetails", getIntakeDetails?.data);
+  console.log("getIntakeDetails", getIntakeDetails?.error);
+
+  const MENOPAUSE_TAGS = ["Menopause", "Perimenopause", "Postmenopause"];
+
+  const existingTags = getUserData?.data?.tags ?? [];
+  const newmenopauseStage = getIntakeDetails?.data?.menopauseStage;
+
+  let updatedTags = existingTags;
+
+  // 1️⃣ Remove menopause-related tags
+  updatedTags = updatedTags.filter(
+    (tag: string) => !MENOPAUSE_TAGS.includes(tag)
+  );
+
+  // 2️⃣ Add new menopause stage (if valid & not already present)
+  if (newmenopauseStage && !updatedTags.includes(newmenopauseStage)) {
+    updatedTags = [...updatedTags, newmenopauseStage];
+  }
+
+  const handleIntakes=()=>{
+    if (getIntakeDetails?.data) {
+      router.push("/(tabs)/homepage/profilepage/profile-screen/intake-info");
+    } else {
+      Alert.alert(
+        "No Intake Details",
+        "Please complete your intake information first.",
+        [
+          {
+            text: "OK",
+            onPress: () =>
+              router.push(
+                "/(tabs)/homepage/personal-info"
+              ),
+          },
+        ]
+      );
+    }
+  }
 
   const openWebView = (itemUrl: string) => {
     try {
@@ -50,7 +90,8 @@ export default function ProfilePage() {
         return;
       }
       router.push({
-        pathname: "/(tabs)/homepage/profilepage/profile-screen/recommendations-webview",
+        pathname:
+          "/(tabs)/homepage/profilepage/profile-screen/recommendations-webview",
         params: { item: JSON.stringify(uri) },
       });
     } catch (error) {
@@ -67,7 +108,6 @@ export default function ProfilePage() {
 
   //!  working in porgress...
   const handleLikeAndUnLike = (itemId: any, isLiked: any) => {
-    
     if (isLiked === getUserData?.data.id) {
       unLikeArticleApi.mutate({
         id: itemId,
@@ -78,14 +118,6 @@ export default function ProfilePage() {
       });
     }
   };
-
-  // const birthDate = getUserData?.data?.dob;
-  // let age = null;
-  // if (birthDate) {
-  //   const date = parseISO(birthDate);
-  //   const now = new Date();
-  //   age = differenceInYears(now, date);
-  // }
 
   const birthDate = getUserData?.data?.dob;
   let age = null;
@@ -186,7 +218,7 @@ export default function ProfilePage() {
 
           {/* Health Tags */}
           <View className="flex-row flex-wrap justify-center mb-1">
-            {getUserData.data?.tags?.map((tag: string, index: number) => (
+            {updatedTags?.map((tag: string, index: number) => (
               <View
                 key={index}
                 className="bg-white border border-gray-300 rounded-full px-4 py-2 mr-2 mb-2"
@@ -202,9 +234,12 @@ export default function ProfilePage() {
           <View className="flex-row w-full gap-4 justify-between">
             <TouchableOpacity
               className="border border-primary rounded-xl items-center justify-center flex-1"
-              onPress={() => {
-                router.push("/(tabs)/homepage/profilepage/profile-screen/intake-info");
-              }}
+              // onPress={() => {
+              //   router.push(
+              //     "/(tabs)/homepage/profilepage/profile-screen/intake-info"
+              //   );
+              // }}
+              onPress={handleIntakes}
             >
               <GradientText className="font-[PoppinsMedium] text-center p-4">
                 Health Information

@@ -118,7 +118,7 @@
 //   const handleLastPeriodClose = () => lastMenstrualPeriodRef.current?.close();
 
 //   const formsStep = [
-  
+
 //     "Menstrual History",
 //     "Surgical & Reproductive History",
 //     "Current Status",
@@ -146,7 +146,7 @@
 //   const validateCurrentStep = () => {
 //     const values = formMethods.getValues();
 //     switch (currentIndex) {
-    
+
 //       case 0: // Menstrual History
 //         return firstPeriod && lastDateValue && periodsStoppedAnswer !== null;
 //       case 1: // Surgical & Reproductive History
@@ -424,7 +424,7 @@
 //                 isNextButtonDisabled() ? "bg-primaryLight" : "bg-primary"
 //               }`}
 //             >
-           
+
 //                 <Ionicons
 //                   name="arrow-forward"
 //                   size={24}
@@ -487,10 +487,9 @@
 
 // export default PersonalInfoForm;
 
-
 import {
   useEditIntakeDetailsApi,
-  useEditUser
+  useEditUser,
 } from "@/src/api_services/userApi/userMutation";
 import {
   useGetIntakeDetails,
@@ -502,6 +501,7 @@ import CurrentStatus from "@/src/components/PersonalInfoForm/CurrentStatus";
 import HormonalTreatment from "@/src/components/PersonalInfoForm/HormonalTreatment";
 import MenstrualHistory from "@/src/components/PersonalInfoForm/MenstrualHistory";
 import SurgicalAndReproductiveHistory from "@/src/components/PersonalInfoForm/SurgicalAndReproductiveHistory";
+import { GRADIENT_COLORS } from "@/src/constants";
 import BottomSheetScreen from "@/src/custom-components/BottomSheetScreen";
 import KeyboardAwareScreen from "@/src/layout/KeyboardAwareScreen";
 import { Ionicons } from "@expo/vector-icons";
@@ -557,7 +557,7 @@ const PersonalInfoForm = () => {
   const editUserProfile = useEditUser(() =>
     setCurrentIndex((prev) => prev + 1)
   );
-  
+
   const editIntakeDetails = useEditIntakeDetailsApi();
 
   React.useEffect(() => {
@@ -606,7 +606,7 @@ const PersonalInfoForm = () => {
       setCurrentIndex((prev) => prev + 1);
       return;
     }
-  }
+  };
 
   const handleSave = () => {
     // if (!isLastStep) {
@@ -647,10 +647,24 @@ const PersonalInfoForm = () => {
           <TouchableOpacity
             disabled={isDisabled}
             onPress={handleNext}
-            className="h-11 w-11 rounded-full bg-[#9F3E83] items-center justify-center"
+            // className="h-11 w-11 rounded-full bg-[#9F3E83] items-center justify-center"
             style={{ opacity: isDisabled ? 0.4 : 1 }}
           >
-            <Ionicons name="arrow-forward" size={20} color="#fff" />
+            <LinearGradient
+              colors={["#6B5591", "#6E3F8C", "#853385", "#9F3E83"]}
+              start={{ x: 0, y: 0 }}
+              end={{ x: 1, y: 1 }}
+              // className="items-center justify-center py-4"
+              style={{
+                minHeight: 44,
+                width: 44,
+                alignItems: "center",
+                justifyContent: "center",
+                borderRadius: 100,
+              }}
+            >
+              <Ionicons name="arrow-forward" size={24} color="#fff" />
+            </LinearGradient>
           </TouchableOpacity>
         </View>
 
@@ -707,12 +721,21 @@ const PersonalInfoForm = () => {
           <TouchableOpacity
             onPress={handleSave}
             disabled={isDisabled}
-            className="flex-1 ml-3 h-12 rounded-xl overflow-hidden"
+            className="flex-1 rounded-lg overflow-hidden"
           >
             <LinearGradient
-              colors={["#6B5591", "#6E3F8C", "#853385", "#9F3E83"]}
-              className="flex-1 items-center justify-center"
-              style={{ opacity: isDisabled ? 0.4 : 1 }}
+              colors={GRADIENT_COLORS}
+              start={{ x: 0, y: 0 }}
+              end={{ x: 1, y: 1 }}
+              // className="h-14 flex-row items-center justify-center"
+              style={{
+                minHeight: 42,
+                flexDirection: "row",
+                // padding: Platform.OS === "ios" ? 16 : 16,
+                alignItems: "center",
+                justifyContent: "center",
+                borderRadius: 8,
+              }}
             >
               {editIntakeDetails.isPending ? (
                 <Text className="text-white font-semibold">Saving...</Text>
