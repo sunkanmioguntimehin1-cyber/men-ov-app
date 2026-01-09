@@ -2,7 +2,7 @@ import {
   useEditUser,
   useIntakeDetailsApi,
 } from "@/src/api_services/userApi/userMutation";
-import { useGetUser } from "@/src/api_services/userApi/userQuery";
+import { useGetIntakeDetails, useGetUser } from "@/src/api_services/userApi/userQuery";
 import AgeOfFirstPeriod from "@/src/components/PersonalInfoForm/BottomSheetComp/AgeOfFirstPeriod";
 import LastMenstrualPeriod from "@/src/components/PersonalInfoForm/BottomSheetComp/LastMenstrualPeriod";
 import SetPersonalInfoCalender from "@/src/components/PersonalInfoForm/BottomSheetComp/SetPersonalInfoCalender";
@@ -37,6 +37,7 @@ const dataItem = [
 
 const PersonalInfoForm = () => {
   const router = useRouter();
+  const getIntakeDetails = useGetIntakeDetails();
   const [currentIndex, setCurrentIndex] = React.useState<number>(0);
   const [selectedDate, setSelectedDate] = React.useState<Date | any>(null);
   const [selected, setSelected] = React.useState<Item | null>(null);
@@ -70,7 +71,7 @@ const PersonalInfoForm = () => {
     defaultValues: {
       address: "",
       fullname: "",
-      dob:"",
+      dob: "",
     },
   });
 
@@ -79,6 +80,26 @@ const PersonalInfoForm = () => {
     reset,
     formState: { errors, isValid },
   } = formMethods;
+
+React.useEffect(() => {
+  if (getIntakeDetails?.data) {
+    setFirstPeriod(getIntakeDetails?.data?.ageOfFirstPeriod ?? "");
+    setSelectedLastMenstrualDate(
+      getIntakeDetails?.data?.dateOfLastPeriod
+        ? new Date(getIntakeDetails?.data?.dateOfLastPeriod)
+        : null
+    );
+    setIsHysterectomy(getIntakeDetails?.data?.ishysterectomy ?? null);
+    setIsAvariesRemoved(getIntakeDetails?.data?.isOvariesRemoved ?? null);
+    setIsOnHormoneTherapy(getIntakeDetails?.data?.isOnHormoneTherapy ?? null);
+    setPeriodsStoppedAnswer(
+      getIntakeDetails?.data?.isPeriodsStopped12Months ?? null
+    );
+    setMenopauseStage(getIntakeDetails?.data?.menopauseStage ?? "");
+  }
+}, [getIntakeDetails?.data, setMenopauseStage, setIsHysterectomy]);
+
+  console.log("getIntakeDetails?.data", getIntakeDetails?.data);
 
   // bottom sheet
   const snapPoints = useMemo(() => ["30%", "50%"], []);
@@ -122,8 +143,6 @@ const PersonalInfoForm = () => {
   const editUserProfile = useEditUser(handleEditProfileSuccess);
   const intakeDetails = useIntakeDetailsApi();
 
-  
-
   // Function to validate current step before proceeding
   const validateCurrentStep = () => {
     const values = formMethods.getValues();
@@ -135,7 +154,7 @@ const PersonalInfoForm = () => {
           !!selected &&
           !!(values.fullname || getUserData?.data?.fullname) &&
           !!(values.address || getUserData?.data?.address)
-        );// Form validation will handle this
+        ); // Form validation will handle this
       case 1: // Menstrual History
         return firstPeriod && lastDateValue && periodsStoppedAnswer !== null;
       case 2: // Surgical & Reproductive History

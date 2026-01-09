@@ -26,7 +26,7 @@ import {
   ScrollView,
   Text,
   TouchableOpacity,
-  View
+  View,
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
@@ -47,6 +47,9 @@ export default function HomePage() {
   const getArticles = useGetArticleApi();
   const getCycleTrackingLatest = useCycleTrackingLatest();
   const getNotificationsCount = useGetNotificationsCountApi();
+
+  const isMenopause =
+    getCycleTrackingLatest?.data?.menopauseStage === "menopause";
 
   const insets = useSafeAreaInsets();
 
@@ -108,8 +111,6 @@ export default function HomePage() {
   const onCancel3 = () => {
     setModelVisible3(false);
   };
-
- 
 
   return (
     <>
@@ -244,6 +245,7 @@ export default function HomePage() {
                   />
                 </View>
                 <View className="">
+                  {/* {isMenopause?():()} */}
                   <CustomSelectData
                     onPress={handleOpenmodal2}
                     primary

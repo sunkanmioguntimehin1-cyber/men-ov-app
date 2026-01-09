@@ -6,14 +6,19 @@ import {
   useUnSavePostApi,
 } from "@/src/api_services/postsApi/postsMutation";
 import { useGetUser } from "@/src/api_services/userApi/userQuery";
+import DeletePostModal from "@/src/components/community/DeletePostModal";
+import CustomModel from "@/src/custom-components/CustomModel";
 import {
+  GradientEntypoIcon,
   GradientFeatherIcon,
   GradientIoniconsIcon,
-  GradientMaterialCommunityIcons
+  GradientMaterialCommunityIcons,
 } from "@/src/custom-components/GradientIcon";
 import LoadingOverlay from "@/src/custom-components/LoadingOverlay";
+import Popover, { PopoverMenuItem } from "@/src/custom-components/Popover";
 import Screen from "@/src/layout/Screen";
 import { getInitials } from "@/src/utils/getInitials";
+import { Feather } from "@expo/vector-icons";
 import { format } from "date-fns";
 import { Image } from "expo-image";
 import { LinearGradient } from "expo-linear-gradient";
@@ -24,13 +29,18 @@ import {
   FlatList,
   Text,
   TouchableOpacity,
-  View
+  View,
 } from "react-native";
 
 const Communitypage = () => {
   const router = useRouter();
+  const [modelVisible, setModelVisible] = React.useState(false);
+  const [getPostId, setGetPostId] = React.useState<string | null>(null);
+  const [activePopoverId, setActivePopoverId] = React.useState<string | null>(
+    null
+  );
+  const [popoverPosition, setPopoverPosition] = React.useState({ x: 0, y: 0 });
 
-  // const getPosts = useGetAllPosts();
   const getUserData = useGetUser();
   const savePost = useSavePostApi();
   const unSavePost = useUnSavePostApi();
@@ -48,18 +58,18 @@ const Communitypage = () => {
     fetchNextPage,
   } = useGetAllPosts();
 
+  console.log("getUserData", getUserData?.data);
+  console.log("data333", data);
+
   const getPosts = React.useMemo(() => {
     return data?.pages.flatMap((page) => page.data) || [];
   }, [data]);
-
 
   const _onReachEnd = () => {
     if (hasNextPage && !isLoading) {
       fetchNextPage();
     }
   };
-
- 
 
   const handleSaveAndUnsave = (item: any) => {
     if (item.isSaved) {
@@ -98,16 +108,81 @@ const Communitypage = () => {
       params: { item: JSON.stringify(postId) },
     });
   };
+
+  const handleOpenPopover = (postId: string, event: any) => {
+    event.currentTarget.measure(
+      (
+        x: number,
+        y: number,
+        width: number,
+        height: number,
+        pageX: number,
+        pageY: number
+      ) => {
+        setPopoverPosition({ x: pageX + width, y: pageY + height });
+        setActivePopoverId(postId);
+      }
+    );
+  };
+
+  const handleEdit = (postId: string) => {
+    console.log("Edit post:", postId);
+    // Add your edit logic here
+    router.push({
+      pathname: `/(tabs)/communitypage/edit-post`,
+      params: { item: JSON.stringify(postId) },
+    });
+  };
+
+  const handleDelete = (postId: string) => {
+    setModelVisible(true);
+    setGetPostId(postId);
+    // Add your delete logic here
+  };
+
+  const getPopoverItems = (postId: string): PopoverMenuItem[] => [
+    {
+      label: "Edit",
+      icon: (
+        <GradientFeatherIcon
+          name="edit"
+          size={18}
+          gradientColors={["#6B5591", "#6E3F8C", "#853385", "#9F3E83"]}
+        />
+      ),
+      onPress: () => handleEdit(postId),
+      textColor: "#374151",
+    },
+    {
+      label: "Delete",
+      icon: <Feather name="trash-2" size={18} color="#DC2626" />,
+      onPress: () => handleDelete(postId),
+      textColor: "#DC2626",
+    },
+  ];
+
+  const onCancel = () => {
+    // router.push("/guess-home");
+    setModelVisible(false);
+  };
+
   return (
     <Screen className="px-4 py-3">
-      <LoadingOverlay
-        isOpen={isLoading} // Required: Controls visibility
-        // message="Login..." // Optional: Loading text
-        animationType="pulse" // Optional: "spin" | "pulse" | "bounce" | "fade"
-        backdropClassName="..." // Optional: Additional backdrop styling
+      <CustomModel
+        modelVisible={modelVisible}
+        setModelVisible={setModelVisible}
+        closeOnOutsideClick={false}
+        message={
+          <DeletePostModal
+            onCancel={onCancel}
+            getPostId={getPostId}
+            setModelVisible={setModelVisible}
+          />
+        }
       />
+      <LoadingOverlay isOpen={isLoading} animationType="pulse" />
       <TouchableOpacity
-        className=" flex-row items-center justify-between"
+        className="flex-row items-center justify-between"
         onPress={() => {
           router.push("/(tabs)/communitypage/create-post");
         }}
@@ -132,15 +207,11 @@ const Communitypage = () => {
             )}
           </View>
           <View>
-            <Text>What’s on your mind?</Text>
+            <Text>{`What's on your mind today?`}</Text>
           </View>
         </View>
-
-        {/* <TouchableOpacity className=" ">
-          <MaterialIcons name="filter-list" size={24} color="black" />
-        </TouchableOpacity> */}
       </TouchableOpacity>
-      <View className=" h-0.5 bg-slate-200 my-2" />
+      <View className="h-0.5 bg-slate-200 my-2" />
 
       <FlatList
         data={getPosts}
@@ -157,17 +228,19 @@ const Communitypage = () => {
               No Post found
             </Text>
 
-            <TouchableOpacity className="mt-6  px-6 py-3 rounded-full" onPress={()=>{
-              router.push("/communitypage/create-post")
-            }}>
+            <TouchableOpacity
+              className="mt-6 px-6 py-3 rounded-full"
+              onPress={() => {
+                router.push("/communitypage/create-post");
+              }}
+            >
               <LinearGradient
                 colors={["#6B5591", "#6E3F8C", "#853385", "#9F3E83"]}
                 start={{ x: 0, y: 0 }}
                 end={{ x: 1, y: 1 }}
-                // className="items-center justify-center py-4"
                 style={{
                   minHeight: 56,
-                  padding:  16,
+                  padding: 16,
                   alignItems: "center",
                   justifyContent: "center",
                   borderRadius: 10,
@@ -186,7 +259,7 @@ const Communitypage = () => {
 
           return (
             <TouchableOpacity
-              className="my-2"
+              className="my-5"
               onPress={() => handleViewPost(item._id)}
             >
               {/* Recommendation Header */}
@@ -219,11 +292,13 @@ const Communitypage = () => {
                     </Text>
                   </View>
                 </View>
-
-                <TouchableOpacity onPress={() => handleSaveAndUnsave(item)}>
-                  {item.isSaved ? (
-                    <GradientIoniconsIcon
-                      name="bookmark"
+                {getUserData?.data?.id === item.user?._id ? (
+                  <TouchableOpacity
+                    className=""
+                    onPress={(e) => handleOpenPopover(item._id, e)}
+                  >
+                    <GradientEntypoIcon
+                      name="dots-three-vertical"
                       size={20}
                       gradientColors={[
                         "#6B5591",
@@ -232,19 +307,8 @@ const Communitypage = () => {
                         "#9F3E83",
                       ]}
                     />
-                  ) : (
-                    <GradientIoniconsIcon
-                      name="bookmark-outline"
-                      size={20}
-                      gradientColors={[
-                        "#6B5591",
-                        "#6E3F8C",
-                        "#853385",
-                        "#9F3E83",
-                      ]}
-                    />
-                  )}
-                </TouchableOpacity>
+                  </TouchableOpacity>
+                ) : null}
               </View>
 
               {/* Title */}
@@ -290,12 +354,12 @@ const Communitypage = () => {
               {/* Engagement Bar */}
               <View className="flex-row items-center justify-between">
                 <View className="flex-row items-center">
-                  <View className="flex-row items-center mr-6">
+                  <View className="flex-row items-center">
                     <TouchableOpacity onPress={() => handleLikeAndUnLike(item)}>
                       {item.isLiked ? (
                         <GradientMaterialCommunityIcons
                           name="thumb-up"
-                          size={16}
+                          size={20}
                           gradientColors={[
                             "#6B5591",
                             "#6E3F8C",
@@ -306,7 +370,7 @@ const Communitypage = () => {
                       ) : (
                         <GradientMaterialCommunityIcons
                           name="thumb-up-outline"
-                          size={16}
+                          size={20}
                           gradientColors={[
                             "#6B5591",
                             "#6E3F8C",
@@ -317,16 +381,16 @@ const Communitypage = () => {
                       )}
                     </TouchableOpacity>
                     <Text className="text-xs text-gray-600 ml-1">
-                      {item?.likes} likes
+                      {item?.likes}
                     </Text>
                   </View>
                   <TouchableOpacity
-                    className="flex-row items-center"
+                    className="flex-row items-center mx-2"
                     onPress={() => handleComments(item._id)}
                   >
                     <GradientFeatherIcon
                       name="message-circle"
-                      size={16}
+                      size={20}
                       gradientColors={[
                         "#6B5591",
                         "#6E3F8C",
@@ -336,35 +400,73 @@ const Communitypage = () => {
                     />
 
                     <Text className="text-xs text-gray-600 ml-1">
-                      {item.commentCount} Comments
+                      {item.commentCount}
+                    </Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity
+                    className="flex-row items-center"
+                    onPress={() => handleComments(item._id)}
+                  >
+                    <GradientMaterialCommunityIcons
+                      name="repeat-variant"
+                      size={20}
+                      gradientColors={[
+                        "#6B5591",
+                        "#6E3F8C",
+                        "#853385",
+                        "#9F3E83",
+                      ]}
+                    />
+                    <Text className="text-xs text-gray-600 ml-1">
+                      {item?.shares}
                     </Text>
                   </TouchableOpacity>
                 </View>
 
                 <View className="flex-row items-center">
-                  {/* <Feather name="share" size={16} color="gray" /> */}
-                  <GradientMaterialCommunityIcons
-                    name="repeat-variant"
-                    size={16}
-                    gradientColors={[
-                      "#6B5591",
-                      "#6E3F8C",
-                      "#853385",
-                      "#9F3E83",
-                    ]}
-                  />
-                  <Text className="text-xs text-gray-600 ml-1">
-                    {item?.shares} reposts
-                  </Text>
+                  <TouchableOpacity onPress={() => handleSaveAndUnsave(item)}>
+                    {item.isSaved ? (
+                      <GradientIoniconsIcon
+                        name="bookmark"
+                        size={20}
+                        gradientColors={[
+                          "#6B5591",
+                          "#6E3F8C",
+                          "#853385",
+                          "#9F3E83",
+                        ]}
+                      />
+                    ) : (
+                      <GradientIoniconsIcon
+                        name="bookmark-outline"
+                        size={20}
+                        gradientColors={[
+                          "#6B5591",
+                          "#6E3F8C",
+                          "#853385",
+                          "#9F3E83",
+                        ]}
+                      />
+                    )}
+                  </TouchableOpacity>
                 </View>
               </View>
             </TouchableOpacity>
           );
         }}
       />
+
+      {/* Single Popover for all posts */}
+      {activePopoverId && (
+        <Popover
+          visible={true}
+          onClose={() => setActivePopoverId(null)}
+          items={getPopoverItems(activePopoverId)}
+          anchorPosition={popoverPosition}
+        />
+      )}
     </Screen>
   );
 };
 
 export default Communitypage;
-

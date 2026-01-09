@@ -1,12 +1,12 @@
 import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
-import { getAllPosts, getCommentPostApi, getHashtag, getMyPost, getTrendingPost, viewAPost } from ".";
+import { getAllPosts, getAPost, getCommentPostApi, getHashtag, getMyPost, getTrendingPost, viewAPost } from ".";
 
-// export const useGetAllPosts = () => {
-//   return useQuery({
-//     queryKey: ["get-all-posts"],
-//     queryFn: getAllPosts,
-//   });
-// };
+export const useGetAPost = (postId:string) => {
+  return useQuery({
+    queryKey: ["get-a-posts"],
+    queryFn:() => getAPost(postId),
+  });
+};
 
 export const useGetAllPosts = () => {
   return useInfiniteQuery({

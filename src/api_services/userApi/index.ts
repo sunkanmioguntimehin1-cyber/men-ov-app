@@ -21,12 +21,22 @@ export const editUserDetails = async (data: any) => {
 };
 
 export const intakeDetailsApi = async (data: any) => {
-  console.log("data22", data)
+  // console.log("data22", data)
   try {
     const res = await axiosInstance.post(`/user/intake`, data);
     return res.data;
   } catch (error) {
     console.error("intakeDetailsApi", error);
+    throw error;
+  }
+};
+export const editIntakeDetailsApi = async (data: any) => {
+  // console.log("data22", data)
+  try {
+    const res = await axiosInstance.put(`/user/intake`, data);
+    return res.data;
+  } catch (error) {
+    console.error("editIntakeDetailsApi", error);
     throw error;
   }
 };

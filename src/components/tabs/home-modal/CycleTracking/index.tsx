@@ -28,6 +28,7 @@ const CycleTracking = ({ onCancel }: any) => {
   const [notePublicUrls, setNotePublicUrls] = React.useState<string>("");
 
   const getIntakeDetails = useGetIntakeDetails();
+  
   const createCycleTracking = useCreateCycleTrackingApi(onCancel);
   const getCycleTrackingLatest = useCycleTrackingLatest();
   const updateCycleTracking = useUpdateCycleTrackingApi(onCancel);
@@ -145,7 +146,8 @@ const CycleTracking = ({ onCancel }: any) => {
           </TouchableOpacity>
         </View>
         <View>
-          {getCycleTrackingLatest?.data ? (
+          {getCycleTrackingLatest?.data ||
+          getIntakeDetails?.data?.menopauseStage ? (
             <>
               {/* {currentIndex === 0 && (
                 <CurrentStatus
@@ -202,7 +204,7 @@ const CycleTracking = ({ onCancel }: any) => {
               !menopauseStage ||
               (getCycleTrackingLatest?.data &&
                 currentIndex === 0 &&
-                (!selectedDate)) ||
+                !selectedDate) ||
               (currentIndex === 1 && (!selectedDate || !durationData)) ||
               updateCycleTracking.isPending ||
               createCycleTracking.isPending

@@ -54,37 +54,37 @@ const CreatePost = () => {
     }
   };
 
- const onSubmit = (data: any) => {
-   const requestedPayload: any = {
-     content: data?.content,
-     hashtags: selectedTags,
-     images: notePublicUrls,
-     isAnon: isAnonymous,
-   };
+  const onSubmit = (data: any) => {
+    const requestedPayload: any = {
+      content: data?.content,
+      hashtags: selectedTags,
+      images: notePublicUrls,
+      isAnon: isAnonymous,
+    };
 
-   if (data?.title && data.title.length >= 3) {
-     requestedPayload.title = data.title;
-   }
+    if (data?.title && data.title.length >= 3) {
+      requestedPayload.title = data.title;
+    }
 
-   createPostMutation.mutate(requestedPayload);
- };
+    createPostMutation.mutate(requestedPayload);
+  };
 
   return (
-    <Screen scroll={true} className=" px-4 bg-white">
+    <Screen scroll={true} className=" px-4 bg-white pb-10">
       {/* Header */}
       <View className="flex-row items-center justify-between py-4 px-4 border-b border-gray-200">
         <TouchableOpacity onPress={() => router.back()}>
           <Ionicons name="chevron-back" size={24} color="black" />
         </TouchableOpacity>
         <Text className="font-[PoppinsSemiBold] text-lg text-black">
-          Creat post
+          Create a post
         </Text>
         <TouchableOpacity onPress={handleSubmit(onSubmit)}>
           {createPostMutation.isPending ? (
             <ActivityIndicator />
           ) : (
             <GradientText className="font-[PoppinsMedium] text-base">
-              Next
+              Post
             </GradientText>
           )}
         </TouchableOpacity>
@@ -135,7 +135,7 @@ const CreatePost = () => {
             render={({ field: { onChange, onBlur, value } }) => (
               <CustomInput
                 primary
-                placeholder="What's topic on your mind?"
+                placeholder={`Add a short topic (optional)`}
                 onChangeText={onChange}
                 onBlur={onBlur}
                 value={value}
@@ -154,7 +154,8 @@ const CreatePost = () => {
           }}
           render={({ field: { onChange, onBlur, value } }) => (
             <TextInput
-              placeholder="Anyone else dealing with brain fog lately?"
+              placeholder={`Share what you’re experiencing—and what kind of support you’d like.
+You can ask a question, share a win, or simply vent.`}
               placeholderTextColor="#9CA3AF"
               value={value}
               onChangeText={onChange}
@@ -176,13 +177,13 @@ const CreatePost = () => {
         {/* Anonymous Toggle */}
         <View className="flex-row items-center justify-between my-3">
           <Text className="font-[PoppinsRegular] text-base text-black">
-            Participate as anonymous
+            {`Share anonymously`}
           </Text>
           <Switch
             value={isAnonymous}
             onValueChange={setIsAnonymous}
             trackColor={{ false: "#D1D5DB", true: "#B33288" }}
-            // thumbColor={isAnonymous ? "#8553F3" : "#F3F4F6"}
+            thumbColor="#fff"
             ios_backgroundColor="#D1D5DB"
           />
         </View>

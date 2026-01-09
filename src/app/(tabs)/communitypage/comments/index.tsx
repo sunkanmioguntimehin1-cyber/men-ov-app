@@ -25,9 +25,7 @@ const CommentsScreen = () => {
 
   const currentUserId = getUserData?.data?.id
 
-  console.log("newData300", newData);
-  console.log(getUserData?.data, "getUserData");
-  console.log(getPostCommentLists, "getPostCommentLists400");
+ 
 
   React.useEffect(() => {
     if (newData) {
@@ -39,9 +37,9 @@ const CommentsScreen = () => {
 
   return (
     <Screen className="p-6">
-      <View className="flex-row items-center justify-between my-2  bg-white">
+      <View className="flex-row items-center justify-between my-2 ">
         <TouchableOpacity onPress={() => router.back()}>
-          <Ionicons name="chevron-back" size={24} color="#2E6939" />
+          <Ionicons name="chevron-back" size={24} color="black" />
         </TouchableOpacity>
         <View>
           <Text
@@ -54,7 +52,7 @@ const CommentsScreen = () => {
         <View />
       </View>
 
-      <View className="flex-1 rounded-lg overflow-hidden mb-4">
+      <View className="flex-1 mb-4">
         <CommentSection
           getPostCommentLists={getPostCommentLists}
           newData={newData} // Pass the actual product data

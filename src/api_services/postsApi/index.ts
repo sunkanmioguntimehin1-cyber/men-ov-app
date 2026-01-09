@@ -40,6 +40,16 @@ export const getMyPost = async () => {
   }
 };
 
+export const getAPost = async (postId: string) => {
+  try {
+    const res = await axiosInstance.get(`/post/${postId}`);
+    return res.data;
+  } catch (error) {
+    console.error("getAPost", error);
+    throw error;
+  }
+};
+
 export const getTrendingPost = async () => {
   try {
     const res = await axiosInstance.get(`/post/trending`);
@@ -51,11 +61,24 @@ export const getTrendingPost = async () => {
 };
 
 export const updateAPost = async (data:any) => {
+   const { id, ...rest } = data;
   try {
-    const res = await axiosInstance.put(`/post/${data}`);
+    const res = await axiosInstance.put(`/post/${id}`, rest);
     return res.data;
   } catch (error) {
     console.error("updateAPost", error);
+    throw error;
+  }
+};
+
+export const deleteAPostApi = async (dataId: any) => {
+  console.log("testing deleteAPost", dataId);
+  
+  try {
+    const res = await axiosInstance.delete(`/post/${dataId}`);
+    return res.data;
+  } catch (error) {
+    console.error("deleteAPost", error);
     throw error;
   }
 };

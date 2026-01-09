@@ -255,6 +255,10 @@ const YesNoSelector = ({
     null
   );
 
+  console.log("controlledValue", controlledValue);
+  console.log("selectedValue", selectedValue);
+
+
   const selectedValue =
     controlledValue !== undefined ? controlledValue : internalSelected;
 
