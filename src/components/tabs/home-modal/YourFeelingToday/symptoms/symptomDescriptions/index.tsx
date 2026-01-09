@@ -56,20 +56,11 @@ const SymptomsDescriptions = ({
   const setSymtomsDataList = useSymtomsStore().setSymtomsDataList;
   const currentPublicUrls = useSymtomsStore().symtomsDataList.publicUrl;
 
-  React.useEffect(() => {
-    if (imageSelected) {
-      getUploadUrlData.mutate({
-        fileName: imageSelected.fileName,
-      });
-    }
-  }, [imageSelected]);
-
   const handleStoreData = (data: any) => {
-    console.log(data, "coming from the data")
-    if(data){
+    console.log(data, "coming from the data");
+
     setStoreData(data);
 
-    }
     if (data?.publicUrl) {
       setSymtomsDataList({
         publicUrl: [...currentPublicUrls, data.publicUrl],
@@ -85,11 +76,19 @@ const SymptomsDescriptions = ({
     isImageUploadPending: ImgIsPending,
     isImageUploadError: ImgIsError,
     resetImageData,
+    status,
   } = useImageUpload(storeData);
 
   const getUploadUrlData = useGetUploadUrl(handleStoreData);
 
-  console.log("storeDatacompone:", storeData);
+  React.useEffect(() => {
+    if (storeData?.uploadUrl && imageSelected?.uri) {
+      console.log("Uploading image with URL:", storeData.uploadUrl);
+      imageUploadedSelected(imageSelected.uri);
+    }
+  }, [storeData]);
+
+ 
 
   const handleImagePick = async () => {
     try {
@@ -102,19 +101,22 @@ const SymptomsDescriptions = ({
       });
 
       if (!result.canceled) {
-        imageUploadedSelected(result.assets[0].uri);
+        const selectedAsset = result.assets[0];
+        setImageSelected(selectedAsset);
 
-        setImageSelected(result.assets[0]);
+        // Request upload URL - this will trigger the useEffect above once complete
+        getUploadUrlData.mutate({
+          fileName: selectedAsset.fileName,
+        });
       }
     } catch (error) {
       console.log("error from image upload", error);
     }
   };
 
- 
-
   const handleCloseImage = () => {
     setImageSelected(null);
+    setStoreData(null); // ✅ Also reset storeData
     resetImageData();
     clearPublicUrls();
   };
@@ -183,23 +185,30 @@ const SymptomsDescriptions = ({
 
       <View className="mt-5 ">
         {imageSelected ? (
-          <View className="w-full h-56  bg-blue-500 items-center justify-center rounded-2xl">
+          <View className="w-full h-56 border border-primary   items-center justify-center rounded-2xl">
             {ImgIsPending ? (
               <View>
                 <ActivityIndicator size={40} />
               </View>
             ) : (
               <View className=" flex-row ">
-                <View className=" w-80 h-56 p-3">
-                  <Image
-                    source={{ uri: imageSelected.uri || storeData.publicUrl }}
-                    style={{ width: "100%", height: "100%" }}
-                    contentFit="cover"
-                  />
-                </View>
+                {ImgIsError ? (
+                  <View className="text-red-500">
+                    <Text>Upload Failed. Try Again.</Text>
+                  </View>
+                ) : (
+                  <View className=" w-80 h-56 p-3">
+                    <Image
+                      // source={{ uri: imageSelected.uri || storeData.publicUrl }}
+                      source={{ uri: storeData?.publicUrl }}
+                      style={{ width: "100%", height: "100%" }}
+                      contentFit="cover"
+                    />
+                  </View>
+                )}
 
                 <TouchableOpacity onPress={handleCloseImage} className="">
-                  <AntDesign name="close" size={18} color="black" />
+                  <AntDesign name="close" size={18} color="#B33288" />
                 </TouchableOpacity>
               </View>
             )}
@@ -207,17 +216,16 @@ const SymptomsDescriptions = ({
         ) : (
           <View>
             <TouchableOpacity
-              className="my-3 w-[131px] flex-row items-center ml-2 bg-[#F9F5FF] rounded-full px-4 py-3 "
+              className="my-3 w-[131px] flex-row items-center ml-2 bg-[#F4EBFF] rounded-full px-4 py-3 "
               onPress={handleImagePick}
             >
-              {/* <View className=" my-3 w-[131px] flex-row items-center ml-2 bg-[#F9F5FF] rounded-full px-4 py-3"> */}
               <View className="">
-                <Entypo name="image-inverted" size={15} color="#8A3FFC" />
+                <Entypo name="image-inverted" size={15} color="#B33288" />
               </View>
               <Text className="font-[PoppinsMedium] text-sm mx-2">
                 Add image
               </Text>
-              {/* </View> */}
+          
             </TouchableOpacity>
           </View>
         )}

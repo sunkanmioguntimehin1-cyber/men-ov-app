@@ -1,7 +1,9 @@
-import { useGetUserChat } from '@/src/api_services/userApi/userQuery';
-import { AntDesign, MaterialIcons } from '@expo/vector-icons';
-import { useRouter } from 'expo-router';
-import React, { useEffect, useRef } from 'react';
+import { useGetUserChat } from "@/src/api_services/userApi/userQuery";
+import { GradientMaterialIcon } from "@/src/custom-components/GradientIcon";
+import { Image } from "expo-image";
+import { useRouter } from "expo-router";
+import * as WebBrowser from "expo-web-browser";
+import React, { useEffect, useRef } from "react";
 import {
   Alert,
   Animated,
@@ -9,30 +11,26 @@ import {
   Linking,
   Text,
   TouchableOpacity,
-  View
-} from 'react-native';
+  View,
+} from "react-native";
 
 const FloatingAiButton = () => {
-  const router=useRouter()
+  const router = useRouter();
   const bounceAnim = useRef(new Animated.Value(0)).current;
   const pulseAnim = useRef(new Animated.Value(0)).current;
 
-  const getUserChatAi = useGetUserChat()
-
-  console.log("getUserChatAi:", getUserChatAi.data);
-
+  const getUserChatAi = useGetUserChat();
 
   const openReceiptInBrowser = async () => {
-  
     try {
       // const result = await getReceipt.refetch(); // Manually fetch
       // const uri = result.data?.url;
-    const uri = getUserChatAi.data.chatUrl;
+      const uri = getUserChatAi.data.chatUrl;
 
-    if (!uri) {
-      Alert.alert("No  chat Url found");
-      return;
-    }
+      if (!uri) {
+        Alert.alert("No  chat Url found");
+        return;
+      }
 
       const supported = await Linking.canOpenURL(uri);
       if (supported) {
@@ -43,6 +41,30 @@ const FloatingAiButton = () => {
     } catch (error) {
       Alert.alert("Failed to fetch receipt.");
     }
+  };
+
+  const openWebView = () => {
+    console.log("getUserChatAi.data", getUserChatAi.data);
+    try {
+      const uri = getUserChatAi.data?.chatUrl;
+
+      if (!uri) {
+        Alert.alert("No  chat Url found");
+        return;
+      }
+      router.push({
+        pathname: "/homepage/chat-webview-ai",
+        params: { item: JSON.stringify(uri) },
+      });
+    } catch (error) {
+      Alert.alert("Failed to fetch chat Url");
+    }
+  };
+
+  const openChai = () => {
+    router.push({
+      pathname: "/(tabs)/homepage/chat-with-ai",
+    });
   };
 
   useEffect(() => {
@@ -96,6 +118,15 @@ const FloatingAiButton = () => {
     outputRange: [0.28, 0.08],
   });
 
+  const handleOpenPrivacyPolicy = async () => {
+    const uri = "https://menoviahealth.com/privacy.html";
+    try {
+      await WebBrowser.openBrowserAsync(uri);
+    } catch (error) {
+      Alert.alert("Failed to fetch receipt.");
+    }
+  };
+
   return (
     <View>
       <Animated.View
@@ -121,7 +152,7 @@ const FloatingAiButton = () => {
           <TouchableOpacity
             accessibilityLabel="Open AI assistant"
             activeOpacity={0.9}
-            className=" w-full  bg-white my-3 border border-[#EAEAEA] p-4 rounded-2xl"
+            className=" w-full  bg-white my-3 border border-[#EAEAEA] p-4 rounded-xl"
             style={{
               shadowColor: "#8A3FFC",
               shadowOpacity: 0.25,
@@ -131,44 +162,68 @@ const FloatingAiButton = () => {
             }}
           >
             <Text className=" text-[#101828] font-[PoppinsSemiBold] text-base">
-              AI-Powered Tool
+              Ziena™ —Your AI Companion
             </Text>
 
             <TouchableOpacity
               className="flex-row items-center justify-between"
-              onPress={openReceiptInBrowser}
+              // onPress={openWebView}
+              onPress={() => {
+                router.push("/(tabs)/homepage/chat-with-ai");
+              }}
             >
-              <AntDesign name="adduser" size={26} color="#8A3FFC" />
+              <View className=" w-10 h-10 ">
+                <Image
+                  source={require("@/assets/images/xena-1.png")}
+                  style={{
+                    height: "100%",
+                    width: "100%",
+                    alignSelf: "center",
+                    // borderRadius: 100,
+                  }}
+                  contentFit="fill"
+                  onError={(error) => console.log("Image error:", error)}
+                />
+              </View>
 
-              <View className="flex-1 mx-3 bg-[#F4EBFF] border border-[#EAECF0] p-4 rounded-lg">
+              <View className="flex-1 my-2  border border-primary p-3 rounded-lg">
                 <Text className="text-base font-[PoppinsRegular]">
-                  Ask about your menopausal symptoms
+                  Ask Ziena™...
                 </Text>
               </View>
 
               {/* Send button */}
               <TouchableOpacity
-                // onPress={() => {
-                //   router.push("/(tabs)/homepage/chat-with-ai");
-                // }}
-                onPress={openReceiptInBrowser}
+                className="mx-2"
+                onPress={() => {
+                  router.push("/(tabs)/homepage/chat-with-ai");
+                }}
+                // onPress={openWebView}
               >
-                <MaterialIcons name="send" size={26} color="#8A3FFC" />
+                <GradientMaterialIcon
+                  name="send"
+                  size={26}
+                  gradientColors={["#6B5591", "#6E3F8C", "#853385", "#9F3E83"]}
+                />
               </TouchableOpacity>
             </TouchableOpacity>
 
             <View className=" my-2">
-              <Text>We care about your data in our privacy policy.</Text>
+              <Text>
+                We care about your data in our{" "}
+                <Text
+                  style={{ color: "#007AFF", textDecorationLine: "underline" }}
+                  onPress={handleOpenPrivacyPolicy}
+                >
+                  <Text>privacy policy.</Text>
+                </Text>{" "}
+              </Text>
             </View>
           </TouchableOpacity>
         </View>
       </Animated.View>
     </View>
   );
-}
+};
 
-export default FloatingAiButton
-
-
-
-
+export default FloatingAiButton;

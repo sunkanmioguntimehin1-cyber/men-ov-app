@@ -6,10 +6,6 @@ import {
   useCloseLogApi,
   useUpdateLogApi,
 } from "@/src/api_services/logApi/logMutation";
-import {
-  useGetUploadUrl,
-  useImageUpload,
-} from "@/src/api_services/uploadApi/uploadMutations";
 import { rMS } from "@/src/lib/responsivehandler";
 import { Image } from "expo-image";
 import React from "react";
@@ -23,6 +19,7 @@ import {
 } from "react-native";
 import ImageUploadedDetails from "./ImageUploadedDetails";
 import Note from "./Note";
+import NoteImageDetails from "./NoteImageDetails";
 import Triggers from "./Trigger";
 
 interface Item {
@@ -38,15 +35,13 @@ const LastSymptomsModal = ({ onCancel, selectedLastSymptom }: any) => {
   const [selectedTriggers, setSelectedTriggers] = React.useState<string[]>(
     selectedLastSymptom?.triggers || []
   );
+  const [notePublicUrls, setNotePublicUrls] = React.useState<string[]>([]);
+  const [symptomImgPublicUrls, setSymptomImgPublicUrls] = React.useState<
+    string[]
+  >([]);
 
   const [customTrigger, setCustomTrigger] = React.useState("");
-  const [storeData, setStoreData] = React.useState<string | any>(null);
-  const [imageSelected, setImageSelected] = React.useState<any>(null);
-
-
-
-  console.log("selectedLastSymptom", selectedLastSymptom);
-  console.log("selectedSeverityLevel", selectedSeverityLevel);
+  const [isDone, setIsDone] = React.useState(false);
 
   const toggleTrigger = (trigger: string) => {
     setSelectedTriggers((prev) =>
@@ -98,8 +93,13 @@ const LastSymptomsModal = ({ onCancel, selectedLastSymptom }: any) => {
     },
   ];
 
+  const handleIsDone = () => {
+    setIsDone(true);
+  };
+
   const handleWelconeBtn = () => {
     onCancel();
+    setIsDone(false);
   };
 
   React.useEffect(() => {
@@ -112,20 +112,10 @@ const LastSymptomsModal = ({ onCancel, selectedLastSymptom }: any) => {
     }
   }, [selectedLastSymptom, reset]);
 
-  const handleStoreData = (data: any) => {
-    setStoreData(data);
-  };
+  
 
-  const getUploadUrlData = useGetUploadUrl(handleStoreData);
 
-  //UPLOADING
-  const {
-    uploadImage: imageUploadedSelected,
-    imageData: itemImgData,
-    isImageUploadPending: ImgIsPending,
-    isImageUploadError: ImgIsError,
-    resetImageData,
-  } = useImageUpload(storeData);
+
 
   const onSubmit = (data: any) => {
     const payload = {
@@ -133,10 +123,9 @@ const LastSymptomsModal = ({ onCancel, selectedLastSymptom }: any) => {
       severityLevel: selectedSeverityLevel || selectedLastSymptom.severityLevel,
       triggers: selectedTriggers || selectedLastSymptom.triggers,
       notes: data.notes || selectedLastSymptom.notes,
-      symptomImages: itemImgData
-        ? [itemImgData]
-        : selectedLastSymptom?.symptomImages || [],
-      images: selectedLastSymptom?.images || [],
+      symptomImages:
+        symptomImgPublicUrls || selectedLastSymptom?.symptomImages || [],
+      images: notePublicUrls || selectedLastSymptom?.images || [],
       id: selectedLastSymptom._id,
     };
     updateLogDetails.mutate(payload);
@@ -148,25 +137,26 @@ const LastSymptomsModal = ({ onCancel, selectedLastSymptom }: any) => {
       severityLevel: selectedSeverityLevel || selectedLastSymptom.severityLevel,
       triggers: selectedTriggers || selectedLastSymptom.triggers,
       notes: data.notes || selectedLastSymptom.notes,
-      symptomImages: itemImgData
-        ? [itemImgData]
-        : selectedLastSymptom?.symptomImages || [],
-      images: selectedLastSymptom?.images || [],
+      symptomImages:
+        symptomImgPublicUrls || selectedLastSymptom?.symptomImages || [],
+      images: notePublicUrls || selectedLastSymptom?.images || [],
       id: selectedLastSymptom._id,
     };
     closeLog.mutate(payload);
   };
 
   const updateLogDetails = useUpdateLogApi(onCancel);
-  const closeLog = useCloseLogApi(onCancel);
+  const closeLog = useCloseLogApi(handleIsDone);
+
+
 
   return (
     <>
-      {selectedLastSymptom.isClosed === false && (
+      {!isDone && (
         <View className=" h-[600px] w-96 p-5 bg-white rounded-lg  shadow-lg overflow-hidden">
           <View className=" flex-row items-center justify-between">
             <Text className=" font-[PoppinsSemiBold] text-base">
-              Are you well now?{" "}
+              Are you well now?
             </Text>
             <TouchableOpacity onPress={onCancel}>
               <MaterialIcons name="close" size={24} color="black" />
@@ -230,19 +220,22 @@ const LastSymptomsModal = ({ onCancel, selectedLastSymptom }: any) => {
               setCustomTrigger={setCustomTrigger}
             />
             <Note errors={errors} control={formMethods.control} />
+
             <ImageUploadedDetails
-              imageSelected={imageSelected}
-              setImageSelected={setImageSelected}
-              imageUploadedSelected={imageUploadedSelected}
+              setSymptomImgPublicUrls={setSymptomImgPublicUrls}
               selectedLastSymptom={selectedLastSymptom}
-              resetImageData={resetImageData}
+            />
+
+            <NoteImageDetails
+              selectedLastSymptom={selectedLastSymptom}
+              setNotePublicUrls={setNotePublicUrls}
             />
           </ScrollView>
 
           <View className="my-3 flex-row items-center justify-center gap-1 space-x-3">
-            <View className=" flex-1">
+            <View className=" w-44 ">
               <CustomButton
-                primary
+                gradient
                 title="I am feeling better"
                 disabled={
                   (selectedSeverityLevel !== null &&
@@ -254,9 +247,9 @@ const LastSymptomsModal = ({ onCancel, selectedLastSymptom }: any) => {
               />
             </View>
 
-            <View className=" ">
+            <View className="  w-40">
               <CustomButton
-                primary
+                gradient
                 title="Update"
                 disabled={updateLogDetails.isPending}
                 loading={updateLogDetails.isPending}
@@ -266,10 +259,10 @@ const LastSymptomsModal = ({ onCancel, selectedLastSymptom }: any) => {
           </View>
         </View>
       )}
-      {selectedLastSymptom.isClosed === true && (
+      {isDone && (
         <View className="h-[550px] w-96 p-5 bg-white rounded-xl  shadow-lg overflow-hidden">
           <ImageBackground
-            source={require("@/assets/images/isdonebg.png")}
+            source={require("@/assets/images/done2.gif")}
             className="w-full h-full"
           >
             <View className=" flex-row items-center justify-between">
@@ -308,8 +301,8 @@ const LastSymptomsModal = ({ onCancel, selectedLastSymptom }: any) => {
 
             <View className="mt-5">
               <CustomButton
-                primary
-                title="Your welcome!"
+                gradient
+                title="You're welcome!"
                 onPress={handleWelconeBtn}
               />
             </View>

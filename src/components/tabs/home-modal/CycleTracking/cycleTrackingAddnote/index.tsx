@@ -3,18 +3,14 @@ import {
   useImageUpload,
 } from "@/src/api_services/uploadApi/uploadMutations";
 import { rS, rV } from "@/src/lib/responsivehandler";
-import { AntDesign, Entypo } from "@expo/vector-icons";
 import * as ImagePicker from "expo-image-picker";
 import React from "react";
 import { Controller } from "react-hook-form";
 import {
-  ActivityIndicator,
-  Image,
   ScrollView,
   Text,
   TextInput,
-  TouchableOpacity,
-  View,
+  View
 } from "react-native";
 
 const CycleTrackingAddnote = ({
@@ -38,12 +34,13 @@ const CycleTrackingAddnote = ({
   const handleStoreData = (data: any) => {
     setStoreData(data);
     if (data?.publicUrl) {
-      setNotePublicUrls((prev: any) => [...prev, data.publicUrl]);
+      // setNotePublicUrls((prev: any) => [...prev, data.publicUrl]);
+      setNotePublicUrls(data.publicUrl);
+
     }
     // keep track of only URLs
   };
 
-  console.log("notePublicUrls2222", notePublicUrls);
 
   //UPLOADING
   const {
@@ -56,58 +53,40 @@ const CycleTrackingAddnote = ({
 
   const getUploadUrlData = useGetUploadUrl(handleStoreData);
 
-  const handleImagePick = async () => {
-     console.log("am_here45");
-    try {
-      await ImagePicker.requestCameraPermissionsAsync();
-      let result = await ImagePicker.launchImageLibraryAsync({
-        mediaTypes: ImagePicker.MediaType,
-        allowsEditing: false,
-        aspect: [4, 3],
-        quality: 1,
-      });
 
-      if (!result.canceled) {
-        imageUploadedSelected(result.assets[0].uri);
-        console.log("am_here")
 
-        setImageSelected(result.assets[0]);
-        console.log("result2222", result.assets[0]);
+    React.useEffect(() => {
+      if (storeData?.uploadUrl && imageSelected?.uri) {
+        imageUploadedSelected(imageSelected.uri);
       }
-    } catch (error) {
-      console.log("error from image upload", error);
-    }
-  };
+    }, [storeData]);
+  
+    const handleImagePick = async () => {
+      try {
+        await ImagePicker.requestCameraPermissionsAsync();
+        let result = await ImagePicker.launchImageLibraryAsync({
+          mediaTypes: ImagePicker.MediaType,
+          allowsEditing: false,
+          aspect: [4, 3],
+          quality: 1,
+        });
+  
+        if (!result.canceled) {
+          const selectedAsset = result.assets[0];
+          setImageSelected(selectedAsset);
+  
+          // Request upload URL - this will trigger the useEffect above once complete
+          getUploadUrlData.mutate({
+            fileName: selectedAsset.fileName,
+          });
+        }
+      } catch (error) {
+        console.log("error from image upload", error);
+      }
+    };
+  
 
-  // const handleImagePick = async () => {
-  //   try {
-  //     await ImagePicker.requestCameraPermissionsAsync();
-  //     let result = await ImagePicker.launchImageLibraryAsync({
-  //       mediaTypes: ImagePicker.MediaType, // Changed from MediaType
-  //       allowsEditing: false,
-  //       aspect: [4, 3],
-  //       quality: 1,
-  //     });
 
-  //     if (!result.canceled) {
-  //       const asset = result.assets[0];
-
-  //       imageUploadedSelected(asset.uri);
-  //       setImageSelected(asset);
-
-  //       console.log("imageUploadedSelected", imageUploadedSelected);
-
-  //       console.log("Selected image:", {
-  //         uri: asset.uri,
-  //         width: asset.width,
-  //         height: asset.height,
-  //         type: asset.type,
-  //       });
-  //     }
-  //   } catch (error) {
-  //     console.log("error from image upload", error);
-  //   }
-  // };
 
 
  
@@ -115,7 +94,7 @@ const CycleTrackingAddnote = ({
   const handleCloseImage = () => {
     setImageSelected(null);
     resetImageData();
-    setNotePublicUrls([]);
+    setNotePublicUrls("");
   };
 
   return (
@@ -152,11 +131,10 @@ const CycleTrackingAddnote = ({
           )}
         />
       </View>
-     
 
-      <View className=" ">
+      {/* <View className=" ">
         {imageSelected ? (
-          <View className="w-full h-56  bg-white items-center justify-center rounded-2xl">
+          <View className="w-full h-56 border border-primary  bg-white items-center justify-center rounded-2xl">
             {ImgIsPending ? (
               <View>
                 <ActivityIndicator size={40} />
@@ -165,7 +143,7 @@ const CycleTrackingAddnote = ({
               <View className=" flex-row ">
                 <View className=" w-80 h-56 p-3">
                   <Image
-                    source={{ uri: imageSelected.uri || storeData.publicUrl }}
+                    source={{ uri: storeData?.publicUrl }}
                     style={{ width: "100%", height: "100%" }}
                   />
                 </View>
@@ -185,11 +163,13 @@ const CycleTrackingAddnote = ({
               <View className="">
                 <Entypo name="image-inverted" size={15} color="#8A3FFC" />
               </View>
-              <Text className=" text-sm font-[PoppinsMedium] mx-2">Add image</Text>
+              <Text className=" text-sm font-[PoppinsMedium] mx-2">
+                Add image
+              </Text>
             </TouchableOpacity>
           </View>
         )}
-      </View>
+      </View> */}
     </ScrollView>
   );
 };

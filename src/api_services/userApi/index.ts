@@ -21,12 +21,22 @@ export const editUserDetails = async (data: any) => {
 };
 
 export const intakeDetailsApi = async (data: any) => {
-  console.log("data22", data)
+  // console.log("data22", data)
   try {
     const res = await axiosInstance.post(`/user/intake`, data);
     return res.data;
   } catch (error) {
     console.error("intakeDetailsApi", error);
+    throw error;
+  }
+};
+export const editIntakeDetailsApi = async (data: any) => {
+  // console.log("data22", data)
+  try {
+    const res = await axiosInstance.put(`/user/intake`, data);
+    return res.data;
+  } catch (error) {
+    console.error("editIntakeDetailsApi", error);
     throw error;
   }
 };
@@ -44,7 +54,7 @@ export const getIntakeDetailsApi = async () => {
 
 export const deleteUser = async () => {
   try {
-    const res = await axiosInstance.delete(`/users/me`);
+    const res = await axiosInstance.delete(`/user/me`);
     return res.data;
   } catch (error) {
     console.error("DeleteUser:", error);
@@ -58,6 +68,17 @@ export const updateNotificationSettings = async (data: any) => {
     return res.data;
   } catch (error) {
     console.error("updateNotificationSettings:", error);
+    throw error;
+  }
+};
+
+export const pushNotificationSyncDevice = async (data: any) => {
+  console.log("dataTokenExpo", data);
+  try {
+    const res = await axiosInstance.patch(`/user/me/sync-device`, data);
+    return res.data;
+  } catch (error) {
+    console.error("pushNotificationSyncDevice:", error);
     throw error;
   }
 };

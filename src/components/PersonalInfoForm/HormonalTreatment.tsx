@@ -2,17 +2,22 @@ import YesNoSelector from "@/src/custom-components/YesNoSelector";
 import { rS } from "@/src/lib/responsivehandler";
 import React from "react";
 import { Text, View } from "react-native";
+import { GradientText } from "../GradientText";
 
-const HormonalTreatment = ({ isOnHormoneTherapy, setIsOnHormoneTherapy }:any) => {
+const HormonalTreatment = ({
+  isOnHormoneTherapy,
+  setIsOnHormoneTherapy,
+}: any) => {
   console.log("isOnHormoneTherapy", isOnHormoneTherapy);
 
   return (
     <View>
       <View className=" items-center my-5">
-        <Text className=" text-xl text-[#42307D] font-[PoppinsSemiBold]">
+        <GradientText className="font-[PoppinsMedium] text-xl">
           Hormonal Treatment
-        </Text>
-        <Text className=" text-base text-[#6941C6] font-[PoppinsRegular] my-2">
+        </GradientText>
+
+        <Text className="text-base font-[PoppinsRegular] my-2">
           Your data will be safe with us.
         </Text>
       </View>
@@ -28,7 +33,7 @@ const HormonalTreatment = ({ isOnHormoneTherapy, setIsOnHormoneTherapy }:any) =>
           <YesNoSelector
             onSelectionChange={(value) => setIsOnHormoneTherapy(value)}
             selectedValue={isOnHormoneTherapy}
-            primaryColor="#6941C6" // Your brand purple
+            useGradient={true}
           />
         </View>
       </View>

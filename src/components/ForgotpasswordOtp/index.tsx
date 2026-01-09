@@ -2,10 +2,10 @@ import { useNavigation } from "@react-navigation/native";
 import React from "react";
 import { Dimensions, StyleSheet, Text, View } from "react-native";
 import {
-    CodeField,
-    Cursor,
-    useBlurOnFulfill,
-    useClearByFocusCell,
+  CodeField,
+  Cursor,
+  useBlurOnFulfill,
+  useClearByFocusCell,
 } from "react-native-confirmation-code-field";
 
 type Props = {
@@ -94,7 +94,7 @@ const styles = StyleSheet.create({
   },
   cellText: {
     fontFamily: "PoppinsMedium",
-    color: "#7F56D9",
+    color: "#712A87",
     textAlign: "center",
     includeFontPadding: false,
     textAlignVertical: "center",

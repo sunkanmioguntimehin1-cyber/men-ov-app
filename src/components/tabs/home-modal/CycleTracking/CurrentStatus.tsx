@@ -7,19 +7,22 @@ const CurrentStatus = ({
   setMenopauseStage,
   getIntakeDetails,
 }: any) => {
-  console.log("getIntakeDetails", getIntakeDetails?.data);
+  // console.log("getIntakeDetails", getIntakeDetails?.data);
 
   const menopauseStageData = [
-    { label: "Premenopause", value: "premenopause" },
+    // { label: "Premenopause", value: "premenopause" },
+    // { label: "Perimenopause", value: "perimenopause" },
+    // { label: "Postmenopause", value: "postmenopause" },
     { label: "Perimenopause", value: "perimenopause" },
+    { label: "Menopause", value: "menopause" },
     { label: "Postmenopause", value: "postmenopause" },
   ];
 
-  React.useEffect(() => {
-    if (getIntakeDetails?.data) {
-      setMenopauseStage(getIntakeDetails?.data?.menopauseStage || "");
-    }
-  }, [getIntakeDetails?.data, setMenopauseStage]);
+  // React.useEffect(() => {
+  //   if (getIntakeDetails?.data) {
+  //     setMenopauseStage(getIntakeDetails?.data?.menopauseStage || "");
+  //   }
+  // }, [getIntakeDetails?.data, setMenopauseStage]);
   return (
     <View>
       <View className=" my-3">

@@ -10,16 +10,17 @@ export const getRecommendationApi = async () => {
   }
 };
 
-// export const createLogApi = async (data: any) => {
-//   console.log("data:", data);
-//   try {
-//     const res = await axiosInstance.post(`/log`, data);
-//     return res.data;
-//   } catch (error) {
-//     console.error("createLogApi", error);
-//     throw error;
-//   }
-// };
+export const saveRecommendationApi = async (data: any) => {
+  // console.log("data21111:", data);
+  
+  try {
+    const res = await axiosInstance.patch(`/recommendation/${data.id}/save`, data.isSaved);
+    return res.data;
+  } catch (error) {
+    console.error("saveRecommendationApi", error);
+    throw error;
+  }
+};
 
 // export const updateLogApi = async (data: any) => {
 //   console.log("data:", data);

@@ -2,7 +2,7 @@ import {
   useEditUser,
   useIntakeDetailsApi,
 } from "@/src/api_services/userApi/userMutation";
-import { useGetUser } from "@/src/api_services/userApi/userQuery";
+import { useGetIntakeDetails, useGetUser } from "@/src/api_services/userApi/userQuery";
 import AgeOfFirstPeriod from "@/src/components/PersonalInfoForm/BottomSheetComp/AgeOfFirstPeriod";
 import LastMenstrualPeriod from "@/src/components/PersonalInfoForm/BottomSheetComp/LastMenstrualPeriod";
 import SetPersonalInfoCalender from "@/src/components/PersonalInfoForm/BottomSheetComp/SetPersonalInfoCalender";
@@ -13,10 +13,11 @@ import PersonalForm from "@/src/components/PersonalInfoForm/PersonalForm";
 import SurgicalAndReproductiveHistory from "@/src/components/PersonalInfoForm/SurgicalAndReproductiveHistory";
 import BottomSheetScreen from "@/src/custom-components/BottomSheetScreen";
 import { useLocationSearch } from "@/src/hooks/useLocationSearch";
-import Screen from "@/src/layout/Screen";
+import KeyboardAwareScreen from "@/src/layout/KeyboardAwareScreen";
 import { Ionicons, MaterialIcons } from "@expo/vector-icons";
 import BottomSheet from "@gorhom/bottom-sheet";
 import { format } from "date-fns";
+import { LinearGradient } from "expo-linear-gradient";
 import { useRouter } from "expo-router";
 import React, { useMemo } from "react";
 import { FormProvider, useForm } from "react-hook-form";
@@ -36,9 +37,11 @@ const dataItem = [
 
 const PersonalInfoForm = () => {
   const router = useRouter();
+  const getIntakeDetails = useGetIntakeDetails();
   const [currentIndex, setCurrentIndex] = React.useState<number>(0);
   const [selectedDate, setSelectedDate] = React.useState<Date | any>(null);
   const [selected, setSelected] = React.useState<Item | null>(null);
+  const [userAddress, setUserAddress] = React.useState<string>("");
 
   //menstrual states
   const [periodsStoppedAnswer, setPeriodsStoppedAnswer] = React.useState<
@@ -68,7 +71,7 @@ const PersonalInfoForm = () => {
     defaultValues: {
       address: "",
       fullname: "",
-      dob:"",
+      dob: "",
     },
   });
 
@@ -77,6 +80,26 @@ const PersonalInfoForm = () => {
     reset,
     formState: { errors, isValid },
   } = formMethods;
+
+React.useEffect(() => {
+  if (getIntakeDetails?.data) {
+    setFirstPeriod(getIntakeDetails?.data?.ageOfFirstPeriod ?? "");
+    setSelectedLastMenstrualDate(
+      getIntakeDetails?.data?.dateOfLastPeriod
+        ? new Date(getIntakeDetails?.data?.dateOfLastPeriod)
+        : null
+    );
+    setIsHysterectomy(getIntakeDetails?.data?.ishysterectomy ?? null);
+    setIsAvariesRemoved(getIntakeDetails?.data?.isOvariesRemoved ?? null);
+    setIsOnHormoneTherapy(getIntakeDetails?.data?.isOnHormoneTherapy ?? null);
+    setPeriodsStoppedAnswer(
+      getIntakeDetails?.data?.isPeriodsStopped12Months ?? null
+    );
+    setMenopauseStage(getIntakeDetails?.data?.menopauseStage ?? "");
+  }
+}, [getIntakeDetails?.data, setMenopauseStage, setIsHysterectomy]);
+
+  console.log("getIntakeDetails?.data", getIntakeDetails?.data);
 
   // bottom sheet
   const snapPoints = useMemo(() => ["30%", "50%"], []);
@@ -120,14 +143,18 @@ const PersonalInfoForm = () => {
   const editUserProfile = useEditUser(handleEditProfileSuccess);
   const intakeDetails = useIntakeDetailsApi();
 
-  
-
   // Function to validate current step before proceeding
   const validateCurrentStep = () => {
+    const values = formMethods.getValues();
     switch (currentIndex) {
       case 0: // Personal Information
         // Check if required fields are filled for first step
-        return true; // Form validation will handle this
+        return (
+          !!selectedDate &&
+          !!selected &&
+          !!(values.fullname || getUserData?.data?.fullname) &&
+          !!(values.address || getUserData?.data?.address)
+        ); // Form validation will handle this
       case 1: // Menstrual History
         return firstPeriod && lastDateValue && periodsStoppedAnswer !== null;
       case 2: // Surgical & Reproductive History
@@ -154,7 +181,7 @@ const PersonalInfoForm = () => {
         fullname: data.fullname || getUserData?.data?.fullname,
         gender: selected?.value || getUserData?.data?.gender,
         address: data.address || getUserData?.data?.address,
-        dob: dateValue,
+        dob: selectedDate,
       });
       // The handleEditProfileSuccess callback will handle moving to next step
     }
@@ -190,7 +217,7 @@ const PersonalInfoForm = () => {
   const isNextButtonDisabled = () => {
     // For first step, use form validation
     if (currentIndex === 0) {
-      return editUserProfile.isPending;
+      return editUserProfile.isPending || !validateCurrentStep();
     }
 
     // For last step, check if API call is pending
@@ -222,6 +249,7 @@ const PersonalInfoForm = () => {
   React.useEffect(() => {
     if (getUserData?.data) {
       const userGender = getUserData.data.gender;
+      const updateDateValue = getUserData?.data?.dob;
       reset({
         fullname: getUserData?.data?.fullname,
         address: getUserData?.data?.address,
@@ -229,12 +257,20 @@ const PersonalInfoForm = () => {
       });
       const matchingGender = dataItem.find((item) => item.value === userGender);
       setSelected(matchingGender || null);
+
+      const parsedDob = updateDateValue ? new Date(updateDateValue) : null;
+      setSelectedDate(parsedDob);
     }
   }, [getUserData?.data, reset]);
 
   return (
     <>
-      <Screen scroll={true} className="">
+      {/* <Screen scroll={true} className=""> */}
+      <KeyboardAwareScreen
+        scroll={true}
+        keyboardAware={true}
+        extraScrollHeight={50}
+      >
         <FormProvider {...formMethods}>
           <TouchableOpacity
             className="px-8 my-4"
@@ -328,7 +364,7 @@ const PersonalInfoForm = () => {
                 className="items-center justify-center w-14 h-14 rounded-full border border-primary"
                 onPress={handlePrev}
               >
-                <Ionicons name="arrow-back" size={24} color="#8A3FFC" />
+                <Ionicons name="arrow-back" size={24} color="#712A87" />
               </TouchableOpacity>
             )}
 
@@ -336,7 +372,56 @@ const PersonalInfoForm = () => {
             {isFirstStep && <View className="w-14 h-14" />}
 
             {/* Next Button */}
-            <TouchableOpacity
+            {isNextButtonDisabled() ? (
+              <TouchableOpacity
+                onPress={
+                  currentIndex === 0
+                    ? handleSubmit(handleNext)
+                    : () => handleNext({})
+                }
+                disabled={isNextButtonDisabled()}
+                className={`items-center justify-center w-14 h-14 rounded-full bg-primaryLight `}
+              >
+                <Ionicons
+                  name="arrow-forward"
+                  size={24}
+                  color={isNextButtonDisabled() ? "#B0B0B0" : "#fff"}
+                />
+              </TouchableOpacity>
+            ) : (
+              <TouchableOpacity
+                onPress={
+                  currentIndex === 0
+                    ? handleSubmit(handleNext)
+                    : () => handleNext({})
+                }
+                // disabled={isNextButtonDisabled()}
+                // className={`items-center justify-center w-14 h-14 rounded-full ${
+                //   isNextButtonDisabled() ? "bg-primaryLight" : "bg-primary"
+                // }`}
+              >
+                <LinearGradient
+                  colors={["#6B5591", "#6E3F8C", "#853385", "#9F3E83"]}
+                  start={{ x: 0, y: 0 }}
+                  end={{ x: 1, y: 1 }}
+                  // className="items-center justify-center py-4"
+                  style={{
+                    minHeight: 56,
+                    width: 56,
+                    alignItems: "center",
+                    justifyContent: "center",
+                    borderRadius: 100,
+                  }}
+                >
+                  <Ionicons
+                    name="arrow-forward"
+                    size={24}
+                    color={isNextButtonDisabled() ? "#B0B0B0" : "#fff"}
+                  />
+                </LinearGradient>
+              </TouchableOpacity>
+            )}
+            {/* <TouchableOpacity
               onPress={
                 currentIndex === 0
                   ? handleSubmit(handleNext)
@@ -347,12 +432,13 @@ const PersonalInfoForm = () => {
                 isNextButtonDisabled() ? "bg-primaryLight" : "bg-primary"
               }`}
             >
-              <Ionicons
-                name="arrow-forward"
-                size={24}
-                color={isNextButtonDisabled() ? "#B0B0B0" : "#fff"}
-              />
-            </TouchableOpacity>
+           
+                <Ionicons
+                  name="arrow-forward"
+                  size={24}
+                  color={isNextButtonDisabled() ? "#B0B0B0" : "#fff"}
+                />
+            </TouchableOpacity> */}
           </View>
         </FormProvider>
 
@@ -401,7 +487,8 @@ const PersonalInfoForm = () => {
             />
           }
         />
-      </Screen>
+      </KeyboardAwareScreen>
+      {/* </Screen> */}
     </>
   );
 };

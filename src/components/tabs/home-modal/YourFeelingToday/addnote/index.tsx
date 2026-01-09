@@ -4,12 +4,12 @@ import {
 } from "@/src/api_services/uploadApi/uploadMutations";
 import { rS, rV } from "@/src/lib/responsivehandler";
 import { AntDesign, Entypo } from "@expo/vector-icons";
+import { Image } from "expo-image";
 import * as ImagePicker from "expo-image-picker";
 import React from "react";
 import { Controller } from "react-hook-form";
 import {
   ActivityIndicator,
-  Image,
   ScrollView,
   Text,
   TextInput,
@@ -26,15 +26,6 @@ const AddNote = ({
   const [storeData, setStoreData] = React.useState<string | any>(null);
   const [imageSelected, setImageSelected] = React.useState<any>(null);
 
-
-  React.useEffect(() => {
-    if (imageSelected) {
-      getUploadUrlData.mutate({
-        fileName: imageSelected.fileName,
-      });
-    }
-  }, [imageSelected]);
-
   const handleStoreData = (data: any) => {
     setStoreData(data);
     if (data?.publicUrl) {
@@ -42,8 +33,6 @@ const AddNote = ({
     }
     // keep track of only URLs
   };
-
-  console.log("notePublicUrls2222", notePublicUrls);
 
   //UPLOADING
   const {
@@ -56,6 +45,12 @@ const AddNote = ({
 
   const getUploadUrlData = useGetUploadUrl(handleStoreData);
 
+  React.useEffect(() => {
+    if (storeData?.uploadUrl && imageSelected?.uri) {
+      imageUploadedSelected(imageSelected.uri);
+    }
+  }, [storeData]);
+
   const handleImagePick = async () => {
     try {
       await ImagePicker.requestCameraPermissionsAsync();
@@ -67,10 +62,13 @@ const AddNote = ({
       });
 
       if (!result.canceled) {
-        imageUploadedSelected(result.assets[0].uri);
+        const selectedAsset = result.assets[0];
+        setImageSelected(selectedAsset);
 
-        setImageSelected(result.assets[0]);
-        console.log("result2222", result.assets[0]);
+        // Request upload URL - this will trigger the useEffect above once complete
+        getUploadUrlData.mutate({
+          fileName: selectedAsset.fileName,
+        });
       }
     } catch (error) {
       console.log("error from image upload", error);
@@ -117,23 +115,29 @@ const AddNote = ({
           )}
         />
       </View>
-     
 
       <View className=" ">
         {imageSelected ? (
-          <View className="w-full h-56  bg-white items-center justify-center rounded-2xl">
+          <View className="w-full h-56 border border-primary   items-center justify-center rounded-2xl">
             {ImgIsPending ? (
               <View>
                 <ActivityIndicator size={40} />
               </View>
             ) : (
               <View className=" flex-row ">
-                <View className=" w-80 h-56 p-3">
-                  <Image
-                    source={{ uri: imageSelected.uri || storeData.publicUrl }}
-                    style={{ width: "100%", height: "100%" }}
-                  />
-                </View>
+                {ImgIsError ? (
+                  <View className="text-red-500">
+                    <Text>Upload Failed. Try Again.</Text>
+                  </View>
+                ) : (
+                  <View className=" w-80 h-56 p-3">
+                    <Image
+                      source={{ uri: storeData?.publicUrl }}
+                      style={{ width: "100%", height: "100%" }}
+                      contentFit="cover"
+                    />
+                  </View>
+                )}
 
                 <TouchableOpacity onPress={handleCloseImage} className="">
                   <AntDesign name="close" size={18} color="black" />
@@ -144,13 +148,15 @@ const AddNote = ({
         ) : (
           <View>
             <TouchableOpacity
-              className="my-3 w-[131px] flex-row items-center ml-2 bg-[#F9F5FF] rounded-full px-4 py-3 "
+              className="my-3 w-[131px] flex-row items-center ml-2 bg-[#F4EBFF] rounded-full px-4 py-3 "
               onPress={handleImagePick}
             >
               <View className="">
-                <Entypo name="image-inverted" size={15} color="#8A3FFC" />
+                <Entypo name="image-inverted" size={15} color="#B33288" />
               </View>
-              <Text className=" text-sm font-[PoppinsMedium] mx-2">Add image</Text>
+              <Text className=" text-sm font-[PoppinsMedium] mx-2">
+                Add image
+              </Text>
             </TouchableOpacity>
           </View>
         )}

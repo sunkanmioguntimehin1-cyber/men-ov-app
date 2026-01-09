@@ -3,17 +3,29 @@ import { showSuccessToast } from "@/src/lib/showSuccessToast";
 import useAuthStore from "@/src/store/authStore";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "expo-router";
-import { deleteUser, editUserDetails, intakeDetailsApi, updateNotificationSettings } from ".";
+import {
+  deleteUser,
+  editIntakeDetailsApi,
+  editUserDetails,
+  intakeDetailsApi,
+  pushNotificationSyncDevice,
+  updateNotificationSettings,
+} from ".";
 
-export const useEditUser = (handleNextBtn: any) => {
+export const useEditUser = (handleNextBtn?: any) => {
   const queryClient = useQueryClient();
+  const router = useRouter();
   return useMutation({
     mutationFn: editUserDetails,
     onSuccess(data: any) {
       showSuccessToast({
         message: data.message,
       });
-      handleNextBtn();
+      if (handleNextBtn) {
+        handleNextBtn();
+      } else {
+        router.back();
+      }
       queryClient.invalidateQueries({ queryKey: ["get-user"] });
     },
     onError(error: any) {
@@ -24,19 +36,25 @@ export const useEditUser = (handleNextBtn: any) => {
 
 export const useIntakeDetailsApi = () => {
   const queryClient = useQueryClient();
-  
-  const router = useRouter()
+
+  const router = useRouter();
   return useMutation({
     mutationFn: intakeDetailsApi,
     onSuccess(data: any) {
       // showSuccessToast({
       //   message: data.message,
       // });
+
+      // console.log("data300", data)
       
-      console.log("data300", data)
-      
-      router.push("/(tabs)/homepage");
-      // queryClient.invalidateQueries({ queryKey: ["get-user"] });
+        router.push("/(tabs)/homepage");
+     
+
+      queryClient.invalidateQueries({ queryKey: ["get-user"] });
+      queryClient.invalidateQueries({ queryKey: ["get-intakes"] });
+      queryClient.invalidateQueries({
+        queryKey: ["get-cycle-tracking-latest"],
+      });
     },
     onError(error: any) {
       handleAxiosError(error);
@@ -44,6 +62,33 @@ export const useIntakeDetailsApi = () => {
   });
 };
 
+export const useEditIntakeDetailsApi = () => {
+  const queryClient = useQueryClient();
+
+  const router = useRouter();
+  return useMutation({
+    mutationFn: editIntakeDetailsApi,
+    onSuccess(data: any) {
+      // showSuccessToast({
+      //   message: data.message,
+      // });
+
+      // console.log("data300", data)
+    
+        router.back();
+     
+
+      queryClient.invalidateQueries({ queryKey: ["get-user"] });
+      queryClient.invalidateQueries({ queryKey: ["get-intakes"] });
+      queryClient.invalidateQueries({
+        queryKey: ["get-cycle-tracking-latest"],
+      });
+    },
+    onError(error: any) {
+      handleAxiosError(error);
+    },
+  });
+};
 
 export const useDeleteUserApi = () => {
   const router = useRouter();
@@ -56,7 +101,7 @@ export const useDeleteUserApi = () => {
       // });
 
       // queryClient.invalidateQueries({ queryKey: ["get-user"] });
-      useAuthStore.getState().clearAuthState();
+      useAuthStore.getState().clearAuthState(queryClient);
       router.replace("/(auth)/login");
     },
     onError(error: any) {
@@ -64,7 +109,6 @@ export const useDeleteUserApi = () => {
     },
   });
 };
-
 
 export const useUpdateNotificationSettings = () => {
   const router = useRouter();
@@ -77,6 +121,16 @@ export const useUpdateNotificationSettings = () => {
       // });
       queryClient.invalidateQueries({ queryKey: ["get-user"] });
     },
+    onError(error: any) {
+      handleAxiosError(error);
+    },
+  });
+};
+
+export const usePushNotificationSyncDevice = () => {
+  return useMutation({
+    mutationFn: pushNotificationSyncDevice,
+    onSuccess(data: any) {},
     onError(error: any) {
       handleAxiosError(error);
     },

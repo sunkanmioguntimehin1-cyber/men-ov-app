@@ -19,18 +19,7 @@ const TriggersActivities = ({ selectedTriggers, setSelectedTriggers }:any) => {
     "Anxiety",
   ]);
 
-  // const triggers = [
-  //   "Alcohol",
-  //   "Caffeine",
-  //   "Lack of Sleep",
-  //   "Certain Food",
-  //   "Hormonal Changes",
-  //   "Medication",
-  //   "Weather",
-  //   "Physical Activity",
-  //   "Mental load",
-  //   "Anxiety",
-  // ];
+  
 
   const toggleTrigger = (trigger: string) => {
     setSelectedTriggers((prev:any) =>
@@ -54,7 +43,7 @@ const TriggersActivities = ({ selectedTriggers, setSelectedTriggers }:any) => {
     setCustomTrigger(""); // clear input
   };
 
-  console.log("selectedTriggers:", selectedTriggers);
+  console.log("selectedTriggers23:", selectedTriggers.length);
   return (
     <View>
       <View className=" mt-5 flex-row flex-wrap">

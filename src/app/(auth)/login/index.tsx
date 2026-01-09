@@ -94,6 +94,7 @@
 // export default LoginScreen;
 
 import { useLoginUser } from "@/src/api_services/authApi/authMutation";
+import { GradientText } from "@/src/components/GradientText";
 import CustomButton from "@/src/custom-components/CustomButton";
 import CustomInput from "@/src/custom-components/CustomInput";
 import LoadingOverlay from "@/src/custom-components/LoadingOverlay";
@@ -104,7 +105,7 @@ import { Image } from "expo-image";
 import { useRouter } from "expo-router";
 import React from "react";
 import { Controller, useForm } from "react-hook-form";
-import { Keyboard, Text, TouchableOpacity, View } from "react-native";
+import { Keyboard, TouchableOpacity, View } from "react-native";
 
 const LoginScreen = () => {
   const router = useRouter();
@@ -146,9 +147,9 @@ const LoginScreen = () => {
         backdropClassName="..." // Optional: Additional backdrop styling
       />
       <View className="items-center mb-20">
-        <View className="w-16 h-14">
+        <View className="w-20 h-14">
           <Image
-            source={require("@/assets/images/logo.png")}
+            source={require("@/assets/images/Menovia-Logo-Icon.png")}
             style={{
               height: "100%",
               width: "100%",
@@ -157,10 +158,10 @@ const LoginScreen = () => {
             onError={(error) => console.log("Image error:", error)}
           />
         </View>
-        <View>
-          <Text className="font-[PoppinsMedium] text-[#42307D] text-xl">
-            Welcome Back to
-          </Text>
+        <View className=" mt-5">
+          <GradientText className="font-[PoppinsMedium] text-xl">
+            Welcome back!
+          </GradientText>
         </View>
       </View>
 
@@ -231,15 +232,16 @@ const LoginScreen = () => {
               router.push("/(auth)/login/forgotPassword");
             }}
           >
-            <Text
-              className="text-right text-primary font-[PoppinsMedium]"
+          
+            <GradientText
+              className="text-right font-[PoppinsRegular]"
               style={{
                 fontSize: rS(12),
                 marginTop: rMS(10),
               }}
             >
               Forgot Password?
-            </Text>
+            </GradientText>
           </TouchableOpacity>
         </View>
       </View>
@@ -247,7 +249,7 @@ const LoginScreen = () => {
       <View className="p-8">
         <View>
           <CustomButton
-            primary
+            gradient
             title="Log in"
             // onPress={() => {
             //   router.push("/(auth)/personal-info");

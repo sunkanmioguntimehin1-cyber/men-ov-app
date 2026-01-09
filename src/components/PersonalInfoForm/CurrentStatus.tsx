@@ -2,22 +2,25 @@ import CustomRadio from "@/src/custom-components/CustomRadio";
 import { rS } from "@/src/lib/responsivehandler";
 import React from "react";
 import { Text, View } from "react-native";
+import { GradientText } from "../GradientText";
 
-const CurrentStatus = ({ menopauseStage, setMenopauseStage }:any) => {
- 
-
+const CurrentStatus = ({ menopauseStage, setMenopauseStage }: any) => {
   const menopauseStageData = [
-    { label: "Premenopause", value: "premenopause" },
+    // { label: "Premenopause", value: "premenopause" },
+    // { label: "Perimenopause", value: "perimenopause" },
+    // { label: "Postmenopause", value: "postmenopause" },
     { label: "Perimenopause", value: "perimenopause" },
+    { label: "Menopause", value: "menopause" },
     { label: "Postmenopause", value: "postmenopause" },
   ];
   return (
     <View>
       <View className=" items-center my-5">
-        <Text className=" text-xl text-[#42307D] font-[PoppinsSemiBold]">
+        <GradientText className="font-[PoppinsMedium] text-xl">
           Current Status
-        </Text>
-        <Text className=" text-base text-[#6941C6] font-[PoppinsRegular] my-2">
+        </GradientText>
+
+        <Text className="text-base font-[PoppinsRegular] my-2">
           Your data will be safe with us.
         </Text>
       </View>
@@ -28,7 +31,7 @@ const CurrentStatus = ({ menopauseStage, setMenopauseStage }:any) => {
             className="mb-2 font-[PoppinsMedium] text-[#101828] "
             style={{ fontSize: rS(12) }}
           >
-            Current menopause stage
+            Current menstrual status 
           </Text>
           <CustomRadio
             options={menopauseStageData}

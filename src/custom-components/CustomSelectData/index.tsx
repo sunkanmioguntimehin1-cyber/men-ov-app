@@ -13,7 +13,7 @@ type InputType = {
   error?: string;
   showImage?: boolean;
   isLoading?: boolean;
-  placeholder?: string
+  placeholder?: string;
 };
 
 const CustomSelectData = ({
@@ -26,6 +26,7 @@ const CustomSelectData = ({
   error,
   onPress,
  placeholder,
+ 
   isLoading,
 }: InputType) => {
   const [focused, setFocused] = React.useState(false);
@@ -40,7 +41,7 @@ const CustomSelectData = ({
 
   const getBgColor = () => {
     if (primary)
-      return `border border-[#EAEAEA] text-black ${
+      return `border bg-white border-[#EAEAEA] text-black ${
         error ? "border-red" : "border-divider"
       }`;
     if (whiteBg)
@@ -70,14 +71,14 @@ const CustomSelectData = ({
       </>
 
       <TouchableOpacity
-        className={`rounded-2xl ${getBgColor()} px-3 ${getFlexDirection()}`}
+        className={`rounded-xl ${getBgColor()} px-3 ${getFlexDirection()}`}
         style={{ height: rV(40) }}
         onPress={onPress}
       >
         <View className="flex-row items-center flex-1">
           <View className="flex-1">
             <Text
-              className={`text-black ${whiteBg && "text-primary"}`}
+              className={`text-primary font-[PoppinsRegular] ${whiteBg && "text-primary"}`}
               style={{
                 fontSize: rMS(13),
               }}

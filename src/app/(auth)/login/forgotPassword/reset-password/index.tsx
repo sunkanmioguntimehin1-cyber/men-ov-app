@@ -1,4 +1,5 @@
 import { useResetPasswordApi } from "@/src/api_services/authApi/authMutation";
+import { GradientText } from "@/src/components/GradientText";
 import CustomButton from "@/src/custom-components/CustomButton";
 import CustomInput from "@/src/custom-components/CustomInput";
 import Screen from "@/src/layout/Screen";
@@ -8,14 +9,13 @@ import { Image } from "expo-image";
 import { router } from "expo-router";
 import React from "react";
 import { Controller, useForm } from "react-hook-form";
-import { Text, TouchableOpacity, View } from "react-native";
+import { TouchableOpacity, View } from "react-native";
 
 const ResetPassword = () => {
   const [isSecureEntry, setIsSecureEntry] = React.useState(true);
   const [comPassIsSecureEntry, setComPassIsSecureEntry] = React.useState(true);
   const userRegOtps = useAuthStore().userRegOtps;
 
-  console.log("userRegOtps", userRegOtps);
   const {
     control,
     handleSubmit,
@@ -55,7 +55,7 @@ const ResetPassword = () => {
       <View className=" items-center mb-20">
         <View className=" w-16 h-14 ">
           <Image
-            source={require("@/assets/images/logo.png")}
+            source={require("@/assets/images/Menovia-Logo-Icon.png")}
             style={{
               height: "100%",
               width: "100%",
@@ -67,9 +67,12 @@ const ResetPassword = () => {
           />
         </View>
         <View>
-          <Text className=" font-[PoppinsMedium] text-[#42307D] text-xl">
+          {/* <Text className=" font-[PoppinsMedium] text-[#42307D] text-xl">
             Forgot Password
-          </Text>
+          </Text> */}
+          <GradientText className="font-[PoppinsMedium] text-xl mt-5">
+            Forgot Password
+          </GradientText>
         </View>
       </View>
       <View className="p-8 flex-1">
@@ -159,7 +162,7 @@ const ResetPassword = () => {
       <View className=" p-8 my-5 ">
         <View>
           <CustomButton
-            primary
+            gradient
             title="Confirm password"
             // onPress={() => {
             //   router.push("/(auth)/login")
