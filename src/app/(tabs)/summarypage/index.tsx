@@ -26,6 +26,10 @@ const SummaryScreen = () => {
   ];
 
   const logs = getAllLog?.data || [];
+  const getCycleTracker = getCycleTracking?.data?.data || [];
+
+  // 1. Determine if EVERYTHING is empty
+  const isEmpty = logs.length === 0 && getCycleTracker.length === 0;
 
   const symptomsData = [
     {
@@ -67,40 +71,31 @@ const SummaryScreen = () => {
           <TouchableOpacity onPress={() => router.back()}>
             <MaterialIcons name="arrow-back-ios" size={24} color="black" />
           </TouchableOpacity>
-
           <Text className="text-lg font-[PoppinsSemiBold] text-black">
             Summary
           </Text>
-
           <View />
         </View>
 
         <View className="px-8 pb-8">
-          {logs.length === 0 ? (
-            // 👉 Empty State UI
+          {isEmpty ? (
+            /* 👉 Empty State UI - Only shows if BOTH are empty */
             <View className="items-center justify-center mt-20">
               <Text className="text-gray-500 text-base mt-4 font-[PoppinsMedium]">
                 No logs found
               </Text>
               <Text className="text-gray-400 text-sm mt-2 text-center px-6">
-                {
-                  "You haven't added any symptoms yet. Start logging to see your summary here."
-                }
+                {`You haven't added any symptoms or cycle data yet.`}
               </Text>
-
               <TouchableOpacity
                 onPress={() => router.push("/(tabs)/homepage")}
-                className="mt-6 px-6 py-3 rounded-full"
+                className="mt-6"
               >
                 <LinearGradient
                   colors={["#6B5591", "#6E3F8C", "#853385", "#9F3E83"]}
-                  start={{ x: 0, y: 0 }}
-                  end={{ x: 1, y: 1 }}
-                  // className="items-center justify-center py-4"
                   style={{
                     minHeight: 56,
-                    padding: 16,
-                    alignItems: "center",
+                    paddingHorizontal: 24,
                     justifyContent: "center",
                     borderRadius: 10,
                   }}
@@ -113,34 +108,28 @@ const SummaryScreen = () => {
             </View>
           ) : (
             <>
-              {/* How do you Feel today? Section */}
-              <View className="mb-8">
-                <Text className="text-lg font-[PoppinsSemiBold] text-black mb-4">
-                  How do you Feel today?
-                </Text>
-
-                {logs.map((symptom: any) => (
-                  <View key={symptom.id} className="">
+              {/* Symptoms Section - Only shows if logs exist */}
+              {logs.length > 0 && (
+                <View className="mb-8">
+                  <Text className="text-lg font-[PoppinsSemiBold] text-black mb-4">
+                    How do you Feel today?
+                  </Text>
+                  {logs.map((symptom: any) => (
                     <LinearGradient
+                      key={symptom.id}
                       colors={["#6B5591", "#6E3F8C", "#853385", "#9F3E83"]}
-                      start={{ x: 0, y: 0 }}
-                      end={{ x: 1, y: 1 }}
                       style={{
                         borderRadius: 10,
                         padding: 16,
                         marginBottom: 10,
                       }}
-                      className="rounded-xl p-4 mb-3"
                     >
                       <View className="flex-row items-center justify-between">
                         <View className="flex-row items-center flex-1">
                           <View className="w-8 h-8 mr-3">
                             <Image
                               source={getSymptomImage(symptom.icon)}
-                              style={{
-                                height: "100%",
-                                width: "100%",
-                              }}
+                              style={{ height: "100%", width: "100%" }}
                               contentFit="contain"
                             />
                           </View>
@@ -148,19 +137,15 @@ const SummaryScreen = () => {
                             <Text className="text-white font-[PoppinsSemiBold] text-base">
                               {symptom.symptoms}
                             </Text>
-                            <Text className="text-white text-[8px] mt-1">
+                            <Text className="text-white text-[10px] mt-1">
                               {symptom.recommendation}
                             </Text>
                           </View>
                         </View>
-
                         <View
-                          className="px-2 py-1 rounded-lg border"
+                          className="px-2 py-1 rounded-lg"
                           style={{
                             backgroundColor:
-                              SeverityLevelData[symptom.severityLevel - 1]
-                                ?.badgeColor,
-                            borderColor:
                               SeverityLevelData[symptom.severityLevel - 1]
                                 ?.badgeColor,
                           }}
@@ -174,69 +159,63 @@ const SummaryScreen = () => {
                         </View>
                       </View>
                     </LinearGradient>
-                  </View>
-                ))}
-              </View>
+                  ))}
+                </View>
+              )}
 
-              {/* Cycle summary Section */}
-              <View className="mb-8">
-                <Text className="text-lg font-[PoppinsSemiBold] text-black mb-4">
-                  Cycle summary
-                </Text>
-
-                {getCycleTracking?.data?.data?.slice(0, 4)?.map((item: any) => {
-                  const dateString = item?.start;
-                  const date = parseISO(dateString);
-                  const now = new Date();
-                  const distance = formatDistance(date, now, {
-                    addSuffix: true,
-                  });
-                  return (
-                    <View className="" key={item.id}>
+              {/* Cycle Summary Section - Only shows if cycle data exists */}
+              {getCycleTracker.length > 0 && (
+                <View className="mb-8">
+                  <Text className="text-lg font-[PoppinsSemiBold] text-black mb-4">
+                    Cycle summary
+                  </Text>
+                  {getCycleTracker.slice(0, 4).map((item: any) => {
+                    const distance = item?.start
+                      ? formatDistance(parseISO(item.start), new Date(), {
+                          addSuffix: true,
+                        })
+                      : "N/A";
+                    return (
                       <LinearGradient
+                        key={item.id}
                         colors={["#6B5591", "#6E3F8C", "#853385", "#9F3E83"]}
-                        start={{ x: 0, y: 0 }}
-                        end={{ x: 1, y: 1 }}
                         style={{
                           borderRadius: 10,
                           padding: 16,
                           marginBottom: 10,
                         }}
-                        className="rounded-xl p-4 mb-3"
                       >
                         <Text className="text-white font-[PoppinsSemiBold] text-base">
                           {item.menopauseStage}
                         </Text>
-                        <Text className="text-white text-[8px] mt-1">
+                        <Text className="text-white text-[10px] mt-1">
                           Last period {distance}
                         </Text>
                       </LinearGradient>
-                    </View>
-                  );
-                })}
-              </View>
+                    );
+                  })}
+                </View>
+              )}
 
-              {/* AI insights Section */}
-              <View className="mb-8">
-                <Text className="text-lg font-[PoppinsSemiBold] text-black mb-4">
-                  AI insights
-                </Text>
-
-                <View className="bg-white border border-gray-200 rounded-xl p-4">
-                  <View className="flex-row items-center">
-                    <View className="w-8 h-8 mr-3">
-                      <MaterialCommunityIcons
-                        name="lightbulb-on-outline"
-                        size={24}
-                        color="#712A87"
-                      />
-                    </View>
+              {/* AI Insights - Only show if there are symptoms to talk about */}
+              {logs.length > 0 && (
+                <View className="mb-8">
+                  <Text className="text-lg font-[PoppinsSemiBold] text-black mb-4">
+                    AI insights
+                  </Text>
+                  <View className="bg-white border border-gray-200 rounded-xl p-4 flex-row items-center">
+                    <MaterialCommunityIcons
+                      name="lightbulb-on-outline"
+                      size={24}
+                      color="#712A87"
+                      style={{ marginRight: 12 }}
+                    />
                     <Text className="text-gray-700 text-sm flex-1 font-[PoppinsMedium]">
                       {aiInsight}
                     </Text>
                   </View>
                 </View>
-              </View>
+              )}
             </>
           )}
         </View>
