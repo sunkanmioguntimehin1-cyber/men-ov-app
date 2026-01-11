@@ -14,7 +14,6 @@ export const getNotificationsApi = async () => {
 
 
 export const updateNotificationDetails = async (notificationId: string) => {
-  console.log("notificationId", notificationId);
   try {
     const res = await axiosInstance.patch(
       `/notification/${notificationId}/read`

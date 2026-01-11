@@ -14,10 +14,16 @@ import {
   View,
 } from "react-native";
 
+const PRIVACY_LINK = process.env.EXPO_PUBLIC_PRIVACY_LINK;
+
+
 const FloatingAiButton = () => {
   const router = useRouter();
   const bounceAnim = useRef(new Animated.Value(0)).current;
   const pulseAnim = useRef(new Animated.Value(0)).current;
+
+  
+
 
   const getUserChatAi = useGetUserChat();
 
@@ -119,7 +125,8 @@ const FloatingAiButton = () => {
   });
 
   const handleOpenPrivacyPolicy = async () => {
-    const uri = "https://menoviahealth.com/privacy.html";
+    // const uri = "https://menoviahealth.com/privacy.html";
+    const uri:any = PRIVACY_LINK;
     try {
       await WebBrowser.openBrowserAsync(uri);
     } catch (error) {
