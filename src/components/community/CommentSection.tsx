@@ -2,10 +2,12 @@
 import { useCommentPostApi } from "@/src/api_services/postsApi/postsMutation";
 import CustomInput from "@/src/custom-components/CustomInput";
 import { GradientMaterialIcon } from "@/src/custom-components/GradientIcon";
-import React, { useState } from "react";
+import { getInitials } from "@/src/utils/getInitials";
+import React, { useEffect, useRef, useState } from "react";
 import {
   ActivityIndicator,
   FlatList,
+  Image,
   Platform,
   Text,
   TouchableOpacity,
@@ -13,9 +15,15 @@ import {
 } from "react-native";
 import { KeyboardAvoidingView } from "react-native-keyboard-controller";
 
+
+interface User {
+  _id: string;
+  fullname: string;
+  picture?: string;
+}
 interface Comment {
   _id: string;
-  user: string;
+  user: User;
   text: string;
   createdAt: string;
 }
@@ -23,7 +31,7 @@ interface Comment {
 interface CommentSectionProps {
   getPostCommentLists: any;
   newData: any;
-  currentUserId?: string; // Pass current user ID to distinguish own messages
+  currentUserId?: string;
 }
 
 const CommentSection = ({
@@ -33,6 +41,7 @@ const CommentSection = ({
 }: CommentSectionProps) => {
   const [newComment, setNewComment] = useState("");
   const commentOnProduct = useCommentPostApi();
+  const flatListRef = useRef<FlatList>(null);
 
   const handleSubmitComment = () => {
     if (!newComment.trim() || !newData) return;
@@ -45,7 +54,20 @@ const CommentSection = ({
     setNewComment("");
   };
 
-  const comments = getPostCommentLists?.data?.comments || [];
+  // Sort comments by date (oldest first) for proper chat UI display
+  const comments = (getPostCommentLists?.data?.comments || []).sort(
+    (a: Comment, b: Comment) =>
+      new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
+  );
+
+  // Auto-scroll to bottom when comments change
+  useEffect(() => {
+    if (comments.length > 0) {
+      setTimeout(() => {
+        flatListRef.current?.scrollToEnd({ animated: true });
+      }, 100);
+    }
+  }, [comments.length]);
 
   // Group messages by date
   const groupedComments = comments.reduce((groups: any, comment: Comment) => {
@@ -58,14 +80,36 @@ const CommentSection = ({
   }, {});
 
   const renderComment = ({ item }: { item: Comment }) => {
-    const isOwn = currentUserId && item.user === currentUserId;
+    const isOwn = currentUserId && item.user?._id === currentUserId;
     const time = new Date(item.createdAt).toLocaleTimeString([], {
       hour: "2-digit",
       minute: "2-digit",
     });
 
     return (
-      <View className={`mb-3 ${isOwn ? "items-end" : "items-start"}`}>
+      <View
+        className={`mb-3 ${
+          isOwn ? "items-start flex-row-reverse " : "items-start flex-row"
+        }`}
+      >
+        {item.user?.picture ? (
+          <View className="mr-2  h-7 w-7 rounded-full">
+            <Image
+              source={{ uri: item.user?.picture }}
+              style={{ width: "100%", height: "100%", borderRadius: 100 }}
+            />
+          </View>
+        ) : (
+          <View
+            className="mr-2  bg-secondary border border-[#FBC3F8] h-7 w-7 items-center justify-center  rounded-full"
+            style={{ borderRadius: 100 }}
+          >
+            <Text className="text-sm text-black font-[PoppinsSemiBold]">
+              {getInitials(item.user?.fullname)}
+            </Text>
+          </View>
+        )}
+
         <View
           className={`max-w-[80%] rounded-2xl px-4 py-2.5 ${
             isOwn ? "bg-primary" : " bg-secondary border border-[#FBC3F8]"
@@ -80,6 +124,15 @@ const CommentSection = ({
             }
           }
         >
+          <Text
+            className={`text-[15px] leading-5 ${
+              isOwn
+                ? "text-white text-sm font-[PoppinsSemiBold] my-1"
+                : "text-black text-sm font-[PoppinsSemiBold] my-1"
+            }`}
+          >
+            {item.user?.fullname}
+          </Text>
           <Text
             className={`text-[15px] leading-5 ${
               isOwn ? "text-white" : "text-black"
@@ -122,7 +175,12 @@ const CommentSection = ({
 
   const renderSectionList = () => {
     const sections: React.ReactNode[] = [];
-    Object.keys(groupedComments).forEach((date) => {
+    // Sort dates chronologically (oldest first)
+    const sortedDates = Object.keys(groupedComments).sort(
+      (a, b) => new Date(a).getTime() - new Date(b).getTime()
+    );
+
+    sortedDates.forEach((date) => {
       sections.push(
         <View key={date}>
           {renderDateHeader(date)}
@@ -142,6 +200,7 @@ const CommentSection = ({
       keyboardVerticalOffset={Platform.OS === "ios" ? 100 : 0}
     >
       <FlatList
+        ref={flatListRef}
         data={[{ key: "comments" }]}
         renderItem={() => (
           <View className="px-4 pt-4">
@@ -160,6 +219,11 @@ const CommentSection = ({
         showsVerticalScrollIndicator={false}
         contentContainerStyle={{ flexGrow: 1 }}
         keyboardShouldPersistTaps="handled"
+        onContentSizeChange={() => {
+          if (comments.length > 0) {
+            flatListRef.current?.scrollToEnd({ animated: false });
+          }
+        }}
       />
 
       <View className="flex-row items-end px-3 py-2 bg-white border-t border-gray-200">
@@ -170,9 +234,8 @@ const CommentSection = ({
             onChangeText={setNewComment}
             primary
             returnKeyType="send"
-            // onSubmitEditing={handleSend}
+            onSubmitEditing={handleSubmitComment}
             autoCapitalize="sentences"
-            // editable={!isLoading && !sendMessage.isPending && !isStreaming}
           />
         </View>
         <TouchableOpacity

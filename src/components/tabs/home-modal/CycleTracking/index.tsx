@@ -47,10 +47,21 @@ const CycleTracking = ({ onCancel }: any) => {
   } = formMethods;
 
   React.useEffect(() => {
-    if (getCycleTrackingLatest?.data) {
-      setMenopauseStage(getCycleTrackingLatest?.data?.menopauseStage);
+    if (getCycleTrackingLatest?.data || getIntakeDetails?.data) {
+      setMenopauseStage(getIntakeDetails?.data?.menopauseStage);
     }
-  }, [getCycleTrackingLatest?.data, reset]);
+  }, [getCycleTrackingLatest?.data, getIntakeDetails?.data]);
+
+  console.log(
+    "getCycleTrackingLatest?.data?.menopauseStage",
+    getCycleTrackingLatest?.data?.menopauseStage
+  );
+  console.log(
+    "getIntakeDetails?.data?.menopauseStage",
+    getIntakeDetails?.data?.menopauseStage
+  );
+
+  console.log("menopauseStageBBB", menopauseStage);
 
   // Function to handle Next/Submit button click
   const handleButtonClick = () => {
