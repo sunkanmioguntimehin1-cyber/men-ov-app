@@ -1,6 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { getChatHistory, getSessionWithAiStream } from ".";
-
+import { getAllChatAiHistory, getChatHistory, getSessionWithAiStream } from ".";
 
 export const useGetChatHistory = () => {
   return useQuery({
@@ -9,9 +8,16 @@ export const useGetChatHistory = () => {
   });
 };
 
-export const useGetSessionWithAiStream = (contentData:string) => {
+export const useGetSessionWithAiStream = (contentData: string) => {
   return useQuery({
     queryKey: ["get-chat-session", contentData],
     queryFn: () => getSessionWithAiStream(contentData),
+  });
+};
+
+export const useGetAllChatAiHistory = () => {
+  return useQuery({
+    queryKey: ["get-all-chat-history"],
+    queryFn: getAllChatAiHistory,
   });
 };
