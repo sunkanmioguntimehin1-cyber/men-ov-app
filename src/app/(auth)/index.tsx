@@ -1,12 +1,14 @@
 import { DisclaimerSheet } from "@/src/components/DisclaimerSheet";
 import { GradientText } from "@/src/components/GradientText";
 import BottomSheetScreen from "@/src/custom-components/BottomSheetScreen";
-import BottomSheet from "@gorhom/bottom-sheet";
+import BottomSheet, {
+  TouchableOpacity
+} from "@gorhom/bottom-sheet";
 import { Image, ImageBackground } from "expo-image";
 import { LinearGradient } from "expo-linear-gradient";
 import { useRouter } from "expo-router";
 import React, { useMemo } from "react";
-import { Platform, Text, TouchableOpacity, View } from "react-native";
+import { Platform, Pressable, Text, View } from "react-native";
 
 export default function GetStarted() {
   const router = useRouter();
@@ -33,8 +35,8 @@ export default function GetStarted() {
         source={require("@/assets/images/getstarted01.png")}
         style={{ flex: 1 }}
         contentFit="cover"
+        
       >
-       
         {/* Logo positioned at top-middle */}
         <View className="items-center justify-center pt-24 ">
           <View className="w-64 h-48">
@@ -51,14 +53,14 @@ export default function GetStarted() {
           </View>
         </View>
 
-        
         <View className="flex-1" />
 
         <View className="px-8 pb-[80px] items-center">
-          <TouchableOpacity
+          <Pressable
             className=" w-60 rounded-xl overflow-hidden"
             onPress={() => handleDisclaimerBottomSheetOpen("signup")}
-            activeOpacity={0.8}
+            // onPress={() => console.log("signup")}
+            // activeOpacity={0.8}
           >
             <LinearGradient
               colors={["#6B5591", "#6E3F8C", "#853385", "#9F3E83"]}
@@ -76,7 +78,7 @@ export default function GetStarted() {
                 Get started
               </Text>
             </LinearGradient>
-          </TouchableOpacity>
+          </Pressable>
 
           <View className="flex-row my-2 justify-center items-center">
             <Text className="text-white text-sm">
@@ -84,6 +86,7 @@ export default function GetStarted() {
             </Text>
             <TouchableOpacity
               onPress={() => handleDisclaimerBottomSheetOpen("signin")}
+             
             >
               <GradientText className="font-[PoppinsMedium] text-base underline">
                 Sign In
@@ -92,6 +95,7 @@ export default function GetStarted() {
           </View>
         </View>
       </ImageBackground>
+
       <BottomSheetScreen
         snapPoints={snapPoints}
         ref={DisclaimerBottomSheetRef}

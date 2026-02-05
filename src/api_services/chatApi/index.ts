@@ -32,15 +32,22 @@ export const talkToChatAiwithStream = async (data: any) => {
   }
 };
 
-
-
+export const getAllChatAiHistory = async () => {
+  try {
+    const res = await customAxiosInstance.get(`/history?limit=20`);
+    return res.data;
+  } catch (error) {
+    console.error("getAllChatAiHistory", error);
+    throw error;
+  }
+};
 
 export const getSessionWithAiStream = async (data: any) => {
   console.log("datada3000", data);
   try {
     const res = await axiosInstance.get(
       `/chat/session/messages?content=${data}`,
-      data
+      data,
     );
     return res.data;
   } catch (error) {
@@ -48,6 +55,3 @@ export const getSessionWithAiStream = async (data: any) => {
     throw error;
   }
 };
-
-
-

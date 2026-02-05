@@ -98,8 +98,6 @@
 
 // export default axiosInstance;
 
-
-
 import useAuthStore from "@/src/store/authStore";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios, {
@@ -110,9 +108,9 @@ import axios, {
 
 const ROOT_URL = process.env.EXPO_PUBLIC_API_URL;
 const API_KEY = process.env.EXPO_PUBLIC_API_KEY;
-const CUSTOM_BASE_URL =
-  "https://menovia-backend-285086043355.us-central1.run.app";
+const CUSTOM_BASE_URL = "https://api.menoviahealth.com/api/v1/chat/messages";
 
+//const CUSTOM_BASE_URL ="https://menovia-backend-285086043355.us-central1.run.app";
 
 // Shared interceptor configuration function
 const setupInterceptors = (instance: AxiosInstance, baseURL: string) => {
@@ -133,7 +131,7 @@ const setupInterceptors = (instance: AxiosInstance, baseURL: string) => {
     },
     (error) => {
       return Promise.reject(error);
-    }
+    },
   );
 
   // Response interceptor for handling 401 Unauthorized errors
@@ -156,7 +154,7 @@ const setupInterceptors = (instance: AxiosInstance, baseURL: string) => {
               {
                 headers: { "Content-Type": "application/json" },
                 timeout: 10000,
-              }
+              },
             );
 
             if (response.data.access_token) {
@@ -165,7 +163,7 @@ const setupInterceptors = (instance: AxiosInstance, baseURL: string) => {
               if (response.data.refresh_token) {
                 await AsyncStorage.setItem(
                   "refresh_token",
-                  response.data.refresh_token
+                  response.data.refresh_token,
                 );
               }
 
@@ -187,7 +185,7 @@ const setupInterceptors = (instance: AxiosInstance, baseURL: string) => {
       }
 
       return Promise.reject(error);
-    }
+    },
   );
 };
 
@@ -196,7 +194,6 @@ const axiosInstance: AxiosInstance = axios.create({
   baseURL: ROOT_URL,
   headers: {
     "Content-Type": "application/json",
-    
   },
 });
 

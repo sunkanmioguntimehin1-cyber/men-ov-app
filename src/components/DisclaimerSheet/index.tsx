@@ -21,7 +21,7 @@ export const DisclaimerSheet = ({
     // router.push("/(auth)/welcome");
   };
   return (
-    <View className="flex-1 p-8">
+    <View className="flex-1 p-8  ">
       <View>
         <Text className=" font-[PoppinsSemiBold] text-white text-2xl">
           Disclaimer
