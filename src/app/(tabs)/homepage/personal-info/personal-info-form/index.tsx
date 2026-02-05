@@ -2,7 +2,10 @@ import {
   useEditUser,
   useIntakeDetailsApi,
 } from "@/src/api_services/userApi/userMutation";
-import { useGetIntakeDetails, useGetUser } from "@/src/api_services/userApi/userQuery";
+import {
+  useGetIntakeDetails,
+  useGetUser,
+} from "@/src/api_services/userApi/userQuery";
 import AgeOfFirstPeriod from "@/src/components/PersonalInfoForm/BottomSheetComp/AgeOfFirstPeriod";
 import LastMenstrualPeriod from "@/src/components/PersonalInfoForm/BottomSheetComp/LastMenstrualPeriod";
 import SetPersonalInfoCalender from "@/src/components/PersonalInfoForm/BottomSheetComp/SetPersonalInfoCalender";
@@ -53,7 +56,7 @@ const PersonalInfoForm = () => {
 
   //SurgicalAndReproductive
   const [isHysterectomy, setIsHysterectomy] = React.useState<boolean | null>(
-    null
+    null,
   );
   const [isAvariesRemoved, setIsAvariesRemoved] = React.useState<
     boolean | null
@@ -81,23 +84,23 @@ const PersonalInfoForm = () => {
     formState: { errors, isValid },
   } = formMethods;
 
-React.useEffect(() => {
-  if (getIntakeDetails?.data) {
-    setFirstPeriod(getIntakeDetails?.data?.ageOfFirstPeriod ?? "");
-    setSelectedLastMenstrualDate(
-      getIntakeDetails?.data?.dateOfLastPeriod
-        ? new Date(getIntakeDetails?.data?.dateOfLastPeriod)
-        : null
-    );
-    setIsHysterectomy(getIntakeDetails?.data?.ishysterectomy ?? null);
-    setIsAvariesRemoved(getIntakeDetails?.data?.isOvariesRemoved ?? null);
-    setIsOnHormoneTherapy(getIntakeDetails?.data?.isOnHormoneTherapy ?? null);
-    setPeriodsStoppedAnswer(
-      getIntakeDetails?.data?.isPeriodsStopped12Months ?? null
-    );
-    setMenopauseStage(getIntakeDetails?.data?.menopauseStage ?? "");
-  }
-}, [getIntakeDetails?.data, setMenopauseStage, setIsHysterectomy]);
+  React.useEffect(() => {
+    if (getIntakeDetails?.data) {
+      setFirstPeriod(getIntakeDetails?.data?.ageOfFirstPeriod ?? "");
+      setSelectedLastMenstrualDate(
+        getIntakeDetails?.data?.dateOfLastPeriod
+          ? new Date(getIntakeDetails?.data?.dateOfLastPeriod)
+          : null,
+      );
+      setIsHysterectomy(getIntakeDetails?.data?.ishysterectomy ?? null);
+      setIsAvariesRemoved(getIntakeDetails?.data?.isOvariesRemoved ?? null);
+      setIsOnHormoneTherapy(getIntakeDetails?.data?.isOnHormoneTherapy ?? null);
+      setPeriodsStoppedAnswer(
+        getIntakeDetails?.data?.isPeriodsStopped12Months ?? null,
+      );
+      setMenopauseStage(getIntakeDetails?.data?.menopauseStage ?? "");
+    }
+  }, [getIntakeDetails?.data, setMenopauseStage, setIsHysterectomy]);
 
   console.log("getIntakeDetails?.data", getIntakeDetails?.data);
 
@@ -152,8 +155,7 @@ React.useEffect(() => {
         return (
           !!selectedDate &&
           !!selected &&
-          !!(values.fullname || getUserData?.data?.fullname) &&
-          !!(values.address || getUserData?.data?.address)
+          !!(values.fullname || getUserData?.data?.fullname)
         ); // Form validation will handle this
       case 1: // Menstrual History
         return firstPeriod && lastDateValue && periodsStoppedAnswer !== null;
@@ -240,7 +242,7 @@ React.useEffect(() => {
 
   const handleAddressSelect = (
     item: any,
-    onChange: (value: string) => void
+    onChange: (value: string) => void,
   ) => {
     onChange(item.description);
     onOptionSelect(item);
@@ -292,8 +294,8 @@ React.useEffect(() => {
                         index === currentIndex
                           ? "border-primary"
                           : index < currentIndex
-                          ? "border-primary"
-                          : "border-[#D0D5DD]"
+                            ? "border-primary"
+                            : "border-[#D0D5DD]"
                       }`}
                     />
                   </TouchableOpacity>

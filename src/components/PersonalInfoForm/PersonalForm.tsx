@@ -90,9 +90,9 @@ const PersonalForm = ({
             <Controller
               control={control}
               name="address"
-              rules={{
-                required: "Address is required",
-              }}
+              // rules={{
+              //   required: "Address is required",
+              // }}
               render={({ field: { onChange, value, onBlur } }) => (
                 <>
                   <CustomInput
