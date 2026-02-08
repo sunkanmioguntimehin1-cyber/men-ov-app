@@ -1,7 +1,7 @@
 import { GoogleSignin } from "@react-native-google-signin/google-signin";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { useFonts } from "expo-font";
-import { Stack } from "expo-router";
+import { Stack, usePathname } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
 import { StatusBar } from "expo-status-bar";
 import React, { useEffect } from "react";
@@ -11,6 +11,11 @@ import { SafeAreaProvider } from "react-native-safe-area-context";
 import Toast from "react-native-toast-message";
 import "../../global.css";
 import NetworkStatus from "../components/NetworkStatus";
+import {
+  initializeAnalytics,
+  logAppOpen,
+  logScreenView,
+} from "../lib/analytics";
 import { useAppFocusManager } from "../lib/focusManager";
 import { setupNetworkStatus } from "../lib/networkManager";
 import useAuthStore from "../store/authStore";
@@ -35,6 +40,7 @@ setupNetworkStatus();
 
 export default function RootLayout() {
   // const isLoggedIn = false;
+  const pathname = usePathname();
 
   const isLoggedIn = useAuthStore((state) => state.isLoggedIn);
   const initializeAuth = useAuthStore((state) => state.initializeAuth);
@@ -43,6 +49,19 @@ export default function RootLayout() {
   React.useEffect(() => {
     initializeAuth();
   }, [initializeAuth]);
+
+  useEffect(() => {
+    // Initialize Firebase Analytics
+    initializeAnalytics();
+    logAppOpen();
+  }, []);
+
+  // Track screen changes
+  useEffect(() => {
+    if (pathname) {
+      logScreenView(pathname);
+    }
+  }, [pathname]);
 
   const [loaded] = useFonts({
     PoppinsLight: require("../../assets/fonts/Poppins-Light.ttf"),

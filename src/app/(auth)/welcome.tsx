@@ -8,7 +8,7 @@ import {
 } from "@react-native-google-signin/google-signin";
 import { Image } from "expo-image";
 import { useRouter } from "expo-router";
-import { View, } from "react-native";
+import { View } from "react-native";
 
 export default function Welcome() {
   const router = useRouter();
@@ -74,7 +74,7 @@ export default function Welcome() {
             <CustomButton
               whiteBg
               title="Continue with google"
-              // onPress={signIn}
+              onPress={signIn}
             />
           </View>
         </View>
@@ -82,7 +82,3 @@ export default function Welcome() {
     </>
   );
 }
-
-
-
-

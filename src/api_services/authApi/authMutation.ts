@@ -1,3 +1,4 @@
+import { logLogin } from "@/src/lib/analytics";
 import { handleAxiosError } from "@/src/lib/handleAxiosError";
 import { showSuccessToast } from "@/src/lib/showSuccessToast";
 import useAuthStore from "@/src/store/authStore";
@@ -29,7 +30,7 @@ export const useRegisterUser = () => {
       if (data.refresh_token) {
         await AsyncStorage.setItem("refresh_token", data.refresh_token);
       }
-      setIsLoggedIn(true)
+      setIsLoggedIn(true);
       router.push("/(tabs)/homepage/personal-info");
     },
     onError(error: any) {
@@ -70,7 +71,7 @@ export const useLoginUser = () => {
         }
         setIsLoggedIn(true);
         router.push("/(tabs)/homepage");
-      
+        logLogin("email");
       }
     },
     onError(error: any) {
@@ -115,11 +116,10 @@ export const useResetPasswordApi = () => {
   });
 };
 
-
 export const useRefreshToken = () => {
   const router = useRouter();
   const setIsLoggedIn = useAuthStore().setIsLoggedIn;
-  
+
   return useMutation({
     mutationFn: async () => {
       const refreshTokenValue = await AsyncStorage.getItem("refresh_token");
