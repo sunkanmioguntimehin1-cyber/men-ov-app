@@ -7,6 +7,7 @@ import { useMutation } from "@tanstack/react-query";
 import { useRouter } from "expo-router";
 import {
   forgotPasswordApi,
+  googleLoginUser,
   loginUser,
   refreshToken,
   registerUser,
@@ -64,6 +65,34 @@ export const useLoginUser = () => {
       // showSuccessToast({
       //   message: data.message,
       // });
+      if (data) {
+        await AsyncStorage.setItem("token", data?.access_token);
+        if (data.refresh_token) {
+          await AsyncStorage.setItem("refresh_token", data?.refresh_token);
+        }
+        setIsLoggedIn(true);
+        router.push("/(tabs)/homepage");
+        logLogin("email");
+      }
+    },
+    onError(error: any) {
+      console.log("login error", error.response?.status === 403);
+      handleAxiosError(error);
+    },
+  });
+};
+
+export const useGoogleLoginUser = () => {
+  const router = useRouter();
+  const setIsLoggedIn = useAuthStore().setIsLoggedIn;
+
+  return useMutation({
+    mutationFn: googleLoginUser,
+    async onSuccess(data: any) {
+      // showSuccessToast({
+      //   message: data.message,
+      // });
+      console.log("Google login data", data);
       if (data) {
         await AsyncStorage.setItem("token", data?.access_token);
         if (data.refresh_token) {

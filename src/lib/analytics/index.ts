@@ -172,29 +172,29 @@ export const initializeAnalytics = async () => {
 const screenNameMap: Record<string, string> = {
   "/": "Home",
   "/(tabs)": "Home",
-  "/(tabs)/index": "Home",
-  "/index": "Home",
+  "/(tabs)/homepage": "Home",
+  "/homepage": "Home",
 
-  "/(tabs)/explore": "Explore",
-  "/explore": "Explore",
+  "/(tabs)/explore": "Learn",
+  "/explore": "Learn",
 
-  "/(tabs)/community": "Community",
-  "/community": "Community",
+  "/(tabs)/communitypage": "Community",
+  "/communitypage": "Community",
 
-  "/(tabs)/profile": "Profile",
-  "/profile": "Profile",
+  "/(tabs)/summarypage": "Summary",
+  "/summarypage": "Summary",
 
   "/(auth)/login": "Login",
   "/login": "Login",
 
-  "/(auth)/registration": "Registration",
-  "/registration": "Registration",
-  "/signup": "Registration",
+  "/(auth)/sign-up": "Sign Up",
+  "/sign-up": "Sign Up",
+  "/signup": "Sign Up",
 
   // Add more routes as needed
   "/settings": "Settings",
-  "/notifications": "Notifications",
-  "/chat": "AI_Chat",
+  "/homepage/notifications-screen": "Notifications",
+  "/homepage/chat-with-ai": "AI_Chat",
   "/ai-chat": "AI_Chat",
 };
 

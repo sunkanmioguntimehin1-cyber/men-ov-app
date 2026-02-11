@@ -11,6 +11,7 @@
     "newArchEnabled": true,
     "ios": {
       "supportsTablet": true,
+      "usesAppleSignIn": true,
       "infoPlist": {
         "ITSAppUsesNonExemptEncryption": false,
         "userInterfaceStyle": "light",
@@ -50,6 +51,7 @@
     "plugins": [
       "expo-router",
       "@react-native-firebase/app",
+      "expo-apple-authentication",
       [
         "expo-splash-screen",
         {
@@ -66,7 +68,7 @@
       [
         "@react-native-google-signin/google-signin",
         {
-          "iosUrlScheme": "com.googleusercontent.apps.759542327992-971ok5geank09ddh8kaeoglsk9mqg1fo"
+          "iosUrlScheme": "com.googleusercontent.apps.903613683909-6pttesaais3m7qdg33r3epiu0dqm4j8o"
         }
       ],
       [
