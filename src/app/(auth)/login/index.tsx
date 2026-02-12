@@ -94,6 +94,7 @@
 // export default LoginScreen;
 
 import {
+  useAppleLoginUser,
   useGoogleLoginUser,
   useLoginUser,
 } from "@/src/api_services/authApi/authMutation";
@@ -122,6 +123,7 @@ const LoginScreen = () => {
   const router = useRouter();
   const [isSecureEntry, setIsSecureEntry] = React.useState(true);
   const googleLoginUser = useGoogleLoginUser();
+  const appleLoginUser = useAppleLoginUser();
 
   const {
     control,
@@ -183,7 +185,15 @@ const LoginScreen = () => {
           AppleAuthentication.AppleAuthenticationScope.EMAIL,
         ],
       });
-      console.log("Success:", credential);
+      console.log(" apple login Success:", credential);
+      const resquestedPayload = {
+        identityToken: credential.identityToken,
+        fullName: credential.fullName,
+      };
+
+      // console.log("resquestedPayload:", resquestedPayload);
+
+      appleLoginUser.mutate(resquestedPayload);
     } catch (e: any) {
       console.log("Error or Cancelled", e);
     }
@@ -354,8 +364,9 @@ const LoginScreen = () => {
 
         <View className="my-3">
           <SocialMediaButton
-            title="Continue with Apple"
+            title={"Continue with Apple"}
             whiteBg
+            loading={appleLoginUser.isPending}
             onPress={handleAppleLogin}
             icon={
               <Image

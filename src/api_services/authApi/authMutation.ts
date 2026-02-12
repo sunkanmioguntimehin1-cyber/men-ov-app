@@ -6,6 +6,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useMutation } from "@tanstack/react-query";
 import { useRouter } from "expo-router";
 import {
+  appleLoginUser,
   forgotPasswordApi,
   googleLoginUser,
   loginUser,
@@ -104,7 +105,35 @@ export const useGoogleLoginUser = () => {
       }
     },
     onError(error: any) {
-      console.log("login error", error.response?.status === 403);
+      console.log("google error", error.response?.status === 403);
+      handleAxiosError(error);
+    },
+  });
+};
+
+export const useAppleLoginUser = () => {
+  const router = useRouter();
+  const setIsLoggedIn = useAuthStore().setIsLoggedIn;
+
+  return useMutation({
+    mutationFn: appleLoginUser,
+    async onSuccess(data: any) {
+      // showSuccessToast({
+      //   message: data.message,
+      // });
+      // console.log("Apple login data", data);
+      if (data) {
+        await AsyncStorage.setItem("token", data?.access_token);
+        if (data.refresh_token) {
+          await AsyncStorage.setItem("refresh_token", data?.refresh_token);
+        }
+        setIsLoggedIn(true);
+        router.push("/(tabs)/homepage");
+        logLogin("email");
+      }
+    },
+    onError(error: any) {
+      console.log("apple error", error.response?.status === 403);
       handleAxiosError(error);
     },
   });

@@ -69,7 +69,18 @@ export const googleLoginUser = async (data: any) => {
     const res = await axiosInstance.post(`/auth/google`, data);
     return res.data;
   } catch (error) {
-    console.error("Login User", error);
+    console.error("Google User", error);
+    throw error;
+  }
+};
+
+export const appleLoginUser = async (data: any) => {
+  console.log("data3030:", data);
+  try {
+    const res = await axiosInstance.post(`/auth/apple`, data);
+    return res.data;
+  } catch (error) {
+    console.error("Apple User", error);
     throw error;
   }
 };
