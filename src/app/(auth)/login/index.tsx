@@ -342,24 +342,8 @@ const LoginScreen = () => {
         </View> */}
         <View className=" my-5 flex-row items-center justify-center">
           <View className=" flex-1 h-0.5 bg-slate-400" />
-          <Text className="mx-3">OR</Text>
+          <Text className="mx-3">or</Text>
           <View className=" flex-1 h-0.5 bg-slate-400" />
-        </View>
-        <View>
-          <SocialMediaButton
-            title="Continue with Google"
-            whiteBg
-            onPress={signIn}
-            icon={
-              <Image
-                source={require("@/assets/images/google-icon.png")}
-                style={{
-                  width: 24,
-                  height: 24,
-                }}
-              />
-            }
-          />
         </View>
 
         <View className="my-3">
@@ -379,10 +363,34 @@ const LoginScreen = () => {
             }
           />
         </View>
-
-        <View className=" items-center my-3">
-          <Text>Don’t have an account? Sign up</Text>
+        <View>
+          <SocialMediaButton
+            title="Continue with Google"
+            whiteBg
+            onPress={signIn}
+            icon={
+              <Image
+                source={require("@/assets/images/google-icon.png")}
+                style={{
+                  width: 24,
+                  height: 24,
+                }}
+              />
+            }
+          />
         </View>
+
+        <TouchableOpacity
+          className=" items-center my-3"
+          onPress={() => {
+            router.push("/(auth)/sign-up");
+          }}
+        >
+          <Text>
+            {` Don’t have an account?`}
+            <Text className="font-[PoppinsMedium] text-[#B33288]">Sign up</Text>
+          </Text>
+        </TouchableOpacity>
       </View>
     </KeyboardAwareScreen>
   );
