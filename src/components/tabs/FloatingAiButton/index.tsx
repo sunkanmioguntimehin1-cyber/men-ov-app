@@ -1,5 +1,4 @@
 import { useGetUserChat } from "@/src/api_services/userApi/userQuery";
-import { GradientMaterialIcon } from "@/src/custom-components/GradientIcon";
 import { Image } from "expo-image";
 import { useRouter } from "expo-router";
 import * as WebBrowser from "expo-web-browser";
@@ -9,21 +8,16 @@ import {
   Animated,
   Easing,
   Linking,
-  Text,
   TouchableOpacity,
   View,
 } from "react-native";
 
 const PRIVACY_LINK = process.env.EXPO_PUBLIC_PRIVACY_LINK;
 
-
 const FloatingAiButton = () => {
   const router = useRouter();
   const bounceAnim = useRef(new Animated.Value(0)).current;
   const pulseAnim = useRef(new Animated.Value(0)).current;
-
-  
-
 
   const getUserChatAi = useGetUserChat();
 
@@ -88,7 +82,7 @@ const FloatingAiButton = () => {
           easing: Easing.inOut(Easing.quad),
           useNativeDriver: true,
         }),
-      ])
+      ]),
     ).start();
 
     Animated.loop(
@@ -105,7 +99,7 @@ const FloatingAiButton = () => {
           easing: Easing.inOut(Easing.quad),
           useNativeDriver: true,
         }),
-      ])
+      ]),
     ).start();
   }, [bounceAnim, pulseAnim]);
 
@@ -126,7 +120,7 @@ const FloatingAiButton = () => {
 
   const handleOpenPrivacyPolicy = async () => {
     // const uri = "https://menoviahealth.com/privacy.html";
-    const uri:any = PRIVACY_LINK;
+    const uri: any = PRIVACY_LINK;
     try {
       await WebBrowser.openBrowserAsync(uri);
     } catch (error) {
@@ -151,12 +145,12 @@ const FloatingAiButton = () => {
               top: -6,
               bottom: -6,
               borderRadius: 18,
-              backgroundColor: "rgba(138,63,252,0.25)",
+              // backgroundColor: "rgba(138,63,252,0.25)",
               opacity: glowOpacity as unknown as number,
               transform: [{ scale: glowScale as unknown as number }],
             }}
           />
-          <TouchableOpacity
+          {/* <TouchableOpacity
             accessibilityLabel="Open AI assistant"
             activeOpacity={0.9}
             className=" w-full  bg-white my-3 border border-[#EAEAEA] p-4 rounded-xl"
@@ -174,7 +168,7 @@ const FloatingAiButton = () => {
 
             <TouchableOpacity
               className="flex-row items-center justify-between"
-              // onPress={openWebView}
+
               onPress={() => {
                 router.push("/(tabs)/homepage/chat-with-ai");
               }}
@@ -186,7 +180,7 @@ const FloatingAiButton = () => {
                     height: "100%",
                     width: "100%",
                     alignSelf: "center",
-                    // borderRadius: 100,
+
                   }}
                   contentFit="fill"
                   onError={(error) => console.log("Image error:", error)}
@@ -199,13 +193,12 @@ const FloatingAiButton = () => {
                 </Text>
               </View>
 
-              {/* Send button */}
               <TouchableOpacity
                 className="mx-2"
                 onPress={() => {
                   router.push("/(tabs)/homepage/chat-with-ai");
                 }}
-                // onPress={openWebView}
+
               >
                 <GradientMaterialIcon
                   name="send"
@@ -226,6 +219,24 @@ const FloatingAiButton = () => {
                 </Text>{" "}
               </Text>
             </View>
+          </TouchableOpacity>  */}
+
+          <TouchableOpacity
+            className=" w-28 h-28  "
+            onPress={() => {
+              router.push("/(tabs)/homepage/chat-with-ai");
+            }}
+          >
+            <Image
+              source={require("@/assets/images/ai-image.png")}
+              style={{
+                height: "100%",
+                width: "100%",
+                alignSelf: "center",
+              }}
+              contentFit="fill"
+              onError={(error) => console.log("Image error:", error)}
+            />
           </TouchableOpacity>
         </View>
       </Animated.View>
@@ -234,3 +245,87 @@ const FloatingAiButton = () => {
 };
 
 export default FloatingAiButton;
+
+// // components/FloatingAiButton.tsx
+// import { Image } from "expo-image";
+// import { useRouter } from "expo-router";
+// import { useEffect, useRef } from "react";
+// import { Animated, TouchableOpacity, View } from "react-native";
+
+// export function FloatingAiButton() {
+//   const router = useRouter();
+//   const glowOpacity = useRef(new Animated.Value(0.4)).current;
+//   const glowScale = useRef(new Animated.Value(1)).current;
+
+//   useEffect(() => {
+//     Animated.loop(
+//       Animated.sequence([
+//         Animated.parallel([
+//           Animated.timing(glowOpacity, {
+//             toValue: 0.8,
+//             duration: 1000,
+//             useNativeDriver: true,
+//           }),
+//           Animated.timing(glowScale, {
+//             toValue: 1.15,
+//             duration: 1000,
+//             useNativeDriver: true,
+//           }),
+//         ]),
+//         Animated.parallel([
+//           Animated.timing(glowOpacity, {
+//             toValue: 0.4,
+//             duration: 1000,
+//             useNativeDriver: true,
+//           }),
+//           Animated.timing(glowScale, {
+//             toValue: 1,
+//             duration: 1000,
+//             useNativeDriver: true,
+//           }),
+//         ]),
+//       ]),
+//     ).start();
+//   }, []);
+
+//   return (
+//     <View
+//       style={{
+//         position: "absolute",
+//         bottom: 90, // above tab bar
+//         right: 20,
+//         zIndex: 9999,
+//       }}
+//       pointerEvents="box-none"
+//     >
+//       {/* Glow ring */}
+//       <Animated.View
+//         pointerEvents="none"
+//         style={{
+//           position: "absolute",
+//           left: -6,
+//           right: -6,
+//           top: -6,
+//           bottom: -6,
+//           borderRadius: 18,
+//           backgroundColor: "rgba(138,63,252,0.25)",
+//           opacity: glowOpacity,
+//           transform: [{ scale: glowScale }],
+//         }}
+//       />
+
+//       <TouchableOpacity
+//         style={{ width: 80, height: 80 }}
+//         activeOpacity={0.85}
+//         onPress={() => router.push("/(tabs)/homepage/chat-with-ai")}
+//         accessibilityLabel="Open AI assistant"
+//       >
+//         <Image
+//           source={require("@/assets/images/ai-image.png")}
+//           style={{ height: "100%", width: "100%" }}
+//           contentFit="fill"
+//         />
+//       </TouchableOpacity>
+//     </View>
+//   );
+// }

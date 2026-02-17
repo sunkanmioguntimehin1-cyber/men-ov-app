@@ -2,7 +2,6 @@ import { useGetArticleApi } from "@/src/api_services/articleApi/articleQuery";
 import { useCycleTrackingLatest } from "@/src/api_services/logApi/logQuery";
 import { useGetNotificationsCountApi } from "@/src/api_services/notificationApi/notificationQuery";
 import { useGetUser } from "@/src/api_services/userApi/userQuery";
-import FloatingAiButton from "@/src/components/tabs/FloatingAiButton";
 import CycleTracking from "@/src/components/tabs/home-modal/CycleTracking";
 import YourFeelingToday from "@/src/components/tabs/home-modal/YourFeelingToday";
 import LastSymptomsModal from "@/src/components/tabs/home-modal/YourFeelingToday/lastSymptomsModal";
@@ -24,11 +23,10 @@ import { useRouter } from "expo-router";
 import React from "react";
 import {
   ImageBackground,
-  Platform,
   ScrollView,
   Text,
   TouchableOpacity,
-  View,
+  View
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
@@ -278,7 +276,7 @@ export default function HomePage() {
           </ScrollView>
         </Screen>
 
-        {/* Floating button with proper positioning for all screen sizes */}
+        {/* Floating button with proper positioning for all screen sizes
         <View
           style={{
             position: "absolute",
@@ -290,7 +288,7 @@ export default function HomePage() {
           }}
         >
           <FloatingAiButton />
-        </View>
+        </View> */}
       </View>
     </>
   );
