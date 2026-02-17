@@ -175,14 +175,14 @@ const screenNameMap: Record<string, string> = {
   "/(tabs)/homepage": "Home",
   "/homepage": "Home",
 
-  "/(tabs)/explore": "Learn",
-  "/explore": "Learn",
+  "/(tabs)/explorepage": "Learn",
+  "/explorepage": "Learn",
 
   "/(tabs)/communitypage": "Community",
   "/communitypage": "Community",
 
-  "/(tabs)/summarypage": "Summary",
-  "/summarypage": "Summary",
+  "/(tabs)/summarypage": "Insights,",
+  "/summarypage": "Insights,",
 
   "/(auth)/login": "Login",
   "/login": "Login",
@@ -194,8 +194,8 @@ const screenNameMap: Record<string, string> = {
   // Add more routes as needed
   "/settings": "Settings",
   "/homepage/notifications-screen": "Notifications",
-  "/homepage/chat-with-ai": "AI_Chat",
-  "/ai-chat": "AI_Chat",
+  "/homepage/chat-with-ai": "Ziena_Chat",
+  "/chat-with-ai": "Ziena_Chat",
 };
 
 /**

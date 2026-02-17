@@ -5,11 +5,8 @@ import SafeScreen from "@/src/components/SafeScreen";
 import CustomModel from "@/src/custom-components/CustomModel";
 import useAuthStore from "@/src/store/authStore";
 import useSymtomsStore from "@/src/store/symtomsStore";
-import {
-  AntDesign,
-  Feather,
-  MaterialIcons
-} from "@expo/vector-icons";
+import { AntDesign, Feather, MaterialIcons } from "@expo/vector-icons";
+import { GoogleSignin } from "@react-native-google-signin/google-signin";
 import { useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "expo-router";
 import React from "react";
@@ -78,7 +75,7 @@ export default function ProfilePage() {
     if (item === "Notifications") {
       router.push("/homepage/profilepage/notifications");
     } else if (item === "Contact Us") {
-       router.push("/homepage/profilepage/contact-us");
+      router.push("/homepage/profilepage/contact-us");
     } else if (item === "Share App") {
       //  router.push({ pathname: "/settings/about" });
     } else if (item === "Delete Account") {
@@ -98,6 +95,7 @@ export default function ProfilePage() {
         text: "Ok",
         onPress: async () => {
           // Clear all cached data and auth state
+          await GoogleSignin.signOut();
           useAuthStore.getState().clearAuthState(queryClient);
           useSymtomsStore.getState().clearAllData();
           router.replace("/(auth)/login");

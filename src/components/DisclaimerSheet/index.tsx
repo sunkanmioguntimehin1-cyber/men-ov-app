@@ -69,7 +69,7 @@ export const DisclaimerSheet = ({
 
         <TouchableOpacity onPress={handleOpenPrivacyPolicy}>
           <Text className=" font-[PoppinsRegular] text-white py-4 text-base">
-            By tapping “I agree”, you acknowledge this and agree to our
+            By tapping “I agree”, you acknowledge this and agree to our {}
             <Text
               className=""
               style={{ color: "#B33288", textDecorationLine: "underline" }}
@@ -92,12 +92,16 @@ export const DisclaimerSheet = ({
         </Text>
       </View>
       <TouchableOpacity
-        className="bg-white rounded-xl w-60 h-14 items-center justify-center mx-auto mt-10"
+        // 1. Add the disabled prop
+        disabled={!isChecked}
+        // 2. Adjust styling to look disabled when !isChecked
+        className={`rounded-xl w-56 h-14 items-center justify-center mx-auto mt-10 ${
+          isChecked ? "bg-white" : "bg-black opacity-20"
+        }`}
         style={{
-          elevation: 8,
+          elevation: isChecked ? 8 : 0, // Optional: remove shadow when disabled
           shadowColor: "#000000",
         }}
-        // onPress={() => router.push("/(auth)/welcome")}
         onPress={handleRoute}
         activeOpacity={0.8}
       >
@@ -107,7 +111,10 @@ export const DisclaimerSheet = ({
       </TouchableOpacity>
 
       <View className="mt-4">
-        <TermsAndPrivacy />
+        <TermsAndPrivacy
+          privacyText={"You may review our"}
+          bottonPrivacyText={"at any time."}
+        />
       </View>
     </View>
   );

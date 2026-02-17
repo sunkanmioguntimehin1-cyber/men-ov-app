@@ -59,7 +59,6 @@ import { GradientText } from "@/src/components/GradientText";
 import CustomButton from "@/src/custom-components/CustomButton";
 import { GradientFontistoIcon } from "@/src/custom-components/GradientIcon";
 import Screen from "@/src/layout/Screen";
-import { MaterialIcons } from "@expo/vector-icons";
 import { Image } from "expo-image";
 import { useRouter } from "expo-router";
 import React from "react";
@@ -69,6 +68,16 @@ const PersonalInfo = () => {
   const router = useRouter();
   return (
     <Screen className="bg-white">
+      <TouchableOpacity
+        className=" px-8 items-end"
+        onPress={() => {
+          router.push("/homepage");
+        }}
+      >
+        <GradientText className="font-[PoppinsMedium] text-xl">
+          Skip
+        </GradientText>
+      </TouchableOpacity>
       <View className="items-center flex-1">
         <View className="relative w-full" style={{ height: "100%" }}>
           {/* Background logo - purple lotus */}
@@ -128,19 +137,7 @@ const PersonalInfo = () => {
           />
         </View>
 
-        <TouchableOpacity
-          className="my-5 flex-row items-center justify-center"
-          onPress={() => {
-            router.push("/homepage");
-          }}
-        >
-          <View>
-            <MaterialIcons name="arrow-back-ios" size={20} color="#712A87" />
-          </View>
-          <Text className="text-primary">I will do this later</Text>
-        </TouchableOpacity>
-
-        <View className=" flex-row justify-between items-center">
+        <View className=" my-5 flex-row justify-between items-center">
           <View>
             <GradientFontistoIcon
               name="locked"

@@ -7,6 +7,7 @@ import {
   useGetUser,
 } from "@/src/api_services/userApi/userQuery";
 import AgeOfFirstPeriod from "@/src/components/PersonalInfoForm/BottomSheetComp/AgeOfFirstPeriod";
+import ChooseSexBottonSheet from "@/src/components/PersonalInfoForm/BottomSheetComp/ChooseSexBottonSheet";
 import LastMenstrualPeriod from "@/src/components/PersonalInfoForm/BottomSheetComp/LastMenstrualPeriod";
 import SetPersonalInfoCalender from "@/src/components/PersonalInfoForm/BottomSheetComp/SetPersonalInfoCalender";
 import CurrentStatus from "@/src/components/PersonalInfoForm/CurrentStatus";
@@ -44,6 +45,8 @@ const PersonalInfoForm = () => {
   const [currentIndex, setCurrentIndex] = React.useState<number>(0);
   const [selectedDate, setSelectedDate] = React.useState<Date | any>(null);
   const [selected, setSelected] = React.useState<Item | null>(null);
+  const [selectedSex, setSelectedSex] = React.useState<Item | null>(null);
+
   const [userAddress, setUserAddress] = React.useState<string>("");
 
   //menstrual states
@@ -107,6 +110,10 @@ const PersonalInfoForm = () => {
   // bottom sheet
   const snapPoints = useMemo(() => ["30%", "50%"], []);
 
+  const sexbottomSheetRef = React.useRef<BottomSheet>(null);
+  const handleSexBottomSheetOpen = () => sexbottomSheetRef.current?.expand();
+  const handleSexBottomSheetClose = () => sexbottomSheetRef.current?.close();
+
   const datebottomSheetRef = React.useRef<BottomSheet>(null);
   const handleDateBottomSheetOpen = () => datebottomSheetRef.current?.expand();
   const handleDateBottomSheetClose = () => datebottomSheetRef.current?.close();
@@ -154,7 +161,7 @@ const PersonalInfoForm = () => {
         // Check if required fields are filled for first step
         return (
           !!selectedDate &&
-          !!selected &&
+          !!selectedSex &&
           !!(values.fullname || getUserData?.data?.fullname)
         ); // Form validation will handle this
       case 1: // Menstrual History
@@ -181,7 +188,7 @@ const PersonalInfoForm = () => {
 
       editUserProfile.mutate({
         fullname: data.fullname || getUserData?.data?.fullname,
-        gender: selected?.value || getUserData?.data?.gender,
+        gender: selectedSex?.value || getUserData?.data?.gender,
         address: data.address || getUserData?.data?.address,
         dob: selectedDate,
       });
@@ -308,8 +315,9 @@ const PersonalInfoForm = () => {
             {currentIndex === 0 && (
               <PersonalForm
                 selectedDate={dateValue}
-                setSelected={setSelected}
-                selected={selected}
+                setSelectedSex={setSelectedSex}
+                selectedSex={selectedSex}
+                handleSexBottomSheetOpen={handleSexBottomSheetOpen}
                 errors={errors}
                 control={formMethods.control}
                 reset={reset}
@@ -445,6 +453,21 @@ const PersonalInfoForm = () => {
         </FormProvider>
 
         {/* Bottom Sheets */}
+
+        <BottomSheetScreen
+          snapPoints={snapPoints}
+          ref={sexbottomSheetRef}
+          isBackdropComponent={true}
+          enablePanDownToClose={true}
+          index={-1}
+          message={
+            <ChooseSexBottonSheet
+              selectedSex={selectedSex}
+              setSelectedSex={setSelectedSex}
+              handleSexBottomSheetClose={handleSexBottomSheetClose}
+            />
+          }
+        />
         <BottomSheetScreen
           snapPoints={snapPoints}
           ref={datebottomSheetRef}

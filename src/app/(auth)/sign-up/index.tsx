@@ -192,7 +192,7 @@ const SignUp = () => {
               <CustomInput
                 primary
                 label="Full name"
-                placeholder="Full name"
+                placeholder=" Enter full name"
                 onChangeText={onChange}
                 onBlur={onBlur}
                 value={value}
@@ -328,7 +328,7 @@ const SignUp = () => {
       </View>
 
       <View className="mt-2">
-        <TermsAndPrivacy />
+        <TermsAndPrivacy privacyText={"By continuing you agree to our"} />
       </View>
     </KeyboardAwareScreen>
   );

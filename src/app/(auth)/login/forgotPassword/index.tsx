@@ -9,7 +9,7 @@ import { Image } from "expo-image";
 import { router } from "expo-router";
 import React from "react";
 import { Controller, useForm } from "react-hook-form";
-import { Keyboard, TouchableOpacity, View } from "react-native";
+import { Keyboard, Text, TouchableOpacity, View } from "react-native";
 
 const EnterEmail = () => {
   const setUserRegOtps = useAuthStore().setUserRegOtps;
@@ -37,7 +37,7 @@ const EnterEmail = () => {
     }
   };
 
-  const forgotPasswordEmail = useForgotPasswordApi();
+  const forgotPasswordEmail = useForgotPasswordApi("forgotpassword-page");
   return (
     <Screen className="">
       <TouchableOpacity
@@ -48,7 +48,7 @@ const EnterEmail = () => {
       >
         <MaterialIcons name="arrow-back-ios" size={24} color="black" />
       </TouchableOpacity>
-      <View className=" items-center mb-20">
+      <View className=" items-center mb-5">
         <View className=" w-16 h-14">
           <Image
             source={require("@/assets/images/Menovia-Logo-Icon.png")}
@@ -68,8 +68,13 @@ const EnterEmail = () => {
           </GradientText>
         </View>
       </View>
-      <View className="p-8 flex-1">
-        <View className=" my-5">
+      <View className="px-8 ">
+        <View className="">
+          <Text className="text-center text-[#42307D] font-[PoppinsRegular]">
+            Personalized support for perimenopause, menopause, and beyond.
+          </Text>
+        </View>
+        <View className=" mt-5">
           <Controller
             control={control}
             name="email"
@@ -80,7 +85,7 @@ const EnterEmail = () => {
               <CustomInput
                 primary
                 label="Email"
-                placeholder="Email"
+                placeholder=" Enter email"
                 onChangeText={onChange}
                 onBlur={onBlur}
                 value={value}
@@ -91,7 +96,7 @@ const EnterEmail = () => {
           />
         </View>
       </View>
-      <View className=" p-8 my-5 ">
+      <View className=" p-8  ">
         <View>
           <CustomButton
             gradient

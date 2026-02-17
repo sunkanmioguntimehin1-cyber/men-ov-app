@@ -30,7 +30,7 @@ export default function GetStarted() {
   return (
     <View className="flex-1">
       <ImageBackground
-        source={require("@/assets/images/getstarted01.png")}
+        source={require("@/assets/images/getstarted22.png")}
         style={{ flex: 1 }}
         contentFit="cover"
       >

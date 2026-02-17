@@ -139,7 +139,7 @@ export const useAppleLoginUser = () => {
   });
 };
 
-export const useForgotPasswordApi = () => {
+export const useForgotPasswordApi = (pageName?: string) => {
   const router = useRouter();
   return useMutation({
     mutationFn: forgotPasswordApi,
@@ -148,7 +148,9 @@ export const useForgotPasswordApi = () => {
         message: data.message,
       });
       if (data) {
-        router.push("/(auth)/login/forgotPassword/enter-otp");
+        if (pageName === "forgotpassword-page") {
+          router.push("/(auth)/login/forgotPassword/enter-otp");
+        }
       }
     },
     onError(error) {

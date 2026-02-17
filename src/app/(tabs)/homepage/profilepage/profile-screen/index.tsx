@@ -53,7 +53,7 @@ export default function ProfilePage() {
 
   // 1️⃣ Remove menopause-related tags
   updatedTags = updatedTags.filter(
-    (tag: string) => !MENOPAUSE_TAGS.includes(tag)
+    (tag: string) => !MENOPAUSE_TAGS.includes(tag),
   );
 
   // 2️⃣ Add new menopause stage (if valid & not already present)
@@ -61,7 +61,7 @@ export default function ProfilePage() {
     updatedTags = [...updatedTags, newmenopauseStage];
   }
 
-  const handleIntakes=()=>{
+  const handleIntakes = () => {
     if (getIntakeDetails?.data) {
       router.push("/(tabs)/homepage/profilepage/profile-screen/intake-info");
     } else {
@@ -71,15 +71,12 @@ export default function ProfilePage() {
         [
           {
             text: "OK",
-            onPress: () =>
-              router.push(
-                "/(tabs)/homepage/personal-info"
-              ),
+            onPress: () => router.push("/(tabs)/homepage/personal-info"),
           },
-        ]
+        ],
       );
     }
-  }
+  };
 
   const openWebView = (itemUrl: string) => {
     try {
@@ -148,7 +145,7 @@ export default function ProfilePage() {
       <ImageBackground
         source={require("@/assets/images/AI.png")}
         style={{
-          height: "109%",
+          height: "106%",
           width: "100%",
         }}
         resizeMode="cover"
@@ -289,7 +286,7 @@ export default function ProfilePage() {
 
             //like icon
             const isLiked = item.article.likedBy.find(
-              (id: string) => id === getUserData?.data?.id
+              (id: string) => id === getUserData?.data?.id,
             );
 
             console.log("isLiked", isLiked);
