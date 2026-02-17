@@ -1,4 +1,12 @@
-import { AntDesign, Entypo, Feather, Ionicons, MaterialCommunityIcons, MaterialIcons } from "@expo/vector-icons";
+import {
+  AntDesign,
+  Entypo,
+  Feather,
+  Fontisto,
+  Ionicons,
+  MaterialCommunityIcons,
+  MaterialIcons,
+} from "@expo/vector-icons";
 import MaskedView from "@react-native-masked-view/masked-view";
 import { LinearGradient } from "expo-linear-gradient";
 import { View } from "react-native";
@@ -57,13 +65,11 @@ export const GradientMaterialCommunityIcons = ({
   );
 };
 
-
-
 export const GradientFeatherIcon = ({
   name,
   size = 24,
   gradientColors = ["#6B5591", "#9F3E83"],
-}:any) => {
+}: any) => {
   return (
     <MaskedView
       maskElement={
@@ -82,7 +88,6 @@ export const GradientFeatherIcon = ({
     </MaskedView>
   );
 };
-
 
 export const GradientIoniconsIcon = ({
   name,
@@ -132,7 +137,6 @@ export const GradientAntDesignIcon = ({
   );
 };
 
-
 export const GradientEntypoIcon = ({
   name,
   size = 24,
@@ -157,6 +161,26 @@ export const GradientEntypoIcon = ({
   );
 };
 
-
-
-
+export const GradientFontistoIcon = ({
+  name,
+  size = 24,
+  gradientColors = ["#6B5591", "#9F3E83"],
+}: any) => {
+  return (
+    <MaskedView
+      maskElement={
+        <View style={{ backgroundColor: "transparent" }}>
+          <Fontisto name={name} size={size} color="white" />
+        </View>
+      }
+    >
+      <LinearGradient
+        colors={gradientColors}
+        start={{ x: 0, y: 0 }}
+        end={{ x: 1, y: 0 }}
+      >
+        <Fontisto name={name} size={size} color="transparent" />
+      </LinearGradient>
+    </MaskedView>
+  );
+};

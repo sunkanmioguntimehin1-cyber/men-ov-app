@@ -1,3 +1,4 @@
+import { useForgotPasswordApi } from "@/src/api_services/authApi/authMutation";
 import ForgotPasswordOtp from "@/src/components/ForgotpasswordOtp";
 import { GradientText } from "@/src/components/GradientText";
 import CustomButton from "@/src/custom-components/CustomButton";
@@ -7,11 +8,23 @@ import { MaterialIcons } from "@expo/vector-icons";
 import { Image } from "expo-image";
 import { router } from "expo-router";
 import React from "react";
-import { TouchableOpacity, View } from "react-native";
+import { Keyboard, TouchableOpacity, View } from "react-native";
 
 const EnterOtp = () => {
   const [value, setValue] = React.useState("");
   const setUserRegOtps = useAuthStore().setUserRegOtps;
+  const userRegOtps = useAuthStore().userRegOtps;
+
+  const forgotPasswordEmail = useForgotPasswordApi("resent-page");
+
+  const recentPassword = (data: any) => {
+    if (data) {
+      Keyboard.dismiss();
+      forgotPasswordEmail.mutate({
+        email: userRegOtps.email,
+      });
+    }
+  };
 
   const onSubmit = () => {
     console.log(value);
@@ -32,7 +45,7 @@ const EnterOtp = () => {
       >
         <MaterialIcons name="arrow-back-ios" size={24} color="black" />
       </TouchableOpacity>
-      <View className=" items-center mb-20">
+      <View className=" items-center">
         <View className=" w-16 h-14 ">
           <Image
             source={require("@/assets/images/Menovia-Logo-Icon.png")}
@@ -52,16 +65,16 @@ const EnterOtp = () => {
           </GradientText>
         </View>
       </View>
-      <View className="p-8 flex-1">
-        <View className=" my-5">
+      <View className="px-8">
+        <View className="mt-5 ">
           {/* <CustomInput primary label="Enter Otp" placeholder="Input email" /> */}
           <ForgotPasswordOtp value={value} setValue={setValue} />
-          <TouchableOpacity className=" items-end my-4">
-            {/* <Text className=" text-primary font-[PoppinsRegular]">
-              Resent code
-            </Text> */}
+          <TouchableOpacity
+            className=" items-end my-4"
+            onPress={recentPassword}
+          >
             <GradientText className="font-[PoppinsRegular] mt-4">
-              Resent code
+              {forgotPasswordEmail.isPending ? "sending..." : "Resent code"}
             </GradientText>
           </TouchableOpacity>
 

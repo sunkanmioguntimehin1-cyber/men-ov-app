@@ -52,7 +52,7 @@ const ResetPassword = () => {
       >
         <MaterialIcons name="arrow-back-ios" size={24} color="black" />
       </TouchableOpacity>
-      <View className=" items-center mb-20">
+      <View className=" items-center mb-5">
         <View className=" w-16 h-14 ">
           <Image
             source={require("@/assets/images/Menovia-Logo-Icon.png")}
@@ -75,8 +75,8 @@ const ResetPassword = () => {
           </GradientText>
         </View>
       </View>
-      <View className="p-8 flex-1">
-        <View className=" my-5">
+      <View className="px-8 ">
+        <View className=" my-2">
           <Controller
             control={control}
             name="password"
@@ -96,7 +96,7 @@ const ResetPassword = () => {
             render={({ field: { onChange, onBlur, value } }) => (
               <CustomInput
                 primary
-                label="Password"
+                label="New Password"
                 placeholder="Enter your New Password"
                 secureTextEntry={isSecureEntry}
                 // iconPostion="left"
@@ -123,7 +123,7 @@ const ResetPassword = () => {
           />
         </View>
 
-        <View className=" my-5">
+        <View className=" my-2">
           <Controller
             control={control}
             name="password_confirmation"
@@ -134,8 +134,8 @@ const ResetPassword = () => {
             render={({ field: { onChange, onBlur, value } }) => (
               <CustomInput
                 primary
-                label="Re-type password"
-                placeholder="confirm password"
+                label="Confirm New Password"
+                placeholder="Confirm password"
                 secureTextEntry={comPassIsSecureEntry}
                 onChangeText={onChange}
                 value={value}
@@ -159,7 +159,7 @@ const ResetPassword = () => {
           />
         </View>
       </View>
-      <View className=" p-8 my-5 ">
+      <View className=" p-8 ">
         <View>
           <CustomButton
             gradient

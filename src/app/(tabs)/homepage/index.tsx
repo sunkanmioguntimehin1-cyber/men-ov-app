@@ -11,8 +11,10 @@ import YourLastSymptoms from "@/src/components/tabs/YourLastSymptoms";
 import CustomModel from "@/src/custom-components/CustomModel";
 import CustomSelectData from "@/src/custom-components/CustomSelectData";
 import LoadingOverlay from "@/src/custom-components/LoadingOverlay";
+import { useAnalyticsScreenTracking } from "@/src/hooks/useAnalyticsScreenTracking";
 import { usePushNotifications } from "@/src/hooks/usePushNotifications";
 import Screen from "@/src/layout/Screen";
+import { logEvent } from "@/src/lib/analytics";
 import { truncateSimple } from "@/src/lib/truncateSimple";
 import { getInitials } from "@/src/utils/getInitials";
 import { AntDesign, Ionicons } from "@expo/vector-icons";
@@ -41,6 +43,8 @@ export default function HomePage() {
   console.log("expoPushToken:", expoPushToken);
 
   const [selectedLastSymptom, setSelectedLastSymptom] = React.useState(null);
+
+  useAnalyticsScreenTracking("home_page");
 
   const firstTimeRef = React.useRef(true);
   const getUserData = useGetUser();
@@ -80,6 +84,7 @@ export default function HomePage() {
 
   const handleOpenmodal = () => {
     setModelVisible(true);
+    logEvent("symptom_modal_opened");
   };
 
   const onCancel = () => {
@@ -254,7 +259,7 @@ export default function HomePage() {
                       getCycleTrackingLatest?.data && result
                         ? `${truncateSimple(
                             getCycleTrackingLatest?.data?.summary,
-                            25
+                            25,
                           )} ${result}`
                         : "Add your last cycle"
                     }

@@ -1,3 +1,4 @@
+import { logLogin } from "@/src/lib/analytics";
 import { handleAxiosError } from "@/src/lib/handleAxiosError";
 import { showSuccessToast } from "@/src/lib/showSuccessToast";
 import useAuthStore from "@/src/store/authStore";
@@ -5,7 +6,9 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useMutation } from "@tanstack/react-query";
 import { useRouter } from "expo-router";
 import {
+  appleLoginUser,
   forgotPasswordApi,
+  googleLoginUser,
   loginUser,
   refreshToken,
   registerUser,
@@ -29,7 +32,7 @@ export const useRegisterUser = () => {
       if (data.refresh_token) {
         await AsyncStorage.setItem("refresh_token", data.refresh_token);
       }
-      setIsLoggedIn(true)
+      setIsLoggedIn(true);
       router.push("/(tabs)/homepage/personal-info");
     },
     onError(error: any) {
@@ -70,7 +73,7 @@ export const useLoginUser = () => {
         }
         setIsLoggedIn(true);
         router.push("/(tabs)/homepage");
-      
+        logLogin("email");
       }
     },
     onError(error: any) {
@@ -80,7 +83,63 @@ export const useLoginUser = () => {
   });
 };
 
-export const useForgotPasswordApi = () => {
+export const useGoogleLoginUser = () => {
+  const router = useRouter();
+  const setIsLoggedIn = useAuthStore().setIsLoggedIn;
+
+  return useMutation({
+    mutationFn: googleLoginUser,
+    async onSuccess(data: any) {
+      // showSuccessToast({
+      //   message: data.message,
+      // });
+      console.log("Google login data", data);
+      if (data) {
+        await AsyncStorage.setItem("token", data?.access_token);
+        if (data.refresh_token) {
+          await AsyncStorage.setItem("refresh_token", data?.refresh_token);
+        }
+        setIsLoggedIn(true);
+        router.push("/(tabs)/homepage");
+        logLogin("email");
+      }
+    },
+    onError(error: any) {
+      console.log("google error", error.response?.status === 403);
+      handleAxiosError(error);
+    },
+  });
+};
+
+export const useAppleLoginUser = () => {
+  const router = useRouter();
+  const setIsLoggedIn = useAuthStore().setIsLoggedIn;
+
+  return useMutation({
+    mutationFn: appleLoginUser,
+    async onSuccess(data: any) {
+      // showSuccessToast({
+      //   message: data.message,
+      // });
+      // console.log("Apple login data", data);
+      if (data) {
+        await AsyncStorage.setItem("token", data?.access_token);
+        if (data.refresh_token) {
+          await AsyncStorage.setItem("refresh_token", data?.refresh_token);
+        }
+        setIsLoggedIn(true);
+        router.push("/(tabs)/homepage");
+        logLogin("email");
+      }
+    },
+    onError(error: any) {
+      console.log("apple error", error.response?.status === 403);
+      handleAxiosError(error);
+    },
+  });
+};
+
+export const useForgotPasswordApi = (pageName?: string) => {
   const router = useRouter();
   return useMutation({
     mutationFn: forgotPasswordApi,
@@ -89,7 +148,9 @@ export const useForgotPasswordApi = () => {
         message: data.message,
       });
       if (data) {
-        router.push("/(auth)/login/forgotPassword/enter-otp");
+        if (pageName === "forgotpassword-page") {
+          router.push("/(auth)/login/forgotPassword/enter-otp");
+        }
       }
     },
     onError(error) {
@@ -115,11 +176,10 @@ export const useResetPasswordApi = () => {
   });
 };
 
-
 export const useRefreshToken = () => {
   const router = useRouter();
   const setIsLoggedIn = useAuthStore().setIsLoggedIn;
-  
+
   return useMutation({
     mutationFn: async () => {
       const refreshTokenValue = await AsyncStorage.getItem("refresh_token");

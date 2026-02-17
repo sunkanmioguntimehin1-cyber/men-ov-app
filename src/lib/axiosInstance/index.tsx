@@ -100,6 +100,7 @@
 
 import useAuthStore from "@/src/store/authStore";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { GoogleSignin } from "@react-native-google-signin/google-signin";
 import axios, {
   AxiosInstance,
   AxiosResponse,
@@ -177,6 +178,7 @@ const setupInterceptors = (instance: AxiosInstance, baseURL: string) => {
 
           // If refresh fails or no refresh token, clear auth state
           await useAuthStore.getState().clearAuthState();
+          await GoogleSignin.signOut();
         } catch (refreshError) {
           console.error("Token refresh failed:", refreshError);
           // Clear auth state on refresh failure

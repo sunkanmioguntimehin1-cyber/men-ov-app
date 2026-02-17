@@ -1,17 +1,14 @@
 import * as WebBrowser from "expo-web-browser";
 import React from "react";
-import {
-    Alert,
-    StyleSheet,
-    Text,
-    TouchableOpacity,
-    View
-} from "react-native";
+import { Alert, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
 interface PolicyLinkProps {
   text: string;
   onPress: () => void;
 }
+
+const PRIVACY_LINK = process.env.EXPO_PUBLIC_PRIVACY_LINK;
+const TERMS_LINK = process.env.EXPO_PUBLIC_TERMS_LINK;
 
 const PolicyLink = ({ text, onPress }: PolicyLinkProps) => (
   <TouchableOpacity onPress={onPress}>
@@ -24,14 +21,18 @@ const PolicyLink = ({ text, onPress }: PolicyLinkProps) => (
 interface TermsAndPrivacyProps {
   containerStyle?: object;
   textStyle?: object;
+  privacyText?: string;
+  bottonPrivacyText?: string;
 }
 
 const TermsAndPrivacy = ({
   containerStyle,
   textStyle,
+  privacyText,
+  bottonPrivacyText,
 }: TermsAndPrivacyProps) => {
   const handleOpenPrivacyPolicy = async () => {
-    const uri = "https://menoviahealth.com/privacy.html";
+    const uri = PRIVACY_LINK || "";
     try {
       await WebBrowser.openBrowserAsync(uri);
     } catch (error) {
@@ -40,7 +41,7 @@ const TermsAndPrivacy = ({
   };
 
   const handleOpenTermsAndConditions = async () => {
-    const uri = "https://menoviahealth.com/terms.html";
+    const uri = TERMS_LINK || "";
     try {
       await WebBrowser.openBrowserAsync(uri);
     } catch (error) {
@@ -58,7 +59,8 @@ const TermsAndPrivacy = ({
       >
         <Text style={[{ textAlign: "center" }, textStyle]} className="mx-1">
           {/* I accept the */}
-          By continuing you agree to our
+          {/* By continuing you agree to our */}
+          {privacyText}
         </Text>
         <PolicyLink text="privacy policy" onPress={handleOpenPrivacyPolicy} />
         <Text style={textStyle} className="">
@@ -69,6 +71,11 @@ const TermsAndPrivacy = ({
           text="terms and conditions"
           onPress={handleOpenTermsAndConditions}
         />
+        <Text style={[{ textAlign: "center" }, textStyle]} className="mx-1">
+          {/* I accept the */}
+          {/* By continuing you agree to our */}
+          {bottonPrivacyText}
+        </Text>
       </View>
     </>
   );

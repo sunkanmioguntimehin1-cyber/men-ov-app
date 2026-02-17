@@ -1,9 +1,7 @@
 import { DisclaimerSheet } from "@/src/components/DisclaimerSheet";
 import { GradientText } from "@/src/components/GradientText";
 import BottomSheetScreen from "@/src/custom-components/BottomSheetScreen";
-import BottomSheet, {
-  TouchableOpacity
-} from "@gorhom/bottom-sheet";
+import BottomSheet, { TouchableOpacity } from "@gorhom/bottom-sheet";
 import { Image, ImageBackground } from "expo-image";
 import { LinearGradient } from "expo-linear-gradient";
 import { useRouter } from "expo-router";
@@ -32,10 +30,9 @@ export default function GetStarted() {
   return (
     <View className="flex-1">
       <ImageBackground
-        source={require("@/assets/images/getstarted01.png")}
+        source={require("@/assets/images/getstarted22.png")}
         style={{ flex: 1 }}
         contentFit="cover"
-        
       >
         {/* Logo positioned at top-middle */}
         <View className="items-center justify-center pt-24 ">
@@ -55,7 +52,7 @@ export default function GetStarted() {
 
         <View className="flex-1" />
 
-        <View className="px-8 pb-[80px] items-center">
+        <View className="px-8 pb-[30px]  items-center">
           <Pressable
             className=" w-60 rounded-xl overflow-hidden"
             onPress={() => handleDisclaimerBottomSheetOpen("signup")}
@@ -81,18 +78,22 @@ export default function GetStarted() {
           </Pressable>
 
           <View className="flex-row my-2 justify-center items-center">
-            <Text className="text-white text-sm">
+            <Text className="text-white text-base">
               Already have an account?{" "}
             </Text>
             <TouchableOpacity
               onPress={() => handleDisclaimerBottomSheetOpen("signin")}
-             
             >
-              <GradientText className="font-[PoppinsMedium] text-base underline">
+              <GradientText className="font-[PoppinsMedium] text-base ">
                 Sign In
               </GradientText>
             </TouchableOpacity>
           </View>
+        </View>
+        <View className="px-8  items-center mb-10">
+          <GradientText className="font-[PoppinsMedium] text-sm ">
+            Clinically informed • Built by women’s health experts
+          </GradientText>
         </View>
       </ImageBackground>
 

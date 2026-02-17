@@ -1,5 +1,4 @@
 import CustomInput from "@/src/custom-components/CustomInput";
-import CustomSelect from "@/src/custom-components/CustomSelect";
 import CustomSelectData from "@/src/custom-components/CustomSelectData";
 import { AntDesign } from "@expo/vector-icons";
 import React from "react";
@@ -9,9 +8,10 @@ import { GradientText } from "../GradientText";
 
 const PersonalForm = ({
   handleDateBottomSheetOpen,
+  handleSexBottomSheetOpen,
   selectedDate,
-  setSelected,
-  selected,
+  setSelectedSex,
+  selectedSex,
   control,
   errors,
   handleAddressSelect,
@@ -58,7 +58,7 @@ const PersonalForm = ({
           </View>
 
           <View className=" my-3">
-            <CustomSelect
+            {/* <CustomSelect
               label="Sex"
               primary
               selected={selected}
@@ -68,6 +68,19 @@ const PersonalForm = ({
               placeholder="Choose"
               dataItem={dataItem}
               // style={{ borderRadius: 100 }}
+            /> */}
+
+            <CustomSelectData
+              onPress={handleSexBottomSheetOpen}
+              primary
+              placeholder="Choose"
+              label="Sex"
+              value={selectedSex}
+              icon={
+                <TouchableOpacity onPress={handleSexBottomSheetOpen}>
+                  <AntDesign name="down" size={20} color="#1E1D2F" />
+                </TouchableOpacity>
+              }
             />
           </View>
 

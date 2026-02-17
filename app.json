@@ -3,7 +3,7 @@
     "name": "Menovia",
     "slug": "menovia",
     "owner": "menovia",
-    "version": "1.0.7",
+    "version": "1.0.8",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
     "scheme": "menoviaapp",
@@ -11,13 +11,16 @@
     "newArchEnabled": true,
     "ios": {
       "supportsTablet": true,
+      "usesAppleSignIn": true,
       "infoPlist": {
         "ITSAppUsesNonExemptEncryption": false,
         "userInterfaceStyle": "light",
         "NSCameraUsageDescription": "This app uses the camera to allow users upload photos.",
         "NSMicrophoneUsageDescription": "This app uses the microphone for video recording .",
-        "NSPhotoLibraryUsageDescription": "This app needs access to your photo library so you can upload photos."
+        "NSPhotoLibraryUsageDescription": "This app needs access to your photo library so you can upload photos.",
+        "FirebaseAutomaticScreenReportingEnabled": false
       },
+      "googleServicesFile": "./GoogleService-Info.plist",
       "bundleIdentifier": "com.menovia.menovia"
     },
     "android": {
@@ -47,6 +50,8 @@
     },
     "plugins": [
       "expo-router",
+      "@react-native-firebase/app",
+      "expo-apple-authentication",
       [
         "expo-splash-screen",
         {
@@ -63,7 +68,7 @@
       [
         "@react-native-google-signin/google-signin",
         {
-          "iosUrlScheme": "com.googleusercontent.apps.759542327992-971ok5geank09ddh8kaeoglsk9mqg1fo"
+          "iosUrlScheme": "com.googleusercontent.apps.903613683909-6pttesaais3m7qdg33r3epiu0dqm4j8o"
         }
       ],
       [
@@ -73,6 +78,18 @@
           "color": "#ffffff",
           "defaultChannel": "default",
           "enableBackgroundRemoteNotifications": false
+        }
+      ],
+      [
+        "expo-build-properties",
+        {
+          "ios": {
+            "useFrameworks": "static",
+            "podfileProperties": {
+              "use_modular_headers!": true
+            },
+            "buildReactNativeFromSource": true
+          }
         }
       ],
       "expo-asset",
