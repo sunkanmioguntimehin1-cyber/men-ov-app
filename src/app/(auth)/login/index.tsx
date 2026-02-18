@@ -117,7 +117,7 @@ import { Image } from "expo-image";
 import { useRouter } from "expo-router";
 import React from "react";
 import { Controller, useForm } from "react-hook-form";
-import { Keyboard, Text, TouchableOpacity, View } from "react-native";
+import { Keyboard, Platform, Text, TouchableOpacity, View } from "react-native";
 
 const LoginScreen = () => {
   const router = useRouter();
@@ -250,7 +250,7 @@ const LoginScreen = () => {
               <CustomInput
                 primary
                 label="Email"
-                placeholder="Enter your email"
+                placeholder="Enter email"
                 onChangeText={onChange}
                 onBlur={onBlur}
                 value={value}
@@ -271,7 +271,7 @@ const LoginScreen = () => {
               <CustomInput
                 primary
                 label="Password"
-                placeholder="Create your password"
+                placeholder="Enter password"
                 secureTextEntry={isSecureEntry}
                 value={value}
                 error={errors.password?.message}
@@ -312,7 +312,7 @@ const LoginScreen = () => {
                 marginTop: rMS(10),
               }}
             >
-              Forgot Password?
+              Forgot Password
             </GradientText>
           </TouchableOpacity>
         </View>
@@ -322,7 +322,7 @@ const LoginScreen = () => {
         <View>
           <CustomButton
             gradient
-            title="Log in"
+            title="Login"
             // onPress={() => {
             //   router.push("/(auth)/personal-info");
             // }}
@@ -331,63 +331,59 @@ const LoginScreen = () => {
             onPress={handleSubmit(onSubmit)}
           />
         </View>
-        {/* <View className="my-5">
-          <CustomButton
-            whiteBg
-            title="Sign up"
-            onPress={() => {
-              router.push("/(auth)/sign-up");
-            }}
-          />
-        </View> */}
+
         <View className=" my-5 flex-row items-center justify-center">
           <View className=" flex-1 h-0.5 bg-slate-400" />
           <Text className="mx-3">or</Text>
           <View className=" flex-1 h-0.5 bg-slate-400" />
         </View>
 
-        <View className="my-3">
-          <SocialMediaButton
-            title={"Continue with Apple"}
-            whiteBg
-            loading={appleLoginUser.isPending}
-            onPress={handleAppleLogin}
-            icon={
-              <Image
-                source={require("@/assets/images/apple-icon.png")}
-                style={{
-                  width: 24,
-                  height: 24,
-                }}
-              />
-            }
-          />
-        </View>
-        <View>
-          <SocialMediaButton
-            title="Continue with Google"
-            whiteBg
-            onPress={signIn}
-            icon={
-              <Image
-                source={require("@/assets/images/google-icon.png")}
-                style={{
-                  width: 24,
-                  height: 24,
-                }}
-              />
-            }
-          />
-        </View>
+        {Platform.OS === "ios" && (
+          <View className="my-3">
+            <SocialMediaButton
+              title={"Continue with Apple"}
+              whiteBg
+              loading={appleLoginUser.isPending}
+              onPress={handleAppleLogin}
+              icon={
+                <Image
+                  source={require("@/assets/images/apple-icon.png")}
+                  style={{
+                    width: 24,
+                    height: 24,
+                  }}
+                />
+              }
+            />
+          </View>
+        )}
+        {Platform.OS === "android" && (
+          <View>
+            <SocialMediaButton
+              title="Continue with Google"
+              whiteBg
+              onPress={signIn}
+              icon={
+                <Image
+                  source={require("@/assets/images/google-icon.png")}
+                  style={{
+                    width: 24,
+                    height: 24,
+                  }}
+                />
+              }
+            />
+          </View>
+        )}
 
         <TouchableOpacity
-          className=" items-center my-3"
+          className=" items-center my-5"
           onPress={() => {
             router.push("/(auth)/sign-up");
           }}
         >
           <Text>
-            {` Don’t have an account?`}
+            {` Don’t have an account?`} {}
             <Text className="font-[PoppinsMedium] text-[#B33288]">Sign up</Text>
           </Text>
         </TouchableOpacity>

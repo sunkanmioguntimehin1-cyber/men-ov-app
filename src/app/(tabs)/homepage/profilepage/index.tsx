@@ -59,6 +59,11 @@ export default function ProfilePage() {
     //   icon: <AntDesign name="right" size={24} color="black" />,
     // },
     {
+      img: <Feather name="share-2" size={24} color="black" />,
+      title: "Upgrade your plan",
+      icon: <AntDesign name="right" size={24} color="black" />,
+    },
+    {
       img: <MaterialIcons name="delete-outline" size={24} color="red" />,
       title: "Delete Account",
       icon: <AntDesign name="right" size={24} color="black" />,

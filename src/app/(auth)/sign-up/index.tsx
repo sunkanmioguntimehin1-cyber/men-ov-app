@@ -3,11 +3,9 @@ import {
   useGoogleLoginUser,
   useRegisterUser,
 } from "@/src/api_services/authApi/authMutation";
-import RegisterFormModal from "@/src/components/RegisterFormModal";
 import TermsAndPrivacy from "@/src/components/TermsAndPrivacy";
 import CustomButton from "@/src/custom-components/CustomButton";
 import CustomInput from "@/src/custom-components/CustomInput";
-import CustomModel from "@/src/custom-components/CustomModel";
 import LoadingOverlay from "@/src/custom-components/LoadingOverlay";
 import SocialMediaButton from "@/src/custom-components/SocialMediaButton";
 import KeyboardAwareScreen from "@/src/layout/KeyboardAwareScreen";
@@ -23,7 +21,7 @@ import { Image } from "expo-image";
 import { useRouter } from "expo-router";
 import React from "react";
 import { Controller, useForm } from "react-hook-form";
-import { Text, TouchableOpacity, View } from "react-native";
+import { Platform, Text, TouchableOpacity, View } from "react-native";
 import { GradientText } from "../../../components/GradientText";
 
 const SignUp = () => {
@@ -113,9 +111,9 @@ const SignUp = () => {
     }
   };
 
-  React.useEffect(() => {
-    setModelVisible(true);
-  }, []);
+  // React.useEffect(() => {
+  //   setModelVisible(true);
+  // }, []);
 
   const handleAgree = () => {
     setHasAgreed(true);
@@ -133,14 +131,14 @@ const SignUp = () => {
       keyboardAware={true}
       extraScrollHeight={50}
     >
-      <CustomModel
+      {/* <CustomModel
         modelVisible={modelVisible}
         setModelVisible={setModelVisible}
         closeOnOutsideClick={false}
         message={
           <RegisterFormModal onCancel={onCancel} onAgree={handleAgree} />
         }
-      />
+      /> */}
       <LoadingOverlay
         isOpen={registerUser.isPending} // Required: Controls visibility
         // message="Login..." // Optional: Loading text
@@ -213,7 +211,7 @@ const SignUp = () => {
               <CustomInput
                 primary
                 label="Email"
-                placeholder="Email"
+                placeholder="Enter Email"
                 onChangeText={onChange}
                 onBlur={onBlur}
                 value={value}
@@ -280,40 +278,43 @@ const SignUp = () => {
           <View className=" flex-1 h-0.5 bg-slate-400" />
         </View>
 
-        <View className="my-2">
-          <SocialMediaButton
-            title={"Continue with Apple"}
-            whiteBg
-            loading={appleLoginUser.isPending}
-            onPress={handleAppleLogin}
-            icon={
-              <Image
-                source={require("@/assets/images/apple-icon.png")}
-                style={{
-                  width: 24,
-                  height: 24,
-                }}
-              />
-            }
-          />
-        </View>
-        <View className="my-2">
-          <SocialMediaButton
-            title="Continue with Google"
-            whiteBg
-            onPress={signIn}
-            icon={
-              <Image
-                source={require("@/assets/images/google-icon.png")}
-                style={{
-                  width: 24,
-                  height: 24,
-                }}
-              />
-            }
-          />
-        </View>
-
+        {Platform.OS === "ios" && (
+          <View className="my-2">
+            <SocialMediaButton
+              title={"Continue with Apple"}
+              whiteBg
+              loading={appleLoginUser.isPending}
+              onPress={handleAppleLogin}
+              icon={
+                <Image
+                  source={require("@/assets/images/apple-icon.png")}
+                  style={{
+                    width: 24,
+                    height: 24,
+                  }}
+                />
+              }
+            />
+          </View>
+        )}
+        {Platform.OS === "android" && (
+          <View className="my-2">
+            <SocialMediaButton
+              title="Continue with Google"
+              whiteBg
+              onPress={signIn}
+              icon={
+                <Image
+                  source={require("@/assets/images/google-icon.png")}
+                  style={{
+                    width: 24,
+                    height: 24,
+                  }}
+                />
+              }
+            />
+          </View>
+        )}
         <TouchableOpacity
           className=" items-center my-2"
           onPress={() => {
