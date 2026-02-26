@@ -69,7 +69,7 @@ export const DisclaimerSheet = ({
 
         <TouchableOpacity onPress={handleOpenPrivacyPolicy}>
           <Text className=" font-[PoppinsRegular] text-white py-4 text-base">
-            By tapping “I agree”, you acknowledge this and agree to our {}
+            By tapping “I Agree”, you acknowledge this and agree to our {}
             <Text
               className=""
               style={{ color: "#B33288", textDecorationLine: "underline" }}
@@ -88,7 +88,7 @@ export const DisclaimerSheet = ({
           color={isChecked ? "#B33288" : "#fff"}
         />
         <Text className=" text-white mx-2">
-          have read and understand the disclaimer above.
+          I have read and understand the disclaimer above.
         </Text>
       </View>
       <TouchableOpacity

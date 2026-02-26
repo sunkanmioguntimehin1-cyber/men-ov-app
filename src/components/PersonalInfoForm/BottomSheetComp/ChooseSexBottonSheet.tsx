@@ -6,13 +6,8 @@ const ChooseSexBottonSheet = ({
   handleSexBottomSheetClose,
   selectedSex,
   setSelectedSex,
+  ChooseSexData,
 }: any) => {
-  const ChooseSexData = [
-    { label: "Female", value: "female" },
-    { label: "Male", value: "male" },
-    { label: "Intersex", value: "intersex" },
-  ];
-
   return (
     <View className=" p-8">
       <View className=" items-center">

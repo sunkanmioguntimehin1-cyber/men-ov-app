@@ -10,7 +10,6 @@ import YourLastSymptoms from "@/src/components/tabs/YourLastSymptoms";
 import CustomModel from "@/src/custom-components/CustomModel";
 import CustomSelectData from "@/src/custom-components/CustomSelectData";
 import LoadingOverlay from "@/src/custom-components/LoadingOverlay";
-import { useAnalyticsScreenTracking } from "@/src/hooks/useAnalyticsScreenTracking";
 import { usePushNotifications } from "@/src/hooks/usePushNotifications";
 import Screen from "@/src/layout/Screen";
 import { logEvent } from "@/src/lib/analytics";
@@ -26,7 +25,7 @@ import {
   ScrollView,
   Text,
   TouchableOpacity,
-  View
+  View,
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
@@ -39,10 +38,12 @@ export default function HomePage() {
   const data = JSON.stringify(notification, undefined, 2);
   const trigger = notification?.request?.trigger as any;
   console.log("expoPushToken:", expoPushToken);
+  // console.log("expoPushTokenData:", data);
+  // console.log("expoPushTokentrigger:", trigger);
 
   const [selectedLastSymptom, setSelectedLastSymptom] = React.useState(null);
 
-  useAnalyticsScreenTracking("home_page");
+  // useAnalyticsScreenTracking("home_page");
 
   const firstTimeRef = React.useRef(true);
   const getUserData = useGetUser();

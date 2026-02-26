@@ -62,15 +62,16 @@ const TermsAndPrivacy = ({
           {/* By continuing you agree to our */}
           {privacyText}
         </Text>
-        <PolicyLink text="privacy policy" onPress={handleOpenPrivacyPolicy} />
+        <PolicyLink
+          text="Terms of Service "
+          onPress={handleOpenTermsAndConditions}
+        />
         <Text style={textStyle} className="">
           {" "}
           and{" "}
         </Text>
-        <PolicyLink
-          text="terms and conditions"
-          onPress={handleOpenTermsAndConditions}
-        />
+        <PolicyLink text="Privacy Policy" onPress={handleOpenPrivacyPolicy} />
+
         <Text style={[{ textAlign: "center" }, textStyle]} className="mx-1">
           {/* I accept the */}
           {/* By continuing you agree to our */}

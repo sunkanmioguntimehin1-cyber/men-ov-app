@@ -13,8 +13,6 @@ import Toast from "react-native-toast-message";
 //     const statusCode = error.response?.status;
 //     const errorsList = errorData?.errors;
 
-
-
 //     if (showToast) {
 //       if (errorsList && typeof errorsList === "object") {
 //         // Handle object-style errors (e.g., validation errors)
@@ -66,8 +64,6 @@ import Toast from "react-native-toast-message";
 //   }
 // }
 
-
-
 interface ErrorResponse {
   message?: string;
   errors?: Record<string, string[]> | string;
@@ -75,13 +71,10 @@ interface ErrorResponse {
 }
 
 export function handleAxiosError(error: unknown, showToast = true): void {
-
   if (isAxiosError(error)) {
     const errorData = error.response?.data as ErrorResponse;
     const statusCode = error.response?.status;
-    const errorsList = errorData.errors;
-
-    
+    const errorsList = errorData?.errors;
 
     if (showToast) {
       // 1) object-map of arrays
@@ -89,7 +82,7 @@ export function handleAxiosError(error: unknown, showToast = true): void {
         for (const messages of Object.values(errorsList)) {
           if (Array.isArray(messages)) {
             messages.forEach((msg) =>
-              Toast.show({ type: "error", text1: msg, position: "top" })
+              Toast.show({ type: "error", text1: msg, position: "top" }),
             );
           }
         }
@@ -99,7 +92,7 @@ export function handleAxiosError(error: unknown, showToast = true): void {
         Toast.show({ type: "error", text1: errorsList, position: "top" });
       }
       // 3) single `message` property
-      else if (errorData.message) {
+      else if (errorData?.message) {
         Toast.show({
           type: "error",
           text1: errorData.message,
@@ -107,7 +100,7 @@ export function handleAxiosError(error: unknown, showToast = true): void {
         });
       }
       // 4) single `error` property
-      else if (errorData.error) {
+      else if (errorData?.error) {
         Toast.show({ type: "error", text1: errorData.error, position: "top" });
       }
       // 5) fallback
@@ -121,7 +114,7 @@ export function handleAxiosError(error: unknown, showToast = true): void {
     }
   } else if (error instanceof Error) {
     if (showToast) {
-      Toast.show({ type: "error", text1: error.message, position: "top" });
+      Toast.show({ type: "error", text1: error?.message, position: "top" });
     }
   } else {
     console.log("Unknown error type:", error);

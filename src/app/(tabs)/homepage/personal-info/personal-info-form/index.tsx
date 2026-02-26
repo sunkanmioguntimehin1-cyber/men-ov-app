@@ -28,7 +28,7 @@ import { FormProvider, useForm } from "react-hook-form";
 import { TouchableOpacity, View } from "react-native";
 
 interface Item {
-  title: string;
+  label: string;
   value: string;
   price?: string;
 }
@@ -37,6 +37,12 @@ const dataItem = [
   { title: "Female", value: "female" },
   { title: "Male", value: "male" },
   { title: "Intersex", value: "Intersex" },
+];
+
+const ChooseSexData = [
+  { label: "Female", value: "female" },
+  { label: "Male", value: "male" },
+  { label: "Intersex", value: "intersex" },
 ];
 
 const PersonalInfoForm = () => {
@@ -264,8 +270,10 @@ const PersonalInfoForm = () => {
         address: getUserData?.data?.address,
         dob: getUserData?.data?.dob,
       });
-      const matchingGender = dataItem.find((item) => item.value === userGender);
-      setSelected(matchingGender || null);
+      const matchingGender = ChooseSexData.find(
+        (item) => item.value === userGender,
+      );
+      setSelectedSex(matchingGender || null);
 
       const parsedDob = updateDateValue ? new Date(updateDateValue) : null;
       setSelectedDate(parsedDob);
@@ -464,6 +472,7 @@ const PersonalInfoForm = () => {
             <ChooseSexBottonSheet
               selectedSex={selectedSex}
               setSelectedSex={setSelectedSex}
+              ChooseSexData={ChooseSexData}
               handleSexBottomSheetClose={handleSexBottomSheetClose}
             />
           }

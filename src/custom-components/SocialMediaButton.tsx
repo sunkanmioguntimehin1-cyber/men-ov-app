@@ -1,12 +1,12 @@
 import { LinearGradient } from "expo-linear-gradient";
 import React from "react";
 import {
-    ActivityIndicator,
-    StyleProp,
-    Text,
-    TouchableOpacity,
-    View,
-    ViewStyle,
+  ActivityIndicator,
+  StyleProp,
+  Text,
+  TouchableOpacity,
+  View,
+  ViewStyle,
 } from "react-native";
 
 type ButtonType = {
@@ -43,7 +43,7 @@ const SocialMediaButton = ({
     if (danger) return "bg-red-500";
     // Matching the image: White background with a light gray border
     if (borderBn) return "bg-white border border-gray-300";
-    if (whiteBg) return "bg-white shadow-lg";
+    if (whiteBg) return "bg-white shadow-sm";
     return "bg-gray-200";
   };
 
