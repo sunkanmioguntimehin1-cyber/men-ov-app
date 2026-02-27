@@ -111,7 +111,7 @@ const PersonalInfoForm = () => {
     }
   }, [getIntakeDetails?.data, setMenopauseStage, setIsHysterectomy]);
 
-  console.log("getIntakeDetails?.data", getIntakeDetails?.data);
+  // console.log("getIntakeDetails?.data", getIntakeDetails?.data);
 
   // bottom sheet
   const snapPoints = useMemo(() => ["30%", "50%"], []);

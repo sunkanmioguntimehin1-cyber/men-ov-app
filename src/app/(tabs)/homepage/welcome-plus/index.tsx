@@ -50,7 +50,7 @@ const WelcomePlus = () => {
           />
         </View>
       ),
-      onPress: () => router.push("/"),
+      onPress: () => router.push("/(tabs)/homepage/welcome-plus/plus-benefit"),
     },
   ];
 
@@ -64,7 +64,7 @@ const WelcomePlus = () => {
       </View>
 
       {/* Hero Section */}
-      <View className="items-center mt-4">
+      <View className="items-center">
         <View className="w-24 h-24 mb-2">
           <Image
             source={require("@/assets/images/Menovia-Logo-Icon.png")}
@@ -112,7 +112,10 @@ const WelcomePlus = () => {
 
       {/* Footer */}
       <TouchableOpacity className="mt-6">
-        <Text className="text-[#8b4c8c] text-center font-[PoppinsSemiBold] underline">
+        <Text
+          className="text-[#8b4c8c] text-center font-[PoppinsSemiBold] underline"
+          onPress={() => router.push("/(tabs)/homepage/manage-subscription")}
+        >
           Manage subscription
         </Text>
       </TouchableOpacity>

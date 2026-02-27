@@ -18,9 +18,10 @@ import Purchases from "react-native-purchases";
 const PaywallScreen = () => {
   const router = useRouter();
   const [selectedPlan, setSelectedPlan] = useState("annual");
-  const { currentOffering, isProMember } = useRevenueCat(); // This is the trigger
+  const { currentOffering, customerInfo, isProMember } = useRevenueCat(); // This is the trigger
 
   console.log("currentOffering:", currentOffering);
+  console.log("customerInfo:", customerInfo);
 
   const isLoading = !currentOffering;
 
