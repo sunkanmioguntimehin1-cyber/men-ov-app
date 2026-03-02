@@ -90,8 +90,6 @@ export default function ProfilePage() {
     } else if (item === "Contact Us") {
       router.push("/homepage/profilepage/contact-us");
     } else if (item === "Upgrade your plan") {
-      // router.push("/homepage/manage-subscription");
-
       router.push("/homepage/profilepage/paywall-screen");
     } else if (item === "Manage Subscription") {
       router.push("/homepage/manage-subscription");

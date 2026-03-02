@@ -292,6 +292,7 @@
 // };
 // export default PaywallScreen;
 
+import { usePaymentSyncApi } from "@/src/api_services/payment/paymentMutation";
 import CustomButton from "@/src/custom-components/CustomButton";
 import useRevenueCat from "@/src/hooks/useRevenueCat";
 import { Ionicons } from "@expo/vector-icons";
@@ -316,6 +317,7 @@ const PaywallScreen = () => {
   const [isTrialEligible, setIsTrialEligible] = useState(false);
   const [isPurchasing, setIsPurchasing] = useState(false);
   const { currentOffering, customerInfo, isProMember } = useRevenueCat();
+  const paymentSync = usePaymentSyncApi(); // Add this line to use the mutation
   console.log("currentOffering:", currentOffering);
   console.log("customerInfo:", customerInfo);
   console.log("isProMember:", isProMember);
@@ -327,128 +329,6 @@ const PaywallScreen = () => {
   const isLoading = !currentOffering;
 
   // Check trial eligibility whenever plan or offering changes
-
-  // useEffect(() => {
-  //   const checkTrialEligibility = async () => {
-  //     if (!currentOffering) return;
-
-  //     const packageToPurchase =
-  //       selectedPlan === "annual"
-  //         ? currentOffering?.annual
-  //         : currentOffering?.monthly;
-
-  //     if (!packageToPurchase) return;
-
-  //     const eligibility =
-  //       await Purchases.checkTrialOrIntroductoryPriceEligibility([
-  //         packageToPurchase.product.identifier,
-  //       ]);
-
-  //     const result =
-  //       eligibility[packageToPurchase.product.identifier] ??
-  //       eligibility[packageToPurchase.identifier];
-
-  //     console.log("Eligibility result:", result);
-
-  //     if (
-  //       result?.status ===
-  //       Purchases.INTRO_ELIGIBILITY_STATUS.INTRO_ELIGIBILITY_STATUS_ELIGIBLE
-  //     ) {
-  //       // Confirmed eligible (iOS)
-  //       setIsTrialEligible(true);
-  //     } else if (
-  //       result?.status ===
-  //       Purchases.INTRO_ELIGIBILITY_STATUS.INTRO_ELIGIBILITY_STATUS_UNKNOWN
-  //     ) {
-  //       // Android — fall back to checking if introPrice exists on the product
-  //       const hasIntroOffer = !!packageToPurchase.product.introPrice;
-  //       console.log("Android fallback - hasIntroOffer:", hasIntroOffer);
-  //       setIsTrialEligible(hasIntroOffer);
-  //     } else {
-  //       // INELIGIBLE or NO_INTRO_OFFER_EXISTS
-  //       setIsTrialEligible(false);
-  //     }
-  //   };
-
-  //   checkTrialEligibility();
-  // }, [selectedPlan, currentOffering]);
-
-  // useEffect(() => {
-  //   const checkTrialEligibility = async () => {
-  //     if (!currentOffering) return;
-
-  //     const packageToPurchase =
-  //       selectedPlan === "annual"
-  //         ? currentOffering?.annual
-  //         : currentOffering?.monthly;
-  //     console.log("am here now packageToPurchase", packageToPurchase);
-
-  //     if (!packageToPurchase) return;
-
-  //     // const eligibility =
-  //     //   await Purchases.checkTrialOrIntroductoryPriceEligibility([
-  //     //     packageToPurchase.product.identifier,
-  //     //   ]);
-
-  //     // Pass product identifier to the check
-  //     const eligibility =
-  //       await Purchases.checkTrialOrIntroductoryPriceEligibility([
-  //         packageToPurchase.product.identifier, // "menovia_annual:menovia-annual-plus"
-  //       ]);
-
-  //     // Read result using product identifier
-  //     const result = eligibility[packageToPurchase.product.identifier];
-
-  //     console.log("Result:", result); // should no longer be undefined
-
-  //     // const result =
-  //     //   eligibility[packageToPurchase.product.identifier] ??
-  //     //   eligibility[packageToPurchase.identifier];
-
-  //     console.log("Eligibility result:", result);
-
-  //     if (
-  //       result?.status ===
-  //       Purchases.INTRO_ELIGIBILITY_STATUS.INTRO_ELIGIBILITY_STATUS_ELIGIBLE
-  //     ) {
-  //       // iOS — confirmed eligible
-  //       setIsTrialEligible(true);
-  //     } else if (
-  //       result?.status ===
-  //       Purchases.INTRO_ELIGIBILITY_STATUS.INTRO_ELIGIBILITY_STATUS_UNKNOWN
-  //     ) {
-  //       // Android always lands here, iOS rarely does
-  //       const hasIntroOffer = !!packageToPurchase.product.introPrice;
-
-  //       // Check if user has EVER purchased your specific products before
-  //       const allPurchased = customerInfo?.allPurchasedProductIdentifiers ?? [];
-
-  //       const annualProductId = currentOffering?.annual?.product.identifier;
-  //       const monthlyProductId = currentOffering?.monthly?.product.identifier;
-
-  //       const hasEverSubscribed =
-  //         allPurchased.includes(annualProductId ?? "") ||
-  //         allPurchased.includes(monthlyProductId ?? "");
-
-  //       // console.log("All purchased products:", allPurchased);
-  //       // console.log("Has ever subscribed:", hasEverSubscribed);
-
-  //       console.log("hasIntroOffer:", hasIntroOffer);
-  //       console.log("hasEverSubscribed:", hasEverSubscribed);
-  //       console.log("allPurchased:", allPurchased);
-  //       console.log("annualProductId:", annualProductId);
-  //       console.log("monthlyProductId:", monthlyProductId);
-
-  //       // Only eligible for trial if introPrice exists AND never subscribed before
-  //       setIsTrialEligible(hasIntroOffer && !hasEverSubscribed);
-  //     } else {
-  //       // INELIGIBLE or NO_INTRO_OFFER_EXISTS
-  //       setIsTrialEligible(false);
-  //     }
-  //   };
-
-  //   checkTrialEligibility();
-  // }, [selectedPlan, currentOffering, customerInfo]);
 
   useEffect(() => {
     const checkTrialEligibility = async () => {
@@ -551,6 +431,9 @@ const PaywallScreen = () => {
       const purchaserInfo = await Purchases.purchasePackage(packageToPurchase);
 
       if (purchaserInfo.customerInfo.entitlements.active.pro) {
+        paymentSync.mutate({
+          customerId: customerInfo?.originalAppUserId || "unknown",
+        });
         router.push("/homepage/welcome-plus");
       } else {
         Alert.alert(

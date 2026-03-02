@@ -13,6 +13,7 @@
 
 import { GradientText } from "@/src/components/GradientText";
 import useRevenueCat from "@/src/hooks/useRevenueCat";
+import Screen from "@/src/layout/Screen";
 import { LinearGradient } from "expo-linear-gradient";
 import { useRouter } from "expo-router";
 import { ChevronLeft } from "lucide-react-native";
@@ -52,11 +53,14 @@ const CancelSubscription = () => {
   const handleSubmit = () => {
     if (!selectedReason) return;
     // Handle cancellation logic here
+    router.push(
+      "/homepage/manage-subscription/cancel-subscription/cancellation-page",
+    );
     // e.g. Linking.openURL("https://apps.apple.com/account/subscriptions");
   };
 
   return (
-    <View className="flex-1 bg-[#F5F5F8]">
+    <Screen className="flex-1 bg-[#F5F5F8]">
       <ScrollView
         className="flex-1"
         contentContainerStyle={{ paddingHorizontal: 20, paddingBottom: 120 }}
@@ -64,7 +68,7 @@ const CancelSubscription = () => {
       >
         {/* Back Button */}
         <TouchableOpacity
-          className="mt-12 mb-4 p-1 self-start"
+          className=" mb-4 p-1 self-start"
           onPress={() => router.back()}
         >
           <ChevronLeft color="#1A1C1E" size={24} />
@@ -76,7 +80,7 @@ const CancelSubscription = () => {
         </GradientText>
 
         {/* Subtitle */}
-        <Text className="text-slate-400 text-center font-[PoppinsRegular] text-lg leading-6 mb-6">
+        <Text className="text-slate-400 text-center font-[PoppinsRegular] text-lg  mb-4">
           {`Before you go, let us know what’s not working. Your feedback helps us improve your experience.`}
         </Text>
 
@@ -93,11 +97,12 @@ const CancelSubscription = () => {
               <TouchableOpacity
                 key={reason}
                 onPress={() => setSelectedReason(reason)}
-                className="flex-row items-center px-4 rounded-2xl border"
+                className="flex-row items-center px-4 rounded-2xl "
                 style={{
-                  height: 56,
-                  backgroundColor: isSelected ? "#F3EEFE" : "#FFFFFF",
-                  borderColor: isSelected ? "#C4A1D1" : "#E5E7EB",
+                  height: 48,
+                  backgroundColor: isSelected ? "#f3e8ff" : "#FFFFFF",
+                  borderWidth: isSelected ? 0 : 1,
+                  borderColor: "#e5e7eb",
                 }}
               >
                 {/* Radio Button */}
@@ -108,8 +113,8 @@ const CancelSubscription = () => {
                     height: 22,
                     borderRadius: 11,
                     borderWidth: 2,
-                    borderColor: isSelected ? "#7C3AED" : "#D1D5DB",
-                    backgroundColor: isSelected ? "#7C3AED" : "transparent",
+                    borderColor: isSelected ? "#8b4c8c" : "#D1D5DB",
+                    backgroundColor: isSelected ? "#8b4c8c" : "transparent",
                     marginRight: 12,
                   }}
                 >
@@ -119,21 +124,26 @@ const CancelSubscription = () => {
                         width: 8,
                         height: 8,
                         borderRadius: 4,
-                        backgroundColor: "white",
+                        // backgroundColor: "white",
                       }}
                     />
                   )}
                 </View>
 
-                <Text
-                  style={{
-                    color: isSelected ? "#7C3AED" : "#374151",
-                    fontWeight: isSelected ? "600" : "400",
-                    fontSize: 15,
-                  }}
-                >
-                  {reason}
-                </Text>
+                {isSelected ? (
+                  <GradientText className="font-[PoppinsRegular] text-base">
+                    {reason}
+                  </GradientText>
+                ) : (
+                  <Text
+                    className="font-[PoppinsRegular] text-base"
+                    style={{
+                      color: "#9ca3af",
+                    }}
+                  >
+                    {reason}
+                  </Text>
+                )}
               </TouchableOpacity>
             );
           })}
@@ -174,7 +184,7 @@ const CancelSubscription = () => {
           </LinearGradient>
         </Pressable>
       </View>
-    </View>
+    </Screen>
   );
 };
 

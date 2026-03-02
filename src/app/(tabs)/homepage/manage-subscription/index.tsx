@@ -1,10 +1,11 @@
+import { GradientText } from "@/src/components/GradientText";
 import BottomSheetScreen from "@/src/custom-components/BottomSheetScreen";
 import useRevenueCat from "@/src/hooks/useRevenueCat";
 import Screen from "@/src/layout/Screen";
 import BottomSheet from "@gorhom/bottom-sheet";
 import { LinearGradient } from "expo-linear-gradient";
 import { useRouter } from "expo-router";
-import { ChevronLeft } from "lucide-react-native";
+import { ChevronLeft, ChevronRight } from "lucide-react-native";
 import React, { useMemo } from "react";
 import { Pressable, Text, TouchableOpacity, View } from "react-native";
 import ManageSubscriptionBottonSheet from "./ManageSubscriptionBottonSheet";
@@ -105,6 +106,36 @@ const ManageSubscription = () => {
         </View>
       </View>
 
+      {planName.includes("No Active Plan") ? null : (
+        <TouchableOpacity
+          className="mt-6 flex-row items-center justify-between gap-2 px-4 py-3 border border-slate-200 rounded-2xl"
+          onPress={() => {}}
+        >
+          <GradientText>Switch to {planName.toLowerCase()}</GradientText>
+          <View className=" flex-row items-center">
+            {planName.includes("Annual") ? null : (
+              <LinearGradient
+                colors={["#6B5591", "#6E3F8C", "#853385", "#9F3E83"]}
+                start={{ x: 0, y: 0 }}
+                end={{ x: 1, y: 1 }}
+                style={{
+                  paddingHorizontal: 16,
+                  paddingVertical: 4,
+                  borderRadius: 999,
+                }}
+              >
+                <Text className="font-[PoppinsSemiBold] text-white text-sm">
+                  Save 20%
+                </Text>
+              </LinearGradient>
+            )}
+            <View className="ml-2">
+              <ChevronRight color="#1A1C1E" size={24} />
+            </View>
+          </View>
+        </TouchableOpacity>
+      )}
+
       {/* Spacer */}
       <View className="flex-1" />
 
@@ -121,7 +152,9 @@ const ManageSubscription = () => {
         {/* Change Plan Button */}
         <Pressable
           className="flex-1" // Ensures it takes up the exact same 50% width as the Cancel button
-          // onPress={handleManageBottomSheetOpen}
+          onPress={() => {
+            router.push("/homepage/manage-subscription/choose-your-plan");
+          }}
         >
           <LinearGradient
             colors={["#6B5591", "#6E3F8C", "#853385", "#9F3E83"]}
