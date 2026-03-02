@@ -6,7 +6,12 @@ import CustomModel from "@/src/custom-components/CustomModel";
 import useRevenueCat from "@/src/hooks/useRevenueCat";
 import useAuthStore from "@/src/store/authStore";
 import useSymtomsStore from "@/src/store/symtomsStore";
-import { AntDesign, Feather, MaterialIcons } from "@expo/vector-icons";
+import {
+  AntDesign,
+  Feather,
+  MaterialIcons,
+  Octicons,
+} from "@expo/vector-icons";
 import { GoogleSignin } from "@react-native-google-signin/google-signin";
 import { useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "expo-router";
@@ -62,7 +67,7 @@ export default function ProfilePage() {
     //   icon: <AntDesign name="right" size={24} color="black" />,
     // },
     {
-      img: <Feather name="share-2" size={24} color="black" />,
+      img: <Octicons name="megaphone" size={24} color="black" />,
       title: isProMember ? "Manage Subscription" : "Upgrade your plan",
       icon: <AntDesign name="right" size={24} color="black" />,
     },

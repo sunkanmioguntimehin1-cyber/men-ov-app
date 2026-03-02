@@ -71,7 +71,10 @@ const useRevenueCat = () => {
     null,
   );
 
-  const isProMember = !!customerInfo?.entitlements.active.pro;
+  // const isProMember = !!customerInfo?.entitlements.active.pro;
+  // const isProMember = customerInfo?.entitlements.active.pro;
+  // inside useRevenueCat hook
+  const isProMember = customerInfo?.entitlements?.active?.pro !== undefined;
 
   // Add these two new derived states
   const isCancelled =
