@@ -78,7 +78,7 @@ const ChatWithAi = () => {
   const getSessionWithAi = useGetSessionWithAiStream(chatMessage);
   const sendMessage = useTalkToChatAi();
 
-  // console.log("getAllChatAiHistory", getAllChatAiHistory);
+  console.log("getAllChatAiHistory", getAllChatAiHistory);
   // console.log("chatMessage", chatMessage);
   // console.log("messages4040", messages);
   // console.log("messageDatail", messageDatail);
