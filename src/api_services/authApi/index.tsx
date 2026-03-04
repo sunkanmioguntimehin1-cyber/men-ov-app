@@ -23,6 +23,8 @@ export const verifyEmail = async (data: any) => {
 };
 
 export const loginUser = async (data: any) => {
+  console.log("dataLogin:", data);
+
   try {
     const res = await axiosInstance.post(`/auth/login`, data);
     return res.data;

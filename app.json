@@ -3,7 +3,7 @@
     "name": "Menovia",
     "slug": "menovia",
     "owner": "menovia",
-    "version": "1.0.8",
+    "version": "1.0.9",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
     "scheme": "menoviaapp",
@@ -15,9 +15,9 @@
       "infoPlist": {
         "ITSAppUsesNonExemptEncryption": false,
         "userInterfaceStyle": "light",
-        "NSCameraUsageDescription": "This app uses the camera to allow users upload photos.",
-        "NSMicrophoneUsageDescription": "This app uses the microphone for video recording .",
-        "NSPhotoLibraryUsageDescription": "This app needs access to your photo library so you can upload photos.",
+        "NSCameraUsageDescription": "This app uses the camera to allow users upload photos. For example, for profile picture and for video recording.",
+        "NSMicrophoneUsageDescription": "This app uses the microphone for video recording. For example, when you want to record a video with sound.",
+        "NSPhotoLibraryUsageDescription": "This app needs access to your photo library so you can upload photos. For example, for profile picture and for video recording.",
         "FirebaseAutomaticScreenReportingEnabled": false
       },
       "googleServicesFile": "./GoogleService-Info.plist",

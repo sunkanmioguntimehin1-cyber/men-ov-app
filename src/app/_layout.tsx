@@ -11,6 +11,7 @@ import { SafeAreaProvider } from "react-native-safe-area-context";
 import Toast from "react-native-toast-message";
 import "../../global.css";
 import NetworkStatus from "../components/NetworkStatus";
+import FloatingAiButton from "../components/tabs/FloatingAiButton";
 import {
   initializeAnalytics,
   logAppOpen,
@@ -105,6 +106,7 @@ export default function RootLayout() {
                     name="(tabs)"
                     options={{ headerShown: false }}
                   />
+                  <FloatingAiButton />
                 </Stack.Protected>
                 <Stack.Protected guard={!isLoggedIn}>
                   <Stack.Screen
