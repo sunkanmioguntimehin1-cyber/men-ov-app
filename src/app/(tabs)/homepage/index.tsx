@@ -1,7 +1,10 @@
 import { useGetArticleApi } from "@/src/api_services/articleApi/articleQuery";
 import { useCycleTrackingLatest } from "@/src/api_services/logApi/logQuery";
 import { useGetNotificationsCountApi } from "@/src/api_services/notificationApi/notificationQuery";
-import { useGetUser } from "@/src/api_services/userApi/userQuery";
+import {
+  useGetIntakeDetails,
+  useGetUser,
+} from "@/src/api_services/userApi/userQuery";
 import CycleTracking from "@/src/components/tabs/home-modal/CycleTracking";
 import YourFeelingToday from "@/src/components/tabs/home-modal/YourFeelingToday";
 import LastSymptomsModal from "@/src/components/tabs/home-modal/YourFeelingToday/lastSymptomsModal";
@@ -21,6 +24,7 @@ import { Image } from "expo-image";
 import { useRouter } from "expo-router";
 import React from "react";
 import {
+  Alert,
   ImageBackground,
   ScrollView,
   Text,
@@ -50,9 +54,10 @@ export default function HomePage() {
   const getArticles = useGetArticleApi();
   const getCycleTrackingLatest = useCycleTrackingLatest();
   const getNotificationsCount = useGetNotificationsCountApi();
+  const getIntakeDetails = useGetIntakeDetails();
 
-  const isMenopause =
-    getCycleTrackingLatest?.data?.menopauseStage === "menopause";
+  const isPeriMenopause =
+    getIntakeDetails?.data?.menopauseStage === "perimenopause";
 
   const insets = useSafeAreaInsets();
 
@@ -93,6 +98,13 @@ export default function HomePage() {
   const handleOpenLastSymptoms = (item: any) => {
     setSelectedLastSymptom(item);
     setModelVisible1(true);
+  };
+
+  const handleMenopauseLevel = () => {
+    Alert.alert(
+      `${getIntakeDetails?.data?.menopauseStage} stage`,
+      `Based on your intake details, you are currently in the ${getIntakeDetails?.data?.menopauseStage} stage. the cycle tracking feature is designed for users in the perimenopause stage.`,
+    );
   };
 
   const onCancel1 = () => {
@@ -249,9 +261,13 @@ export default function HomePage() {
                   />
                 </View>
                 <View className="">
-                  {/* {isMenopause?():()} */}
+                  {/* {isPeriMenopause?(
+
+                   ):()}  */}
                   <CustomSelectData
-                    onPress={handleOpenmodal2}
+                    onPress={
+                      isPeriMenopause ? handleOpenmodal2 : handleMenopauseLevel
+                    }
                     primary
                     label="Cycle Tracking"
                     placeholder={
