@@ -537,7 +537,8 @@ const PaywallScreen = () => {
                     }}
                   >
                     <Text className="text-white text-[10px] font-bold">
-                      {discountPercentage}% OFF
+                      {/* {discountPercentage}% OFF */}
+                      20% OFF
                     </Text>
                   </LinearGradient>
                 </View>

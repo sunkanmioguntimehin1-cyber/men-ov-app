@@ -46,9 +46,8 @@ export const useIntakeDetailsApi = () => {
       // });
 
       // console.log("data300", data)
-      
-        router.push("/(tabs)/homepage");
-     
+
+      router.push("/(tabs)/homepage");
 
       queryClient.invalidateQueries({ queryKey: ["get-user"] });
       queryClient.invalidateQueries({ queryKey: ["get-intakes"] });
@@ -74,9 +73,8 @@ export const useEditIntakeDetailsApi = () => {
       // });
 
       // console.log("data300", data)
-    
-        router.back();
-     
+
+      router.back();
 
       queryClient.invalidateQueries({ queryKey: ["get-user"] });
       queryClient.invalidateQueries({ queryKey: ["get-intakes"] });

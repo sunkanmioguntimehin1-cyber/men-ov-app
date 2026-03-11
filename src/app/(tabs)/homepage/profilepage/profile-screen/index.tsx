@@ -9,6 +9,7 @@ import {
   useGetUser,
 } from "@/src/api_services/userApi/userQuery";
 import { GradientText } from "@/src/components/GradientText";
+import { GradientFontistoIcon } from "@/src/custom-components/GradientIcon";
 import LoadingOverlay from "@/src/custom-components/LoadingOverlay";
 import Screen from "@/src/layout/Screen";
 import { getInitials } from "@/src/utils/getInitials";
@@ -40,6 +41,11 @@ export default function ProfilePage() {
   const getIntakeDetails = useGetIntakeDetails();
   const likeArticleApi = useLikeArticleApi();
   const unLikeArticleApi = useUnLikeArticleApi();
+  const isPeriMenopause =
+    getIntakeDetails?.data?.menopauseStage === "perimenopause" ||
+    getIntakeDetails?.data?.menopauseStage === "" ||
+    getIntakeDetails?.data?.menopauseStage === null ||
+    getIntakeDetails?.data?.menopauseStage === undefined;
 
   // console.log("getUserData11", getUserData?.data);
   console.log("getIntakeDetails", getIntakeDetails?.error);
@@ -231,16 +237,17 @@ export default function ProfilePage() {
           <View className="flex-row w-full gap-4 justify-between">
             <TouchableOpacity
               className="border border-primary rounded-xl items-center justify-center flex-1"
-              // onPress={() => {
-              //   router.push(
-              //     "/(tabs)/homepage/profilepage/profile-screen/intake-info"
-              //   );
-              // }}
               onPress={handleIntakes}
+              disabled={!isPeriMenopause}
             >
-              <GradientText className="font-[PoppinsMedium] text-center p-4">
-                Health Information
-              </GradientText>
+              <View className=" items-center p-4">
+                <GradientText className="font-[PoppinsMedium] text-center ">
+                  Health Information
+                </GradientText>
+                {!isPeriMenopause && (
+                  <GradientFontistoIcon name="locked" size={16} />
+                )}
+              </View>
             </TouchableOpacity>
 
             <TouchableOpacity className="bg-white border border-primary rounded-xl  flex-1 items-center justify-center">

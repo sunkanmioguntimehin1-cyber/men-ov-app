@@ -7,7 +7,10 @@ export const usePaymentSyncApi = () => {
 
   return useMutation({
     mutationFn: paymentSyncApi,
-    onSuccess(data: any) {},
+    onSuccess(data: any) {
+      console.log("Payment sync successful:", data);
+      // queryClient.invalidateQueries(["userData"]);
+    },
     onError(error: any) {
       handleAxiosError(error);
     },
