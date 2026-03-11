@@ -1,7 +1,13 @@
 import { handleAxiosError } from "@/src/lib/handleAxiosError";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "expo-router";
-import { closeLogApi, createCycleTrackingApi, createLogApi, updateCycleTrackingApi, updateLogApi } from ".";
+import {
+  closeLogApi,
+  createCycleTrackingApi,
+  createLogApi,
+  updateCycleTrackingApi,
+  updateLogApi,
+} from ".";
 
 // Mutation api call
 export const useCreateLogApi = (onCancel?: any) => {
@@ -23,7 +29,7 @@ export const useCreateLogApi = (onCancel?: any) => {
   });
 };
 
-export const useUpdateLogApi = (onCancel:any) => {
+export const useUpdateLogApi = (onCancel: any) => {
   const router = useRouter();
   const queryClient = useQueryClient();
   return useMutation({
@@ -33,7 +39,7 @@ export const useUpdateLogApi = (onCancel:any) => {
       //   message: data.message,
       // });
       queryClient.invalidateQueries({ queryKey: ["get-log"] });
-      onCancel()
+      onCancel();
     },
     onError(error: any) {
       handleAxiosError(error);
@@ -51,14 +57,13 @@ export const useCloseLogApi = (handleIsDone: any) => {
       //   message: data.message,
       // });
       queryClient.invalidateQueries({ queryKey: ["get-log"] });
-      handleIsDone()
+      handleIsDone();
     },
     onError(error: any) {
       handleAxiosError(error);
     },
   });
 };
-
 
 export const useCreateCycleTrackingApi = (onCancel: any) => {
   const router = useRouter();
@@ -70,9 +75,13 @@ export const useCreateCycleTrackingApi = (onCancel: any) => {
       //   message: data.message,
       // });
       queryClient.invalidateQueries({ queryKey: ["get-cycle-tracking"] });
-       queryClient.invalidateQueries({
-         queryKey: ["get-cycle-tracking-latest"],
-       });
+      queryClient.invalidateQueries({
+        queryKey: ["get-cycle-tracking-latest"],
+      });
+      queryClient.invalidateQueries({
+        queryKey: ["get-intakes"],
+      });
+
       onCancel();
     },
     onError(error: any) {
@@ -93,10 +102,13 @@ export const useUpdateCycleTrackingApi = (onCancel: any) => {
       queryClient.invalidateQueries({
         queryKey: ["get-cycle-tracking"],
       });
-       queryClient.invalidateQueries({
-         queryKey: ["get-cycle-tracking-latest"],
-       });
-      
+      queryClient.invalidateQueries({
+        queryKey: ["get-cycle-tracking-latest"],
+      });
+      queryClient.invalidateQueries({
+        queryKey: ["get-intakes"],
+      });
+
       onCancel();
     },
     onError(error: any) {
@@ -104,7 +116,3 @@ export const useUpdateCycleTrackingApi = (onCancel: any) => {
     },
   });
 };
-
-
-
-;

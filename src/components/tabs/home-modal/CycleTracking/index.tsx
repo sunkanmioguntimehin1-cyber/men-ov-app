@@ -28,7 +28,7 @@ const CycleTracking = ({ onCancel }: any) => {
   const [notePublicUrls, setNotePublicUrls] = React.useState<string>("");
 
   const getIntakeDetails = useGetIntakeDetails();
-  
+
   const createCycleTracking = useCreateCycleTrackingApi(onCancel);
   const getCycleTrackingLatest = useCycleTrackingLatest();
   const updateCycleTracking = useUpdateCycleTrackingApi(onCancel);
@@ -54,11 +54,11 @@ const CycleTracking = ({ onCancel }: any) => {
 
   console.log(
     "getCycleTrackingLatest?.data?.menopauseStage",
-    getCycleTrackingLatest?.data?.menopauseStage
+    getCycleTrackingLatest?.data?.menopauseStage,
   );
   console.log(
     "getIntakeDetails?.data?.menopauseStage",
-    getIntakeDetails?.data?.menopauseStage
+    getIntakeDetails?.data?.menopauseStage,
   );
 
   console.log("menopauseStageBBB", menopauseStage);

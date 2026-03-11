@@ -1,16 +1,3 @@
-// import React from "react";
-// import { Text, View } from "react-native";
-
-// const CancelSubscription = () => {
-//   return (
-//     <View>
-//       <Text>CancelSubscription</Text>
-//     </View>
-//   );
-// };
-
-// export default CancelSubscription;
-
 import { GradientText } from "@/src/components/GradientText";
 import useRevenueCat from "@/src/hooks/useRevenueCat";
 import Screen from "@/src/layout/Screen";
