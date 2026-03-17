@@ -257,6 +257,8 @@ export default function ProfilePage() {
   // ✅ Single source of truth for post-purchase navigation
   const wasProMember = React.useRef<boolean | null>(null);
 
+  console.log("customerInfo", customerInfo);
+
   const hasNavigated = React.useRef(false);
 
   useEffect(() => {

@@ -123,8 +123,9 @@ import * as WebBrowser from "expo-web-browser";
 import { useCallback, useState } from "react";
 import { Linking } from "react-native";
 
-const getPaywallUrl = (appUserId: string) =>
-  `https://pay.rev.cat/sandbox/mdhvqdvlguvgpdok/${appUserId}`;
+const PAYWALLURLLINK = process.env.EXPO_PUBLIC_PAYWALL_URL;
+
+const getPaywallUrl = (appUserId: string) => `${PAYWALLURLLINK}/${appUserId}`;
 
 // ✅ Fix 1: matches app.json scheme "menoviaapp"
 const SUCCESS_REDIRECT_SCHEME = "menoviaapp://";
@@ -141,22 +142,6 @@ const useWebPaywall = (
   const [isPurchasing, setIsPurchasing] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-
-  // const syncEntitlements = useCallback(async () => {
-  //   try {
-  //     setIsLoading(true);
-  //     for (let i = 0; i < 3; i++) {
-  //       await delay(2000);
-  //       const info = await fetchCustomerInfo();
-  //       if (info?.entitlements?.[ENTITLEMENT_ID]) {
-  //         const expires = info.entitlements[ENTITLEMENT_ID].expires_date;
-  //         if (!expires || new Date(expires) > new Date()) return info;
-  //       }
-  //     }
-  //   } finally {
-  //     setIsLoading(false);
-  //   }
-  // }, [fetchCustomerInfo]);
 
   const syncEntitlements = useCallback(async () => {
     try {
@@ -176,47 +161,6 @@ const useWebPaywall = (
       setIsLoading(false);
     }
   }, [fetchCustomerInfo, onSuccess]);
-
-  const openWebPaywall2 = useCallback(
-    async (appUserId: string) => {
-      if (!appUserId) {
-        setError("User ID not found. Please try again.");
-        return;
-      }
-
-      try {
-        setIsPurchasing(true);
-        setError(null);
-
-        const url = getPaywallUrl(appUserId);
-
-        const result = await WebBrowser.openAuthSessionAsync(
-          url,
-          SUCCESS_REDIRECT_SCHEME,
-          {
-            preferEphemeralSession: false,
-            presentationStyle:
-              WebBrowser.WebBrowserPresentationStyle.FORM_SHEET,
-            toolbarColor: "#0F0F0F",
-            showTitle: false,
-          },
-        );
-
-        console.log("[WebPaywall] result:", result);
-
-        if (result.type === "success" || result.type === "dismiss") {
-          // ✅ sync on both success AND dismiss
-          // dismiss = user closed browser after paying but before redirect
-          await syncEntitlements();
-        }
-      } catch (err: any) {
-        setError(err.message ?? "Failed to open paywall");
-      } finally {
-        setIsPurchasing(false);
-      }
-    },
-    [syncEntitlements],
-  );
 
   const openWebPaywall = useCallback(
     async (appUserId: string) => {
