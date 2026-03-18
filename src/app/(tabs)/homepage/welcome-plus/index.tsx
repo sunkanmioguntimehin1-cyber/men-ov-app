@@ -1,4 +1,6 @@
+import { useGetUser } from "@/src/api_services/userApi/userQuery";
 import { GradientText } from "@/src/components/GradientText";
+import useRevenueCat from "@/src/hooks/useRevenueCat";
 import Screen from "@/src/layout/Screen";
 import { Entypo, Ionicons } from "@expo/vector-icons";
 import { Image } from "expo-image";
@@ -8,6 +10,23 @@ import { Text, TouchableOpacity, View } from "react-native";
 
 const WelcomePlus = () => {
   const router = useRouter();
+  const getUserData = useGetUser();
+  const userId = getUserData?.data?.id;
+  const { customerInfo, fetchCustomerInfo, isProMember } =
+    useRevenueCat(userId);
+
+  console.log("🚀 ~ file:  ~ WelcomePlus ~ isProMember:", isProMember);
+
+  console.log("🚀 ~ file: ~ WelcomePlus ~ customerInfo:", customerInfo);
+  console.log(
+    " WelcomePlus ~ customerInfo:",
+    customerInfo?.subscriptions?.menovia_web_monthly?.period_type === "trial",
+  );
+
+  console.log(
+    " WelcomePlus ~ customerInfo:",
+    customerInfo?.subscriptions?.menovia_web_annual?.period_type === "trial",
+  );
 
   const menuItems = [
     {
@@ -22,7 +41,7 @@ const WelcomePlus = () => {
           />
         </View>
       ),
-      onPress: () => router.push("/(tabs)/homepage/chat-with-ai"),
+      onPress: () => router.replace("/(tabs)/homepage/chat-with-ai"),
     },
     {
       title: "Track symptoms",
@@ -36,7 +55,7 @@ const WelcomePlus = () => {
           />
         </View>
       ),
-      onPress: () => router.push("/(tabs)/homepage"),
+      onPress: () => router.replace("/(tabs)/homepage"),
     },
     {
       title: "View Plus benefits",
@@ -50,7 +69,8 @@ const WelcomePlus = () => {
           />
         </View>
       ),
-      onPress: () => router.push("/(tabs)/homepage/welcome-plus/plus-benefit"),
+      onPress: () =>
+        router.replace("/(tabs)/homepage/welcome-plus/plus-benefit"),
     },
   ];
 
@@ -75,9 +95,18 @@ const WelcomePlus = () => {
         <GradientText className="font-[PoppinsBold] text-3xl text-center">
           Welcome to Plus
         </GradientText>
-        <Text className="text-[#6b7280] text-lg text-center mt-4 font-[PoppinsRegular]">
-          Your 7-day trial has started
-        </Text>
+        {customerInfo?.subscriptions?.menovia_web_monthly?.period_type ===
+          "trial" && (
+          <Text className="text-[#6b7280] text-lg text-center mt-4 font-[PoppinsRegular]">
+            Your 7-day trial has started
+          </Text>
+        )}
+        {customerInfo?.subscriptions?.menovia_web_annual?.period_type ===
+          "trial" && (
+          <Text className="text-[#6b7280] text-lg text-center mt-4 font-[PoppinsRegular]">
+            Your 7-day trial has started
+          </Text>
+        )}
       </View>
 
       {/* Menu Cards */}
@@ -90,7 +119,7 @@ const WelcomePlus = () => {
               "flex-row items-center border border-gray-200  p-4 rounded-3xl mb-4"
             }
             // className={"flex-row items-center border border-gray-100 bg-white shadow-sm p-4 rounded-3xl mb-4"}
-            style={{ elevation: 2 }} // Added for a slight shadow effect on Android
+            // style={{ elevation: 2 }} // Added for a slight shadow effect on Android
           >
             <View className="w-12 items-center justify-center">
               {item.icon}

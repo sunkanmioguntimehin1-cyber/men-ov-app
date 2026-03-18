@@ -131,10 +131,10 @@
 
 // export default PlusBenefit;
 
+import { GradientText } from "@/src/components/GradientText";
 import Screen from "@/src/layout/Screen";
 import { Ionicons } from "@expo/vector-icons";
 import { Image } from "expo-image";
-import { LinearGradient } from "expo-linear-gradient"; // Ensure this is installed
 import { useRouter } from "expo-router";
 import React from "react";
 import { ScrollView, Text, TouchableOpacity, View } from "react-native";
@@ -172,14 +172,14 @@ const PlusBenefit = () => {
         contentContainerStyle={{ paddingBottom: 40 }}
       >
         {/* Header Navigation */}
-        <View className="pt-4">
+        <View className="pt-2">
           <TouchableOpacity onPress={() => router.back()}>
             <Ionicons name="chevron-back" size={28} color="black" />
           </TouchableOpacity>
         </View>
 
         {/* Hero Section */}
-        <View className="items-center mt-4">
+        <View className="items-center">
           <View className="w-24 h-24 mb-4">
             <Image
               source={require("@/assets/images/Menovia-Logo-Icon.png")}
@@ -187,9 +187,9 @@ const PlusBenefit = () => {
               contentFit="contain"
             />
           </View>
-          <Text className="font-[PoppinsBold] text-3xl text-center text-[#5c3d64]">
+          <GradientText className="font-[PoppinsBold] text-3xl text-center">
             What you get with Plus
-          </Text>
+          </GradientText>
         </View>
 
         {/* Menu Cards */}
@@ -197,14 +197,7 @@ const PlusBenefit = () => {
           {menuItems.map((item, index) => (
             <View
               key={index}
-              className="flex-row items-center border border-gray-100 p-4 rounded-[24px] mb-4 bg-white"
-              style={{
-                shadowColor: "#000",
-                shadowOffset: { width: 0, height: 1 },
-                shadowOpacity: 0.05,
-                shadowRadius: 5,
-                elevation: 2,
-              }}
+              className="flex-row items-center border border-gray-200  p-4 rounded-3xl mb-4"
             >
               <View className="w-12 h-12 rounded-full overflow-hidden">
                 <Image
@@ -215,10 +208,10 @@ const PlusBenefit = () => {
               </View>
 
               <View className="flex-1 ml-4">
-                <Text className="font-[PoppinsSemiBold] text-[#1f2937] text-[16px]">
+                <Text className="font-[PoppinsSemiBold] text-[#1f2937] text-base">
                   {item.title}
                 </Text>
-                <Text className="font-[PoppinsRegular] text-gray-500 text-[14px] leading-5">
+                <Text className="font-[PoppinsRegular] text-gray-500 text-sm">
                   {item.subtitle}
                 </Text>
               </View>
@@ -234,13 +227,13 @@ const PlusBenefit = () => {
         </View>
 
         {/* Call to Action Button */}
-        <TouchableOpacity
+        {/* <TouchableOpacity
           activeOpacity={0.8}
           className="mt-8"
           onPress={() => console.log("Trial started")}
         >
           <LinearGradient
-            colors={["#6b6bb3", "#b34e8d"]} // Matching the purple-to-pink gradient
+            colors={["#6b6bb3", "#b34e8d"]} 
             start={{ x: 0, y: 0.5 }}
             end={{ x: 1, y: 0.5 }}
             style={{
@@ -253,7 +246,7 @@ const PlusBenefit = () => {
               Start free trial
             </Text>
           </LinearGradient>
-        </TouchableOpacity>
+        </TouchableOpacity> */}
       </ScrollView>
     </Screen>
   );

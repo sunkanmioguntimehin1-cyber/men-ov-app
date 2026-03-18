@@ -228,7 +228,7 @@ const FloatingAiButton = () => {
             }}
           >
             <Image
-              source={require("@/assets/images/ai-image.png")}
+              source={require("@/assets/images/xena-1.png")}
               style={{
                 height: "100%",
                 width: "100%",
