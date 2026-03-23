@@ -2,6 +2,7 @@ import { usePushNotificationSyncDevice } from "@/src/api_services/userApi/userMu
 import Constants from "expo-constants";
 import * as Device from "expo-device";
 import * as Notifications from "expo-notifications";
+import { router } from "expo-router";
 import { useEffect, useRef, useState } from "react";
 import { Platform } from "react-native";
 
@@ -11,8 +12,8 @@ export interface PushNotificationState {
 }
 
 export const usePushNotifications = (): PushNotificationState => {
-    const getPushNotificationSyncDeviceToken = usePushNotificationSyncDevice();
-  
+  const getPushNotificationSyncDeviceToken = usePushNotificationSyncDevice();
+
   Notifications.setNotificationHandler({
     handleNotification: async () => ({
       shouldPlaySound: true,
@@ -77,8 +78,6 @@ export const usePushNotifications = (): PushNotificationState => {
     return token;
   }
 
-   
-
   useEffect(() => {
     registerForPushNotificationsAsync().then((token: any) => {
       setExpoPushToken(token);
@@ -91,7 +90,27 @@ export const usePushNotifications = (): PushNotificationState => {
 
     responseListener.current =
       Notifications.addNotificationResponseReceivedListener((response) => {
-        console.log(response);
+        const data = response.notification.request.content.data || {};
+        const screen = data.screen as string | undefined;
+
+        const routeMapping: Record<string, string> = {
+          home: "/homepage",
+          homepage: "/homepage",
+          notification: "/homepage/notification-screen",
+          notifications: "/notification-screen",
+          chat: "/homepage/chat-with-ai",
+          "chat-with-ai": "/homepage/chat-with-ai",
+          learn: "/explorepage",
+          community: "/communitypage",
+          insights: "/summarypage",
+          profile: "/profilepage/profile-screen",
+          subscription: "/manage-subscription/choose-your-plan",
+        };
+
+        const route = screen
+          ? routeMapping[screen] || "/homepage"
+          : "/homepage";
+        router.push(route as any);
       });
 
     return () => {

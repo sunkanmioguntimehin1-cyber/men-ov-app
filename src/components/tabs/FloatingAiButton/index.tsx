@@ -2,7 +2,7 @@ import { useGetUserChat } from "@/src/api_services/userApi/userQuery";
 import { Image } from "expo-image";
 import { useRouter } from "expo-router";
 import * as WebBrowser from "expo-web-browser";
-import React, { useEffect, useRef } from "react";
+import { useEffect, useRef } from "react";
 import {
   Alert,
   Animated,
@@ -150,85 +150,15 @@ const FloatingAiButton = () => {
               transform: [{ scale: glowScale as unknown as number }],
             }}
           />
-          {/* <TouchableOpacity
-            accessibilityLabel="Open AI assistant"
-            activeOpacity={0.9}
-            className=" w-full  bg-white my-3 border border-[#EAEAEA] p-4 rounded-xl"
-            style={{
-              shadowColor: "#8A3FFC",
-              shadowOpacity: 0.25,
-              shadowRadius: 12,
-              shadowOffset: { width: 0, height: 6 },
-              elevation: 8,
-            }}
-          >
-            <Text className=" text-[#101828] font-[PoppinsSemiBold] text-base">
-              Ziena™ —Your AI Companion
-            </Text>
-
-            <TouchableOpacity
-              className="flex-row items-center justify-between"
-
-              onPress={() => {
-                router.push("/(tabs)/homepage/chat-with-ai");
-              }}
-            >
-              <View className=" w-10 h-10 ">
-                <Image
-                  source={require("@/assets/images/xena-1.png")}
-                  style={{
-                    height: "100%",
-                    width: "100%",
-                    alignSelf: "center",
-
-                  }}
-                  contentFit="fill"
-                  onError={(error) => console.log("Image error:", error)}
-                />
-              </View>
-
-              <View className="flex-1 my-2  border border-primary p-3 rounded-lg">
-                <Text className="text-base font-[PoppinsRegular]">
-                  Ask Ziena™...
-                </Text>
-              </View>
-
-              <TouchableOpacity
-                className="mx-2"
-                onPress={() => {
-                  router.push("/(tabs)/homepage/chat-with-ai");
-                }}
-
-              >
-                <GradientMaterialIcon
-                  name="send"
-                  size={26}
-                  gradientColors={["#6B5591", "#6E3F8C", "#853385", "#9F3E83"]}
-                />
-              </TouchableOpacity>
-            </TouchableOpacity>
-
-            <View className=" my-2">
-              <Text>
-                We care about your data in our{" "}
-                <Text
-                  style={{ color: "#007AFF", textDecorationLine: "underline" }}
-                  onPress={handleOpenPrivacyPolicy}
-                >
-                  <Text>privacy policy.</Text>
-                </Text>{" "}
-              </Text>
-            </View>
-          </TouchableOpacity>  */}
 
           <TouchableOpacity
-            className=" w-28 h-28  "
+            className="w-20 h-20"
             onPress={() => {
               router.push("/(tabs)/homepage/chat-with-ai");
             }}
           >
             <Image
-              source={require("@/assets/images/xena-1.png")}
+              source={require("@/assets/images/xena-2.png")}
               style={{
                 height: "100%",
                 width: "100%",
@@ -245,87 +175,3 @@ const FloatingAiButton = () => {
 };
 
 export default FloatingAiButton;
-
-// // components/FloatingAiButton.tsx
-// import { Image } from "expo-image";
-// import { useRouter } from "expo-router";
-// import { useEffect, useRef } from "react";
-// import { Animated, TouchableOpacity, View } from "react-native";
-
-// export function FloatingAiButton() {
-//   const router = useRouter();
-//   const glowOpacity = useRef(new Animated.Value(0.4)).current;
-//   const glowScale = useRef(new Animated.Value(1)).current;
-
-//   useEffect(() => {
-//     Animated.loop(
-//       Animated.sequence([
-//         Animated.parallel([
-//           Animated.timing(glowOpacity, {
-//             toValue: 0.8,
-//             duration: 1000,
-//             useNativeDriver: true,
-//           }),
-//           Animated.timing(glowScale, {
-//             toValue: 1.15,
-//             duration: 1000,
-//             useNativeDriver: true,
-//           }),
-//         ]),
-//         Animated.parallel([
-//           Animated.timing(glowOpacity, {
-//             toValue: 0.4,
-//             duration: 1000,
-//             useNativeDriver: true,
-//           }),
-//           Animated.timing(glowScale, {
-//             toValue: 1,
-//             duration: 1000,
-//             useNativeDriver: true,
-//           }),
-//         ]),
-//       ]),
-//     ).start();
-//   }, []);
-
-//   return (
-//     <View
-//       style={{
-//         position: "absolute",
-//         bottom: 90, // above tab bar
-//         right: 20,
-//         zIndex: 9999,
-//       }}
-//       pointerEvents="box-none"
-//     >
-//       {/* Glow ring */}
-//       <Animated.View
-//         pointerEvents="none"
-//         style={{
-//           position: "absolute",
-//           left: -6,
-//           right: -6,
-//           top: -6,
-//           bottom: -6,
-//           borderRadius: 18,
-//           backgroundColor: "rgba(138,63,252,0.25)",
-//           opacity: glowOpacity,
-//           transform: [{ scale: glowScale }],
-//         }}
-//       />
-
-//       <TouchableOpacity
-//         style={{ width: 80, height: 80 }}
-//         activeOpacity={0.85}
-//         onPress={() => router.push("/(tabs)/homepage/chat-with-ai")}
-//         accessibilityLabel="Open AI assistant"
-//       >
-//         <Image
-//           source={require("@/assets/images/ai-image.png")}
-//           style={{ height: "100%", width: "100%" }}
-//           contentFit="fill"
-//         />
-//       </TouchableOpacity>
-//     </View>
-//   );
-// }

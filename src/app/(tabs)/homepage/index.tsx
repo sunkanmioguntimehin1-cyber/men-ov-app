@@ -42,8 +42,8 @@ export default function HomePage() {
   const data = JSON.stringify(notification, undefined, 2);
   const trigger = notification?.request?.trigger as any;
   console.log("expoPushToken:", expoPushToken);
-  // console.log("expoPushTokenData:", data);
-  // console.log("expoPushTokentrigger:", trigger);
+  console.log("expoPushTokenData:", data);
+  console.log("expoPushTokentrigger:", trigger);
 
   const [selectedLastSymptom, setSelectedLastSymptom] = React.useState(null);
 
