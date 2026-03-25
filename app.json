@@ -84,7 +84,8 @@
           "icon": "./assets/images/notification_icon.png",
           "color": "#ffffff",
           "defaultChannel": "default",
-          "enableBackgroundRemoteNotifications": false
+          "enableBackgroundRemoteNotifications": false,
+          "iosDisplayInForeground": true
         }
       ],
       [
