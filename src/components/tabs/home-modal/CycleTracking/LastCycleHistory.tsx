@@ -1,8 +1,8 @@
 import CustomSelectData from "@/src/custom-components/CustomSelectData";
 import { GradientFeatherIcon } from "@/src/custom-components/GradientIcon";
+import { AntDesign } from "@expo/vector-icons";
 import { format, isValid } from "date-fns";
 import { LinearGradient } from "expo-linear-gradient";
-import React from "react";
 import { Text, TouchableOpacity, View } from "react-native";
 import CycleTrackingAddnote from "./cycleTrackingAddnote";
 
@@ -17,9 +17,7 @@ const LastCycleHistory = ({
   setNotePublicUrls,
   getCycleTrackingLatest,
 }: any) => {
-
-
-    //date calculation with proper validation
+  //date calculation with proper validation
   const getFormattedDate = () => {
     const start = getCycleTrackingLatest?.data?.start;
     if (!start) return null;
@@ -37,6 +35,8 @@ const LastCycleHistory = ({
       return null;
     }
   };
+
+  console.log("getCycleTrackingLatest?.data?:", getCycleTrackingLatest?.data);
 
   const result = getFormattedDate();
   return (
@@ -84,7 +84,7 @@ const LastCycleHistory = ({
           }
         />
 
-        {/* <View className="mt-3">
+        <View className="mt-3">
           <CustomSelectData
             onPress={handleDurationBottomSheetOpen}
             primary
@@ -97,7 +97,7 @@ const LastCycleHistory = ({
               </TouchableOpacity>
             }
           />
-        </View> */}
+        </View>
 
         <View>
           <CycleTrackingAddnote

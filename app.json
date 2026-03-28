@@ -56,6 +56,14 @@
       "favicon": "./assets/images/favicon.png"
     },
     "plugins": [
+      [
+        "expo-notification-service-extension-plugin",
+        {
+          "mode": "production",
+          "iosNSEFilePath": "./assets/NotificationService.m",
+          "filtering": false
+        }
+      ],
       "expo-router",
       "@react-native-firebase/app",
       "expo-apple-authentication",

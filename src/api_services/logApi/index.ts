@@ -56,12 +56,21 @@ export const closeLogApi = async (data: any) => {
 };
 
 export const createCycleTrackingApi = async (data: any) => {
-  
   try {
     const res = await axiosInstance.post(`/cycle-track`, data);
     return res.data;
   } catch (error) {
     console.error("createCycleTrackingApi", error);
+    throw error;
+  }
+};
+
+export const cycleTrackingMenopauseApi = async (data: any) => {
+  try {
+    const res = await axiosInstance.put(`/cycle-track/menopauseStage`, data);
+    return res.data;
+  } catch (error) {
+    console.error("cycleTrackingMenopauseApi", error);
     throw error;
   }
 };
@@ -77,8 +86,6 @@ export const updateCycleTrackingApi = async (data: any) => {
     throw error;
   }
 };
-
-
 
 export const getCycleTrackingApi = async (data: any) => {
   try {

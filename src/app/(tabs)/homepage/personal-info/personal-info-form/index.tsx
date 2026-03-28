@@ -36,7 +36,7 @@ interface Item {
 const dataItem = [
   { title: "Female", value: "female" },
   { title: "Male", value: "male" },
-  { title: "Intersex", value: "Intersex" },
+  { title: "Intersex", value: "intersex" },
 ];
 
 const ChooseSexData = [
@@ -182,6 +182,10 @@ const PersonalInfoForm = () => {
         return false;
     }
   };
+  console.log("selectedSex?.value", selectedSex?.value);
+  console.log("selectedSex", selectedSex);
+
+  console.log(" getUserData?.data?.gender", getUserData?.data?.gender);
 
   // Handle moving to next step
   const handleNext = (data: any) => {
@@ -194,7 +198,7 @@ const PersonalInfoForm = () => {
 
       editUserProfile.mutate({
         fullname: data.fullname || getUserData?.data?.fullname,
-        gender: selectedSex?.value || getUserData?.data?.gender,
+        gender: selectedSex || getUserData?.data?.gender,
         address: data.address || getUserData?.data?.address,
         dob: selectedDate,
       });

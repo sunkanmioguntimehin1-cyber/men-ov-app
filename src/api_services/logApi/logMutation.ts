@@ -5,6 +5,7 @@ import {
   closeLogApi,
   createCycleTrackingApi,
   createLogApi,
+  cycleTrackingMenopauseApi,
   updateCycleTrackingApi,
   updateLogApi,
 } from ".";
@@ -80,6 +81,34 @@ export const useCreateCycleTrackingApi = (onCancel: any) => {
       });
       queryClient.invalidateQueries({
         queryKey: ["get-intakes"],
+      });
+
+      onCancel();
+    },
+    onError(error: any) {
+      handleAxiosError(error);
+    },
+  });
+};
+
+export const useCycleTrackingMenopauseApi = (onCancel: any) => {
+  const router = useRouter();
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: cycleTrackingMenopauseApi,
+    async onSuccess(data: any) {
+      // showSuccessToast({
+      //   message: data.message,
+      // });
+      queryClient.invalidateQueries({ queryKey: ["get-cycle-tracking"] });
+      queryClient.invalidateQueries({
+        queryKey: ["get-cycle-tracking-latest"],
+      });
+      queryClient.invalidateQueries({
+        queryKey: ["get-intakes"],
+      });
+      queryClient.invalidateQueries({
+        queryKey: ["get-user"],
       });
 
       onCancel();

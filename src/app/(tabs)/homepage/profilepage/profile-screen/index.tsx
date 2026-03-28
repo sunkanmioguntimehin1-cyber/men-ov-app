@@ -9,7 +9,6 @@ import {
   useGetUser,
 } from "@/src/api_services/userApi/userQuery";
 import { GradientText } from "@/src/components/GradientText";
-import { GradientFontistoIcon } from "@/src/custom-components/GradientIcon";
 import LoadingOverlay from "@/src/custom-components/LoadingOverlay";
 import Screen from "@/src/layout/Screen";
 import { getInitials } from "@/src/utils/getInitials";
@@ -137,6 +136,11 @@ export default function ProfilePage() {
     if (!hasHadBirthday) age--;
   }
 
+  console.log(
+    " getUserData.data.menopauseStage:",
+    getUserData.data.menopauseStage,
+  );
+
   return (
     <Screen scroll={true} className="bg-white">
       <LoadingOverlay
@@ -221,16 +225,24 @@ export default function ProfilePage() {
 
           {/* Health Tags */}
           <View className="flex-row flex-wrap justify-center mb-1">
-            {updatedTags?.map((tag: string, index: number) => (
-              <View
-                key={index}
-                className="bg-white border border-gray-300 rounded-full px-4 py-2 mr-2 mb-2"
-              >
+            {updatedTags?.length > 0 ? (
+              updatedTags.map((tag: string, index: number) => (
+                <View
+                  key={index}
+                  className="bg-white border border-gray-300 rounded-full px-4 py-2 mr-2 mb-2"
+                >
+                  <Text className="text-sm text-gray-700 font-[PoppinsRegular]">
+                    {tag}
+                  </Text>
+                </View>
+              ))
+            ) : getUserData.data.menopauseStage ? (
+              <View className="bg-white border border-gray-300 rounded-full px-4 py-2 mr-2 mb-2">
                 <Text className="text-sm text-gray-700 font-[PoppinsRegular]">
-                  {tag}
+                  {getUserData.data.menopauseStage}
                 </Text>
               </View>
-            ))}
+            ) : null}
           </View>
 
           {/* Action Buttons */}
@@ -238,15 +250,15 @@ export default function ProfilePage() {
             <TouchableOpacity
               className="border border-primary rounded-xl items-center justify-center flex-1"
               onPress={handleIntakes}
-              disabled={!isPeriMenopause}
+              // disabled={!isPeriMenopause}
             >
               <View className=" items-center p-4">
                 <GradientText className="font-[PoppinsMedium] text-center ">
                   Health Information
                 </GradientText>
-                {!isPeriMenopause && (
+                {/* {!isPeriMenopause && (
                   <GradientFontistoIcon name="locked" size={16} />
-                )}
+                )} */}
               </View>
             </TouchableOpacity>
 

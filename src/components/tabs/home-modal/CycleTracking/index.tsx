@@ -1,5 +1,6 @@
 import {
   useCreateCycleTrackingApi,
+  useCycleTrackingMenopauseApi,
   useUpdateCycleTrackingApi,
 } from "@/src/api_services/logApi/logMutation";
 import { useCycleTrackingLatest } from "@/src/api_services/logApi/logQuery";
@@ -32,6 +33,7 @@ const CycleTracking = ({ onCancel }: any) => {
   const createCycleTracking = useCreateCycleTrackingApi(onCancel);
   const getCycleTrackingLatest = useCycleTrackingLatest();
   const updateCycleTracking = useUpdateCycleTrackingApi(onCancel);
+  const cycleTrackingMenopause = useCycleTrackingMenopauseApi(onCancel);
 
   const formMethods = useForm({
     mode: "onChange",
@@ -52,17 +54,6 @@ const CycleTracking = ({ onCancel }: any) => {
     }
   }, [getCycleTrackingLatest?.data, getIntakeDetails?.data]);
 
-  console.log(
-    "getCycleTrackingLatest?.data?.menopauseStage",
-    getCycleTrackingLatest?.data?.menopauseStage,
-  );
-  console.log(
-    "getIntakeDetails?.data?.menopauseStage",
-    getIntakeDetails?.data?.menopauseStage,
-  );
-
-  console.log("menopauseStageBBB", menopauseStage);
-
   // Function to handle Next/Submit button click
   const handleButtonClick = () => {
     if (getCycleTrackingLatest?.data) {
@@ -70,6 +61,17 @@ const CycleTracking = ({ onCancel }: any) => {
       handleSubmit(onSubmit)();
       // setCurrentIndex(currentIndex + 1);
     } else if (currentIndex < 1) {
+      if (
+        menopauseStage === "postmenopause" ||
+        menopauseStage === "menopause"
+      ) {
+        console.log("Submit menopause", menopauseStage);
+        // handleSubmit(onSubmit)();
+        cycleTrackingMenopause.mutate({
+          menopauseStage: menopauseStage,
+        });
+        return;
+      }
       // Submit the form
       setCurrentIndex(currentIndex + 1);
     } else {
@@ -79,13 +81,16 @@ const CycleTracking = ({ onCancel }: any) => {
   // Determine button text and state
   const getButtonText = () => {
     if (getCycleTrackingLatest?.data) {
-      // if (currentIndex === 0) {
-      //   return "Submit";
-      // }
       return "Add";
     } else {
       if (currentIndex === 1) {
         return "Submit";
+      }
+      if (
+        menopauseStage === "postmenopause" ||
+        menopauseStage === "menopause"
+      ) {
+        return "Save";
       }
       return "Next";
     }
@@ -103,23 +108,10 @@ const CycleTracking = ({ onCancel }: any) => {
       image: notePublicUrls,
     };
 
-    // console.log("requestPayload5001", requestPayload);
-
-    // createCycleTracking.mutate(requestPayload);
-
-    // const requestUpdatePayload = {
-    //   start: selectedDate,
-    //   duration: Number(durationData),
-    //   note: data.notes || getCycleTrackingLatest?.data?.note,
-    //   image: getCycleTrackingLatest?.data?.image,
-    //   user: getCycleTrackingLatest?.data?.user,
-    //   id: getCycleTrackingLatest?.data?.id,
-    // };
-
     const requestUpdatePayload = {
       menopauseStage: menopauseStage,
       start: selectedDate,
-      // duration: Number(durationData),
+      duration: Number(durationData),
       note: data.notes,
       image: notePublicUrls,
     };
@@ -150,7 +142,8 @@ const CycleTracking = ({ onCancel }: any) => {
       <View className=" w-96 p-5 bg-white rounded-lg  shadow-lg overflow-hidden">
         <View className=" flex-row items-center justify-between">
           <Text className=" text-base font-[PoppinsSemiBold]">
-            Cycle Tracking{" "}
+            {/* Cycle Tracking{" "} */}
+            Current Menopause Stage
           </Text>
           <TouchableOpacity onPress={onCancel}>
             <MaterialIcons name="close" size={24} color="black" />
@@ -221,7 +214,9 @@ const CycleTracking = ({ onCancel }: any) => {
               createCycleTracking.isPending
             }
             loading={
-              createCycleTracking.isPending || updateCycleTracking.isPending
+              createCycleTracking.isPending ||
+              updateCycleTracking.isPending ||
+              cycleTrackingMenopause.isPending
             }
           />
         </View>
