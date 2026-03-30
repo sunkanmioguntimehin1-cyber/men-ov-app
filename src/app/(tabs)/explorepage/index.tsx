@@ -135,7 +135,7 @@
 //           </View>
 
 //           <View className="flex-row items-center">
-           
+
 //             <Fontisto name="share-a" size={16} color="black" />
 //             <Text className="text-gray-500 text-xs ml-1">{post.shares}</Text>
 //           </View>
@@ -269,7 +269,6 @@
 
 // export default ExplorePage;
 
-
 import {
   useLikeArticleApi,
   useUnLikeArticleApi,
@@ -282,7 +281,6 @@ import { GradientText } from "@/src/components/GradientText";
 import { GradientIoniconsIcon } from "@/src/custom-components/GradientIcon";
 import LoadingOverlay from "@/src/custom-components/LoadingOverlay";
 import Screen from "@/src/layout/Screen";
-import { EvilIcons, Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
 import { BlurView } from "expo-blur";
 import { Image } from "expo-image";
 import { LinearGradient } from "expo-linear-gradient";
@@ -387,7 +385,7 @@ const ExplorePage = () => {
         </View>
       </View>
 
-      <View className="px-4 py-2 mb-4">
+      {/* <View className="px-4 py-2 mb-4">
         <View className="flex-row justify-between">
           <View className="flex-row">
             <View className="flex-row items-center mr-4">
@@ -401,7 +399,6 @@ const ExplorePage = () => {
           </View>
 
           <View className="flex-row items-center">
-            {/* <Fontisto name="share-a" size={16} color="black" /> */}
             <MaterialCommunityIcons
               name="repeat-variant"
               size={20}
@@ -410,7 +407,7 @@ const ExplorePage = () => {
             <Text className="text-gray-500 text-xs ml-1">{post.shares}</Text>
           </View>
         </View>
-      </View>
+      </View> */}
     </TouchableOpacity>
   );
 
@@ -550,7 +547,7 @@ const ExplorePage = () => {
             source={require("@/assets/images/Exploreimg.png")}
             style={{
               // flex: 1,
-              height: Platform.OS === "ios"? "118%": "125%",
+              height: Platform.OS === "ios" ? "118%" : "125%",
               width: "100%",
             }}
             resizeMode="cover"

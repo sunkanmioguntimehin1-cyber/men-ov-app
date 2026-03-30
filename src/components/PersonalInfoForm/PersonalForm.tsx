@@ -16,7 +16,6 @@ const PersonalForm = ({
   errors,
   handleAddressSelect,
   handleLocationChange,
-  dataItem,
   getSearchOptionQuery,
   option,
   term,
@@ -75,7 +74,7 @@ const PersonalForm = ({
               primary
               placeholder="Choose"
               label="Sex"
-              value={selectedSex}
+              value={selectedSex?.label}
               icon={
                 <TouchableOpacity onPress={handleSexBottomSheetOpen}>
                   <AntDesign name="down" size={20} color="#1E1D2F" />

@@ -58,12 +58,13 @@ export default function HomePage() {
 
   const isPeriMenopause =
     getUserData.data?.menopauseStage === "perimenopause" ||
+    getUserData.data?.menopauseStage === "don't know" ||
     getUserData.data?.menopauseStage === "" ||
     getUserData.data?.menopauseStage === null ||
     getUserData.data?.menopauseStage === undefined;
 
-  console.log("getUserData1111", getUserData.data?.menopauseStage);
-  console.log("isPeriMenopause3000", isPeriMenopause);
+  // console.log("getUserData1111", getUserData.data?.menopauseStage);
+  // console.log("isPeriMenopause3000", isPeriMenopause);
 
   const insets = useSafeAreaInsets();
 

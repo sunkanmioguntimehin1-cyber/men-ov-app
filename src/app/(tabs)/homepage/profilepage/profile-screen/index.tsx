@@ -46,10 +46,15 @@ export default function ProfilePage() {
     getIntakeDetails?.data?.menopauseStage === null ||
     getIntakeDetails?.data?.menopauseStage === undefined;
 
-  // console.log("getUserData11", getUserData?.data);
-  console.log("getIntakeDetails", getIntakeDetails?.error);
+  // console.log("getUserData900", getUserData?.data);
+  // console.log("getIntakeDetails20-0", getIntakeDetails?.data);
 
-  const MENOPAUSE_TAGS = ["Menopause", "Perimenopause", "Postmenopause"];
+  const MENOPAUSE_TAGS = [
+    "Menopause",
+    "Perimenopause",
+    "Postmenopause",
+    "Don't Know",
+  ];
 
   const existingTags = getUserData?.data?.tags ?? [];
   const newmenopauseStage = getIntakeDetails?.data?.menopauseStage;
