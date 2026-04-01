@@ -141,10 +141,19 @@ const CycleTracking = ({ onCancel }: any) => {
     <>
       <View className=" w-96 p-5 bg-white rounded-lg  shadow-lg overflow-hidden">
         <View className=" flex-row items-center justify-between">
-          <Text className=" text-base font-[PoppinsSemiBold]">
-            {/* Cycle Tracking{" "} */}
-            Current Menopause Stage
-          </Text>
+          {getCycleTrackingLatest?.data ||
+          getIntakeDetails?.data?.menopauseStage ? (
+            <Text className=" text-base font-[PoppinsSemiBold]">
+              {/* Cycle Tracking{" "} */}
+              {currentIndex === 0 ? "Log Previous Cycle" : null}
+            </Text>
+          ) : (
+            <Text className=" text-base font-[PoppinsSemiBold]">
+              {/* Cycle Tracking{" "} */}
+              {currentIndex === 0 ? "Current Menopause Stage" : " Log Cycle"}
+            </Text>
+          )}
+
           <TouchableOpacity onPress={onCancel}>
             <MaterialIcons name="close" size={24} color="black" />
           </TouchableOpacity>

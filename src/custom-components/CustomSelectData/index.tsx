@@ -55,9 +55,6 @@ const CustomSelectData = ({
     return `${placeholder}`;
   };
 
-  console.log("value200:", value);
-  console.log("label400:", label);
-
   return (
     <View className="my-1">
       <>

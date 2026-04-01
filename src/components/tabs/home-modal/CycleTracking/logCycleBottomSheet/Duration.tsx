@@ -1,6 +1,5 @@
 import CustomRadio from "@/src/custom-components/CustomRadio";
 import { AntDesign } from "@expo/vector-icons";
-import React from "react";
 import { Text, TouchableOpacity, View } from "react-native";
 
 const Duration = ({
@@ -11,7 +10,7 @@ const Duration = ({
   const durationDataList = [
     { label: "3 days", value: 3 },
     { label: "5 days", value: 5 },
-    { label: "10 days", value: 10 },
+    { label: "7 days", value: 7 },
   ];
 
   return (

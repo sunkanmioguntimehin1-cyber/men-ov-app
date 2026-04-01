@@ -6,7 +6,6 @@ import SafeScreen from "@/src/components/SafeScreen";
 import { Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import { useRouter } from "expo-router";
-import React from "react";
 import {
   ActivityIndicator,
   ScrollView,
@@ -89,7 +88,7 @@ const NotificationScreen = () => {
           className="p-1"
           onPress={() =>
             router.push(
-              "/(tabs)/homepage/notification-screen/notification-settings"
+              "/(tabs)/homepage/notification-screen/notification-settings",
             )
           }
         >
@@ -101,7 +100,7 @@ const NotificationScreen = () => {
       <ScrollView className="flex-1">
         {getNotificationsDetails.isLoading ? (
           <View className="flex-1 items-center justify-center py-10">
-            <ActivityIndicator size="large" color="#8B5CF6" />
+            <ActivityIndicator size="large" color="#9F3E83" />
           </View>
         ) : getNotificationsDetails?.data?.data.length === 0 ? (
           <View className="flex-1 items-center justify-center py-10">

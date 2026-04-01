@@ -1,7 +1,6 @@
 import CustomSelectData from "@/src/custom-components/CustomSelectData";
 import { AntDesign, Feather } from "@expo/vector-icons";
-import React from "react";
-import { Text, TouchableOpacity, View } from "react-native";
+import { TouchableOpacity, View } from "react-native";
 import CycleTrackingAddnote from "./cycleTrackingAddnote";
 
 const LogCycle = ({
@@ -16,12 +15,12 @@ const LogCycle = ({
 }: any) => {
   return (
     <View className="my-3">
-      <Text
+      {/* <Text
         className="mb-5 font-[PoppinsMedium] text-[#101828] text-sm "
         // style={{ fontSize: rS(12) }}
       >
         Log Cycle
-      </Text>
+      </Text> */}
       <View>
         <CustomSelectData
           onPress={handleDateBottomSheetOpen}
