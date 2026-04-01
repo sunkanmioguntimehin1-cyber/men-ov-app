@@ -3,7 +3,7 @@
     "name": "Menovia",
     "slug": "menovia",
     "owner": "menovia",
-    "version": "1.0.10",
+    "version": "1.0.11",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
     "scheme": "menoviaapp",
@@ -56,6 +56,14 @@
       "favicon": "./assets/images/favicon.png"
     },
     "plugins": [
+      [
+        "expo-notification-service-extension-plugin",
+        {
+          "mode": "production",
+          "iosNSEFilePath": "./assets/NotificationService.m",
+          "filtering": false
+        }
+      ],
       "expo-router",
       "@react-native-firebase/app",
       "expo-apple-authentication",
@@ -84,7 +92,8 @@
           "icon": "./assets/images/notification_icon.png",
           "color": "#ffffff",
           "defaultChannel": "default",
-          "enableBackgroundRemoteNotifications": false
+          "enableBackgroundRemoteNotifications": false,
+          "iosDisplayInForeground": true
         }
       ],
       [

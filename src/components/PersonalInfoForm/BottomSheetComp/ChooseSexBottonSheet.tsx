@@ -1,13 +1,17 @@
-import CustomRadio from "@/src/custom-components/CustomRadio";
-import React from "react";
+import ChooseSexRadio from "@/src/custom-components/ChooseSexRadio";
 import { Text, View } from "react-native";
 
 const ChooseSexBottonSheet = ({
   handleSexBottomSheetClose,
   selectedSex,
   setSelectedSex,
-  ChooseSexData,
 }: any) => {
+  const ChooseSexData = [
+    { label: "Female", value: "female" },
+    { label: "Male", value: "male" },
+    { label: "Intersex", value: "intersex" },
+  ];
+
   return (
     <View className=" p-8">
       <View className=" items-center">
@@ -17,7 +21,7 @@ const ChooseSexBottonSheet = ({
       </View>
       <View>
         <View className=" my-3">
-          <CustomRadio
+          <ChooseSexRadio
             isBottomSheet={true}
             options={ChooseSexData}
             checkedValue={selectedSex}

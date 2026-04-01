@@ -1,6 +1,5 @@
 import CustomRadio from "@/src/custom-components/CustomRadio";
-import React from "react";
-import { Text, View } from "react-native";
+import { View } from "react-native";
 
 const CurrentStatus = ({
   menopauseStage,
@@ -26,12 +25,12 @@ const CurrentStatus = ({
   return (
     <View>
       <View className=" my-3">
-        <Text
+        {/* <Text
           className="mb-2 font-[PoppinsMedium] text-[#101828] text-sm "
-          // style={{ fontSize: rS(12) }}
+        
         >
           Current menopause stage
-        </Text>
+        </Text> */}
         <CustomRadio
           options={menopauseStageData}
           checkedValue={menopauseStage}

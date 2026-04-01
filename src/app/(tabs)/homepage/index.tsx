@@ -41,7 +41,7 @@ export default function HomePage() {
   const { expoPushToken, notification } = usePushNotifications();
   const data = JSON.stringify(notification, undefined, 2);
   const trigger = notification?.request?.trigger as any;
-  console.log("expoPushToken:", expoPushToken);
+  // console.log("expoPushToken:", expoPushToken);
   // console.log("expoPushTokenData:", data);
   // console.log("expoPushTokentrigger:", trigger);
 
@@ -57,10 +57,14 @@ export default function HomePage() {
   const getIntakeDetails = useGetIntakeDetails();
 
   const isPeriMenopause =
-    getIntakeDetails?.data?.menopauseStage === "perimenopause" ||
-    getIntakeDetails?.data?.menopauseStage === "" ||
-    getIntakeDetails?.data?.menopauseStage === null ||
-    getIntakeDetails?.data?.menopauseStage === undefined;
+    getUserData.data?.menopauseStage === "perimenopause" ||
+    getUserData.data?.menopauseStage === "don't know" ||
+    getUserData.data?.menopauseStage === "" ||
+    getUserData.data?.menopauseStage === null ||
+    getUserData.data?.menopauseStage === undefined;
+
+  // console.log("getUserData1111", getUserData.data?.menopauseStage);
+  // console.log("isPeriMenopause3000", isPeriMenopause);
 
   const insets = useSafeAreaInsets();
 

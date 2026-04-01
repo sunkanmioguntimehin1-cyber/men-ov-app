@@ -33,12 +33,6 @@ interface Item {
   price?: string;
 }
 
-const dataItem = [
-  { title: "Female", value: "female" },
-  { title: "Male", value: "male" },
-  { title: "Intersex", value: "Intersex" },
-];
-
 const ChooseSexData = [
   { label: "Female", value: "female" },
   { label: "Male", value: "male" },
@@ -50,7 +44,6 @@ const PersonalInfoForm = () => {
   const getIntakeDetails = useGetIntakeDetails();
   const [currentIndex, setCurrentIndex] = React.useState<number>(0);
   const [selectedDate, setSelectedDate] = React.useState<Date | any>(null);
-  const [selected, setSelected] = React.useState<Item | null>(null);
   const [selectedSex, setSelectedSex] = React.useState<Item | null>(null);
 
   const [userAddress, setUserAddress] = React.useState<string>("");
@@ -110,8 +103,6 @@ const PersonalInfoForm = () => {
       setMenopauseStage(getIntakeDetails?.data?.menopauseStage ?? "");
     }
   }, [getIntakeDetails?.data, setMenopauseStage, setIsHysterectomy]);
-
-  // console.log("getIntakeDetails?.data", getIntakeDetails?.data);
 
   // bottom sheet
   const snapPoints = useMemo(() => ["30%", "50%"], []);
@@ -261,6 +252,7 @@ const PersonalInfoForm = () => {
     onOptionSelect(item);
   };
 
+  //! here  ooooo###### check here
   React.useEffect(() => {
     if (getUserData?.data) {
       const userGender = getUserData.data.gender;
@@ -278,7 +270,7 @@ const PersonalInfoForm = () => {
       const parsedDob = updateDateValue ? new Date(updateDateValue) : null;
       setSelectedDate(parsedDob);
     }
-  }, [getUserData?.data, reset]);
+  }, [getUserData?.data, setSelectedSex, reset]);
 
   return (
     <>
@@ -332,7 +324,6 @@ const PersonalInfoForm = () => {
                 handleDateBottomSheetOpen={handleDateBottomSheetOpen}
                 handleAddressSelect={handleAddressSelect}
                 handleLocationChange={handleLocationChange}
-                dataItem={dataItem}
                 getSearchOptionQuery={getSearchOptionQuery}
                 option={option}
                 term={term}
@@ -472,7 +463,6 @@ const PersonalInfoForm = () => {
             <ChooseSexBottonSheet
               selectedSex={selectedSex}
               setSelectedSex={setSelectedSex}
-              ChooseSexData={ChooseSexData}
               handleSexBottomSheetClose={handleSexBottomSheetClose}
             />
           }

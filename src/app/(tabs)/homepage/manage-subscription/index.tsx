@@ -393,9 +393,9 @@ const ManageSubscription = () => {
       {!isProMember || planName.includes("No Active Plan") ? null : (
         <TouchableOpacity
           className="mt-6 flex-row items-center justify-between gap-2 px-4 py-3 border border-slate-200 rounded-2xl"
-          onPress={() =>
-            router.push("/homepage/manage-subscription/choose-your-plan")
-          }
+          // onPress={() =>
+          //   router.push("/homepage/manage-subscription/choose-your-plan")
+          // }
         >
           <GradientText>
             {planName.toLowerCase().includes("annual")

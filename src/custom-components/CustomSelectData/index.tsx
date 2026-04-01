@@ -25,8 +25,8 @@ const CustomSelectData = ({
   whiteBg,
   error,
   onPress,
- placeholder,
- 
+  placeholder,
+
   isLoading,
 }: InputType) => {
   const [focused, setFocused] = React.useState(false);
@@ -50,12 +50,10 @@ const CustomSelectData = ({
   };
 
   const getDisplayText = () => {
-    if (value) return value
+    if (value) return value;
     // if (displayValue) return displayValue;
     return `${placeholder}`;
   };
-
-  // console.log("value200:", value);
 
   return (
     <View className="my-1">

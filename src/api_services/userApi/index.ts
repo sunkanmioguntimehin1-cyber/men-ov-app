@@ -11,8 +11,18 @@ export const getUser = async () => {
 };
 
 export const editUserDetails = async (data: any) => {
+  const requestPayload = {
+    ...(data.address && { address: data.address }),
+    ...(data.gender && { gender: data.gender }),
+    ...(data.picture && { picture: data.gender }),
+    dob: data.dob,
+    fullname: data.fullname,
+    gender: data.gender,
+  };
+  // console.log("requestPayload500:", requestPayload);
+
   try {
-    const res = await axiosInstance.put(`/user/me`, data);
+    const res = await axiosInstance.put(`/user/me`, requestPayload);
     return res.data;
   } catch (error) {
     console.error("EditUserDetails:", error);

@@ -116,7 +116,7 @@ export default function RootLayout() {
                 </Stack.Protected>
               </Stack>
             </KeyboardProvider>
-            <StatusBar style="auto" />
+            <StatusBar style="dark" />
             <Toast />
           </GestureHandlerRootView>
         </SafeAreaProvider>

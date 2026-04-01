@@ -20,7 +20,7 @@ import {
   ScrollView,
   Text,
   TouchableOpacity,
-  View,
+  View
 } from "react-native";
 
 interface Item {
@@ -40,7 +40,7 @@ const EditProfile = () => {
   const [selectedDate, setSelectedDate] = React.useState<Date | null>(null);
   const [selected, setSelected] = React.useState<Item | null>(null);
   const [notePublicUrls, setNotePublicUrls] = React.useState<string | any>(
-    null
+    null,
   );
 
   const [openDropDown, setOpenDropDown] = React.useState(false);
@@ -71,7 +71,7 @@ const EditProfile = () => {
 
   const handleAddressSelect = (
     item: any,
-    onChange: (value: string) => void
+    onChange: (value: string) => void,
   ) => {
     onChange(item.description);
     onOptionSelect(item);
@@ -204,9 +204,9 @@ const EditProfile = () => {
               <Controller
                 control={control}
                 name="address"
-                rules={{
-                  required: "Address is required",
-                }}
+                // rules={{
+                //   required: "Address is required",
+                // }}
                 render={({ field: { onChange, value, onBlur } }) => (
                   <>
                     <CustomInput
