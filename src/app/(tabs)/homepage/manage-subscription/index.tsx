@@ -265,7 +265,7 @@ const ManageSubscription = () => {
   const userId = getUserData?.data?.id;
   const { customerInfo, fetchCustomerInfo, isProMember } =
     useRevenueCat(userId);
-  const { openWebPaywall, isPurchasing } = useWebPaywall(fetchCustomerInfo);
+  const { openWebPaywall, isPurchasing, renderWebView } = useWebPaywall(fetchCustomerInfo);
 
   console.log("customerInfo400", customerInfo);
 
@@ -475,10 +475,11 @@ const ManageSubscription = () => {
         message={
           <ManageSubscriptionBottonSheet
             handleManageBottomSheetClose={handleManageBottomSheetClose}
-            // managementUrl={activeSubDetails?.managementUrl} // Pass URL to bottom sheet if needed
           />
         }
       />
+
+      {renderWebView()}
     </Screen>
   );
 };

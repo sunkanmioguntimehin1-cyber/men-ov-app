@@ -1,10 +1,9 @@
 import { GradientText } from "@/src/components/GradientText";
-import useRevenueCat from "@/src/hooks/useRevenueCat";
 import Screen from "@/src/layout/Screen";
 import { LinearGradient } from "expo-linear-gradient";
 import { useRouter } from "expo-router";
 import { ChevronLeft } from "lucide-react-native";
-import React, { useState } from "react";
+import { useState } from "react";
 import {
   Pressable,
   ScrollView,
@@ -25,13 +24,13 @@ const REASONS = [
 
 const CancelSubscription = () => {
   const router = useRouter();
-  const {
-    currentOffering,
-    customerInfo,
-    isProMember,
-    isCancelled,
-    isPendingCancellation,
-  } = useRevenueCat();
+  // const {
+  //   currentOffering,
+  //   customerInfo,
+  //   isProMember,
+  //   isCancelled,
+  //   isPendingCancellation,
+  // } = useRevenueCat();
 
   const [selectedReason, setSelectedReason] = useState<string | null>(
     "Too expensive",

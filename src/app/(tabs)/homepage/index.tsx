@@ -21,7 +21,7 @@ import { getInitials } from "@/src/utils/getInitials";
 import { AntDesign, Ionicons } from "@expo/vector-icons";
 import { formatDistanceToNow } from "date-fns";
 import { Image } from "expo-image";
-import { useRouter } from "expo-router";
+import { useLocalSearchParams, useRouter } from "expo-router";
 import React from "react";
 import {
   Alert,
@@ -41,7 +41,7 @@ export default function HomePage() {
   const { expoPushToken, notification } = usePushNotifications();
   const data = JSON.stringify(notification, undefined, 2);
   const trigger = notification?.request?.trigger as any;
-  // console.log("expoPushToken:", expoPushToken);
+  console.log("expoPushToken:", expoPushToken);
   // console.log("expoPushTokenData:", data);
   // console.log("expoPushTokentrigger:", trigger);
 
@@ -69,6 +69,16 @@ export default function HomePage() {
   const insets = useSafeAreaInsets();
 
   const router = useRouter();
+  const params = useLocalSearchParams();
+
+  React.useEffect(() => {
+    if (params.openLogPopup === "true") {
+      handleOpenmodal();
+    }
+    if (params.openCycleTrackingPopup === "true") {
+      handleOpenmodal2();
+    }
+  }, [params.openLogPopup, params.openCycleTrackingPopup]);
 
   //date calculation with proper validation
   const getFormattedDate = () => {

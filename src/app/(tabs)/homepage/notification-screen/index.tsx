@@ -1,9 +1,11 @@
-//
-
 import { useUpdateNotificationDetails } from "@/src/api_services/notificationApi/notificationMutation";
 import { useGetNotificationsApi } from "@/src/api_services/notificationApi/notificationQuery";
 import SafeScreen from "@/src/components/SafeScreen";
-import { Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
+import {
+  GradientIoniconsIcon,
+  GradientMaterialCommunityIcons,
+} from "@/src/custom-components/GradientIcon";
+import { Ionicons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import { useRouter } from "expo-router";
 import {
@@ -13,6 +15,30 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
+
+const NOTIFICATION_ROUTES: Record<
+  string,
+  { route: string; params?: (actionData: any) => object } | null
+> = {
+  chat_with_ziena: {
+    route: "/(tabs)/homepage/chat-with-ai",
+    params: (actionData) => ({
+      ...(actionData?.chat_message && {
+        initialMessage: actionData.chat_message,
+      }),
+    }),
+  },
+  read_article: {
+    route: "/(tabs)/homepage/articles-webview",
+  },
+  log_symptom: {
+    route: "/(tabs)/homepage",
+  },
+  complete_profile: {
+    route: "/(tabs)/homepage/profilepage/profile-screen",
+    params: () => ({ openIntake: true }),
+  },
+};
 
 const NotificationScreen = () => {
   const router = useRouter();
@@ -56,11 +82,29 @@ const NotificationScreen = () => {
     if (iconSet === "Ionicons") {
       return <Ionicons name={iconName} size={size} color={color} />;
     }
-    return <MaterialCommunityIcons name={iconName} size={size} color={color} />;
+    // return <MaterialCommunityIcons name={iconName} size={size} color={color} />;
+    return (
+      <GradientMaterialCommunityIcons
+        name={iconName}
+        size={size}
+        gradientColors={["#6B5591", "#6E3F8C", "#853385", "#9F3E83"]}
+      />
+    );
   };
 
   const handleUnread = (notificationId: string) => {
     updateNotificationData.mutate(notificationId);
+  };
+
+  const handleNotificationPress = (notification: any) => {
+    handleUnread(notification.id);
+    const { action_data } = notification;
+    const config = NOTIFICATION_ROUTES[action_data?.action_type];
+
+    if (config) {
+      const params = config.params?.(action_data) || {};
+      router.push(config.route as any, params);
+    }
   };
 
   return (
@@ -104,10 +148,15 @@ const NotificationScreen = () => {
           </View>
         ) : getNotificationsDetails?.data?.data.length === 0 ? (
           <View className="flex-1 items-center justify-center py-10">
-            <Ionicons
+            {/* <Ionicons
               name="notifications-off-outline"
               size={48}
               color="#9CA3AF"
+            /> */}
+            <GradientIoniconsIcon
+              name="notifications-off-outline"
+              size={20}
+              gradientColors={["#6B5591", "#6E3F8C", "#853385", "#9F3E83"]}
             />
             <Text className="text-gray-400 font-[Poppins] mt-4">
               No notifications yet
@@ -115,43 +164,41 @@ const NotificationScreen = () => {
           </View>
         ) : (
           getNotificationsDetails?.data?.data.map((notification: any) => {
-            const iconConfig = getCategoryIcon(notification.category);
+            const iconConfig = getCategoryIcon(notification.notification_type);
 
             return (
               <TouchableOpacity
-                key={notification._id}
+                key={notification.id}
                 className="flex-row px-5 py-4 border-b border-gray-100"
                 activeOpacity={0.7}
-                onPress={() => {
-                  // TODO: Handle notification click and mark as read
-                  handleUnread(notification._id);
-                }}
+                onPress={() => handleNotificationPress(notification)}
               >
                 {/* Icon Container */}
                 <View
-                  style={{ backgroundColor: "#F3E8FF" }}
+                  // style={{ backgroundColor: "#6E3F8C" }}
                   className="w-10 h-10 rounded-full items-center justify-center mr-3"
                 >
-                  {renderIcon(iconConfig.set, iconConfig.name, 24, "#8B5CF6")}
+                  {renderIcon(iconConfig.set, iconConfig.name, 24)}
                 </View>
 
                 {/* Content */}
                 <View className="flex-1">
-                  <View className="flex-row items-start justify-between mb-1">
+                  {/* <View className="flex-row items-start justify-between mb-1">
                     <Text className="flex-1 text-sm font-[PoppinsMedium] text-gray-900 mr-2">
-                      {notification.title}
+                      {notification.notification_text}
                     </Text>
-                    {!notification.isRead && (
+                    {!notification.is_read && (
                       <View className="w-2 h-2 rounded-full bg-red-500 mt-1.5" />
                     )}
-                  </View>
+                  </View> */}
 
                   <Text className="text-sm font-[Poppins] text-gray-500 mb-2">
-                    {notification.message}
+                    {notification.chat_message ||
+                      notification.notification_text}
                   </Text>
 
                   <Text className="text-xs font-[Poppins] text-gray-400">
-                    {getTimeAgo(notification.createdAt)}
+                    {getTimeAgo(notification.created_at)}
                   </Text>
                 </View>
               </TouchableOpacity>

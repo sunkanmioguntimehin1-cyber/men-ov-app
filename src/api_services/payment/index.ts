@@ -9,3 +9,13 @@ export const paymentSyncApi = async (data: any) => {
     throw error;
   }
 };
+
+export const cancelSubscriptionApi = async (data: any) => {
+  try {
+    const res = await axiosInstance.post(`/payment/cancel`, data);
+    return res.data;
+  } catch (error) {
+    console.error("cancelSubscriptionApi:", error);
+    throw error;
+  }
+};

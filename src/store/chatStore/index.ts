@@ -2,6 +2,14 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { create } from "zustand";
 import { createJSONStorage, persist } from "zustand/middleware";
 
+export type WidgetName =
+  | "symptom_form"
+  | "cycle_form"
+  | "date_picker"
+  | "intensity_slider"
+  | "management_tabs"
+  | "resource";
+
 interface Message {
   id: string;
   text: string;
@@ -9,12 +17,16 @@ interface Message {
   timestamp: string;
   date: string;
   fullDate: Date;
+  widget?: WidgetName;
+  widgetPayload?: string;
 }
 
 interface ChatStore {
   messages: Message[];
-  hydrated?: boolean;            
+  hydrated: boolean;
+  hasHydrated: () => boolean;
   setMessages: (messages: Message[]) => void;
+  mergeMessages: (newMessages: Message[]) => void;
   addMessage: (message: Message) => void;
   clearMessages: () => void;
   updateLastMessage: (text: string) => void;
@@ -25,9 +37,28 @@ const useChatStore = create<ChatStore>()(
   persist(
     (set, get) => ({
       messages: [],
+      hydrated: false,
+
+      hasHydrated: () => get().hydrated,
 
       setMessages: (messages: Message[]) => {
         set({ messages });
+      },
+
+      mergeMessages: (newMessages: Message[]) => {
+        set((state) => {
+          const existingIds = new Set(state.messages.map((m) => m.id));
+          const uniqueNewMessages = newMessages.filter(
+            (m) => !existingIds.has(m.id)
+          );
+          const merged = [...state.messages, ...uniqueNewMessages];
+          merged.sort((a, b) => {
+            const dateA = a.fullDate instanceof Date ? a.fullDate : new Date(a.fullDate);
+            const dateB = b.fullDate instanceof Date ? b.fullDate : new Date(b.fullDate);
+            return dateA.getTime() - dateB.getTime();
+          });
+          return { messages: merged };
+        });
       },
 
       addMessage: (message: Message) => {
@@ -63,11 +94,18 @@ const useChatStore = create<ChatStore>()(
       name: "chat-storage",
       storage: createJSONStorage(() => AsyncStorage),
       partialize: (state) => ({
-        messages: state.messages.map(msg => ({
+        messages: state.messages.map((msg) => ({
           ...msg,
           fullDate: msg.fullDate instanceof Date ? msg.fullDate.toISOString() : msg.fullDate,
-        })) as any,
+        })),
       }),
+      onRehydrateStorage: () => {
+        return (state, error) => {
+          if (!error && state) {
+            state.hydrated = true;
+          }
+        };
+      },
     }
   )
 );
