@@ -37,7 +37,7 @@ const Communitypage = () => {
   const [modelVisible, setModelVisible] = React.useState(false);
   const [getPostId, setGetPostId] = React.useState<string | null>(null);
   const [activePopoverId, setActivePopoverId] = React.useState<string | null>(
-    null
+    null,
   );
   const [popoverPosition, setPopoverPosition] = React.useState({ x: 0, y: 0 });
 
@@ -96,7 +96,7 @@ const Communitypage = () => {
   };
 
   const handleViewPost = (postId: string) => {
-    router.push({
+    router.replace({
       pathname: `/(tabs)/communitypage/view-post`,
       params: { item: JSON.stringify(postId) },
     });
@@ -117,11 +117,11 @@ const Communitypage = () => {
         width: number,
         height: number,
         pageX: number,
-        pageY: number
+        pageY: number,
       ) => {
         setPopoverPosition({ x: pageX + width, y: pageY + height });
         setActivePopoverId(postId);
-      }
+      },
     );
   };
 

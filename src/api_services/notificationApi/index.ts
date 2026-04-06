@@ -1,22 +1,21 @@
 import axiosInstance from "@/src/lib/axiosInstance";
 
-
-
 export const getNotificationsApi = async () => {
   try {
     const res = await axiosInstance.get(`/notification`);
+    console.log("getNotificationsApi response:", res.data);
     return res.data;
   } catch (error) {
-    console.error("pushNotificationSyncDevice:", error);
+    console.error("getNotificationsApi:", error);
     throw error;
   }
 };
 
-
 export const updateNotificationDetails = async (notificationId: string) => {
+  console.log("Updating notification as read:", notificationId);
   try {
     const res = await axiosInstance.patch(
-      `/notification/${notificationId}/read`
+      `/notification/${notificationId}/read`,
     );
     return res.data;
   } catch (error) {
