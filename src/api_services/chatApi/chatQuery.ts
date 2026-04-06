@@ -19,5 +19,8 @@ export const useGetAllChatAiHistory = () => {
   return useQuery({
     queryKey: ["get-all-chat-history"],
     queryFn: getAllChatAiHistory,
+    enabled: true,
+    refetchOnMount: true,
+    staleTime: 1000 * 60 * 5,
   });
 };
