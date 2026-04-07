@@ -1,12 +1,12 @@
 import { useGetAllChatAiHistory } from "@/src/api_services/chatApi/chatQuery";
+import { ActionPills } from "@/src/components/ActionPills";
+import { InlineWidget } from "@/src/components/InlineWidget";
 import CustomInput from "@/src/custom-components/CustomInput";
 import { GradientMaterialIcon } from "@/src/custom-components/GradientIcon";
 import { TypingDots } from "@/src/custom-components/TypingDots";
 import Screen from "@/src/layout/Screen";
 import useChatStore, { WidgetName } from "@/src/store/chatStore";
-import { parseMessage, MessageSegment } from "@/src/widgets/messageParser";
-import { ActionPills } from "@/src/components/ActionPills";
-import { InlineWidget } from "@/src/components/InlineWidget";
+import { parseMessage } from "@/src/widgets/messageParser";
 import { MaterialIcons } from "@expo/vector-icons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Image } from "expo-image";
@@ -56,6 +56,9 @@ const ChatWithAi = () => {
   const [hasLoadedInitially, setHasLoadedInitially] = useState(false);
   const [showScrollButton, setShowScrollButton] = useState(false);
 
+  //ActionPills state
+  const [selectedButton, setSelectedButton] = useState<string | null>(null);
+
   // ✅ Separate streaming state with typing animation
   const [streamingText, setStreamingText] = useState("");
   const [isStreaming, setIsStreaming] = useState(false);
@@ -75,6 +78,7 @@ const ChatWithAi = () => {
   const lastChatMessageRef = useRef("");
 
   const getAllChatAiHistory = useGetAllChatAiHistory();
+  // console.log("getAllChatAiHistory", getAllChatAiHistory?.data);
 
   const scrollViewRef = useRef<ScrollView>(null);
   const insets = useSafeAreaInsets();
@@ -171,6 +175,8 @@ const ChatWithAi = () => {
     }
     isTypingRef.current = false;
   };
+
+  console.log("messageDatail33", messageDatail);
 
   // ✅ Cleanup on unmount
   useEffect(() => {
@@ -294,7 +300,7 @@ const ChatWithAi = () => {
     }
   }
 
-  // Parse Markdown-style text and render it
+  //! Parse Markdown-style text and render it
   const renderFormattedText = (text: string) => {
     const elements: React.ReactNode[] = [];
     const lines = text.split("\n");
@@ -320,7 +326,7 @@ const ChatWithAi = () => {
             </Text>
             <Text
               style={{
-                color: "white",
+                color: "black",
                 flex: 1,
                 fontSize: 16,
                 fontFamily: "PoppinsRegular",
@@ -336,7 +342,7 @@ const ChatWithAi = () => {
           <Text
             key={lineIndex}
             style={{
-              color: "white",
+              color: "black",
               fontSize: 16,
               marginBottom: 4,
               fontFamily: "PoppinsRegular",
@@ -351,7 +357,7 @@ const ChatWithAi = () => {
     return <>{elements}</>;
   };
 
-  // Parse inline formatting like **bold** and [links](urls)
+  //! Parse inline formatting like **bold** and [links](urls)
   const parseInlineFormatting = (text: string): React.ReactNode[] => {
     const elements: React.ReactNode[] = [];
     let currentIndex = 0;
@@ -371,7 +377,7 @@ const ChatWithAi = () => {
         elements.push(
           <Text
             key={match.index}
-            style={{ fontFamily: "PoppinsSemiBold", color: "white" }}
+            style={{ fontFamily: "PoppinsSemiBold", color: "black" }}
           >
             {boldText}
           </Text>,
@@ -459,7 +465,7 @@ const ChatWithAi = () => {
     }, 100);
   };
 
-  // Render message content segments (text, actions, widgets)
+  //! Render message content segments (text, actions, widgets)
   const renderMessageContent = (message: Message) => {
     const segments = parseMessage(message.text);
 
@@ -475,17 +481,18 @@ const ChatWithAi = () => {
           switch (segment.type) {
             case "text":
               return segment.content ? (
-                <View key={index}>
-                  {renderFormattedText(segment.content)}
-                </View>
+                <View key={index}>{renderFormattedText(segment.content)}</View>
               ) : null;
             case "actions":
               return (
                 <View key={index} style={{ marginTop: 12 }}>
                   <ActionPills
                     actions={segment.options}
-                    onPress={handleActionPress}
+                    // onPress={handleActionPress}
+                    onPress={() => {}}
                     disabled={false}
+                    selectedButton={selectedButton}
+                    setSelectedButton={setSelectedButton}
                   />
                 </View>
               );
@@ -730,25 +737,48 @@ const ChatWithAi = () => {
                   <TypingDots />
                 </View>
               ) : (
-                <LinearGradient
-                  colors={["#6B5591", "#6E3F8C", "#853385", "#9F3E83"]}
-                  start={{ x: 0, y: 0 }}
-                  end={{ x: 1, y: 1 }}
-                  style={{ padding: 16 }}
+                // <LinearGradient
+                //   colors={["#6B5591", "#6E3F8C", "#853385", "#9F3E83"]}
+                //   start={{ x: 0, y: 0 }}
+                //   end={{ x: 1, y: 1 }}
+                //   style={{ padding: 16 }}
+                // >
+                //   {renderMessageContent(item)}
+                // </LinearGradient>
+                <View
+                  className="px-4 py-3 rounded-2xl bg-secondary border border-[#FBC3F8] rounded-tr-none"
+                  style={{ maxWidth: bubbleMaxWidth }}
                 >
-                  {renderMessageContent(item)}
-                </LinearGradient>
+                  <Text className="text-base font-[PoppinsRegular]">
+                    {renderMessageContent(item)}
+                  </Text>
+                </View>
               )}
             </View>
           ) : (
-            <View
-              className="px-4 py-3 rounded-2xl bg-secondary border border-[#FBC3F8] rounded-tr-none"
-              style={{ maxWidth: bubbleMaxWidth }}
+            // <View
+            //   className="px-4 py-3 rounded-2xl bg-secondary border border-[#FBC3F8] rounded-tr-none"
+            //   style={{ maxWidth: bubbleMaxWidth }}
+            // >
+            // <Text className="text-base font-[PoppinsRegular] text-titleText">
+            //   {item.text}
+            // </Text>
+            // </View>
+            <LinearGradient
+              colors={["#6B5591", "#6E3F8C", "#853385", "#9F3E83"]}
+              start={{ x: 0, y: 0 }}
+              end={{ x: 1, y: 1 }}
+              style={{
+                paddingHorizontal: 20,
+                paddingVertical: 16,
+                borderRadius: 16,
+                borderTopRightRadius: 4,
+              }}
             >
-              <Text className="text-base font-[PoppinsRegular] text-titleText">
+              <Text className="text-sm text-white font-[PoppinsRegular]">
                 {item.text}
               </Text>
-            </View>
+            </LinearGradient>
           )}
 
           <Text className="text-xs text-gray-400 mt-1 px-2 font-[PoppinsRegular]">
