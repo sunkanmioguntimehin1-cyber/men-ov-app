@@ -19,6 +19,7 @@ interface Message {
   fullDate: Date;
   widget?: WidgetName;
   widgetPayload?: string;
+  selectedAction?: string;
 }
 
 interface ChatStore {
@@ -31,6 +32,7 @@ interface ChatStore {
   clearMessages: () => void;
   updateLastMessage: (text: string) => void;
   removeTypingIndicator: () => void;
+  updateMessageSelectedAction: (messageId: string, action: string) => void;
 }
 
 const useChatStore = create<ChatStore>()(
@@ -87,6 +89,14 @@ const useChatStore = create<ChatStore>()(
       removeTypingIndicator: () => {
         set((state) => ({
           messages: state.messages.filter((msg) => msg.id !== "typing-indicator"),
+        }));
+      },
+
+      updateMessageSelectedAction: (messageId: string, action: string) => {
+        set((state) => ({
+          messages: state.messages.map((msg) =>
+            msg.id === messageId ? { ...msg, selectedAction: action } : msg
+          ),
         }));
       },
     }),

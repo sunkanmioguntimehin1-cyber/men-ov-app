@@ -117,8 +117,9 @@ interface ActionPillsProps {
   onPress: (action: string) => void;
   disabled?: boolean;
   style?: StyleProp<ViewStyle>;
-  selectedButton: string;
-  setSelectedButton: (action: string) => void;
+  selectedButton?: string;
+  setSelectedButton?: (action: string) => void;
+  messageId?: string;
 }
 
 export const ActionPills: React.FC<ActionPillsProps> = ({
@@ -129,15 +130,11 @@ export const ActionPills: React.FC<ActionPillsProps> = ({
   selectedButton,
   setSelectedButton,
 }) => {
-  // const [selected, setSelected] = useState<string | null>(null);
-
   const handlePress = (action: string) => {
-    if (disabled || selectedButton !== null) return;
-    setSelectedButton(action);
+    if (disabled || selectedButton !== undefined) return;
+    setSelectedButton?.(action);
     onPress(action);
   };
-
-  console.log("selectedButton1234", selectedButton);
 
   return (
     <View
@@ -153,9 +150,8 @@ export const ActionPills: React.FC<ActionPillsProps> = ({
     >
       {actions.map((action) => {
         const isSelected = selectedButton === action;
-        const isLocked = selectedButton !== null && !isSelected;
+        const isLocked = selectedButton !== undefined && !isSelected;
 
-        // FIXED DIMENSIONS
         const BUTTON_WIDTH = 140;
         const BUTTON_HEIGHT = 52;
 
@@ -164,7 +160,7 @@ export const ActionPills: React.FC<ActionPillsProps> = ({
             key={action}
             onPress={() => handlePress(action)}
             activeOpacity={0.8}
-            disabled={disabled || selectedButton !== null}
+            disabled={disabled || selectedButton !== undefined}
             style={{ width: BUTTON_WIDTH, height: BUTTON_HEIGHT }}
           >
             {isSelected ? (

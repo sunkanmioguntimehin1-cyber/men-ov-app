@@ -41,6 +41,7 @@ interface Message {
   fullDate: Date;
   widget?: WidgetName;
   widgetPayload?: string;
+  selectedAction?: string;
 }
 
 const STREAMING_BASE_URL = process.env.EXPO_PUBLIC_STREAMING_BASE_URL;
@@ -55,9 +56,6 @@ const ChatWithAi = () => {
   const [isNearBottom, setIsNearBottom] = useState(true);
   const [hasLoadedInitially, setHasLoadedInitially] = useState(false);
   const [showScrollButton, setShowScrollButton] = useState(false);
-
-  //ActionPills state
-  const [selectedButton, setSelectedButton] = useState<string | null>(null);
 
   // ✅ Separate streaming state with typing animation
   const [streamingText, setStreamingText] = useState("");
@@ -413,8 +411,8 @@ const ChatWithAi = () => {
     return elements.length > 0 ? elements : [text];
   };
 
-  // Handle action pill press - send as user message
-  const handleActionPress = (action: string) => {
+  // Handle action pill press - send as user message and trigger AI response
+  const handleActionPress = async (messageId: string, action: string) => {
     const fullDate = new Date();
     const timestamp = fullDate.toLocaleTimeString("en-US", {
       hour: "2-digit",
@@ -422,21 +420,57 @@ const ChatWithAi = () => {
     });
     const date = formatDateHeader(fullDate);
 
+    // 1. Update message with selected action in store
+    useChatStore.getState().updateMessageSelectedAction(messageId, action);
+
+    // 2. Add user message
     useChatStore.getState().addMessage({
       id: `user-${Date.now()}`,
       text: action,
       isAi: false,
-      timestamp: timestamp,
-      date: date,
-      fullDate: fullDate,
+      timestamp,
+      date,
+      fullDate,
     });
 
+    // 3. Add typing indicator
+    useChatStore.getState().addMessage({
+      id: "typing-indicator",
+      text: "...",
+      isAi: true,
+      timestamp,
+      date,
+      fullDate,
+    });
+
+    // 4. Scroll to bottom
     setTimeout(() => {
       if (scrollViewRef.current) {
         scrollViewRef.current.scrollToEnd({ animated: true });
         setIsNearBottom(true);
       }
     }, 100);
+
+    // 5. Reset fetch flag and trigger streaming response
+    hasFetchedAIRef.current = false;
+    lastMessageDetailRef.current = null;
+
+    // 6. Set message payload to continue conversation
+    const token = await AsyncStorage.getItem("token");
+    const chatHistory = messages.map((msg) => ({
+      role: msg.isAi ? "assistant" : "user",
+      content: msg.text,
+    }));
+
+    setMessageDatail({
+      messages: [
+        ...chatHistory,
+        {
+          role: "user",
+          content: action,
+        },
+      ],
+    });
   };
 
   // Handle widget submission
@@ -488,11 +522,10 @@ const ChatWithAi = () => {
                 <View key={index} style={{ marginTop: 12 }}>
                   <ActionPills
                     actions={segment.options}
-                    // onPress={handleActionPress}
-                    onPress={() => {}}
-                    disabled={false}
-                    selectedButton={selectedButton}
-                    setSelectedButton={setSelectedButton}
+                    messageId={message.id}
+                    selectedButton={message.selectedAction}
+                    onPress={(action) => handleActionPress(message.id, action)}
+                    disabled={!!message.selectedAction}
                   />
                 </View>
               );
