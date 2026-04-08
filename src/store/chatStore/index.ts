@@ -20,6 +20,7 @@ interface Message {
   widget?: WidgetName;
   widgetPayload?: string;
   selectedAction?: string;
+  selectedDate?: string;
 }
 
 interface ChatStore {
@@ -33,6 +34,7 @@ interface ChatStore {
   updateLastMessage: (text: string) => void;
   removeTypingIndicator: () => void;
   updateMessageSelectedAction: (messageId: string, action: string) => void;
+  updateMessageSelectedDate: (messageId: string, date: string) => void;
 }
 
 const useChatStore = create<ChatStore>()(
@@ -96,6 +98,14 @@ const useChatStore = create<ChatStore>()(
         set((state) => ({
           messages: state.messages.map((msg) =>
             msg.id === messageId ? { ...msg, selectedAction: action } : msg
+          ),
+        }));
+      },
+
+      updateMessageSelectedDate: (messageId: string, date: string) => {
+        set((state) => ({
+          messages: state.messages.map((msg) =>
+            msg.id === messageId ? { ...msg, selectedDate: date } : msg
           ),
         }));
       },

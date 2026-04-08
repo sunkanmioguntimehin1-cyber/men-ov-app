@@ -1,16 +1,14 @@
+// import DatePickerWidget from "@/src/widgets/DatePickerWidget";
 import { LinearGradient } from "expo-linear-gradient";
 import React, { useState } from "react";
 import {
-  ScrollView,
-  StyleProp,
-  Text,
-  TouchableOpacity,
-  View,
-  ViewStyle,
+    ScrollView,
+    Text,
+    TouchableOpacity,
+    View,
+    ViewStyle
 } from "react-native";
-import { DatePickerWidget } from "./DatePickerWidget";
-import useChatStore from "@/src/store/chatStore";
-import type { WidgetName } from "@/src/store/chatStore";
+// import type { Message } from "../ChatWithAi";
 
 // ─── Shared Styles ─────────────────────────────────────────────────────────────
 
@@ -29,41 +27,6 @@ const CARD_STYLE: ViewStyle = {
 
 const PURPLE = "#6B5591";
 const PURPLE_LIGHT = "#F8F0FF";
-
-// ─── Submit Button ─────────────────────────────────────────────────────────────
-
-const SubmitButton: React.FC<{
-  label: string;
-  onPress: () => void;
-  disabled?: boolean;
-}> = ({ label, onPress, disabled }) => (
-  <TouchableOpacity
-    onPress={onPress}
-    disabled={disabled}
-    activeOpacity={0.85}
-    style={{ marginTop: 12 }}
-  >
-    <LinearGradient
-      colors={["#6B5591", "#6E3F8C", "#853385", "#9F3E83"]}
-      start={{ x: 0, y: 0 }}
-      end={{ x: 1, y: 0 }}
-      style={{ borderRadius: 12, paddingVertical: 11, alignItems: "center" }}
-    >
-      <Text
-        style={{ color: "white", fontSize: 14, fontFamily: "PoppinsSemiBold" }}
-      >
-        {label}
-      </Text>
-    </LinearGradient>
-  </TouchableOpacity>
-);
-
-// ─── Date Picker Widget ────────────────────────────────────────────────────────
-
-// ─── Symptom Form Widget ───────────────────────────────────────────────────────
-
-// ─── Cycle Form Widget ─────────────────────────────────────────────────────────
-
 const FLOW_OPTIONS = ["Spotting", "Light", "Moderate", "Heavy", "Very Heavy"];
 const CYCLE_SYMPTOMS = [
   "Cramps",
@@ -246,58 +209,11 @@ const CycleFormWidget: React.FC<{
         })}
       </View>
 
-      <SubmitButton
+      {/* <SubmitButton
         label={submitted ? "Cycle logged ✓" : "Log Cycle"}
         onPress={handleSubmit}
         disabled={!flow || submitted}
-      />
-    </View>
-  );
-};
-
-// ─── InlineWidget (router) ─────────────────────────────────────────────────────
-
-interface InlineWidgetProps {
-  type: WidgetName;
-  onSubmit: (payload: any) => void;
-  submitted?: boolean;
-  disabled?: boolean;
-  style?: StyleProp<ViewStyle>;
-  messageId?: string;
-}
-
-export const InlineWidget: React.FC<InlineWidgetProps> = ({
-  type,
-  onSubmit,
-  submitted = false,
-  disabled,
-  style,
-  messageId,
-}) => {
-  return (
-    <View style={style}>
-      {type === "date_picker" && (
-        <DatePickerWidget
-          onSubmit={onSubmit}
-          submitted={submitted}
-          disabled={disabled}
-          messageId={messageId}
-        />
-      )}
-      {/* {type === "symptom_form" && (
-        <SymptomFormWidget
-          onSubmit={onSubmit}
-          submitted={submitted}
-          disabled={disabled}
-        />
-      )}
-      {type === "cycle_form" && (
-        <CycleFormWidget
-          onSubmit={onSubmit}
-          submitted={submitted}
-          disabled={disabled}
-        />
-      )} */}
+      /> */}
     </View>
   );
 };

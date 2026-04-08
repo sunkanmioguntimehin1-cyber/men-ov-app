@@ -42,6 +42,7 @@ interface Message {
   widget?: WidgetName;
   widgetPayload?: string;
   selectedAction?: string;
+  selectedDate?: string;
 }
 
 const STREAMING_BASE_URL = process.env.EXPO_PUBLIC_STREAMING_BASE_URL;
@@ -473,6 +474,64 @@ const ChatWithAi = () => {
     });
   };
 
+  // Handle date picker submission
+  const handleDateSubmit = async (
+    messageId: string,
+    payload: { date: string },
+  ) => {
+    const fullDate = new Date();
+    const timestamp = fullDate.toLocaleTimeString("en-US", {
+      hour: "2-digit",
+      minute: "2-digit",
+    });
+    const date = formatDateHeader(fullDate);
+
+    useChatStore.getState().updateMessageSelectedDate(messageId, payload.date);
+
+    useChatStore.getState().addMessage({
+      id: `user-${Date.now()}`,
+      text: payload.date,
+      isAi: false,
+      timestamp,
+      date,
+      fullDate,
+    });
+
+    useChatStore.getState().addMessage({
+      id: "typing-indicator",
+      text: "...",
+      isAi: true,
+      timestamp,
+      date,
+      fullDate,
+    });
+
+    setTimeout(() => {
+      if (scrollViewRef.current) {
+        scrollViewRef.current.scrollToEnd({ animated: true });
+        setIsNearBottom(true);
+      }
+    }, 100);
+
+    hasFetchedAIRef.current = false;
+    lastMessageDetailRef.current = null;
+
+    const chatHistory = messages.map((msg) => ({
+      role: msg.isAi ? "assistant" : "user",
+      content: msg.text,
+    }));
+
+    setMessageDatail({
+      messages: [
+        ...chatHistory,
+        {
+          role: "user",
+          content: payload.date,
+        },
+      ],
+    });
+  };
+
   // Handle widget submission
   const handleWidgetSubmit = (messageId: string) => (payload: any) => {
     const fullDate = new Date();
@@ -534,8 +593,22 @@ const ChatWithAi = () => {
                 <View key={index} style={{ marginTop: 12 }}>
                   <InlineWidget
                     type={segment.name}
-                    onSubmit={handleWidgetSubmit(message.id)}
-                    disabled={false}
+                    messageId={message.id}
+                    onSubmit={
+                      segment.name === "date_picker"
+                        ? (payload) => handleDateSubmit(message.id, payload)
+                        : handleWidgetSubmit(message.id)
+                    }
+                    submitted={
+                      segment.name === "date_picker"
+                        ? !!message.selectedDate
+                        : false
+                    }
+                    disabled={
+                      segment.name === "date_picker"
+                        ? !!message.selectedDate
+                        : false
+                    }
                   />
                 </View>
               );
@@ -548,8 +621,22 @@ const ChatWithAi = () => {
           <View style={{ marginTop: 12 }}>
             <InlineWidget
               type={message.widget}
-              onSubmit={handleWidgetSubmit(message.id)}
-              disabled={false}
+              messageId={message.id}
+              onSubmit={
+                message.widget === "date_picker"
+                  ? (payload) => handleDateSubmit(message.id, payload)
+                  : handleWidgetSubmit(message.id)
+              }
+              submitted={
+                message.widget === "date_picker"
+                  ? !!message.selectedDate
+                  : false
+              }
+              disabled={
+                message.widget === "date_picker"
+                  ? !!message.selectedDate
+                  : false
+              }
             />
           </View>
         )}
@@ -933,10 +1020,10 @@ const ChatWithAi = () => {
                       {isStreaming && streamingText && (
                         <View className="mb-4 items-start">
                           <View
-                            className="rounded-2xl rounded-tl-none overflow-hidden"
+                            className="rounded-2xl rounded-tl-none overflow-hidden bg-secondary border border-[#FBC3F8]"
                             style={{ maxWidth: bubbleMaxWidth }}
                           >
-                            <LinearGradient
+                            {/* <LinearGradient
                               colors={[
                                 "#6B5591",
                                 "#6E3F8C",
@@ -946,12 +1033,12 @@ const ChatWithAi = () => {
                               start={{ x: 0, y: 0 }}
                               end={{ x: 1, y: 1 }}
                               style={{ padding: 16 }}
-                            >
-                              {renderFormattedText(streamingText)}
-                              <Text style={{ color: "white", fontSize: 16 }}>
-                                ▌
-                              </Text>
-                            </LinearGradient>
+                            > */}
+                            {renderFormattedText(streamingText)}
+                            <Text style={{ color: "white", fontSize: 16 }}>
+                              ▌
+                            </Text>
+                            {/* </LinearGradient> */}
                           </View>
                           <Text className="text-xs text-gray-400 mt-1 px-2 font-[PoppinsRegular]">
                             {new Date().toLocaleTimeString("en-US", {
