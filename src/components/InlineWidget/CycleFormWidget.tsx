@@ -1,13 +1,19 @@
 // import DatePickerWidget from "@/src/widgets/DatePickerWidget";
-import { LinearGradient } from "expo-linear-gradient";
+import CustomButton from "@/src/custom-components/CustomButton";
+import CustomSelectData from "@/src/custom-components/CustomSelectData";
+import { GradientFeatherIcon } from "@/src/custom-components/GradientIcon";
+import { rS, rV } from "@/src/lib/responsivehandler";
+import { AntDesign } from "@expo/vector-icons";
+import { format } from "date-fns";
 import React, { useState } from "react";
 import {
-    ScrollView,
-    Text,
-    TouchableOpacity,
-    View,
-    ViewStyle
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
+  ViewStyle
 } from "react-native";
+
 // import type { Message } from "../ChatWithAi";
 
 // ─── Shared Styles ─────────────────────────────────────────────────────────────
@@ -37,11 +43,24 @@ const CYCLE_SYMPTOMS = [
   "Back pain",
 ];
 
-const CycleFormWidget: React.FC<{
+export const CycleFormWidget: React.FC<{
   onSubmit: (payload: any) => void;
   submitted?: boolean;
   disabled?: boolean;
-}> = ({ onSubmit, submitted = false, disabled }) => {
+  selectedDate: string;
+  durationData: string;
+  handleDateBottomSheetOpen: () => void;
+
+  handleDurationBottomSheetOpen: () => void;
+}> = ({
+  onSubmit,
+  submitted = false,
+  disabled,
+  selectedDate,
+  durationData,
+  handleDateBottomSheetOpen,
+  handleDurationBottomSheetOpen,
+}) => {
   const [flow, setFlow] = useState<string | null>(null);
   const [selectedSymptoms, setSelectedSymptoms] = useState<string[]>([]);
 
@@ -62,22 +81,27 @@ const CycleFormWidget: React.FC<{
     onSubmit({ startDate, flow, symptoms: selectedSymptoms });
   };
 
+  const dateValue = selectedDate ? format(selectedDate, "dd-MM-yyy") : "";
+
   return (
-    <View style={CARD_STYLE}>
+    <View style={CARD_STYLE} className=" ">
       {/* Flow selector */}
-      <Text
-        style={{
-          fontSize: 12,
-          fontFamily: "PoppinsSemiBold",
-          color: "#999",
-          textTransform: "uppercase",
-          letterSpacing: 0.5,
-          marginBottom: 10,
-        }}
-      >
-        Flow
-      </Text>
-      <ScrollView
+
+      <View className=" flex-row items-center mb-5">
+        <GradientFeatherIcon
+          name="calendar"
+          size={20}
+          gradientColors={["#6B5591", "#6E3F8C", "#853385", "#9F3E83"]}
+        />
+        <Text
+          className=" mx-3 font-[PoppinsMedium] text-[#101828] text-sm "
+          // style={{ fontSize: rS(12) }}
+        >
+          Cycle Tracker
+        </Text>
+      </View>
+
+      {/* <ScrollView
         horizontal
         showsHorizontalScrollIndicator={false}
         contentContainerStyle={{ gap: 8, paddingBottom: 4 }}
@@ -136,78 +160,72 @@ const CycleFormWidget: React.FC<{
             </TouchableOpacity>
           );
         })}
-      </ScrollView>
+      </ScrollView> */}
+      <View className=" ">
+        <View>
+          <CustomSelectData
+            onPress={handleDateBottomSheetOpen}
+            primary
+            placeholder="MM / DD / YYYY"
+            label="Start Date"
+            value={dateValue}
+            icon={
+              <TouchableOpacity onPress={() => {}}>
+                {/* <Feather name="calendar" size={24} className="!text-primary" /> */}
+                <GradientFeatherIcon
+                  name="calendar"
+                  size={24}
+                  gradientColors={["#6B5591", "#6E3F8C", "#853385", "#9F3E83"]}
+                />
+              </TouchableOpacity>
+            }
+          />
+        </View>
 
-      {/* Symptoms */}
-      <Text
-        style={{
-          fontSize: 12,
-          fontFamily: "PoppinsSemiBold",
-          color: "#999",
-          textTransform: "uppercase",
-          letterSpacing: 0.5,
-          marginTop: 14,
-          marginBottom: 8,
-        }}
-      >
-        Symptoms (optional)
-      </Text>
-      <View style={{ flexDirection: "row", flexWrap: "wrap", gap: 8 }}>
-        {CYCLE_SYMPTOMS.map((sym) => {
-          const sel = selectedSymptoms.includes(sym);
-          return (
-            <TouchableOpacity
-              key={sym}
-              onPress={() => !submitted && toggleSym(sym)}
-              disabled={submitted}
-            >
-              {sel ? (
-                <LinearGradient
-                  colors={["#6B5591", "#9F3E83"]}
-                  start={{ x: 0, y: 0 }}
-                  end={{ x: 1, y: 0 }}
-                  style={{
-                    borderRadius: 20,
-                    paddingHorizontal: 12,
-                    paddingVertical: 6,
-                  }}
-                >
-                  <Text
-                    style={{
-                      color: "white",
-                      fontSize: 12,
-                      fontFamily: "PoppinsMedium",
-                    }}
-                  >
-                    {sym}
-                  </Text>
-                </LinearGradient>
-              ) : (
-                <View
-                  style={{
-                    borderRadius: 20,
-                    paddingHorizontal: 12,
-                    paddingVertical: 6,
-                    borderWidth: 1.5,
-                    borderColor: "#E0C8F8",
-                    backgroundColor: PURPLE_LIGHT,
-                  }}
-                >
-                  <Text
-                    style={{
-                      color: PURPLE,
-                      fontSize: 12,
-                      fontFamily: "PoppinsMedium",
-                    }}
-                  >
-                    {sym}
-                  </Text>
-                </View>
-              )}
-            </TouchableOpacity>
-          );
-        })}
+        <View className="mt-3">
+          <CustomSelectData
+            onPress={handleDurationBottomSheetOpen}
+            primary
+            label="Duration (days)"
+            placeholder="0 days"
+            value={durationData}
+            icon={
+              <TouchableOpacity onPress={() => {}}>
+                <AntDesign name="down" size={20} color="#1E1D2F" />
+              </TouchableOpacity>
+            }
+          />
+        </View>
+
+        <View className="mt-3 mb-5">
+          <Text
+            className="mb-2 font-[PoppinsMedium]"
+            style={{ fontSize: rS(12) }}
+          >
+            Notes
+          </Text>
+
+          <View className="border border-[#B4B4B4] bg-white rounded-lg p-4">
+            <TextInput
+              multiline={true}
+              numberOfLines={4}
+              placeholder="Add a note about how do you feel"
+              placeholderTextColor="#9B9B9B"
+              // value={value}
+              // onChangeText={onChange}
+              // onBlur={onBlur}
+              style={{
+                fontSize: rS(10),
+                color: "#000",
+                textAlignVertical: "top",
+                minHeight: rV(70),
+              }}
+            />
+          </View>
+        </View>
       </View>
+
+      <CustomButton gradient title={"Send Cycle"} />
 
       {/* <SubmitButton
         label={submitted ? "Cycle logged ✓" : "Log Cycle"}

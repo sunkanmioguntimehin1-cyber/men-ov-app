@@ -1,6 +1,9 @@
 import { useGetAllChatAiHistory } from "@/src/api_services/chatApi/chatQuery";
 import { ActionPills } from "@/src/components/ActionPills";
 import { InlineWidget } from "@/src/components/InlineWidget";
+import Duration from "@/src/components/tabs/home-modal/CycleTracking/logCycleBottomSheet/Duration";
+import StartDateBottomSheet from "@/src/components/tabs/home-modal/CycleTracking/logCycleBottomSheet/StartDateBottomSheet";
+import BottomSheetScreen from "@/src/custom-components/BottomSheetScreen";
 import CustomInput from "@/src/custom-components/CustomInput";
 import { GradientMaterialIcon } from "@/src/custom-components/GradientIcon";
 import { TypingDots } from "@/src/custom-components/TypingDots";
@@ -8,12 +11,13 @@ import Screen from "@/src/layout/Screen";
 import useChatStore, { WidgetName } from "@/src/store/chatStore";
 import { parseMessage } from "@/src/widgets/messageParser";
 import { MaterialIcons } from "@expo/vector-icons";
+import BottomSheet from "@gorhom/bottom-sheet";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Image } from "expo-image";
 import { LinearGradient } from "expo-linear-gradient";
 import { useRouter } from "expo-router";
 import { fetch } from "expo/fetch";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import {
   ActivityIndicator,
   Animated,
@@ -58,6 +62,9 @@ const ChatWithAi = () => {
   const [hasLoadedInitially, setHasLoadedInitially] = useState(false);
   const [showScrollButton, setShowScrollButton] = useState(false);
 
+  const [selectedDate, setSelectedDate] = React.useState(null);
+  const [durationData, setDurationData] = React.useState("");
+
   // ✅ Separate streaming state with typing animation
   const [streamingText, setStreamingText] = useState("");
   const [isStreaming, setIsStreaming] = useState(false);
@@ -82,6 +89,19 @@ const ChatWithAi = () => {
   const scrollViewRef = useRef<ScrollView>(null);
   const insets = useSafeAreaInsets();
   const { width } = useWindowDimensions();
+
+  // all the bottom sheet handler
+  const snapPoints = useMemo(() => ["30%", "50%"], []);
+
+  const datebottomSheetRef = React.useRef<BottomSheet>(null);
+  const handleDateBottomSheetOpen = () => datebottomSheetRef.current?.expand();
+  const handleDateBottomSheetClose = () => datebottomSheetRef.current?.close();
+
+  const durationBottomSheetRef = React.useRef<BottomSheet>(null);
+  const handleDurationBottomSheetOpen = () =>
+    durationBottomSheetRef.current?.expand();
+  const handleDurationBottomSheetClose = () =>
+    durationBottomSheetRef.current?.close();
 
   // ✅ Track app state to prevent re-fetching when returning from background
   useEffect(() => {
@@ -594,6 +614,12 @@ const ChatWithAi = () => {
                   <InlineWidget
                     type={segment.name}
                     messageId={message.id}
+                    selectedDate={selectedDate}
+                    durationData={durationData}
+                    handleDurationBottomSheetOpen={
+                      handleDurationBottomSheetOpen
+                    }
+                    handleDateBottomSheetOpen={handleDateBottomSheetOpen}
                     onSubmit={
                       segment.name === "date_picker"
                         ? (payload) => handleDateSubmit(message.id, payload)
@@ -866,7 +892,7 @@ const ChatWithAi = () => {
                 //   {renderMessageContent(item)}
                 // </LinearGradient>
                 <View
-                  className="px-4 py-3 rounded-2xl bg-secondary border border-[#FBC3F8] rounded-tr-none"
+                  className="p-4  rounded-2xl bg-secondary border border-[#FBC3F8] rounded-tr-none"
                   style={{ maxWidth: bubbleMaxWidth }}
                 >
                   <Text className="text-base font-[PoppinsRegular]">
@@ -1020,7 +1046,7 @@ const ChatWithAi = () => {
                       {isStreaming && streamingText && (
                         <View className="mb-4 items-start">
                           <View
-                            className="rounded-2xl rounded-tl-none overflow-hidden bg-secondary border border-[#FBC3F8]"
+                            className="rounded-2xl p-4 rounded-tl-none overflow-hidden bg-secondary border border-[#FBC3F8]"
                             style={{ maxWidth: bubbleMaxWidth }}
                           >
                             {/* <LinearGradient
@@ -1139,6 +1165,36 @@ const ChatWithAi = () => {
           </View>
         </KeyboardAvoidingView>
       </ImageBackground>
+
+      <BottomSheetScreen
+        snapPoints={snapPoints}
+        ref={datebottomSheetRef}
+        isBackdropComponent={true}
+        enablePanDownToClose={true}
+        index={-1}
+        message={
+          <StartDateBottomSheet
+            selectedDate={selectedDate}
+            setSelectedDate={setSelectedDate}
+            handleDateBottomSheetClose={handleDateBottomSheetClose}
+          />
+        }
+      />
+
+      <BottomSheetScreen
+        snapPoints={snapPoints}
+        ref={durationBottomSheetRef}
+        isBackdropComponent={true}
+        enablePanDownToClose={true}
+        index={-1}
+        message={
+          <Duration
+            handleDurationBottomSheetClose={handleDurationBottomSheetClose}
+            durationData={durationData}
+            setDurationData={setDurationData}
+          />
+        }
+      />
     </Screen>
   );
 };
