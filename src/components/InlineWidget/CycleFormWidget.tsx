@@ -47,22 +47,24 @@ export const CycleFormWidget: React.FC<{
   onSubmit: (payload: any) => void;
   submitted?: boolean;
   disabled?: boolean;
-  selectedDate: string;
-  durationData: string;
-  handleDateBottomSheetOpen: () => void;
-
-  handleDurationBottomSheetOpen: () => void;
+  selectedDate?: string;
+  durationData?: string;
+  handleDateBottomSheetOpen?: () => void;
+  handleDurationBottomSheetOpen?: () => void;
+  messageId?: string;
 }> = ({
   onSubmit,
   submitted = false,
   disabled,
-  selectedDate,
-  durationData,
+  selectedDate = "",
+  durationData = "",
   handleDateBottomSheetOpen,
   handleDurationBottomSheetOpen,
+  messageId,
 }) => {
   const [flow, setFlow] = useState<string | null>(null);
   const [selectedSymptoms, setSelectedSymptoms] = useState<string[]>([]);
+  const [note, setNote] = useState("");
 
   const toggleSym = (s: string) => {
     if (submitted) return;
@@ -72,13 +74,9 @@ export const CycleFormWidget: React.FC<{
   };
 
   const handleSubmit = () => {
-    if (!flow || submitted) return;
-    const startDate = new Date().toLocaleDateString("en-US", {
-      year: "numeric",
-      month: "long",
-      day: "numeric",
-    });
-    onSubmit({ startDate, flow, symptoms: selectedSymptoms });
+    if (!selectedDate || !durationData || submitted) return;
+    const payload = `[SYSTEM_PAYLOAD: FORM_SUBMITTED | type: cycle | start_date: ${selectedDate} | duration: ${durationData} | note: ${note}]`;
+    onSubmit({ cycleData: payload });
   };
 
   const dateValue = selectedDate ? format(selectedDate, "dd-MM-yyy") : "";
@@ -211,9 +209,9 @@ export const CycleFormWidget: React.FC<{
               numberOfLines={4}
               placeholder="Add a note about how do you feel"
               placeholderTextColor="#9B9B9B"
-              // value={value}
-              // onChangeText={onChange}
-              // onBlur={onBlur}
+              value={note}
+              onChangeText={setNote}
+              editable={!submitted}
               style={{
                 fontSize: rS(10),
                 color: "#000",
@@ -225,7 +223,12 @@ export const CycleFormWidget: React.FC<{
         </View>
       </View>
 
-      <CustomButton gradient title={"Send Cycle"} />
+      <CustomButton 
+        gradient 
+        title={"Send Cycle"} 
+        onPress={handleSubmit}
+        disabled={!selectedDate || !durationData || submitted}
+      />
 
       {/* <SubmitButton
         label={submitted ? "Cycle logged ✓" : "Log Cycle"}

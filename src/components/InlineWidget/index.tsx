@@ -66,8 +66,10 @@ interface InlineWidgetProps {
   disabled?: boolean;
   style?: StyleProp<ViewStyle>;
   messageId?: string;
-  durationData: string;
-  selectedDate: string;
+  durationData?: string;
+  selectedDate?: string;
+  handleDateBottomSheetOpen?: () => void;
+  handleDurationBottomSheetOpen?: () => void;
 }
 
 export const InlineWidget: React.FC<InlineWidgetProps> = ({
@@ -108,6 +110,7 @@ export const InlineWidget: React.FC<InlineWidgetProps> = ({
           durationData={durationData}
           handleDurationBottomSheetOpen={handleDurationBottomSheetOpen}
           handleDateBottomSheetOpen={handleDateBottomSheetOpen}
+          messageId={messageId}
         />
       )}
     </View>

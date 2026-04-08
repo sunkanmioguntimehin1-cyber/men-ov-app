@@ -47,6 +47,7 @@ interface Message {
   widgetPayload?: string;
   selectedAction?: string;
   selectedDate?: string;
+  selectedCycle?: string;
 }
 
 const STREAMING_BASE_URL = process.env.EXPO_PUBLIC_STREAMING_BASE_URL;
@@ -552,6 +553,66 @@ const ChatWithAi = () => {
     });
   };
 
+  // Handle cycle form submission
+  const handleCycleSubmit = async (
+    messageId: string,
+    payload: { cycleData: string },
+  ) => {
+    const fullDate = new Date();
+    const timestamp = fullDate.toLocaleTimeString("en-US", {
+      hour: "2-digit",
+      minute: "2-digit",
+    });
+    const date = formatDateHeader(fullDate);
+
+    useChatStore
+      .getState()
+      .updateMessageSelectedCycle(messageId, payload.cycleData);
+
+    useChatStore.getState().addMessage({
+      id: `user-${Date.now()}`,
+      text: payload.cycleData,
+      isAi: false,
+      timestamp,
+      date,
+      fullDate,
+    });
+
+    useChatStore.getState().addMessage({
+      id: "typing-indicator",
+      text: "...",
+      isAi: true,
+      timestamp,
+      date,
+      fullDate,
+    });
+
+    setTimeout(() => {
+      if (scrollViewRef.current) {
+        scrollViewRef.current.scrollToEnd({ animated: true });
+        setIsNearBottom(true);
+      }
+    }, 100);
+
+    hasFetchedAIRef.current = false;
+    lastMessageDetailRef.current = null;
+
+    const chatHistory = messages.map((msg) => ({
+      role: msg.isAi ? "assistant" : "user",
+      content: msg.text,
+    }));
+
+    setMessageDatail({
+      messages: [
+        ...chatHistory,
+        {
+          role: "user",
+          content: payload.cycleData,
+        },
+      ],
+    });
+  };
+
   // Handle widget submission
   const handleWidgetSubmit = (messageId: string) => (payload: any) => {
     const fullDate = new Date();
@@ -623,17 +684,23 @@ const ChatWithAi = () => {
                     onSubmit={
                       segment.name === "date_picker"
                         ? (payload) => handleDateSubmit(message.id, payload)
-                        : handleWidgetSubmit(message.id)
+                        : segment.name === "cycle_form"
+                          ? (payload) => handleCycleSubmit(message.id, payload)
+                          : handleWidgetSubmit(message.id)
                     }
                     submitted={
                       segment.name === "date_picker"
                         ? !!message.selectedDate
-                        : false
+                        : segment.name === "cycle_form"
+                          ? !!message.selectedCycle
+                          : false
                     }
                     disabled={
                       segment.name === "date_picker"
                         ? !!message.selectedDate
-                        : false
+                        : segment.name === "cycle_form"
+                          ? !!message.selectedCycle
+                          : false
                     }
                   />
                 </View>
@@ -648,20 +715,30 @@ const ChatWithAi = () => {
             <InlineWidget
               type={message.widget}
               messageId={message.id}
+              selectedDate={selectedDate}
+              durationData={durationData}
+              handleDurationBottomSheetOpen={handleDurationBottomSheetOpen}
+              handleDateBottomSheetOpen={handleDateBottomSheetOpen}
               onSubmit={
                 message.widget === "date_picker"
                   ? (payload) => handleDateSubmit(message.id, payload)
-                  : handleWidgetSubmit(message.id)
+                  : message.widget === "cycle_form"
+                    ? (payload) => handleCycleSubmit(message.id, payload)
+                    : handleWidgetSubmit(message.id)
               }
               submitted={
                 message.widget === "date_picker"
                   ? !!message.selectedDate
-                  : false
+                  : message.widget === "cycle_form"
+                    ? !!message.selectedCycle
+                    : false
               }
               disabled={
                 message.widget === "date_picker"
                   ? !!message.selectedDate
-                  : false
+                  : message.widget === "cycle_form"
+                    ? !!message.selectedCycle
+                    : false
               }
             />
           </View>
@@ -883,22 +960,22 @@ const ChatWithAi = () => {
                   <TypingDots />
                 </View>
               ) : (
-                // <LinearGradient
-                //   colors={["#6B5591", "#6E3F8C", "#853385", "#9F3E83"]}
-                //   start={{ x: 0, y: 0 }}
-                //   end={{ x: 1, y: 1 }}
-                //   style={{ padding: 16 }}
-                // >
-                //   {renderMessageContent(item)}
-                // </LinearGradient>
-                <View
-                  className="p-4  rounded-2xl bg-secondary border border-[#FBC3F8] rounded-tr-none"
-                  style={{ maxWidth: bubbleMaxWidth }}
+                <LinearGradient
+                  colors={["#853385", "#9F3E83"]}
+                  start={{ x: 0, y: 0 }}
+                  end={{ x: 1, y: 1 }}
+                  style={{ padding: 16 }}
                 >
-                  <Text className="text-base font-[PoppinsRegular]">
-                    {renderMessageContent(item)}
-                  </Text>
-                </View>
+                  {renderMessageContent(item)}
+                </LinearGradient>
+                // <View
+                //   className="p-4  rounded-2xl bg-secondary border border-[#FBC3F8] rounded-tr-none"
+                //   style={{ maxWidth: bubbleMaxWidth }}
+                // >
+                //   <Text className="text-base font-[PoppinsRegular]">
+                //     {renderMessageContent(item)}
+                //   </Text>
+                // </View>
               )}
             </View>
           ) : (
