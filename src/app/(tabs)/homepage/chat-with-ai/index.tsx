@@ -810,6 +810,17 @@ const ChatWithAi = () => {
     return currentDate.getTime() !== prevDate.getTime();
   };
 
+  // Format system payload for user display
+  const formatUserMessageForDisplay = (text: string): string => {
+    if (text.startsWith("[SYSTEM_PAYLOAD:")) {
+      return text
+        .replace("[SYSTEM_PAYLOAD: FORM_SUBMITTED | ", "")
+        .replace("]", "")
+        .replace("type: ", "");
+    }
+    return text;
+  };
+
   // ✅ Transform server data from getAllChatAiHistory to message format
   useEffect(() => {
     let isMounted = true;
@@ -960,22 +971,22 @@ const ChatWithAi = () => {
                   <TypingDots />
                 </View>
               ) : (
-                <LinearGradient
-                  colors={["#853385", "#9F3E83"]}
-                  start={{ x: 0, y: 0 }}
-                  end={{ x: 1, y: 1 }}
-                  style={{ padding: 16 }}
-                >
-                  {renderMessageContent(item)}
-                </LinearGradient>
-                // <View
-                //   className="p-4  rounded-2xl bg-secondary border border-[#FBC3F8] rounded-tr-none"
-                //   style={{ maxWidth: bubbleMaxWidth }}
+                // <LinearGradient
+                //   colors={["#853385", "#9F3E83"]}
+                //   start={{ x: 0, y: 0 }}
+                //   end={{ x: 1, y: 1 }}
+                //   style={{ padding: 16 }}
                 // >
-                //   <Text className="text-base font-[PoppinsRegular]">
-                //     {renderMessageContent(item)}
-                //   </Text>
-                // </View>
+                //   {renderMessageContent(item)}
+                // </LinearGradient>
+                <View
+                  className="p-4  rounded-2xl bg-secondary border border-[#FBC3F8] rounded-tr-none"
+                  style={{ maxWidth: bubbleMaxWidth }}
+                >
+                  <Text className="text-base font-[PoppinsRegular]">
+                    {renderMessageContent(item)}
+                  </Text>
+                </View>
               )}
             </View>
           ) : (
@@ -999,7 +1010,7 @@ const ChatWithAi = () => {
               }}
             >
               <Text className="text-sm text-white font-[PoppinsRegular]">
-                {item.text}
+                {formatUserMessageForDisplay(item.text)}
               </Text>
             </LinearGradient>
           )}
@@ -1138,7 +1149,7 @@ const ChatWithAi = () => {
                               style={{ padding: 16 }}
                             > */}
                             {renderFormattedText(streamingText)}
-                            <Text style={{ color: "white", fontSize: 16 }}>
+                            <Text style={{ color: "black", fontSize: 16 }}>
                               ▌
                             </Text>
                             {/* </LinearGradient> */}

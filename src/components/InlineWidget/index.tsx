@@ -10,6 +10,7 @@ import {
 } from "react-native";
 import { CycleFormWidget } from "./CycleFormWidget";
 import { DatePickerWidget } from "./DatePickerWidget";
+import { SymptomFormWidget } from "./SymptomFormWidget";
 
 // ─── Shared Styles ─────────────────────────────────────────────────────────────
 
@@ -94,13 +95,13 @@ export const InlineWidget: React.FC<InlineWidgetProps> = ({
           messageId={messageId}
         />
       )}
-      {/* {type === "symptom_form" && (
+      {type === "symptom_form" && (
         <SymptomFormWidget
           onSubmit={onSubmit}
           submitted={submitted}
           disabled={disabled}
         />
-      )} */}
+      )}
       {type === "cycle_form" && (
         <CycleFormWidget
           onSubmit={onSubmit}

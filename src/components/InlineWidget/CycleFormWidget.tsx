@@ -11,7 +11,7 @@ import {
   TextInput,
   TouchableOpacity,
   View,
-  ViewStyle
+  ViewStyle,
 } from "react-native";
 
 // import type { Message } from "../ChatWithAi";
@@ -82,7 +82,7 @@ export const CycleFormWidget: React.FC<{
   const dateValue = selectedDate ? format(selectedDate, "dd-MM-yyy") : "";
 
   return (
-    <View style={CARD_STYLE} className=" ">
+    <View style={CARD_STYLE} className="  ">
       {/* Flow selector */}
 
       <View className=" flex-row items-center mb-5">
@@ -92,7 +92,7 @@ export const CycleFormWidget: React.FC<{
           gradientColors={["#6B5591", "#6E3F8C", "#853385", "#9F3E83"]}
         />
         <Text
-          className=" mx-3 font-[PoppinsMedium] text-[#101828] text-sm "
+          className=" mx-3 font-[PoppinsBold] text-[#101828] text-base "
           // style={{ fontSize: rS(12) }}
         >
           Cycle Tracker
@@ -223,9 +223,9 @@ export const CycleFormWidget: React.FC<{
         </View>
       </View>
 
-      <CustomButton 
-        gradient 
-        title={"Send Cycle"} 
+      <CustomButton
+        gradient
+        title={"Send Cycle"}
         onPress={handleSubmit}
         disabled={!selectedDate || !durationData || submitted}
       />
