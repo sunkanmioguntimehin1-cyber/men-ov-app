@@ -47,7 +47,7 @@ const NotificationScreen = () => {
   const getNotificationsDetails = useGetNotificationsApi();
   const updateNotificationData = useUpdateNotificationDetails();
 
-  // console.log("getNotificationsDetails", getNotificationsDetails?.data?.data);
+  console.log("getNotificationsDetails", getNotificationsDetails?.data?.data);
 
   // Function to get icon based on category
   const getCategoryIcon = (category: any) => {

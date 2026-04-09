@@ -100,6 +100,9 @@ export const InlineWidget: React.FC<InlineWidgetProps> = ({
           onSubmit={onSubmit}
           submitted={submitted}
           disabled={disabled}
+          messageId={messageId}
+          selectedDate={selectedDate}
+          handleDateBottomSheetOpen={handleDateBottomSheetOpen}
         />
       )}
       {type === "cycle_form" && (

@@ -1,20 +1,19 @@
-// import DatePickerWidget from "@/src/widgets/DatePickerWidget";
 import CustomButton from "@/src/custom-components/CustomButton";
 import CustomSelectData from "@/src/custom-components/CustomSelectData";
 import { GradientFeatherIcon } from "@/src/custom-components/GradientIcon";
+import { rS, rV } from "@/src/lib/responsivehandler";
 import Slider from "@react-native-community/slider";
+import { format } from "date-fns";
 import { LinearGradient } from "expo-linear-gradient";
 import React, { useState } from "react";
 import {
   StyleSheet,
   Text,
+  TextInput,
   TouchableOpacity,
   View,
   ViewStyle,
 } from "react-native";
-// import type { Message } from "../ChatWithAi";
-
-// ─── Shared Styles ─────────────────────────────────────────────────────────────
 
 const CARD_STYLE: ViewStyle = {
   backgroundColor: "white",
@@ -30,7 +29,6 @@ const CARD_STYLE: ViewStyle = {
 };
 
 const PURPLE = "#6B5591";
-const PURPLE_LIGHT = "#F8F0FF";
 const WHITE_LIGHT = "#FFFFFF";
 
 const SYMPTOM_OPTIONS = [
@@ -43,7 +41,8 @@ const SYMPTOM_OPTIONS = [
   "Anxiety",
   "Brain fog",
 ];
-const triggers = [
+
+const TRIGGERS = [
   "Alcohol",
   "Caffeine",
   "Lack of Sleep",
@@ -56,19 +55,28 @@ const triggers = [
   "Anxiety",
 ];
 
-// const PURPLE = "#6B5591";
 const LIGHT_PURPLE_TRACK = "#E0C8F8";
 const TEXT_GRAY = "#667085";
 const LABEL_GRAY = "#98A2B3";
-const SEVERITY_LABELS = ["Mild", "Moderate", "Severe"];
 
 export const SymptomFormWidget: React.FC<{
   onSubmit: (payload: any) => void;
   submitted?: boolean;
   disabled?: boolean;
-}> = ({ onSubmit, submitted = false, disabled }) => {
+  messageId?: string;
+  selectedDate?: string;
+  handleDateBottomSheetOpen?: () => void;
+}> = ({
+  onSubmit,
+  submitted = false,
+  disabled,
+  selectedDate = "",
+  handleDateBottomSheetOpen,
+}) => {
   const [severity, setSeverity] = useState(5);
   const [selectedSymptoms, setSelectedSymptoms] = useState<string[]>([]);
+  const [selectedTriggers, setSelectedTriggers] = useState<string[]>([]);
+  const [note, setNote] = useState("");
 
   const toggleSymptom = (sym: string) => {
     if (submitted) return;
@@ -77,9 +85,23 @@ export const SymptomFormWidget: React.FC<{
     );
   };
 
+  const toggleTrigger = (trigger: string) => {
+    if (submitted) return;
+    setSelectedTriggers((prev) =>
+      prev.includes(trigger)
+        ? prev.filter((t) => t !== trigger)
+        : [...prev, trigger],
+    );
+  };
+
+  const dateValue = selectedDate ? format(selectedDate, "dd-MM-yyy") : "";
+
   const handleSubmit = () => {
     if (submitted) return;
-    onSubmit({ severity, symptoms: selectedSymptoms });
+    const severityLabel =
+      severity <= 3 ? "Mild" : severity <= 6 ? "Moderate" : "Severe";
+    const payload = `[SYSTEM_PAYLOAD: FORM_SUBMITTED | type: symptom | symptoms: ${selectedSymptoms.join(", ") || "none"} | severity_level: ${severityLabel} | date_logged: ${selectedDate || "not_set"} | triggers: ${selectedTriggers.join(", ") || "none"} | notes: ${note}]`;
+    onSubmit({ symptomData: payload });
   };
 
   const severityLabel =
@@ -89,20 +111,12 @@ export const SymptomFormWidget: React.FC<{
 
   return (
     <View style={CARD_STYLE}>
-      <View className=" flex-row items-center mb-5">
-        {/* <GradientFeatherIcon
-          name="calendar"
-          size={20}
-          gradientColors={["#6B5591", "#6E3F8C", "#853385", "#9F3E83"]}
-        /> */}
-        <Text
-          className=" mx-3 font-[PoppinsBold] text-[#101828] text-base "
-          // style={{ fontSize: rS(12) }}
-        >
+      <View className="flex-row items-center mb-5">
+        <Text className="mx-3 font-[PoppinsBold] text-[#101828] text-base">
           Symptom Tracker
         </Text>
       </View>
-      {/* Symptoms */}
+
       <Text
         style={{
           fontSize: 12,
@@ -172,8 +186,7 @@ export const SymptomFormWidget: React.FC<{
         })}
       </View>
 
-      {/* Severity Section (Matching the Image) */}
-      <View>
+      <View style={{ marginTop: 16 }}>
         <Text
           style={{
             fontSize: 12,
@@ -202,7 +215,7 @@ export const SymptomFormWidget: React.FC<{
             onValueChange={setSeverity}
             minimumTrackTintColor={LIGHT_PURPLE_TRACK}
             maximumTrackTintColor={LIGHT_PURPLE_TRACK}
-            thumbTintColor={PURPLE} // Note: Use thumbImage for a real gradient thumb
+            thumbTintColor={PURPLE}
             disabled={submitted}
           />
         </View>
@@ -214,28 +227,26 @@ export const SymptomFormWidget: React.FC<{
         </View>
       </View>
 
-      <View>
-        <View>
-          <CustomSelectData
-            // onPress={handleDateBottomSheetOpen}
-            primary
-            placeholder="MM / DD / YYYY"
-            label="Date"
-            // value={dateValue}
-            icon={
-              <TouchableOpacity onPress={() => {}}>
-                {/* <Feather name="calendar" size={24} className="!text-primary" /> */}
-                <GradientFeatherIcon
-                  name="calendar"
-                  size={24}
-                  gradientColors={["#6B5591", "#6E3F8C", "#853385", "#9F3E83"]}
-                />
-              </TouchableOpacity>
-            }
-          />
-        </View>
+      <View style={{ marginTop: 16 }}>
+        <CustomSelectData
+          onPress={handleDateBottomSheetOpen}
+          primary
+          placeholder="MM / DD / YYYY"
+          label="Date"
+          value={dateValue}
+          icon={
+            <TouchableOpacity onPress={() => {}}>
+              <GradientFeatherIcon
+                name="calendar"
+                size={24}
+                gradientColors={["#6B5591", "#6E3F8C", "#853385", "#9F3E83"]}
+              />
+            </TouchableOpacity>
+          }
+        />
       </View>
-      <View className="my-5">
+
+      <View style={{ marginTop: 12, marginBottom: 16 }}>
         <Text
           style={{
             fontSize: 12,
@@ -246,15 +257,15 @@ export const SymptomFormWidget: React.FC<{
             marginBottom: 8,
           }}
         >
-          Triggers(Optional)
+          Triggers (Optional)
         </Text>
         <View style={{ flexDirection: "row", flexWrap: "wrap", gap: 8 }}>
-          {triggers.map((sym) => {
-            const sel = selectedSymptoms.includes(sym);
+          {TRIGGERS.map((trigger) => {
+            const sel = selectedTriggers.includes(trigger);
             return (
               <TouchableOpacity
-                key={sym}
-                onPress={() => !submitted && toggleSymptom(sym)}
+                key={trigger}
+                onPress={() => !submitted && toggleTrigger(trigger)}
                 disabled={submitted}
               >
                 {sel ? (
@@ -275,7 +286,7 @@ export const SymptomFormWidget: React.FC<{
                         fontFamily: "PoppinsMedium",
                       }}
                     >
-                      {sym}
+                      {trigger}
                     </Text>
                   </LinearGradient>
                 ) : (
@@ -296,7 +307,7 @@ export const SymptomFormWidget: React.FC<{
                         fontFamily: "PoppinsMedium",
                       }}
                     >
-                      {sym}
+                      {trigger}
                     </Text>
                   </View>
                 )}
@@ -306,12 +317,44 @@ export const SymptomFormWidget: React.FC<{
         </View>
       </View>
 
-      <CustomButton gradient title={"Submit"} />
-      {/* <SubmitButton
-        label={submitted ? "Symptom logged ✓" : "Log Symptom"}
+      <View style={{ marginTop: 4, marginBottom: 8 }}>
+        <Text
+          style={{
+            fontSize: 12,
+            fontFamily: "PoppinsSemiBold",
+            color: "#999",
+            textTransform: "uppercase",
+            letterSpacing: 0.5,
+            marginBottom: 8,
+          }}
+        >
+          Notes (Optional)
+        </Text>
+        <View className="border border-[#B4B4B4] bg-white rounded-lg p-4">
+          <TextInput
+            multiline
+            numberOfLines={3}
+            placeholder="Add any additional notes"
+            placeholderTextColor="#9B9B9B"
+            value={note}
+            onChangeText={setNote}
+            editable={!submitted}
+            style={{
+              fontSize: rS(10),
+              color: "#000",
+              textAlignVertical: "top",
+              minHeight: rV(60),
+            }}
+          />
+        </View>
+      </View>
+
+      <CustomButton
+        gradient
+        title={"Submit"}
         onPress={handleSubmit}
         disabled={submitted}
-      /> */}
+      />
     </View>
   );
 };

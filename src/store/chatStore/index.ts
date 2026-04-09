@@ -22,6 +22,7 @@ interface Message {
   selectedAction?: string;
   selectedDate?: string;
   selectedCycle?: string;
+  selectedSymptom?: string;
 }
 
 interface ChatStore {
@@ -37,6 +38,7 @@ interface ChatStore {
   updateMessageSelectedAction: (messageId: string, action: string) => void;
   updateMessageSelectedDate: (messageId: string, date: string) => void;
   updateMessageSelectedCycle: (messageId: string, data: string) => void;
+  updateMessageSelectedSymptom: (messageId: string, data: string) => void;
 }
 
 const useChatStore = create<ChatStore>()(
@@ -116,6 +118,14 @@ const useChatStore = create<ChatStore>()(
         set((state) => ({
           messages: state.messages.map((msg) =>
             msg.id === messageId ? { ...msg, selectedCycle: data } : msg
+          ),
+        }));
+      },
+
+      updateMessageSelectedSymptom: (messageId: string, data: string) => {
+        set((state) => ({
+          messages: state.messages.map((msg) =>
+            msg.id === messageId ? { ...msg, selectedSymptom: data } : msg
           ),
         }));
       },

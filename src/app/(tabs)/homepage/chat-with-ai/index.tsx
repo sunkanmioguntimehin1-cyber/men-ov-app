@@ -15,6 +15,7 @@ import BottomSheet from "@gorhom/bottom-sheet";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Image } from "expo-image";
 import { LinearGradient } from "expo-linear-gradient";
+import * as Linking from "expo-linking";
 import { useRouter } from "expo-router";
 import { fetch } from "expo/fetch";
 import React, { useEffect, useMemo, useRef, useState } from "react";
@@ -24,6 +25,7 @@ import {
   AppState,
   ImageBackground,
   KeyboardAvoidingView,
+  // Linking,
   NativeScrollEvent,
   NativeSyntheticEvent,
   Platform,
@@ -34,7 +36,7 @@ import {
   useWindowDimensions,
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import Linking from "react-native/Libraries/Linking/Linking";
+// import Linking from "react-native/Libraries/Linking/Linking";
 
 interface Message {
   id: string;
@@ -48,6 +50,7 @@ interface Message {
   selectedAction?: string;
   selectedDate?: string;
   selectedCycle?: string;
+  selectedSymptom?: string;
 }
 
 const STREAMING_BASE_URL = process.env.EXPO_PUBLIC_STREAMING_BASE_URL;
@@ -65,6 +68,7 @@ const ChatWithAi = () => {
 
   const [selectedDate, setSelectedDate] = React.useState(null);
   const [durationData, setDurationData] = React.useState("");
+  const [selectedSymptomDate, setSelectedSymptomDate] = React.useState(null);
 
   // ✅ Separate streaming state with typing animation
   const [streamingText, setStreamingText] = useState("");
@@ -97,6 +101,12 @@ const ChatWithAi = () => {
   const datebottomSheetRef = React.useRef<BottomSheet>(null);
   const handleDateBottomSheetOpen = () => datebottomSheetRef.current?.expand();
   const handleDateBottomSheetClose = () => datebottomSheetRef.current?.close();
+
+  const dateSymptomBottomSheetRef = React.useRef<BottomSheet>(null);
+  const handleDateSymptomBottomSheetOpen = () =>
+    dateSymptomBottomSheetRef.current?.expand();
+  const handleDateSymptomBottomSheetClose = () =>
+    dateSymptomBottomSheetRef.current?.close();
 
   const durationBottomSheetRef = React.useRef<BottomSheet>(null);
   const handleDurationBottomSheetOpen = () =>
@@ -411,9 +421,10 @@ const ChatWithAi = () => {
             <Text
               key={match.index}
               style={{
-                color: "#ADD8E6",
+                color: "#0e48c7",
                 textDecorationLine: "underline",
-                fontFamily: "PoppinsRegular",
+                fontFamily: "PoppinsSemiBold",
+                fontSize: 16,
               }}
               onPress={() => Linking.openURL(url)}
             >
@@ -613,6 +624,66 @@ const ChatWithAi = () => {
     });
   };
 
+  // Handle symptom form submission
+  const handleSymptomSubmit = async (
+    messageId: string,
+    payload: { symptomData: string },
+  ) => {
+    const fullDate = new Date();
+    const timestamp = fullDate.toLocaleTimeString("en-US", {
+      hour: "2-digit",
+      minute: "2-digit",
+    });
+    const date = formatDateHeader(fullDate);
+
+    useChatStore
+      .getState()
+      .updateMessageSelectedSymptom(messageId, payload.symptomData);
+
+    useChatStore.getState().addMessage({
+      id: `user-${Date.now()}`,
+      text: payload.symptomData,
+      isAi: false,
+      timestamp,
+      date,
+      fullDate,
+    });
+
+    useChatStore.getState().addMessage({
+      id: "typing-indicator",
+      text: "...",
+      isAi: true,
+      timestamp,
+      date,
+      fullDate,
+    });
+
+    setTimeout(() => {
+      if (scrollViewRef.current) {
+        scrollViewRef.current.scrollToEnd({ animated: true });
+        setIsNearBottom(true);
+      }
+    }, 100);
+
+    hasFetchedAIRef.current = false;
+    lastMessageDetailRef.current = null;
+
+    const chatHistory = messages.map((msg) => ({
+      role: msg.isAi ? "assistant" : "user",
+      content: msg.text,
+    }));
+
+    setMessageDatail({
+      messages: [
+        ...chatHistory,
+        {
+          role: "user",
+          content: payload.symptomData,
+        },
+      ],
+    });
+  };
+
   // Handle widget submission
   const handleWidgetSubmit = (messageId: string) => (payload: any) => {
     const fullDate = new Date();
@@ -686,21 +757,28 @@ const ChatWithAi = () => {
                         ? (payload) => handleDateSubmit(message.id, payload)
                         : segment.name === "cycle_form"
                           ? (payload) => handleCycleSubmit(message.id, payload)
-                          : handleWidgetSubmit(message.id)
+                          : segment.name === "symptom_form"
+                            ? (payload) =>
+                                handleSymptomSubmit(message.id, payload)
+                            : handleWidgetSubmit(message.id)
                     }
                     submitted={
                       segment.name === "date_picker"
                         ? !!message.selectedDate
                         : segment.name === "cycle_form"
                           ? !!message.selectedCycle
-                          : false
+                          : segment.name === "symptom_form"
+                            ? !!message.selectedSymptom
+                            : false
                     }
                     disabled={
                       segment.name === "date_picker"
                         ? !!message.selectedDate
                         : segment.name === "cycle_form"
                           ? !!message.selectedCycle
-                          : false
+                          : segment.name === "symptom_form"
+                            ? !!message.selectedSymptom
+                            : false
                     }
                   />
                 </View>
@@ -724,21 +802,27 @@ const ChatWithAi = () => {
                   ? (payload) => handleDateSubmit(message.id, payload)
                   : message.widget === "cycle_form"
                     ? (payload) => handleCycleSubmit(message.id, payload)
-                    : handleWidgetSubmit(message.id)
+                    : message.widget === "symptom_form"
+                      ? (payload) => handleSymptomSubmit(message.id, payload)
+                      : handleWidgetSubmit(message.id)
               }
               submitted={
                 message.widget === "date_picker"
                   ? !!message.selectedDate
                   : message.widget === "cycle_form"
                     ? !!message.selectedCycle
-                    : false
+                    : message.widget === "symptom_form"
+                      ? !!message.selectedSymptom
+                      : false
               }
               disabled={
                 message.widget === "date_picker"
                   ? !!message.selectedDate
                   : message.widget === "cycle_form"
                     ? !!message.selectedCycle
-                    : false
+                    : message.widget === "symptom_form"
+                      ? !!message.selectedSymptom
+                      : false
               }
             />
           </View>
