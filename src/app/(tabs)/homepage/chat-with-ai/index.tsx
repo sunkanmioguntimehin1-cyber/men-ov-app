@@ -736,7 +736,7 @@ const ChatWithAi = () => {
                     messageId={message.id}
                     selectedButton={message.selectedAction}
                     onPress={(action) => handleActionPress(message.id, action)}
-                    disabled={!!message.selectedAction}
+                    disabled={true}
                   />
                 </View>
               );
@@ -762,24 +762,8 @@ const ChatWithAi = () => {
                                 handleSymptomSubmit(message.id, payload)
                             : handleWidgetSubmit(message.id)
                     }
-                    submitted={
-                      segment.name === "date_picker"
-                        ? !!message.selectedDate
-                        : segment.name === "cycle_form"
-                          ? !!message.selectedCycle
-                          : segment.name === "symptom_form"
-                            ? !!message.selectedSymptom
-                            : false
-                    }
-                    disabled={
-                      segment.name === "date_picker"
-                        ? !!message.selectedDate
-                        : segment.name === "cycle_form"
-                          ? !!message.selectedCycle
-                          : segment.name === "symptom_form"
-                            ? !!message.selectedSymptom
-                            : false
-                    }
+                    submitted={true}
+                    disabled={true}
                   />
                 </View>
               );
@@ -806,24 +790,8 @@ const ChatWithAi = () => {
                       ? (payload) => handleSymptomSubmit(message.id, payload)
                       : handleWidgetSubmit(message.id)
               }
-              submitted={
-                message.widget === "date_picker"
-                  ? !!message.selectedDate
-                  : message.widget === "cycle_form"
-                    ? !!message.selectedCycle
-                    : message.widget === "symptom_form"
-                      ? !!message.selectedSymptom
-                      : false
-              }
-              disabled={
-                message.widget === "date_picker"
-                  ? !!message.selectedDate
-                  : message.widget === "cycle_form"
-                    ? !!message.selectedCycle
-                    : message.widget === "symptom_form"
-                      ? !!message.selectedSymptom
-                      : false
-              }
+              submitted={true}
+              disabled={true}
             />
           </View>
         )}
