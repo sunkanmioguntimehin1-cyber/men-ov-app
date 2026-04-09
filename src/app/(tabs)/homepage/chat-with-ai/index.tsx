@@ -55,6 +55,7 @@ interface Message {
   selectedDate?: string;
   selectedCycle?: string;
   selectedSymptom?: string;
+  isHistory?: boolean;
 }
 
 const STREAMING_BASE_URL = process.env.EXPO_PUBLIC_STREAMING_BASE_URL;
@@ -735,14 +736,12 @@ const ChatWithAi = () => {
             case "actions":
               return (
                 <View key={index} style={{ marginTop: 12 }}>
-                  <ActionPills
+<ActionPills
                     actions={segment.options}
                     messageId={message.id}
                     selectedButton={message.selectedAction}
                     onPress={(action) => handleActionPress(message.id, action)}
-                    disabled={
-                      !isRecentMessage(message) || !!message.selectedAction
-                    }
+                    disabled={message.isHistory || !!message.selectedAction}
                   />
                 </View>
               );
@@ -755,9 +754,11 @@ const ChatWithAi = () => {
                     selectedDate={selectedDate}
                     durationData={durationData}
                     handleDurationBottomSheetOpen={
-                      handleDurationBottomSheetOpen
+                      message.isHistory ? undefined : handleDurationBottomSheetOpen
                     }
-                    handleDateBottomSheetOpen={handleDateBottomSheetOpen}
+                    handleDateBottomSheetOpen={
+                      message.isHistory ? undefined : handleDateBottomSheetOpen
+                    }
                     onSubmit={
                       segment.name === "date_picker"
                         ? (payload) => handleDateSubmit(message.id, payload)
@@ -769,13 +770,13 @@ const ChatWithAi = () => {
                             : handleWidgetSubmit(message.id)
                     }
                     submitted={
-                      !isRecentMessage(message) ||
+                      message.isHistory ||
                       !!message.selectedDate ||
                       !!message.selectedCycle ||
                       !!message.selectedSymptom
                     }
                     disabled={
-                      !isRecentMessage(message) ||
+                      message.isHistory ||
                       !!message.selectedDate ||
                       !!message.selectedCycle ||
                       !!message.selectedSymptom
@@ -795,8 +796,12 @@ const ChatWithAi = () => {
               messageId={message.id}
               selectedDate={selectedDate}
               durationData={durationData}
-              handleDurationBottomSheetOpen={handleDurationBottomSheetOpen}
-              handleDateBottomSheetOpen={handleDateBottomSheetOpen}
+              handleDurationBottomSheetOpen={
+                message.isHistory ? undefined : handleDurationBottomSheetOpen
+              }
+              handleDateBottomSheetOpen={
+                message.isHistory ? undefined : handleDateBottomSheetOpen
+              }
               onSubmit={
                 message.widget === "date_picker"
                   ? (payload) => handleDateSubmit(message.id, payload)
@@ -807,13 +812,13 @@ const ChatWithAi = () => {
                       : handleWidgetSubmit(message.id)
               }
               submitted={
-                !isRecentMessage(message) ||
+                message.isHistory ||
                 !!message.selectedDate ||
                 !!message.selectedCycle ||
                 !!message.selectedSymptom
               }
               disabled={
-                !isRecentMessage(message) ||
+                message.isHistory ||
                 !!message.selectedDate ||
                 !!message.selectedCycle ||
                 !!message.selectedSymptom
@@ -901,15 +906,6 @@ const ChatWithAi = () => {
     return formatted;
   };
 
-  // Check if message is from current session (within 30 minutes)
-  const isRecentMessage = (message: Message): boolean => {
-    const now = new Date();
-    const messageTime = new Date(message.fullDate);
-    const diffMs = now.getTime() - messageTime.getTime();
-    const diffMinutes = diffMs / 1000 / 60;
-    return diffMinutes <= 30;
-  };
-
   // ✅ Transform server data from getAllChatAiHistory to message format
   useEffect(() => {
     let isMounted = true;
@@ -937,6 +933,7 @@ const ChatWithAi = () => {
           date: date,
           fullDate: fullDate,
           selectedAction,
+          isHistory: true,
         };
       });
 

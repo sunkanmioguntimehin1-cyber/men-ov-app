@@ -23,6 +23,7 @@ interface Message {
   selectedDate?: string;
   selectedCycle?: string;
   selectedSymptom?: string;
+  isHistory?: boolean;
 }
 
 interface ChatStore {
