@@ -9,7 +9,11 @@ import { GradientMaterialIcon } from "@/src/custom-components/GradientIcon";
 import { TypingDots } from "@/src/custom-components/TypingDots";
 import Screen from "@/src/layout/Screen";
 import useChatStore, { WidgetName } from "@/src/store/chatStore";
-import { parseMessage, extractSelection, stripSelectionTag } from "@/src/widgets/messageParser";
+import {
+  extractSelection,
+  parseMessage,
+  stripSelectionTag,
+} from "@/src/widgets/messageParser";
 import { MaterialIcons } from "@expo/vector-icons";
 import BottomSheet from "@gorhom/bottom-sheet";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -736,7 +740,9 @@ const ChatWithAi = () => {
                     messageId={message.id}
                     selectedButton={message.selectedAction}
                     onPress={(action) => handleActionPress(message.id, action)}
-                    disabled={true}
+                    disabled={
+                      !isRecentMessage(message) || !!message.selectedAction
+                    }
                   />
                 </View>
               );
@@ -762,8 +768,18 @@ const ChatWithAi = () => {
                                 handleSymptomSubmit(message.id, payload)
                             : handleWidgetSubmit(message.id)
                     }
-                    submitted={true}
-                    disabled={true}
+                    submitted={
+                      !isRecentMessage(message) ||
+                      !!message.selectedDate ||
+                      !!message.selectedCycle ||
+                      !!message.selectedSymptom
+                    }
+                    disabled={
+                      !isRecentMessage(message) ||
+                      !!message.selectedDate ||
+                      !!message.selectedCycle ||
+                      !!message.selectedSymptom
+                    }
                   />
                 </View>
               );
@@ -790,8 +806,18 @@ const ChatWithAi = () => {
                       ? (payload) => handleSymptomSubmit(message.id, payload)
                       : handleWidgetSubmit(message.id)
               }
-              submitted={true}
-              disabled={true}
+              submitted={
+                !isRecentMessage(message) ||
+                !!message.selectedDate ||
+                !!message.selectedCycle ||
+                !!message.selectedSymptom
+              }
+              disabled={
+                !isRecentMessage(message) ||
+                !!message.selectedDate ||
+                !!message.selectedCycle ||
+                !!message.selectedSymptom
+              }
             />
           </View>
         )}
@@ -865,7 +891,7 @@ const ChatWithAi = () => {
   // Format system payload for user display
   const formatUserMessageForDisplay = (text: string): string => {
     let formatted = stripSelectionTag(text);
-    
+
     if (formatted.startsWith("[SYSTEM_PAYLOAD:")) {
       formatted = formatted
         .replace("[SYSTEM_PAYLOAD: FORM_SUBMITTED | ", "")
@@ -873,6 +899,15 @@ const ChatWithAi = () => {
         .replace("type: ", "");
     }
     return formatted;
+  };
+
+  // Check if message is from current session (within 30 minutes)
+  const isRecentMessage = (message: Message): boolean => {
+    const now = new Date();
+    const messageTime = new Date(message.fullDate);
+    const diffMs = now.getTime() - messageTime.getTime();
+    const diffMinutes = diffMs / 1000 / 60;
+    return diffMinutes <= 30;
   };
 
   // ✅ Transform server data from getAllChatAiHistory to message format
@@ -1036,7 +1071,7 @@ const ChatWithAi = () => {
                 //   {renderMessageContent(item)}
                 // </LinearGradient>
                 <View
-                  className="p-4  rounded-2xl bg-secondary border border-[#FBC3F8] rounded-tr-none"
+                  className="p-4  rounded-2xl bg-secondary border border-[#FBC3F8] "
                   style={{ maxWidth: bubbleMaxWidth }}
                 >
                   <Text className="text-base font-[PoppinsRegular]">
@@ -1065,7 +1100,7 @@ const ChatWithAi = () => {
                 borderTopRightRadius: 4,
               }}
             >
-              <Text className="text-sm text-white font-[PoppinsRegular]">
+              <Text className="text-base text-white font-[PoppinsRegular]">
                 {formatUserMessageForDisplay(item.text)}
               </Text>
             </LinearGradient>

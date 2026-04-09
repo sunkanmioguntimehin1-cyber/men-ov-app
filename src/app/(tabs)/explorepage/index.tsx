@@ -353,7 +353,7 @@ const ExplorePage = () => {
       }}
     >
       <View className="p-4 overflow-hidden shadow-sm">
-        <Text className="my-2 font-[PoppinsSemiBold]">{post.title}</Text>
+        <Text className="my-2 font-[PoppinsRegular]">{post.title}</Text>
 
         <View className="h-60">
           <ImageBackground
