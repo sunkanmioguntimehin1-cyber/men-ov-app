@@ -9,7 +9,7 @@ import { GradientMaterialIcon } from "@/src/custom-components/GradientIcon";
 import { TypingDots } from "@/src/custom-components/TypingDots";
 import Screen from "@/src/layout/Screen";
 import useChatStore, { WidgetName } from "@/src/store/chatStore";
-import { parseMessage } from "@/src/widgets/messageParser";
+import { parseMessage, extractSelection, stripSelectionTag } from "@/src/widgets/messageParser";
 import { MaterialIcons } from "@expo/vector-icons";
 import BottomSheet from "@gorhom/bottom-sheet";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -896,13 +896,15 @@ const ChatWithAi = () => {
 
   // Format system payload for user display
   const formatUserMessageForDisplay = (text: string): string => {
-    if (text.startsWith("[SYSTEM_PAYLOAD:")) {
-      return text
+    let formatted = stripSelectionTag(text);
+    
+    if (formatted.startsWith("[SYSTEM_PAYLOAD:")) {
+      formatted = formatted
         .replace("[SYSTEM_PAYLOAD: FORM_SUBMITTED | ", "")
         .replace("]", "")
         .replace("type: ", "");
     }
-    return text;
+    return formatted;
   };
 
   // ✅ Transform server data from getAllChatAiHistory to message format
@@ -922,6 +924,7 @@ const ChatWithAi = () => {
           minute: "2-digit",
         });
         const date = formatDateHeader(fullDate);
+        const selectedAction = extractSelection(msg.content);
 
         return {
           id: msg.id,
@@ -930,6 +933,7 @@ const ChatWithAi = () => {
           timestamp: timestamp,
           date: date,
           fullDate: fullDate,
+          selectedAction,
         };
       });
 

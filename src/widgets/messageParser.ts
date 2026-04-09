@@ -1,7 +1,8 @@
 export type MessageSegment =
   | { type: "text"; content: string }
   | { type: "actions"; options: string[] }
-  | { type: "widget"; name: WidgetName; payload?: string };
+  | { type: "widget"; name: WidgetName; payload?: string }
+  | { type: "selection"; value: string };
 
 export type WidgetName =
   | "symptom_form"
@@ -13,18 +14,18 @@ export type WidgetName =
 
 const ACTION_RE = /<<ACTIONS:\s*(\[.*?\])>>/g;
 const WIDGET_RE = /<<WIDGET:\s*([\w_]+(?::[\w\s\-]+)?)>>/g;
-const SPLIT_RE = /<<(?:ACTIONS:\s*\[.*?\]|WIDGET:\s*[\w_]+(?::[\w\s\-]+)?)>>/g;
+const SELECTION_RE = /<<SELECTION:\[(.*?)\]>>/g;
+const SPLIT_RE = /<<(?:ACTIONS:\s*\[.*?\]|WIDGET:\s*[\w_]+(?::[\w\s\-]+)?|SELECTION:\[.*?\])>>/g;
 
 export function parseMessage(raw: string): MessageSegment[] {
   const segments: MessageSegment[] = [];
   let lastIndex = 0;
 
-  // Collect all tags with their positions
   const tags: { index: number; length: number; raw: string }[] = [];
 
   let m: RegExpExecArray | null;
   const combined = new RegExp(
-    "<<(?:ACTIONS:\\s*(\\[.*?\\])|WIDGET:\\s*([\\w_]+(?::[\\w\\s\\-]+)?))>>",
+    "<<(?:ACTIONS:\\s*(\\[.*?\\])|WIDGET:\\s*([\\w_]+(?::[\\w\\s\\-]+)?)|SELECTION:(\\[.*?\\]))>>",
     "g",
   );
 
@@ -53,6 +54,11 @@ export function parseMessage(raw: string): MessageSegment[] {
         const payload = match[2]?.trim();
         segments.push({ type: "widget", name, payload });
       }
+    } else if (tag.raw.includes("SELECTION:")) {
+      const match = tag.raw.match(/SELECTION:\[(.*?)\]/);
+      if (match) {
+        segments.push({ type: "selection", value: match[1] });
+      }
     }
 
     lastIndex = tag.index + tag.length;
@@ -64,4 +70,13 @@ export function parseMessage(raw: string): MessageSegment[] {
   }
 
   return segments;
+}
+
+export function extractSelection(raw: string): string | undefined {
+  const match = raw.match(/<<SELECTION:\[(.*?)\]>>/);
+  return match ? match[1] : undefined;
+}
+
+export function stripSelectionTag(raw: string): string {
+  return raw.replace(/<<SELECTION:\[.*?\]>>\s*/g, "");
 }
