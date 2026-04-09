@@ -1,10 +1,17 @@
 // import DatePickerWidget from "@/src/widgets/DatePickerWidget";
+import CustomButton from "@/src/custom-components/CustomButton";
 import CustomSelectData from "@/src/custom-components/CustomSelectData";
-import { CustomSlider } from "@/src/custom-components/CustomSlider";
 import { GradientFeatherIcon } from "@/src/custom-components/GradientIcon";
+import Slider from "@react-native-community/slider";
 import { LinearGradient } from "expo-linear-gradient";
 import React, { useState } from "react";
-import { Text, TouchableOpacity, View, ViewStyle } from "react-native";
+import {
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+  ViewStyle,
+} from "react-native";
 // import type { Message } from "../ChatWithAi";
 
 // ─── Shared Styles ─────────────────────────────────────────────────────────────
@@ -48,6 +55,11 @@ const triggers = [
   "Mental load",
   "Anxiety",
 ];
+
+// const PURPLE = "#6B5591";
+const LIGHT_PURPLE_TRACK = "#E0C8F8";
+const TEXT_GRAY = "#667085";
+const LABEL_GRAY = "#98A2B3";
 const SEVERITY_LABELS = ["Mild", "Moderate", "Severe"];
 
 export const SymptomFormWidget: React.FC<{
@@ -159,7 +171,9 @@ export const SymptomFormWidget: React.FC<{
           );
         })}
       </View>
-      {/* <View className=" mt-5">
+
+      {/* Severity Section (Matching the Image) */}
+      <View>
         <Text
           style={{
             fontSize: 12,
@@ -173,155 +187,33 @@ export const SymptomFormWidget: React.FC<{
           Severity
         </Text>
 
-        <View
-          style={{
-            flexDirection: "row",
-            alignItems: "center",
-            gap: 10,
-            marginBottom: 4,
-          }}
-        >
-          <Text
-            style={{
-              fontSize: 11,
-              color: "#aaa",
-              fontFamily: "PoppinsRegular",
-            }}
-          >
-            1
-          </Text>
-          <View style={{ flex: 1 }}>
-            <View
-              style={{
-                flexDirection: "row",
-                height: 6,
-                borderRadius: 3,
-                overflow: "hidden",
-                backgroundColor: "#F0E8FF",
-              }}
-            >
-              {Array.from({ length: 10 }).map((_, i) => (
-                <TouchableOpacity
-                  key={i}
-                  disabled={submitted}
-                  onPress={() => setSeverity(i + 1)}
-                  style={{
-                    flex: 1,
-                    backgroundColor: i < severity ? PURPLE : "transparent",
-                    marginHorizontal: 1,
-                    borderRadius: 2,
-                  }}
-                />
-              ))}
-            </View>
-          </View>
-          <Text
-            style={{
-              fontSize: 11,
-              color: "#aaa",
-              fontFamily: "PoppinsRegular",
-            }}
-          >
-            10
-          </Text>
+        <View style={styles.rangeLabelRow}>
+          <Text style={styles.rangeText}>Mild</Text>
+          <Text style={styles.rangeText}>Severe</Text>
         </View>
-        <View
-          style={{
-            flexDirection: "row",
-            justifyContent: "center",
-            alignItems: "center",
-            gap: 6,
-            marginBottom: 14,
-          }}
-        >
-          <Text
-            style={{
-              fontSize: 22,
-              fontFamily: "PoppinsSemiBold",
-              color: severityColor,
-            }}
-          >
-            {severity}
-          </Text>
-          <Text
-            style={{
-              fontSize: 13,
-              fontFamily: "PoppinsRegular",
-              color: severityColor,
-            }}
-          >
-            {severityLabel}
-          </Text>
+
+        <View style={styles.sliderWrapper}>
+          <Slider
+            style={{ width: "100%", height: 40 }}
+            minimumValue={1}
+            maximumValue={10}
+            step={1}
+            value={severity}
+            onValueChange={setSeverity}
+            minimumTrackTintColor={LIGHT_PURPLE_TRACK}
+            maximumTrackTintColor={LIGHT_PURPLE_TRACK}
+            thumbTintColor={PURPLE} // Note: Use thumbImage for a real gradient thumb
+            disabled={submitted}
+          />
         </View>
-      </View> */}
 
-      <View style={{ marginTop: 20 }}>
-        <Text
-          style={{
-            fontSize: 12,
-            fontFamily: "PoppinsSemiBold",
-            color: "#999",
-            textTransform: "uppercase",
-            letterSpacing: 0.5,
-            marginBottom: 12,
-          }}
-        >
-          Severity
-        </Text>
-
-        <CustomSlider
-          min={1}
-          max={10}
-          step={1}
-          value={severity}
-          onValueChange={setSeverity}
-          disabled={submitted}
-          trackColor="#F0E8FF"
-          fillColor="#8B5CF6"
-          thumbColor="#8B5CF6"
-        />
-
-        {/* Value badge */}
-        <View
-          style={{
-            flexDirection: "row",
-            justifyContent: "center",
-            alignItems: "center",
-            marginTop: 10,
-          }}
-        >
-          <View
-            style={{
-              backgroundColor: severityColor + "20",
-              paddingHorizontal: 14,
-              paddingVertical: 5,
-              borderRadius: 20,
-              flexDirection: "row",
-              alignItems: "center",
-              gap: 6,
-            }}
-          >
-            <Text
-              style={{
-                fontSize: 20,
-                fontFamily: "PoppinsSemiBold",
-                color: severityColor,
-              }}
-            >
-              {severity}
-            </Text>
-            <Text
-              style={{
-                fontSize: 13,
-                fontFamily: "PoppinsRegular",
-                color: severityColor,
-              }}
-            >
-              {severityLabel}
-            </Text>
-          </View>
+        <View style={styles.scaleRow}>
+          <Text style={styles.scaleText}>1</Text>
+          <Text style={styles.scaleText}>5</Text>
+          <Text style={styles.scaleText}>10</Text>
         </View>
       </View>
+
       <View>
         <View>
           <CustomSelectData
@@ -413,6 +305,8 @@ export const SymptomFormWidget: React.FC<{
           })}
         </View>
       </View>
+
+      <CustomButton gradient title={"Submit"} />
       {/* <SubmitButton
         label={submitted ? "Symptom logged ✓" : "Log Symptom"}
         onPress={handleSubmit}
@@ -421,3 +315,24 @@ export const SymptomFormWidget: React.FC<{
     </View>
   );
 };
+
+const styles = StyleSheet.create({
+  rangeLabelRow: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    marginBottom: -5,
+  },
+  rangeText: { fontSize: 14, color: TEXT_GRAY, fontFamily: "PoppinsRegular" },
+  sliderWrapper: { marginVertical: 0 },
+  scaleRow: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    paddingHorizontal: 4,
+    marginTop: -8,
+  },
+  scaleText: {
+    fontSize: 14,
+    color: LABEL_GRAY,
+    fontFamily: "PoppinsRegular",
+  },
+});

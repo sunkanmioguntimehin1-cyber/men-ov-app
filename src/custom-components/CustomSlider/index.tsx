@@ -33,8 +33,8 @@ export const CustomSlider: React.FC<CustomSliderProps> = ({
   // ── Animated values ──────────────────────────────────────────────────────
   const thumbAnim = useRef(new Animated.Value(0)).current;
   const fillAnim = useRef(new Animated.Value(0)).current;
-  const scaleAnim = useRef(new Animated.Value(1)).current;
-  const glowAnim = useRef(new Animated.Value(0)).current;
+  const scaleAnim = useRef(new Animated.Value(1)).current; // useNativeDriver: true
+  const glowAnim = useRef(new Animated.Value(0)).current; // useNativeDriver: false
   const isPressed = useRef(false);
 
   // ── Helpers ───────────────────────────────────────────────────────────────
@@ -60,12 +60,13 @@ export const CustomSlider: React.FC<CustomSliderProps> = ({
     [min, max, step, thumbSize, value],
   );
 
-  // ── Sync animated position when value or trackWidth changes ──────────────
+  // ── Sync position when value or trackWidth changes ────────────────────────
   useEffect(() => {
     if (trackWidth === 0) return;
     const pos = valueToPosition(value, trackWidth);
     const fill = pos + thumbSize / 2;
 
+    // Safe — both use useNativeDriver: false
     Animated.parallel([
       Animated.spring(thumbAnim, {
         toValue: pos,
@@ -82,42 +83,50 @@ export const CustomSlider: React.FC<CustomSliderProps> = ({
     ]).start();
   }, [value, trackWidth]);
 
-  // ── Press in/out animations ───────────────────────────────────────────────
+  // ── Press animations ──────────────────────────────────────────────────────
+  // IMPORTANT: scaleAnim uses useNativeDriver: true
+  //            glowAnim uses useNativeDriver: false
+  //            Never mix them in Animated.parallel!
+
   const animatePressIn = () => {
     isPressed.current = true;
-    Animated.parallel([
-      Animated.spring(scaleAnim, {
-        toValue: 1.35,
-        useNativeDriver: true,
-        tension: 200,
-        friction: 8,
-      }),
-      Animated.timing(glowAnim, {
-        toValue: 1,
-        duration: 150,
-        useNativeDriver: false,
-      }),
-    ]).start();
+
+    // Native driver — separate call
+    Animated.spring(scaleAnim, {
+      toValue: 1.35,
+      useNativeDriver: true,
+      tension: 200,
+      friction: 8,
+    }).start();
+
+    // JS driver — separate call
+    Animated.timing(glowAnim, {
+      toValue: 1,
+      duration: 150,
+      useNativeDriver: false,
+    }).start();
   };
 
   const animatePressOut = () => {
     isPressed.current = false;
-    Animated.parallel([
-      Animated.spring(scaleAnim, {
-        toValue: 1,
-        useNativeDriver: true,
-        tension: 200,
-        friction: 8,
-      }),
-      Animated.timing(glowAnim, {
-        toValue: 0,
-        duration: 200,
-        useNativeDriver: false,
-      }),
-    ]).start();
+
+    // Native driver — separate call
+    Animated.spring(scaleAnim, {
+      toValue: 1,
+      useNativeDriver: true,
+      tension: 200,
+      friction: 8,
+    }).start();
+
+    // JS driver — separate call
+    Animated.timing(glowAnim, {
+      toValue: 0,
+      duration: 200,
+      useNativeDriver: false,
+    }).start();
   };
 
-  // ── Update position during drag (no spring — instant feedback) ────────────
+  // ── Update position during drag (instant — no spring) ────────────────────
   const updatePosition = useCallback(
     (locationX: number) => {
       if (trackWidth === 0) return;
@@ -132,7 +141,7 @@ export const CustomSlider: React.FC<CustomSliderProps> = ({
     [trackWidth, positionToValue, valueToPosition, thumbSize, onValueChange],
   );
 
-  // ── Snap to step on release ───────────────────────────────────────────────
+  // ── Snap to nearest step on release ──────────────────────────────────────
   const snapToStep = useCallback(
     (locationX: number) => {
       if (trackWidth === 0) return;
@@ -140,6 +149,7 @@ export const CustomSlider: React.FC<CustomSliderProps> = ({
       const pos = valueToPosition(snapped, trackWidth);
       const fill = pos + thumbSize / 2;
 
+      // Safe — both use useNativeDriver: false
       Animated.parallel([
         Animated.spring(thumbAnim, {
           toValue: pos,
@@ -188,15 +198,15 @@ export const CustomSlider: React.FC<CustomSliderProps> = ({
     }),
   ).current;
 
-  // ── Glow interpolation ────────────────────────────────────────────────────
-  const glowSize = glowAnim.interpolate({
-    inputRange: [0, 1],
-    outputRange: [0, thumbSize * 0.85],
-  });
-
+  // ── Glow interpolations ───────────────────────────────────────────────────
   const glowOpacity = glowAnim.interpolate({
     inputRange: [0, 1],
     outputRange: [0, 0.2],
+  });
+
+  const glowScale = glowAnim.interpolate({
+    inputRange: [0, 1],
+    outputRange: [1, 1.8],
   });
 
   return (
@@ -205,7 +215,8 @@ export const CustomSlider: React.FC<CustomSliderProps> = ({
       onLayout={(e) => {
         const w = e.nativeEvent.layout.width;
         setTrackWidth(w);
-        // Set initial positions without animation
+
+        // Set initial positions without animation on first layout
         const pos = valueToPosition(value, w);
         thumbAnim.setValue(pos);
         fillAnim.setValue(pos + thumbSize / 2);
@@ -213,7 +224,7 @@ export const CustomSlider: React.FC<CustomSliderProps> = ({
       pointerEvents={disabled ? "none" : "auto"}
       {...(!disabled ? panResponder.panHandlers : {})}
     >
-      {/* Background Track */}
+      {/* ── Background Track ── */}
       <View
         style={[
           styles.track,
@@ -225,7 +236,7 @@ export const CustomSlider: React.FC<CustomSliderProps> = ({
         ]}
       />
 
-      {/* Filled Track */}
+      {/* ── Filled Track ── */}
       <Animated.View
         style={[
           styles.fill,
@@ -239,38 +250,28 @@ export const CustomSlider: React.FC<CustomSliderProps> = ({
         pointerEvents="none"
       />
 
-      {/* Glow ring behind thumb */}
+      {/* ── Glow Ring (behind thumb) ── */}
       <Animated.View
+        pointerEvents="none"
         style={[
           styles.glow,
           {
-            width: Animated.add(
-              new Animated.Value(thumbSize),
-              Animated.multiply(glowSize, 2),
-            ),
-            height: Animated.add(
-              new Animated.Value(thumbSize),
-              Animated.multiply(glowSize, 2),
-            ),
-            borderRadius: thumbSize,
+            width: thumbSize,
+            height: thumbSize,
+            borderRadius: thumbSize / 2,
             backgroundColor: fillColor,
             opacity: glowOpacity,
-            left: Animated.subtract(thumbAnim, glowSize),
             top: "50%",
-            marginTop: Animated.multiply(
-              Animated.add(
-                new Animated.Value(thumbSize),
-                Animated.multiply(glowSize, 2),
-              ),
-              -0.5,
-            ),
+            marginTop: -(thumbSize / 2),
+            left: thumbAnim,
+            transform: [{ scale: glowScale }],
           },
         ]}
-        pointerEvents="none"
       />
 
-      {/* Thumb */}
+      {/* ── Thumb ── */}
       <Animated.View
+        pointerEvents="none"
         style={[
           styles.thumb,
           {
@@ -292,7 +293,6 @@ export const CustomSlider: React.FC<CustomSliderProps> = ({
             elevation: 5,
           },
         ]}
-        pointerEvents="none"
       >
         {/* Inner dot */}
         <View
