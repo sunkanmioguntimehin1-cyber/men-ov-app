@@ -20,23 +20,53 @@ const NOTIFICATION_ROUTES: Record<
   string,
   { route: string; params?: (actionData: any) => object } | null
 > = {
-  chat_with_ziena: {
+  chat: {
     route: "/(tabs)/homepage/chat-with-ai",
     params: (actionData) => ({
-      ...(actionData?.chat_message && {
-        initialMessage: actionData.chat_message,
-      }),
+      ...(actionData?.chat_message && { initialMessage: actionData.chat_message }),
     }),
   },
-  read_article: {
-    route: "/(tabs)/homepage/articles-webview",
+  learn: {
+    route: "/(tabs)/explorepage",
+    params: (actionData) => ({
+      ...(actionData?.article_url && { articleUrl: actionData.article_url }),
+    }),
   },
-  log_symptom: {
+  insights: {
+    route: "/(tabs)/summarypage",
+  },
+  cycleTracking: {
+    route: "/(tabs)/homepage?openCycleTrackingPopup=true",
+  },
+  homepage: {
     route: "/(tabs)/homepage",
   },
-  complete_profile: {
-    route: "/(tabs)/homepage/profilepage/profile-screen",
-    params: () => ({ openIntake: true }),
+  log: {
+    route: "/(tabs)/homepage?openLogPopup=true",
+  },
+  community: {
+    route: "/(tabs)/communitypage",
+  },
+  profile: {
+    route: "/(tabs)/profilepage/profile-screen",
+  },
+  updateIntakeInfo: {
+    route: "/(tabs)/homepage/profilepage/profile-screen/intake-info",
+  },
+  createintakes: {
+    route: "/(tabs)/homepage/personal-info",
+  },
+  subscription: {
+    route: "/(tabs)/manage-subscription/choose-your-plan",
+  },
+  viewPost: {
+    route: "/(tabs)/communitypage/view-post",
+  },
+  communityComments: {
+    route: "/(tabs)/communitypage/comments",
+  },
+  editPost: {
+    route: "/(tabs)/communitypage/edit-post",
   },
 };
 
@@ -99,11 +129,10 @@ const NotificationScreen = () => {
   const handleNotificationPress = (notification: any) => {
     handleUnread(notification.id);
     const { action_data } = notification;
-    const config = NOTIFICATION_ROUTES[action_data?.action_type];
+    const config = NOTIFICATION_ROUTES[action_data?.screen];
 
     if (config) {
-      const params = config.params?.(action_data) || {};
-      router.push(config.route as any, params);
+      router.push(config.route as any);
     }
   };
 
