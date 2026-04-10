@@ -3,9 +3,10 @@ import CustomButton from "@/src/custom-components/CustomButton";
 import CustomSelectData from "@/src/custom-components/CustomSelectData";
 import { GradientFeatherIcon } from "@/src/custom-components/GradientIcon";
 import { rS, rV } from "@/src/lib/responsivehandler";
+import type { CyclePayload } from "@/src/widgets/messageParser";
 import { AntDesign } from "@expo/vector-icons";
 import { format } from "date-fns";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Text,
   TextInput,
@@ -20,6 +21,8 @@ import {
 
 const CARD_STYLE: ViewStyle = {
   backgroundColor: "white",
+  maxWidth: rS(260),
+  width: rS(260),
   borderRadius: 16,
   borderWidth: 1,
   borderColor: "rgba(107,85,145,0.15)",
@@ -52,19 +55,43 @@ export const CycleFormWidget: React.FC<{
   handleDateBottomSheetOpen?: () => void;
   handleDurationBottomSheetOpen?: () => void;
   messageId?: string;
+  initialCycle?: CyclePayload;
 }> = ({
   onSubmit,
   submitted = false,
   disabled,
-  selectedDate = "",
-  durationData = "",
+  selectedDate: selectedDateProp = "",
+  durationData: durationDataProp = "",
   handleDateBottomSheetOpen,
   handleDurationBottomSheetOpen,
   messageId,
+  initialCycle,
 }) => {
   const [flow, setFlow] = useState<string | null>(null);
   const [selectedSymptoms, setSelectedSymptoms] = useState<string[]>([]);
   const [note, setNote] = useState("");
+  const [internalDate, setInternalDate] = useState(selectedDateProp);
+  const [internalDuration, setInternalDuration] = useState(durationDataProp);
+
+  useEffect(() => {
+    if (initialCycle && submitted) {
+      if (initialCycle.start_date) {
+        setInternalDate(initialCycle.start_date);
+      }
+      if (initialCycle.duration) {
+        setInternalDuration(initialCycle.duration);
+      }
+      if (initialCycle.note) {
+        setNote(initialCycle.note);
+      }
+    } else {
+      setInternalDate(selectedDateProp);
+      setInternalDuration(durationDataProp);
+    }
+  }, [initialCycle, submitted, selectedDateProp, durationDataProp]);
+
+  const selectedDate = internalDate;
+  const durationData = internalDuration;
 
   const toggleSym = (s: string) => {
     if (submitted) return;
@@ -99,7 +126,7 @@ export const CycleFormWidget: React.FC<{
         </Text>
       </View>
 
-      {/* <ScrollView
+      {/* <ScrolView
         horizontal
         showsHorizontalScrollIndicator={false}
         contentContainerStyle={{ gap: 8, paddingBottom: 4 }}
@@ -158,7 +185,7 @@ export const CycleFormWidget: React.FC<{
             </TouchableOpacity>
           );
         })}
-      </ScrollView> */}
+      </ScrolView>  */}
       <View className=" ">
         <View>
           <CustomSelectData

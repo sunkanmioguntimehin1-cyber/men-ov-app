@@ -2,11 +2,13 @@ import CustomButton from "@/src/custom-components/CustomButton";
 import CustomSelectData from "@/src/custom-components/CustomSelectData";
 import { GradientFeatherIcon } from "@/src/custom-components/GradientIcon";
 import { rS, rV } from "@/src/lib/responsivehandler";
+import type { SymptomPayload } from "@/src/widgets/messageParser";
 import Slider from "@react-native-community/slider";
 import { format } from "date-fns";
 import { LinearGradient } from "expo-linear-gradient";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
+  Platform,
   StyleSheet,
   Text,
   TextInput,
@@ -17,6 +19,11 @@ import {
 
 const CARD_STYLE: ViewStyle = {
   backgroundColor: "white",
+  height: Platform.OS === "ios" ? null : rV(810),
+
+  // maxWidth: rS(260),
+  // width: rS(260),
+  // height: rV(670),
   borderRadius: 16,
   borderWidth: 1,
   borderColor: "rgba(107,85,145,0.15)",
@@ -66,17 +73,30 @@ export const SymptomFormWidget: React.FC<{
   messageId?: string;
   selectedDate?: string;
   handleDateBottomSheetOpen?: () => void;
+  initialSymptom?: SymptomPayload;
 }> = ({
   onSubmit,
   submitted = false,
   disabled,
   selectedDate = "",
   handleDateBottomSheetOpen,
+  initialSymptom,
 }) => {
   const [severity, setSeverity] = useState(5);
   const [selectedSymptoms, setSelectedSymptoms] = useState<string[]>([]);
   const [selectedTriggers, setSelectedTriggers] = useState<string[]>([]);
   const [note, setNote] = useState("");
+
+  useEffect(() => {
+    if (initialSymptom && submitted) {
+      setSelectedSymptoms(initialSymptom.symptoms || []);
+      if (initialSymptom.severity_level === "Mild") setSeverity(2);
+      else if (initialSymptom.severity_level === "Moderate") setSeverity(5);
+      else if (initialSymptom.severity_level === "Severe") setSeverity(8);
+      setSelectedTriggers(initialSymptom.triggers || []);
+      if (initialSymptom.notes) setNote(initialSymptom.notes);
+    }
+  }, [initialSymptom, submitted]);
 
   const toggleSymptom = (sym: string) => {
     if (submitted) return;

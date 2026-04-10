@@ -1,3 +1,4 @@
+import { rS, rV } from "@/src/lib/responsivehandler";
 import { LinearGradient } from "expo-linear-gradient";
 import React from "react";
 import {
@@ -48,8 +49,8 @@ export const ActionPills: React.FC<ActionPillsProps> = ({
         const isSelected = selectedButton === action;
         const isLocked = selectedButton !== undefined && !isSelected;
 
-        const BUTTON_WIDTH = 140;
-        const BUTTON_HEIGHT = 52;
+        const BUTTON_WIDTH = rS(120);
+        const BUTTON_HEIGHT = rV(40);
 
         return (
           <TouchableOpacity
@@ -57,7 +58,7 @@ export const ActionPills: React.FC<ActionPillsProps> = ({
             onPress={() => handlePress(action)}
             activeOpacity={0.8}
             disabled={disabled || selectedButton !== undefined}
-            style={{ width: BUTTON_WIDTH, height: BUTTON_HEIGHT }}
+            style={{ width: BUTTON_WIDTH, height: BUTTON_HEIGHT, padding: 2 }}
           >
             {isSelected ? (
               <LinearGradient

@@ -1,4 +1,5 @@
 import type { WidgetName } from "@/src/store/chatStore";
+import type { CyclePayload, SymptomPayload } from "@/src/widgets/messageParser";
 import { LinearGradient } from "expo-linear-gradient";
 import React from "react";
 import {
@@ -71,6 +72,9 @@ interface InlineWidgetProps {
   selectedDate?: string;
   handleDateBottomSheetOpen?: () => void;
   handleDurationBottomSheetOpen?: () => void;
+  initialDate?: string;
+  initialCycle?: CyclePayload;
+  initialSymptom?: SymptomPayload;
 }
 
 export const InlineWidget: React.FC<InlineWidgetProps> = ({
@@ -84,6 +88,9 @@ export const InlineWidget: React.FC<InlineWidgetProps> = ({
   durationData,
   handleDateBottomSheetOpen,
   handleDurationBottomSheetOpen,
+  initialDate,
+  initialCycle,
+  initialSymptom,
 }) => {
   return (
     <View style={style}>
@@ -93,6 +100,7 @@ export const InlineWidget: React.FC<InlineWidgetProps> = ({
           submitted={submitted}
           disabled={disabled}
           messageId={messageId}
+          initialDate={initialDate}
         />
       )}
       {type === "symptom_form" && (
@@ -103,6 +111,7 @@ export const InlineWidget: React.FC<InlineWidgetProps> = ({
           messageId={messageId}
           selectedDate={selectedDate}
           handleDateBottomSheetOpen={handleDateBottomSheetOpen}
+          initialSymptom={initialSymptom}
         />
       )}
       {type === "cycle_form" && (
@@ -115,6 +124,7 @@ export const InlineWidget: React.FC<InlineWidgetProps> = ({
           handleDurationBottomSheetOpen={handleDurationBottomSheetOpen}
           handleDateBottomSheetOpen={handleDateBottomSheetOpen}
           messageId={messageId}
+          initialCycle={initialCycle}
         />
       )}
     </View>

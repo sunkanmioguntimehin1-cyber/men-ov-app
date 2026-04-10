@@ -9,7 +9,6 @@ import { formatDistance, parseISO } from "date-fns";
 import { Image } from "expo-image";
 import { LinearGradient } from "expo-linear-gradient";
 import { useRouter } from "expo-router";
-import React from "react";
 import { ScrollView, Text, TouchableOpacity, View } from "react-native";
 
 const SummaryScreen = () => {
@@ -56,12 +55,13 @@ const SummaryScreen = () => {
 
   const getSymptomImage = (iconName: string) => {
     const symptom = symptomsData.find(
-      (item) => item.name.toLowerCase() === iconName.toLowerCase()
+      (item) => item.name.toLowerCase() === iconName.toLowerCase(),
     );
     return symptom?.img || require("@/assets/images/general.png");
   };
 
-  const aiInsight = "Your back pain often occurs on days with elevated stress";
+  const aiInsight =
+    "Ziena™ is learning your unique patterns — personalized insights will show up here soon.";
 
   return (
     <SafeScreen className="bg-white">

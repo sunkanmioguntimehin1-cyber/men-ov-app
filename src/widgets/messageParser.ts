@@ -12,6 +12,27 @@ export type WidgetName =
   | "management_tabs"
   | "resource";
 
+export interface CyclePayload {
+  type: "cycle";
+  start_date: string;
+  duration: string;
+  note?: string;
+}
+
+export interface SymptomPayload {
+  type: "symptom";
+  symptoms: string[];
+  severity_level: "Mild" | "Moderate" | "Severe";
+  date_logged: string;
+  triggers: string[];
+  notes?: string;
+}
+
+export interface WidgetSelectionResult {
+  widgetType: "date_picker" | "cycle_form" | "symptom_form";
+  payload: string | CyclePayload | SymptomPayload;
+}
+
 const ACTION_RE = /<<ACTIONS:\s*(\[.*?\])>>/g;
 const WIDGET_RE = /<<WIDGET:\s*([\w_]+(?::[\w\s\-]+)?)>>/g;
 const SELECTION_RE = /<<SELECTION:\[(.*?)\]>>/g;
@@ -79,4 +100,65 @@ export function extractSelection(raw: string): string | undefined {
 
 export function stripSelectionTag(raw: string): string {
   return raw.replace(/<<SELECTION:\[.*?\]>>\s*/g, "");
+}
+
+export function parseSystemPayload(payloadStr: string): Record<string, string> {
+  const result: Record<string, string> = {};
+  const parts = payloadStr.split("|").map((p) => p.trim());
+  for (const part of parts) {
+    const colonIdx = part.indexOf(":");
+    if (colonIdx !== -1) {
+      const key = part.substring(0, colonIdx).trim();
+      const val = part.substring(colonIdx + 1).trim();
+      result[key] = val;
+    }
+  }
+  return result;
+}
+
+export function parseWidgetSelection(raw: string): WidgetSelectionResult | undefined {
+  if (!raw) return undefined;
+
+  if (raw.match(/^\d{4}-\d{2}-\d{2}$/)) {
+    return { widgetType: "date_picker", payload: raw };
+  }
+
+  if (raw.includes("SYSTEM_PAYLOAD:")) {
+    const payloadMatch = raw.match(/\[SYSTEM_PAYLOAD:\s*(.*?)\]/s);
+    if (!payloadMatch) return undefined;
+    const payloadContent = payloadMatch[1];
+    const parsed = parseSystemPayload(payloadContent);
+    const widgetType = parsed["type"];
+
+    if (widgetType === "cycle") {
+      return {
+        widgetType: "cycle_form",
+        payload: {
+          type: "cycle",
+          start_date: parsed["start_date"] || "",
+          duration: parsed["duration"] || "",
+          note: parsed["note"] || "",
+        } as CyclePayload,
+      };
+    }
+
+    if (widgetType === "symptom") {
+      const symptomsStr = parsed["symptoms"] || "none";
+      const triggersStr = parsed["triggers"] || "none";
+      const severityStr = parsed["severity_level"] || "Moderate";
+      return {
+        widgetType: "symptom_form",
+        payload: {
+          type: "symptom",
+          symptoms: symptomsStr === "none" ? [] : symptomsStr.split(", ").map((s) => s.trim()),
+          severity_level: severityStr as "Mild" | "Moderate" | "Severe",
+          date_logged: parsed["date_logged"] || "",
+          triggers: triggersStr === "none" ? [] : triggersStr.split(", ").map((t) => t.trim()),
+          notes: parsed["notes"] || "",
+        } as SymptomPayload,
+      };
+    }
+  }
+
+  return undefined;
 }

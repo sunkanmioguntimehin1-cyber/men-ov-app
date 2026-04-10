@@ -10,8 +10,11 @@ import { TypingDots } from "@/src/custom-components/TypingDots";
 import Screen from "@/src/layout/Screen";
 import useChatStore, { WidgetName } from "@/src/store/chatStore";
 import {
+  CyclePayload,
+  SymptomPayload,
   extractSelection,
   parseMessage,
+  parseWidgetSelection,
   stripSelectionTag,
 } from "@/src/widgets/messageParser";
 import { MaterialIcons } from "@expo/vector-icons";
@@ -55,6 +58,9 @@ interface Message {
   selectedDate?: string;
   selectedCycle?: string;
   selectedSymptom?: string;
+  initialDate?: string;
+  initialCycle?: CyclePayload;
+  initialSymptom?: SymptomPayload;
   isHistory?: boolean;
 }
 
@@ -731,12 +737,18 @@ const ChatWithAi = () => {
           switch (segment.type) {
             case "text":
               return segment.content ? (
-                <View key={index}>{renderFormattedText(segment.content)}</View>
+                <View className=" pb-2" key={index}>
+                  {renderFormattedText(segment.content)}
+                </View>
               ) : null;
             case "actions":
               return (
-                <View key={index} style={{ marginTop: 12 }}>
-<ActionPills
+                <View
+                  className="  overflow-hidden py-4"
+                  key={index}
+                  style={{ marginTop: 12 }}
+                >
+                  <ActionPills
                     actions={segment.options}
                     messageId={message.id}
                     selectedButton={message.selectedAction}
@@ -747,14 +759,23 @@ const ChatWithAi = () => {
               );
             case "widget":
               return (
-                <View key={index} style={{ marginTop: 12 }}>
+                <View
+                  className="  overflow-hidden py-4"
+                  key={index}
+                  style={{ marginTop: 12, paddingVertical: 8 }}
+                >
                   <InlineWidget
                     type={segment.name}
                     messageId={message.id}
                     selectedDate={selectedDate}
                     durationData={durationData}
+                    initialDate={message.initialDate}
+                    initialCycle={message.initialCycle}
+                    initialSymptom={message.initialSymptom}
                     handleDurationBottomSheetOpen={
-                      message.isHistory ? undefined : handleDurationBottomSheetOpen
+                      message.isHistory
+                        ? undefined
+                        : handleDurationBottomSheetOpen
                     }
                     handleDateBottomSheetOpen={
                       message.isHistory ? undefined : handleDateBottomSheetOpen
@@ -796,6 +817,9 @@ const ChatWithAi = () => {
               messageId={message.id}
               selectedDate={selectedDate}
               durationData={durationData}
+              initialDate={message.initialDate}
+              initialCycle={message.initialCycle}
+              initialSymptom={message.initialSymptom}
               handleDurationBottomSheetOpen={
                 message.isHistory ? undefined : handleDurationBottomSheetOpen
               }
@@ -925,6 +949,34 @@ const ChatWithAi = () => {
         const date = formatDateHeader(fullDate);
         const selectedAction = extractSelection(msg.content);
 
+        const rawSelection = extractSelection(msg.content);
+        let selectedDate: string | undefined;
+        let selectedCycle: string | undefined;
+        let selectedSymptom: string | undefined;
+        let initialDate: string | undefined;
+        let initialCycle: CyclePayload | undefined;
+        let initialSymptom: SymptomPayload | undefined;
+
+        if (rawSelection) {
+          const parsed = parseWidgetSelection(rawSelection);
+          if (parsed) {
+            switch (parsed.widgetType) {
+              case "date_picker":
+                initialDate = parsed.payload as string;
+                selectedDate = parsed.payload as string;
+                break;
+              case "cycle_form":
+                initialCycle = parsed.payload as CyclePayload;
+                selectedCycle = rawSelection;
+                break;
+              case "symptom_form":
+                initialSymptom = parsed.payload as SymptomPayload;
+                selectedSymptom = rawSelection;
+                break;
+            }
+          }
+        }
+
         return {
           id: msg.id,
           text: msg.content,
@@ -933,6 +985,12 @@ const ChatWithAi = () => {
           date: date,
           fullDate: fullDate,
           selectedAction,
+          selectedDate,
+          selectedCycle,
+          selectedSymptom,
+          initialDate,
+          initialCycle,
+          initialSymptom,
           isHistory: true,
         };
       });
