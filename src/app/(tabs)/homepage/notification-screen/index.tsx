@@ -10,7 +10,7 @@ import { useNavigation } from "@react-navigation/native";
 import { useRouter } from "expo-router";
 import {
   ActivityIndicator,
-  ScrollView,
+  FlatList,
   Text,
   TouchableOpacity,
   View,
@@ -76,8 +76,6 @@ const NotificationScreen = () => {
 
   const getNotificationsDetails = useGetNotificationsApi();
   const updateNotificationData = useUpdateNotificationDetails();
-
-  console.log("getNotificationsDetails", getNotificationsDetails?.data?.data);
 
   // Function to get icon based on category
   const getCategoryIcon = (category: any) => {
@@ -170,71 +168,75 @@ const NotificationScreen = () => {
       </View>
 
       {/* Notifications List */}
-      <ScrollView className="flex-1">
-        {getNotificationsDetails.isLoading ? (
-          <View className="flex-1 items-center justify-center py-10">
-            <ActivityIndicator size="large" color="#9F3E83" />
-          </View>
-        ) : getNotificationsDetails?.data?.data.length === 0 ? (
-          <View className="flex-1 items-center justify-center py-10">
-            {/* <Ionicons
-              name="notifications-off-outline"
-              size={48}
-              color="#9CA3AF"
-            /> */}
-            <GradientIoniconsIcon
-              name="notifications-off-outline"
-              size={20}
-              gradientColors={["#6B5591", "#6E3F8C", "#853385", "#9F3E83"]}
-            />
-            <Text className="text-gray-400 font-[Poppins] mt-4">
-              No notifications yet
-            </Text>
-          </View>
-        ) : (
-          getNotificationsDetails?.data?.data.map((notification: any) => {
-            const iconConfig = getCategoryIcon(notification.notification_type);
+      <FlatList
+        data={getNotificationsDetails.data?.pages.flatMap((page: any) => page.data) || []}
+        keyExtractor={(item: any) => item.id}
+        renderItem={({ item: notification }) => {
+          const iconConfig = getCategoryIcon(notification.notification_type);
+          return (
+            <TouchableOpacity
+              className="flex-row px-5 py-4 border-b border-gray-100"
+              activeOpacity={0.7}
+              onPress={() => handleNotificationPress(notification)}
+            >
+              {/* Icon Container */}
+              <View className="relative w-10 h-10 rounded-full items-center justify-center mr-3">
+                {renderIcon(iconConfig.set, iconConfig.name, 24)}
+                {!notification.is_read && (
+                  <View className="absolute -top-0.5 -right-0.5 w-2.5 h-2.5 rounded-full bg-red-500 border-2 border-white" />
+                )}
+              </View>
 
-            return (
-              <TouchableOpacity
-                key={notification.id}
-                className="flex-row px-5 py-4 border-b border-gray-100"
-                activeOpacity={0.7}
-                onPress={() => handleNotificationPress(notification)}
-              >
-                {/* Icon Container */}
-                <View
-                  // style={{ backgroundColor: "#6E3F8C" }}
-                  className="w-10 h-10 rounded-full items-center justify-center mr-3"
-                >
-                  {renderIcon(iconConfig.set, iconConfig.name, 24)}
-                </View>
+              {/* Content */}
+              <View className="flex-1">
+                <Text className="text-sm font-[Poppins] text-gray-500 mb-2">
+                  {notification.chat_message ||
+                    notification.notification_text}
+                </Text>
 
-                {/* Content */}
-                <View className="flex-1">
-                  {/* <View className="flex-row items-start justify-between mb-1">
-                    <Text className="flex-1 text-sm font-[PoppinsMedium] text-gray-900 mr-2">
-                      {notification.notification_text}
-                    </Text>
-                    {!notification.is_read && (
-                      <View className="w-2 h-2 rounded-full bg-red-500 mt-1.5" />
-                    )}
-                  </View> */}
-
-                  <Text className="text-sm font-[Poppins] text-gray-500 mb-2">
-                    {notification.chat_message ||
-                      notification.notification_text}
-                  </Text>
-
-                  <Text className="text-xs font-[Poppins] text-gray-400">
-                    {getTimeAgo(notification.created_at)}
-                  </Text>
-                </View>
-              </TouchableOpacity>
-            );
-          })
-        )}
-      </ScrollView>
+                <Text className="text-xs font-[Poppins] text-gray-400">
+                  {getTimeAgo(notification.created_at)}
+                </Text>
+              </View>
+            </TouchableOpacity>
+          );
+        }}
+        ListEmptyComponent={
+          getNotificationsDetails.isLoading ? (
+            <View className="flex-1 items-center justify-center py-10">
+              <ActivityIndicator size="large" color="#9F3E83" />
+            </View>
+          ) : (
+            <View className="flex-1 items-center justify-center py-10">
+              <GradientIoniconsIcon
+                name="notifications-off-outline"
+                size={20}
+                gradientColors={["#6B5591", "#6E3F8C", "#853385", "#9F3E83"]}
+              />
+              <Text className="text-gray-400 font-[Poppins] mt-4">
+                No notifications yet
+              </Text>
+            </View>
+          )
+        }
+        ListFooterComponent={
+          getNotificationsDetails.hasNextPage ? (
+            <TouchableOpacity
+              className="py-4 items-center"
+              onPress={() => getNotificationsDetails.fetchNextPage()}
+              disabled={getNotificationsDetails.isFetchingNextPage}
+            >
+              {getNotificationsDetails.isFetchingNextPage ? (
+                <ActivityIndicator size="small" color="#9F3E83" />
+              ) : (
+                <Text className="text-[#9F3E83] font-[PoppinsMedium]">
+                  Load More
+                </Text>
+              )}
+            </TouchableOpacity>
+          ) : null
+        }
+      />
     </SafeScreen>
   );
 };

@@ -219,9 +219,9 @@ export default function HomePage() {
                     size={24}
                     color="black"
                   />
-                  {getNotificationsCount?.data?.unread > 0 && (
+                  {getNotificationsCount?.data?.unread > 0 ? (
                     <View className="absolute -top-1 -right-0 w-2 h-2 rounded-full bg-red-500" />
-                  )}
+                  ) : null}
                 </View>
               </TouchableOpacity>
 
