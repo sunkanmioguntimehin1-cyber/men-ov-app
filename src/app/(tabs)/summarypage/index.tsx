@@ -81,12 +81,12 @@ const SummaryScreen = () => {
             <MaterialIcons name="arrow-back-ios" size={24} color="black" />
           </TouchableOpacity>
           <Text className="text-lg font-[PoppinsSemiBold] text-black">
-            Summary
+            Insights
           </Text>
           <View />
         </View>
 
-        <View className="px-8 pb-8">
+        <View className="px-8">
           {isEmpty ? (
             /* 👉 Empty State UI - Only shows if BOTH are empty */
             <View className="items-center justify-center mt-20">
@@ -119,7 +119,7 @@ const SummaryScreen = () => {
             <>
               {/* Symptoms Section - Only shows if logs exist */}
               {logs.length > 0 && (
-                <View className="mb-8">
+                <View className="mb-4">
                   <Text className="text-lg font-[PoppinsSemiBold] text-black mb-4">
                     Symptoms summary
                   </Text>
@@ -186,7 +186,7 @@ const SummaryScreen = () => {
 
               {/* Cycle Summary Section - Only shows if cycle data exists */}
               {getCycleTracker.length > 0 && (
-                <View className="mb-8">
+                <View className="mb-4">
                   <Text className="text-lg font-[PoppinsSemiBold] text-black mb-4">
                     Cycle summary
                   </Text>
@@ -226,7 +226,7 @@ const SummaryScreen = () => {
         </View>
         {/* AI Insights - Only show if there are symptoms to talk about */}
 
-        <View className="px-8 pb-8  mb-6">
+        <View className="px-8 pb-8">
           <Text className="text-lg font-[PoppinsSemiBold] text-black mb-4">
             AI insights
           </Text>
