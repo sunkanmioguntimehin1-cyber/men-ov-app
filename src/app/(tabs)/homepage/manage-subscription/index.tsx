@@ -297,14 +297,14 @@ const ManageSubscription = () => {
   // 3. Format Price (e.g., "$0.99/mo")
   const priceLabel = useMemo(() => {
     if (!activeSubDetails?.price) return "—";
-    const { amount, currency } = activeSubDetails.price;
+    const { amount, currency } = activeSubDetails?.price;
 
     const formattedPrice = new Intl.NumberFormat("en-US", {
       style: "currency",
       currency: currency,
     }).format(amount);
 
-    const isAnnual = activeSubDetails.displayName
+    const isAnnual = activeSubDetails?.displayName
       ?.toLowerCase()
       .includes("annual");
     return `${formattedPrice}${isAnnual ? "/yr" : "/mo"}`;
@@ -398,12 +398,12 @@ const ManageSubscription = () => {
           // }
         >
           <GradientText>
-            {planName.toLowerCase().includes("annual")
+            {planName?.toLowerCase()?.includes("annual")
               ? "View other plans"
               : "Switch to annual"}
           </GradientText>
           <View className=" flex-row items-center">
-            {!planName.toLowerCase().includes("annual") && (
+            {!planName?.toLowerCase()?.includes("annual") && (
               <LinearGradient
                 colors={["#6B5591", "#6E3F8C", "#853385", "#9F3E83"]}
                 start={{ x: 0, y: 0 }}

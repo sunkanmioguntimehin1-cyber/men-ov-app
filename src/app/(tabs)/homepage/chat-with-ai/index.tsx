@@ -26,6 +26,7 @@ import * as Linking from "expo-linking";
 import { useRouter } from "expo-router";
 import { fetch } from "expo/fetch";
 import React, { useEffect, useMemo, useRef, useState } from "react";
+import { useQueryClient } from "@tanstack/react-query";
 import {
   ActivityIndicator,
   Animated,
@@ -69,6 +70,7 @@ const API_KEY = process.env.EXPO_PUBLIC_API_KEY;
 
 const ChatWithAi = () => {
   const router = useRouter();
+  const queryClient = useQueryClient();
   const [message, setMessage] = useState("");
   const [chatMessage, setChatMessage] = useState("");
   const [messageDatail, setMessageDatail] = useState<any>(null);
@@ -308,6 +310,8 @@ const ChatWithAi = () => {
                   fullDate,
                 });
 
+                queryClient.invalidateQueries({ queryKey: ["get-all-chat-history"] });
+
                 return "";
               });
 
@@ -354,6 +358,8 @@ const ChatWithAi = () => {
         date: date,
         fullDate: fullDate,
       });
+
+      queryClient.invalidateQueries({ queryKey: ["get-all-chat-history"] });
     }
   }
 

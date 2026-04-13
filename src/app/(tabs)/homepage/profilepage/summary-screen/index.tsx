@@ -9,7 +9,6 @@ import { formatDistance, parseISO } from "date-fns";
 import { Image } from "expo-image";
 import { LinearGradient } from "expo-linear-gradient";
 import { useRouter } from "expo-router";
-import React from "react";
 import { ScrollView, Text, TouchableOpacity, View } from "react-native";
 
 const SummaryScreen = () => {
@@ -52,7 +51,7 @@ const SummaryScreen = () => {
 
   const getSymptomImage = (iconName: string) => {
     const symptom = symptomsData.find(
-      (item) => item.name.toLowerCase() === iconName.toLowerCase()
+      (item) => item?.name?.toLowerCase() === iconName?.toLowerCase(),
     );
     return symptom?.img || require("@/assets/images/general.png");
   };
@@ -111,7 +110,11 @@ const SummaryScreen = () => {
                       colors={["#6B5591", "#6E3F8C", "#853385", "#9F3E83"]}
                       start={{ x: 0, y: 0 }}
                       end={{ x: 1, y: 1 }}
-                      style={{ borderRadius: 10, padding: 16, marginBottom: 10 }}
+                      style={{
+                        borderRadius: 10,
+                        padding: 16,
+                        marginBottom: 10,
+                      }}
                       className="rounded-xl p-4 mb-3"
                     >
                       <View className="flex-row items-center justify-between">
@@ -179,7 +182,11 @@ const SummaryScreen = () => {
                         colors={["#6B5591", "#6E3F8C", "#853385", "#9F3E83"]}
                         start={{ x: 0, y: 0 }}
                         end={{ x: 1, y: 1 }}
-                        style={{ borderRadius: 10, padding: 16, marginBottom: 10 }}
+                        style={{
+                          borderRadius: 10,
+                          padding: 16,
+                          marginBottom: 10,
+                        }}
                         className="rounded-xl p-4 mb-3"
                       >
                         <Text className="text-white font-[PoppinsSemiBold] text-base">

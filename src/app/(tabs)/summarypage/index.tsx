@@ -64,7 +64,7 @@ const SummaryScreen = () => {
 
   const getSymptomImage = (iconName: string) => {
     const symptom = symptomsData.find(
-      (item) => item.name.toLowerCase() === iconName.toLowerCase(),
+      (item) => item?.name?.toLowerCase() === iconName?.toLowerCase(),
     );
     return symptom?.img || require("@/assets/images/general.png");
   };
