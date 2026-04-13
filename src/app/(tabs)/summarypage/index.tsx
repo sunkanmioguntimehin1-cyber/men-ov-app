@@ -73,19 +73,21 @@ const SummaryScreen = () => {
     "Ziena™ is learning your unique patterns — personalized insights will show up here soon.";
 
   return (
-    <SafeScreen className="bg-white">
-      <ScrollView className="flex-1">
-        {/* Header */}
-        <View className="flex-row items-center justify-between px-8 py-4">
-          <TouchableOpacity onPress={() => router.back()}>
-            <MaterialIcons name="arrow-back-ios" size={24} color="black" />
-          </TouchableOpacity>
-          <Text className="text-lg font-[PoppinsSemiBold] text-black">
-            Insights
-          </Text>
-          <View />
-        </View>
-
+    <SafeScreen className=" bg-white">
+      {/* Header */}
+      <View className="flex-row items-center justify-between px-8 py-4">
+        <TouchableOpacity onPress={() => router.back()}>
+          <MaterialIcons name="arrow-back-ios" size={24} color="black" />
+        </TouchableOpacity>
+        <Text className="text-lg font-[PoppinsSemiBold] text-black">
+          Insights
+        </Text>
+        <View />
+      </View>
+      <ScrollView
+        className="flex-1"
+        contentContainerStyle={{ paddingBottom: 100 }} // Add it here
+      >
         <View className="px-8">
           {isEmpty ? (
             /* 👉 Empty State UI - Only shows if BOTH are empty */
