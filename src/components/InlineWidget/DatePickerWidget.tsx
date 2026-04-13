@@ -373,7 +373,7 @@ const TODAY = new Date();
 
 // Year range: 1900 to 2100
 const YEAR_START = 1900;
-const YEAR_END = 2100;
+const YEAR_END = TODAY.getFullYear();
 const YEARS = Array.from(
   { length: YEAR_END - YEAR_START + 1 },
   (_, i) => YEAR_START + i,
@@ -550,7 +550,7 @@ export const DatePickerWidget: React.FC<{
           >
             <MaterialIcons
               name="keyboard-arrow-left"
-              size={20}
+              size={24}
               color={
                 disabled || submitted || mode === "year" || year <= YEAR_START
                   ? "#CCC"
@@ -589,7 +589,7 @@ export const DatePickerWidget: React.FC<{
           </Text>
           <MaterialIcons
             name={mode === "year" ? "keyboard-arrow-up" : "keyboard-arrow-down"}
-            size={18}
+            size={24}
             color={PURPLE}
           />
         </TouchableOpacity>
@@ -621,7 +621,7 @@ export const DatePickerWidget: React.FC<{
           >
             <MaterialIcons
               name="keyboard-arrow-right"
-              size={20}
+              size={24}
               color={
                 disabled || submitted || mode === "year" || year >= YEAR_END
                   ? "#CCC"

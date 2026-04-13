@@ -1,3 +1,4 @@
+import { useCancelSubscriptionApi } from "@/src/api_services/payment/paymentMutation";
 import { GradientText } from "@/src/components/GradientText";
 import Screen from "@/src/layout/Screen";
 import { LinearGradient } from "expo-linear-gradient";
@@ -24,6 +25,7 @@ const REASONS = [
 
 const CancelSubscription = () => {
   const router = useRouter();
+  const cancelSubscription = useCancelSubscriptionApi();
   // const {
   //   currentOffering,
   //   customerInfo,
@@ -39,9 +41,12 @@ const CancelSubscription = () => {
   const handleSubmit = () => {
     if (!selectedReason) return;
     // Handle cancellation logic here
-    router.push(
-      "/homepage/manage-subscription/cancel-subscription/cancellation-page",
-    );
+
+    const requestBody = {
+      note: selectedReason,
+    };
+    cancelSubscription.mutate(requestBody);
+
     // e.g. Linking.openURL("https://apps.apple.com/account/subscriptions");
   };
 
@@ -144,7 +149,9 @@ const CancelSubscription = () => {
           style={{ height: 56 }}
           onPress={handleSubmit}
         >
-          <Text className="text-red-500 font-bold text-base">Submit</Text>
+          <Text className="text-red-500 font-bold text-base">
+            {cancelSubscription.isPending ? "Submitting..." : "Submit"}
+          </Text>
         </TouchableOpacity>
 
         {/* Keep my plan — gradient */}

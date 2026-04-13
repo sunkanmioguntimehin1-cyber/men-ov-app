@@ -265,7 +265,7 @@ const ManageSubscription = () => {
   const userId = getUserData?.data?.id;
   const { customerInfo, fetchCustomerInfo, isProMember } =
     useRevenueCat(userId);
-  const { openWebPaywall, isPurchasing, renderWebView } = useWebPaywall(fetchCustomerInfo);
+  const { openWebPaywall, isPurchasing } = useWebPaywall(fetchCustomerInfo);
 
   console.log("customerInfo400", customerInfo);
 
@@ -478,8 +478,6 @@ const ManageSubscription = () => {
           />
         }
       />
-
-      {renderWebView()}
     </Screen>
   );
 };

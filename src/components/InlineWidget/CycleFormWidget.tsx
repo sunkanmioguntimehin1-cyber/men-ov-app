@@ -4,7 +4,7 @@ import CustomSelectData from "@/src/custom-components/CustomSelectData";
 import { GradientFeatherIcon } from "@/src/custom-components/GradientIcon";
 import { rS, rV } from "@/src/lib/responsivehandler";
 import type { CyclePayload } from "@/src/widgets/messageParser";
-import { AntDesign } from "@expo/vector-icons";
+import { MaterialIcons } from "@expo/vector-icons";
 import { format } from "date-fns";
 import React, { useEffect, useState } from "react";
 import {
@@ -216,7 +216,11 @@ export const CycleFormWidget: React.FC<{
             value={durationData}
             icon={
               <TouchableOpacity onPress={() => {}}>
-                <AntDesign name="down" size={20} color="#1E1D2F" />
+                <MaterialIcons
+                  name={"keyboard-arrow-down"}
+                  size={24}
+                  color={"#1E1D2F"}
+                />
               </TouchableOpacity>
             }
           />

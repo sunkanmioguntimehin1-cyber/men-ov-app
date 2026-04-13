@@ -46,7 +46,6 @@ import Screen from "@/src/layout/Screen";
 import { Image } from "expo-image";
 import { useRouter } from "expo-router";
 import { ChevronLeft } from "lucide-react-native";
-import React from "react";
 import { ScrollView, Text, TouchableOpacity, View } from "react-native";
 
 const CancellationPage = () => {
@@ -88,9 +87,9 @@ const CancellationPage = () => {
         {/* Main Information Text */}
         <View className="   items-center mb-12">
           <Text className="text-[#5F6368] text-base text-center font-[PoppinsRegular] leading-7">
-            Your Plus access will remain active until [billing end date]. You
-            can continue enjoying all benefits until then, and you’re welcome
-            back anytime.
+            Your Plus access will remain active until billing end date. You can
+            continue enjoying all benefits until then, and you’re welcome back
+            anytime.
           </Text>
         </View>
 
@@ -98,7 +97,12 @@ const CancellationPage = () => {
         <View className=" flex-row items-center">
           <Text className="text-[#5F6368] text-base text-center font-[PoppinsRegular] leading-7">
             If you change your mind, you can resubscribe anytime from your {}
-            <Text className="text-[#6D28D9] font-[PoppinsSemibold] text-base mt-2">
+            <Text
+              className="text-[#6D28D9] font-[PoppinsSemibold] text-base mt-2"
+              onPress={() => {
+                router.replace("/(tabs)/homepage/profilepage");
+              }}
+            >
               Profile.
             </Text>
           </Text>
@@ -109,12 +113,14 @@ const CancellationPage = () => {
       {/* Bottom Contact Support Link */}
       <View className="absolute bottom-10 w-full items-center justify-center">
         <TouchableOpacity
-          //   onPress={() => router.push("/support")} // Adjust route as needed
+          // onPress={() => router.push("/support")} // Adjust route as needed
+          onPress={() => router.push("/homepage")}
           className="py-4 px-6"
           hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
         >
           <GradientText className=" font-[PoppinsSemibold] text-base underline">
-            Contact Support
+            {/* Contact Support */}
+            Back to homepage
           </GradientText>
         </TouchableOpacity>
       </View>
