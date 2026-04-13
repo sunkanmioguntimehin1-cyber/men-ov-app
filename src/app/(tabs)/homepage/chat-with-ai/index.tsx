@@ -62,7 +62,6 @@ interface Message {
   initialDate?: string;
   initialCycle?: CyclePayload;
   initialSymptom?: SymptomPayload;
-  isHistory?: boolean;
 }
 
 const STREAMING_BASE_URL = process.env.EXPO_PUBLIC_STREAMING_BASE_URL;
@@ -77,17 +76,10 @@ const ChatWithAi = () => {
   const { messages, setMessages, addMessage } = useChatStore();
   const [isNearBottom, setIsNearBottom] = useState(true);
 
-  // ✅ Find the last AI message with a widget or actions to keep it interactive
   const lastInteractiveMessageId = useMemo(() => {
     for (let i = messages.length - 1; i >= 0; i--) {
-      const msg = messages[i];
-      if (msg.isAi && msg.widget) {
-        return msg.id;
-      }
-      // Also check if the message text contains widget or actions segments
-      const segments = parseMessage(msg.text);
-      if (msg.isAi && segments.some((s) => s.type === "widget" || s.type === "actions")) {
-        return msg.id;
+      if (messages[i].isAi) {
+        return messages[i].id;
       }
     }
     return null;
@@ -776,8 +768,7 @@ const ChatWithAi = () => {
                     selectedButton={message.selectedAction}
                     onPress={(action) => handleActionPress(message.id, action)}
                     disabled={
-                      (message.isHistory &&
-                        message.id !== lastInteractiveMessageId) ||
+                      message.id !== lastInteractiveMessageId ||
                       !!message.selectedAction
                     }
                   />
@@ -799,12 +790,12 @@ const ChatWithAi = () => {
                     initialCycle={message.initialCycle}
                     initialSymptom={message.initialSymptom}
                     handleDurationBottomSheetOpen={
-                      message.isHistory && message.id !== lastInteractiveMessageId
+                      message.id !== lastInteractiveMessageId
                         ? undefined
                         : handleDurationBottomSheetOpen
                     }
                     handleDateBottomSheetOpen={
-                      message.isHistory && message.id !== lastInteractiveMessageId
+                      message.id !== lastInteractiveMessageId
                         ? undefined
                         : handleDateBottomSheetOpen
                     }
@@ -819,15 +810,13 @@ const ChatWithAi = () => {
                             : handleWidgetSubmit(message.id)
                     }
                     submitted={
-                      (message.isHistory &&
-                        message.id !== lastInteractiveMessageId) ||
+                      message.id !== lastInteractiveMessageId ||
                       !!message.selectedDate ||
                       !!message.selectedCycle ||
                       !!message.selectedSymptom
                     }
                     disabled={
-                      (message.isHistory &&
-                        message.id !== lastInteractiveMessageId) ||
+                      message.id !== lastInteractiveMessageId ||
                       !!message.selectedDate ||
                       !!message.selectedCycle ||
                       !!message.selectedSymptom
@@ -851,12 +840,12 @@ const ChatWithAi = () => {
               initialCycle={message.initialCycle}
               initialSymptom={message.initialSymptom}
               handleDurationBottomSheetOpen={
-                message.isHistory && message.id !== lastInteractiveMessageId
+                message.id !== lastInteractiveMessageId
                   ? undefined
                   : handleDurationBottomSheetOpen
               }
               handleDateBottomSheetOpen={
-                message.isHistory && message.id !== lastInteractiveMessageId
+                message.id !== lastInteractiveMessageId
                   ? undefined
                   : handleDateBottomSheetOpen
               }
@@ -870,15 +859,13 @@ const ChatWithAi = () => {
                       : handleWidgetSubmit(message.id)
               }
               submitted={
-                (message.isHistory &&
-                  message.id !== lastInteractiveMessageId) ||
+                message.id !== lastInteractiveMessageId ||
                 !!message.selectedDate ||
                 !!message.selectedCycle ||
                 !!message.selectedSymptom
               }
               disabled={
-                (message.isHistory &&
-                  message.id !== lastInteractiveMessageId) ||
+                message.id !== lastInteractiveMessageId ||
                 !!message.selectedDate ||
                 !!message.selectedCycle ||
                 !!message.selectedSymptom
@@ -970,6 +957,8 @@ const ChatWithAi = () => {
   useEffect(() => {
     let isMounted = true;
 
+    useChatStore.getState().clearMessages();
+
     if (
       getAllChatAiHistory.data?.messages &&
       Array.isArray(getAllChatAiHistory.data.messages)
@@ -1027,7 +1016,6 @@ const ChatWithAi = () => {
           initialDate,
           initialCycle,
           initialSymptom,
-          isHistory: true,
         };
       });
 
