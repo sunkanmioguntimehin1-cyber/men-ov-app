@@ -20,13 +20,13 @@ import {
 import { MaterialIcons } from "@expo/vector-icons";
 import BottomSheet from "@gorhom/bottom-sheet";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useQueryClient } from "@tanstack/react-query";
 import { Image } from "expo-image";
 import { LinearGradient } from "expo-linear-gradient";
 import * as Linking from "expo-linking";
 import { useRouter } from "expo-router";
 import { fetch } from "expo/fetch";
 import React, { useEffect, useMemo, useRef, useState } from "react";
-import { useQueryClient } from "@tanstack/react-query";
 import {
   ActivityIndicator,
   Animated,
@@ -302,7 +302,9 @@ const ChatWithAi = () => {
                   fullDate,
                 });
 
-                queryClient.invalidateQueries({ queryKey: ["get-all-chat-history"] });
+                queryClient.invalidateQueries({
+                  queryKey: ["get-all-chat-history"],
+                });
 
                 return "";
               });

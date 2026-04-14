@@ -36,7 +36,8 @@ export interface WidgetSelectionResult {
 const ACTION_RE = /<<ACTIONS:\s*(\[.*?\])>>/g;
 const WIDGET_RE = /<<WIDGET:\s*([\w_]+(?::[\w\s\-]+)?)>>/g;
 const SELECTION_RE = /<<SELECTION:\[(.*?)\]>>/g;
-const SPLIT_RE = /<<(?:ACTIONS:\s*\[.*?\]|WIDGET:\s*[\w_]+(?::[\w\s\-]+)?|SELECTION:\[.*?\])>>/g;
+const SPLIT_RE =
+  /<<(?:ACTIONS:\s*\[.*?\]|WIDGET:\s*[\w_]+(?::[\w\s\-]+)?|SELECTION:\[.*?\])>>/g;
 
 export function parseMessage(raw: string): MessageSegment[] {
   const segments: MessageSegment[] = [];
@@ -116,7 +117,9 @@ export function parseSystemPayload(payloadStr: string): Record<string, string> {
   return result;
 }
 
-export function parseWidgetSelection(raw: string): WidgetSelectionResult | undefined {
+export function parseWidgetSelection(
+  raw: string,
+): WidgetSelectionResult | undefined {
   if (!raw) return undefined;
 
   if (raw.match(/^\d{4}-\d{2}-\d{2}$/)) {
@@ -150,10 +153,16 @@ export function parseWidgetSelection(raw: string): WidgetSelectionResult | undef
         widgetType: "symptom_form",
         payload: {
           type: "symptom",
-          symptoms: symptomsStr === "none" ? [] : symptomsStr.split(", ").map((s) => s.trim()),
+          symptoms:
+            symptomsStr === "none"
+              ? []
+              : symptomsStr.split(", ").map((s) => s.trim()),
           severity_level: severityStr as "Mild" | "Moderate" | "Severe",
           date_logged: parsed["date_logged"] || "",
-          triggers: triggersStr === "none" ? [] : triggersStr.split(", ").map((t) => t.trim()),
+          triggers:
+            triggersStr === "none"
+              ? []
+              : triggersStr.split(", ").map((t) => t.trim()),
           notes: parsed["notes"] || "",
         } as SymptomPayload,
       };
