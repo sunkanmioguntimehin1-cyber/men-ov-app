@@ -1547,9 +1547,18 @@ const ChatWithAi = () => {
   const [isNearBottom, setIsNearBottom] = useState(true);
 
   const [quotaInfo, setQuotaInfo] = React.useState<QuotaInfo | null>(null);
-  const isQuotaExhausted = quotaInfo?.status === "exhausted";
+  
+  const isQuotaReset = React.useMemo(() => {
+    if (!quotaInfo?.resets) return false;
+    const resetTime = new Date(quotaInfo.resets).getTime();
+    const now = Date.now();
+    return now >= resetTime;
+  }, [quotaInfo?.resets]);
+
+  const isQuotaExhausted = quotaInfo?.status === "exhausted" && !isQuotaReset;
 
   console.log("isQuotaExhausted:", isQuotaExhausted);
+  console.log("isQuotaReset:", isQuotaReset);
   console.log("quotaInfo2000:", quotaInfo);
 
   const lastInteractiveMessageId = useMemo(() => {
@@ -2519,16 +2528,16 @@ const ChatWithAi = () => {
         };
       });
 
-      const quotaMsg = [...serverMessages]
-        .reverse()
-        .find(
+const quotaMessages = serverMessages.filter(
           (msg: any) =>
-            msg.role === "assistant" && msg.content?.includes("<<QUOTA:"),
+            msg.role === "assistant" && msg.content?.includes("<<QUOTA:")
         );
-      if (quotaMsg) {
-        const q = extractQuota(quotaMsg.content);
-        if (q) setQuotaInfo(q);
-      }
+        // Server messages are returned newest‑first, so the first match is the newest quota.
+        const quotaMsg = quotaMessages.length ? quotaMessages[0] : undefined;
+        if (quotaMsg) {
+          const q = extractQuota(quotaMsg.content);
+          if (q) setQuotaInfo(q);
+        }
 
       transformedMessages.sort(
         (a, b) => a.fullDate.getTime() - b.fullDate.getTime(),
