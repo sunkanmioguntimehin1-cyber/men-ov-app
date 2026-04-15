@@ -245,9 +245,12 @@
 
 // export default ManageSubscription;
 
+import { useManageSubscriptionApi } from "@/src/api_services/payment/paymentMutation";
 import { useGetUser } from "@/src/api_services/userApi/userQuery";
 import { GradientText } from "@/src/components/GradientText";
+import SwitchPlanModal from "@/src/components/SwitchPlanModal";
 import BottomSheetScreen from "@/src/custom-components/BottomSheetScreen";
+import CustomModel from "@/src/custom-components/CustomModel";
 import useRevenueCat from "@/src/hooks/useRevenueCat";
 import useWebPaywall from "@/src/hooks/useWebPaywall";
 import Screen from "@/src/layout/Screen";
@@ -261,11 +264,27 @@ import ManageSubscriptionBottonSheet from "./ManageSubscriptionBottonSheet";
 
 const ManageSubscription = () => {
   const router = useRouter();
+  const [modelVisible, setModelVisible] = React.useState(false);
+
   const getUserData = useGetUser();
   const userId = getUserData?.data?.id;
   const { customerInfo, fetchCustomerInfo, isProMember } =
     useRevenueCat(userId);
-  const { openWebPaywall, isPurchasing, renderWebView } = useWebPaywall(fetchCustomerInfo);
+  const { openWebPaywall, isPurchasing } = useWebPaywall(fetchCustomerInfo);
+
+  const handleOpenModal = () => {
+    setModelVisible(true);
+  };
+
+  const onCancel = () => {
+    router.replace("/homepage");
+    setModelVisible(false);
+  };
+  const handleSwitchPlan = () => {
+    manageSubscription.mutate();
+  };
+
+  const manageSubscription = useManageSubscriptionApi(handleOpenModal);
 
   console.log("customerInfo400", customerInfo);
 
@@ -297,14 +316,14 @@ const ManageSubscription = () => {
   // 3. Format Price (e.g., "$0.99/mo")
   const priceLabel = useMemo(() => {
     if (!activeSubDetails?.price) return "—";
-    const { amount, currency } = activeSubDetails.price;
+    const { amount, currency } = activeSubDetails?.price;
 
     const formattedPrice = new Intl.NumberFormat("en-US", {
       style: "currency",
       currency: currency,
     }).format(amount);
 
-    const isAnnual = activeSubDetails.displayName
+    const isAnnual = activeSubDetails?.displayName
       ?.toLowerCase()
       .includes("annual");
     return `${formattedPrice}${isAnnual ? "/yr" : "/mo"}`;
@@ -321,9 +340,21 @@ const ManageSubscription = () => {
       })
     : "—";
 
+  // 4. Format Renewal/Expiration Date
+  const cancelledDate = activeSubDetails?.unsubscribe_detected_at;
+  const formattedCancelDate = cancelledDate
+    ? new Date(cancelledDate).toLocaleDateString("en-US", {
+        day: "2-digit",
+        month: "short",
+        year: "numeric",
+      })
+    : "—";
+
   // 5. Determine Status & Cancellation
   // If unsubscribe_detected_at exists, they have turned off auto-renew
-  const isCancelled = !!activeSubDetails?.unsubscribeDetectedAt;
+  const isCancelled = !!activeSubDetails?.unsubscribe_detected_at;
+
+  const statusActive = getUserData?.data?.billingAction?.type === "cancel";
 
   const statusLabel = isCancelled
     ? "Cancelled"
@@ -355,6 +386,17 @@ const ManageSubscription = () => {
 
   return (
     <Screen contentClassName="px-4 pb-10 flex-1 ">
+      <CustomModel
+        modelVisible={modelVisible}
+        setModelVisible={setModelVisible}
+        closeOnOutsideClick={false}
+        message={
+          <SwitchPlanModal
+            manageSubscription={manageSubscription}
+            onCancel={onCancel}
+          />
+        }
+      />
       {/* Header */}
       <View className="flex-row items-center py-4">
         <TouchableOpacity className="p-2" onPress={() => router.back()}>
@@ -375,7 +417,16 @@ const ManageSubscription = () => {
 
             <Row label="Plan Name" value={planName} />
             <Row label="Price" value={priceLabel} />
-            <Row label="Renewal date" value={formattedDate} isLast={false} />
+            {formattedCancelDate && (
+              <Row
+                label="Cancelled date"
+                value={formattedCancelDate}
+                isLast={false}
+              />
+            )}
+            {formattedDate && (
+              <Row label="Renewal date" value={formattedDate} isLast={false} />
+            )}
             <Row
               label="Status"
               value={statusLabel}
@@ -390,20 +441,22 @@ const ManageSubscription = () => {
       </View>
 
       {/* Switch Plan / Upsell Logic */}
-      {!isProMember || planName.includes("No Active Plan") ? null : (
+
+      {/* {!isProMember || planName.includes("No Active Plan") ? null : (
         <TouchableOpacity
           className="mt-6 flex-row items-center justify-between gap-2 px-4 py-3 border border-slate-200 rounded-2xl"
           // onPress={() =>
           //   router.push("/homepage/manage-subscription/choose-your-plan")
           // }
+          onPress={handleSwitchPlan}
         >
           <GradientText>
-            {planName.toLowerCase().includes("annual")
+            {planName?.toLowerCase()?.includes("annual")
               ? "View other plans"
               : "Switch to annual"}
           </GradientText>
           <View className=" flex-row items-center">
-            {!planName.toLowerCase().includes("annual") && (
+            {!planName?.toLowerCase()?.includes("annual") && (
               <LinearGradient
                 colors={["#6B5591", "#6E3F8C", "#853385", "#9F3E83"]}
                 start={{ x: 0, y: 0 }}
@@ -424,22 +477,84 @@ const ManageSubscription = () => {
             </View>
           </View>
         </TouchableOpacity>
-      )}
+      )} */}
 
+      {getUserData?.data?.billingAction?.startedAt ? (
+        <Pressable className="mt-6 flex-row items-center justify-between gap-2 px-4 py-3 border border-slate-200 rounded-2xl">
+          <GradientText>Your request is pending</GradientText>
+          <View className=" flex-row items-center">
+            <LinearGradient
+              colors={["#6B5591", "#6E3F8C", "#853385", "#9F3E83"]}
+              start={{ x: 0, y: 0 }}
+              end={{ x: 1, y: 1 }}
+              style={{
+                paddingHorizontal: 16,
+                paddingVertical: 4,
+                borderRadius: 999,
+              }}
+            >
+              <Text className="font-[PoppinsSemiBold] text-white text-sm">
+                Pending
+              </Text>
+            </LinearGradient>
+          </View>
+        </Pressable>
+      ) : (
+        isProMember &&
+        !isCancelled && (
+          <TouchableOpacity
+            className="mt-6 flex-row items-center justify-between gap-2 px-4 py-3 border border-slate-200 rounded-2xl"
+            // onPress={() =>
+            //   router.push("/homepage/manage-subscription/choose-your-plan")
+            // }
+            onPress={handleSwitchPlan}
+          >
+            <GradientText>
+              {planName?.toLowerCase()?.includes("annual")
+                ? "View other plans"
+                : "Switch to annual"}
+            </GradientText>
+            <View className=" flex-row items-center">
+              {!planName?.toLowerCase()?.includes("annual") && (
+                <LinearGradient
+                  colors={["#6B5591", "#6E3F8C", "#853385", "#9F3E83"]}
+                  start={{ x: 0, y: 0 }}
+                  end={{ x: 1, y: 1 }}
+                  style={{
+                    paddingHorizontal: 16,
+                    paddingVertical: 4,
+                    borderRadius: 999,
+                  }}
+                >
+                  <Text className="font-[PoppinsSemiBold] text-white text-sm">
+                    Save 20%
+                  </Text>
+                </LinearGradient>
+              )}
+              <View className="ml-2">
+                <ChevronRight color="#1A1C1E" size={24} />
+              </View>
+            </View>
+          </TouchableOpacity>
+        )
+      )}
       <View className="flex-1" />
 
       {/* Actions */}
-      <View className="flex-row gap-4 pt-4 pb-10 w-full">
-        {isProMember && !isCancelled && (
-          <TouchableOpacity
-            className="flex-1 border-2 border-red-500 rounded-2xl items-center justify-center"
-            style={{ height: 56 }}
-            onPress={handleManageBottomSheetOpen}
-          >
-            <Text className="text-red-500 font-bold text-base">Cancel</Text>
-          </TouchableOpacity>
-        )}
 
+      <View className="flex-row gap-4 pt-4 pb-10 w-full">
+        {getUserData?.data?.billingAction?.startedAt
+          ? null
+          : isProMember &&
+            !isCancelled && (
+              <TouchableOpacity
+                className="flex-1 border-2 border-red-500 rounded-2xl items-center justify-center"
+                style={{ height: 56 }}
+                onPress={handleManageBottomSheetOpen}
+              >
+                <Text className="text-red-500 font-bold text-base">Cancel</Text>
+              </TouchableOpacity>
+            )}
         <Pressable
           className="flex-1"
           // onPress={() =>
@@ -478,8 +593,6 @@ const ManageSubscription = () => {
           />
         }
       />
-
-      {renderWebView()}
     </Screen>
   );
 };

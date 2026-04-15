@@ -118,7 +118,6 @@ import { truncateSimple } from "@/src/lib/truncateSimple";
 import { Image } from "expo-image";
 import { LinearGradient } from "expo-linear-gradient";
 import { useRouter } from "expo-router";
-import React from "react";
 import {
   Platform,
   ScrollView,
@@ -157,7 +156,7 @@ const YourLastSymptoms = ({ handleOpenLastSymptoms }: any) => {
   // Helper function to get the symptom image
   const getSymptomImage = (iconName: string) => {
     const symptom = symptomsData.find(
-      (item) => item.name.toLowerCase() === iconName.toLowerCase()
+      (item) => item?.name?.toLowerCase() === iconName?.toLowerCase(),
     );
     return symptom?.img || require("@/assets/images/general.png");
   };

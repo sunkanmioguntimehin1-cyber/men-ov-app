@@ -2,14 +2,16 @@ import {
   useCycleTrackingApi,
   useGetLogApi,
 } from "@/src/api_services/logApi/logQuery";
-import { useGetIntakeDetails } from "@/src/api_services/userApi/userQuery";
+import {
+  useGetIntakeDetails,
+  useGetUser,
+} from "@/src/api_services/userApi/userQuery";
 import SafeScreen from "@/src/components/SafeScreen";
 import { MaterialCommunityIcons, MaterialIcons } from "@expo/vector-icons";
 import { formatDistance, parseISO } from "date-fns";
 import { Image } from "expo-image";
 import { LinearGradient } from "expo-linear-gradient";
 import { useRouter } from "expo-router";
-import React from "react";
 import { ScrollView, Text, TouchableOpacity, View } from "react-native";
 
 const SummaryScreen = () => {
@@ -17,6 +19,12 @@ const SummaryScreen = () => {
   const getAllLog = useGetLogApi();
   const getCycleTracking = useCycleTrackingApi();
   const getIntakeDetails = useGetIntakeDetails();
+  const getUserData = useGetUser();
+
+  console.log(
+    " getUserData.data.menopauseStage234:",
+    getUserData.data.menopauseStage,
+  );
 
   const SeverityLevelData = [
     { level: "lvl 1", levelColor: "#20D72A", badgeColor: "#D7CE20" },
@@ -56,28 +64,31 @@ const SummaryScreen = () => {
 
   const getSymptomImage = (iconName: string) => {
     const symptom = symptomsData.find(
-      (item) => item.name.toLowerCase() === iconName.toLowerCase()
+      (item) => item?.name?.toLowerCase() === iconName?.toLowerCase(),
     );
     return symptom?.img || require("@/assets/images/general.png");
   };
 
-  const aiInsight = "Your back pain often occurs on days with elevated stress";
+  const aiInsight =
+    "Ziena™ is learning your unique patterns — personalized insights will show up here soon.";
 
   return (
-    <SafeScreen className="bg-white">
-      <ScrollView className="flex-1">
-        {/* Header */}
-        <View className="flex-row items-center justify-between px-8 py-4">
-          <TouchableOpacity onPress={() => router.back()}>
-            <MaterialIcons name="arrow-back-ios" size={24} color="black" />
-          </TouchableOpacity>
-          <Text className="text-lg font-[PoppinsSemiBold] text-black">
-            Summary
-          </Text>
-          <View />
-        </View>
-
-        <View className="px-8 pb-8">
+    <SafeScreen className=" bg-white">
+      {/* Header */}
+      <View className="flex-row items-center justify-between px-8 py-4">
+        <TouchableOpacity onPress={() => router.back()}>
+          <MaterialIcons name="arrow-back-ios" size={24} color="black" />
+        </TouchableOpacity>
+        <Text className="text-lg font-[PoppinsSemiBold] text-black">
+          Insights
+        </Text>
+        <View />
+      </View>
+      <ScrollView
+        className="flex-1"
+        contentContainerStyle={{ paddingBottom: 100 }} // Add it here
+      >
+        <View className="px-8">
           {isEmpty ? (
             /* 👉 Empty State UI - Only shows if BOTH are empty */
             <View className="items-center justify-center mt-20">
@@ -110,9 +121,9 @@ const SummaryScreen = () => {
             <>
               {/* Symptoms Section - Only shows if logs exist */}
               {logs.length > 0 && (
-                <View className="mb-8">
+                <View className="mb-4">
                   <Text className="text-lg font-[PoppinsSemiBold] text-black mb-4">
-                    How do you Feel today?
+                    Symptoms summary
                   </Text>
                   {logs.map((symptom: any) => (
                     <LinearGradient
@@ -163,9 +174,21 @@ const SummaryScreen = () => {
                 </View>
               )}
 
+              {/* Menopause Stage Section */}
+              {getUserData.data?.menopauseStage && (
+                <View className="mb-4">
+                  <Text className="text-lg font-[PoppinsSemiBold] text-black">
+                    Current Stage
+                  </Text>
+                  <Text className=" text-base">
+                    {getUserData.data.menopauseStage}
+                  </Text>
+                </View>
+              )}
+
               {/* Cycle Summary Section - Only shows if cycle data exists */}
               {getCycleTracker.length > 0 && (
-                <View className="mb-8">
+                <View className="mb-4">
                   <Text className="text-lg font-[PoppinsSemiBold] text-black mb-4">
                     Cycle summary
                   </Text>
@@ -173,8 +196,9 @@ const SummaryScreen = () => {
                     const distance = item?.start
                       ? formatDistance(parseISO(item.start), new Date(), {
                           addSuffix: true,
-                        })
+                        }).replace(/^(about|almost|over)\s+/i, "")
                       : "N/A";
+
                     return (
                       <LinearGradient
                         key={item.id}
@@ -186,38 +210,39 @@ const SummaryScreen = () => {
                         }}
                       >
                         <Text className="text-white font-[PoppinsSemiBold] text-base">
-                          {item.menopauseStage}
+                          {/* {item.menopauseStage} */}
+                          {distance}
                         </Text>
-                        <Text className="text-white text-[10px] mt-1">
-                          Last period {distance}
-                        </Text>
+                        {item.duration && (
+                          <Text className="text-white text-[10px] mt-1">
+                            Lasted {item.duration} days
+                          </Text>
+                        )}
                       </LinearGradient>
                     );
                   })}
                 </View>
               )}
-
-              {/* AI Insights - Only show if there are symptoms to talk about */}
-              {logs.length > 0 && (
-                <View className="mb-8">
-                  <Text className="text-lg font-[PoppinsSemiBold] text-black mb-4">
-                    AI insights
-                  </Text>
-                  <View className="bg-white border border-gray-200 rounded-xl p-4 flex-row items-center">
-                    <MaterialCommunityIcons
-                      name="lightbulb-on-outline"
-                      size={24}
-                      color="#712A87"
-                      style={{ marginRight: 12 }}
-                    />
-                    <Text className="text-gray-700 text-sm flex-1 font-[PoppinsMedium]">
-                      {aiInsight}
-                    </Text>
-                  </View>
-                </View>
-              )}
             </>
           )}
+        </View>
+        {/* AI Insights - Only show if there are symptoms to talk about */}
+
+        <View className="px-8 pb-8">
+          <Text className="text-lg font-[PoppinsSemiBold] text-black mb-4">
+            AI insights
+          </Text>
+          <View className="bg-white border border-gray-200 rounded-xl p-4 flex-row items-center">
+            <MaterialCommunityIcons
+              name="lightbulb-on-outline"
+              size={24}
+              color="#712A87"
+              style={{ marginRight: 12 }}
+            />
+            <Text className="text-gray-700 text-sm flex-1 font-[PoppinsMedium]">
+              {aiInsight}
+            </Text>
+          </View>
         </View>
       </ScrollView>
     </SafeScreen>

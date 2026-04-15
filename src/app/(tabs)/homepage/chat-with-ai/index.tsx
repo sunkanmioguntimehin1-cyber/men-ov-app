@@ -1,25 +1,39 @@
 import { useGetAllChatAiHistory } from "@/src/api_services/chatApi/chatQuery";
+import { ActionPills } from "@/src/components/ActionPills";
+import { InlineWidget } from "@/src/components/InlineWidget";
+import Duration from "@/src/components/tabs/home-modal/CycleTracking/logCycleBottomSheet/Duration";
+import StartDateBottomSheet from "@/src/components/tabs/home-modal/CycleTracking/logCycleBottomSheet/StartDateBottomSheet";
+import BottomSheetScreen from "@/src/custom-components/BottomSheetScreen";
 import CustomInput from "@/src/custom-components/CustomInput";
 import { GradientMaterialIcon } from "@/src/custom-components/GradientIcon";
 import { TypingDots } from "@/src/custom-components/TypingDots";
 import Screen from "@/src/layout/Screen";
 import useChatStore, { WidgetName } from "@/src/store/chatStore";
-import { parseMessage, MessageSegment } from "@/src/widgets/messageParser";
-import { ActionPills } from "@/src/components/ActionPills";
-import { InlineWidget } from "@/src/components/InlineWidget";
+import {
+  CyclePayload,
+  SymptomPayload,
+  extractSelection,
+  parseMessage,
+  parseWidgetSelection,
+  stripSelectionTag,
+} from "@/src/widgets/messageParser";
 import { MaterialIcons } from "@expo/vector-icons";
+import BottomSheet from "@gorhom/bottom-sheet";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useQueryClient } from "@tanstack/react-query";
 import { Image } from "expo-image";
 import { LinearGradient } from "expo-linear-gradient";
+import * as Linking from "expo-linking";
 import { useRouter } from "expo-router";
 import { fetch } from "expo/fetch";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import {
   ActivityIndicator,
   Animated,
   AppState,
   ImageBackground,
   KeyboardAvoidingView,
+  // Linking,
   NativeScrollEvent,
   NativeSyntheticEvent,
   Platform,
@@ -30,7 +44,7 @@ import {
   useWindowDimensions,
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import Linking from "react-native/Libraries/Linking/Linking";
+// import Linking from "react-native/Libraries/Linking/Linking";
 
 interface Message {
   id: string;
@@ -41,6 +55,13 @@ interface Message {
   fullDate: Date;
   widget?: WidgetName;
   widgetPayload?: string;
+  selectedAction?: string;
+  selectedDate?: string;
+  selectedCycle?: string;
+  selectedSymptom?: string;
+  initialDate?: string;
+  initialCycle?: CyclePayload;
+  initialSymptom?: SymptomPayload;
 }
 
 const STREAMING_BASE_URL = process.env.EXPO_PUBLIC_STREAMING_BASE_URL;
@@ -48,13 +69,27 @@ const API_KEY = process.env.EXPO_PUBLIC_API_KEY;
 
 const ChatWithAi = () => {
   const router = useRouter();
+  const queryClient = useQueryClient();
   const [message, setMessage] = useState("");
   const [chatMessage, setChatMessage] = useState("");
   const [messageDatail, setMessageDatail] = useState<any>(null);
   const { messages, setMessages, addMessage } = useChatStore();
   const [isNearBottom, setIsNearBottom] = useState(true);
+
+  const lastInteractiveMessageId = useMemo(() => {
+    for (let i = messages.length - 1; i >= 0; i--) {
+      if (messages[i].isAi) {
+        return messages[i].id;
+      }
+    }
+    return null;
+  }, [messages]);
   const [hasLoadedInitially, setHasLoadedInitially] = useState(false);
   const [showScrollButton, setShowScrollButton] = useState(false);
+
+  const [selectedDate, setSelectedDate] = React.useState(null);
+  const [durationData, setDurationData] = React.useState("");
+  const [selectedSymptomDate, setSelectedSymptomDate] = React.useState(null);
 
   // ✅ Separate streaming state with typing animation
   const [streamingText, setStreamingText] = useState("");
@@ -75,10 +110,30 @@ const ChatWithAi = () => {
   const lastChatMessageRef = useRef("");
 
   const getAllChatAiHistory = useGetAllChatAiHistory();
+  // console.log("getAllChatAiHistory", getAllChatAiHistory?.data);
 
   const scrollViewRef = useRef<ScrollView>(null);
   const insets = useSafeAreaInsets();
   const { width } = useWindowDimensions();
+
+  // all the bottom sheet handler
+  const snapPoints = useMemo(() => ["30%", "50%"], []);
+
+  const datebottomSheetRef = React.useRef<BottomSheet>(null);
+  const handleDateBottomSheetOpen = () => datebottomSheetRef.current?.expand();
+  const handleDateBottomSheetClose = () => datebottomSheetRef.current?.close();
+
+  const dateSymptomBottomSheetRef = React.useRef<BottomSheet>(null);
+  const handleDateSymptomBottomSheetOpen = () =>
+    dateSymptomBottomSheetRef.current?.expand();
+  const handleDateSymptomBottomSheetClose = () =>
+    dateSymptomBottomSheetRef.current?.close();
+
+  const durationBottomSheetRef = React.useRef<BottomSheet>(null);
+  const handleDurationBottomSheetOpen = () =>
+    durationBottomSheetRef.current?.expand();
+  const handleDurationBottomSheetClose = () =>
+    durationBottomSheetRef.current?.close();
 
   // ✅ Track app state to prevent re-fetching when returning from background
   useEffect(() => {
@@ -172,6 +227,8 @@ const ChatWithAi = () => {
     isTypingRef.current = false;
   };
 
+  console.log("messageDatail33", messageDatail);
+
   // ✅ Cleanup on unmount
   useEffect(() => {
     return () => {
@@ -245,6 +302,10 @@ const ChatWithAi = () => {
                   fullDate,
                 });
 
+                queryClient.invalidateQueries({
+                  queryKey: ["get-all-chat-history"],
+                });
+
                 return "";
               });
 
@@ -291,10 +352,12 @@ const ChatWithAi = () => {
         date: date,
         fullDate: fullDate,
       });
+
+      queryClient.invalidateQueries({ queryKey: ["get-all-chat-history"] });
     }
   }
 
-  // Parse Markdown-style text and render it
+  //! Parse Markdown-style text and render it
   const renderFormattedText = (text: string) => {
     const elements: React.ReactNode[] = [];
     const lines = text.split("\n");
@@ -320,7 +383,7 @@ const ChatWithAi = () => {
             </Text>
             <Text
               style={{
-                color: "white",
+                color: "black",
                 flex: 1,
                 fontSize: 16,
                 fontFamily: "PoppinsRegular",
@@ -336,7 +399,7 @@ const ChatWithAi = () => {
           <Text
             key={lineIndex}
             style={{
-              color: "white",
+              color: "black",
               fontSize: 16,
               marginBottom: 4,
               fontFamily: "PoppinsRegular",
@@ -351,7 +414,7 @@ const ChatWithAi = () => {
     return <>{elements}</>;
   };
 
-  // Parse inline formatting like **bold** and [links](urls)
+  //! Parse inline formatting like **bold** and [links](urls)
   const parseInlineFormatting = (text: string): React.ReactNode[] => {
     const elements: React.ReactNode[] = [];
     let currentIndex = 0;
@@ -371,7 +434,7 @@ const ChatWithAi = () => {
         elements.push(
           <Text
             key={match.index}
-            style={{ fontFamily: "PoppinsSemiBold", color: "white" }}
+            style={{ fontFamily: "PoppinsSemiBold", color: "black" }}
           >
             {boldText}
           </Text>,
@@ -385,9 +448,10 @@ const ChatWithAi = () => {
             <Text
               key={match.index}
               style={{
-                color: "#ADD8E6",
+                color: "#0e48c7",
                 textDecorationLine: "underline",
-                fontFamily: "PoppinsRegular",
+                fontFamily: "PoppinsSemiBold",
+                fontSize: 16,
               }}
               onPress={() => Linking.openURL(url)}
             >
@@ -407,8 +471,8 @@ const ChatWithAi = () => {
     return elements.length > 0 ? elements : [text];
   };
 
-  // Handle action pill press - send as user message
-  const handleActionPress = (action: string) => {
+  // Handle action pill press - send as user message and trigger AI response
+  const handleActionPress = async (messageId: string, action: string) => {
     const fullDate = new Date();
     const timestamp = fullDate.toLocaleTimeString("en-US", {
       hour: "2-digit",
@@ -416,13 +480,89 @@ const ChatWithAi = () => {
     });
     const date = formatDateHeader(fullDate);
 
+    // 1. Update message with selected action in store
+    useChatStore.getState().updateMessageSelectedAction(messageId, action);
+
+    // 2. Add user message
     useChatStore.getState().addMessage({
       id: `user-${Date.now()}`,
       text: action,
       isAi: false,
-      timestamp: timestamp,
-      date: date,
-      fullDate: fullDate,
+      timestamp,
+      date,
+      fullDate,
+    });
+
+    // 3. Add typing indicator
+    useChatStore.getState().addMessage({
+      id: "typing-indicator",
+      text: "...",
+      isAi: true,
+      timestamp,
+      date,
+      fullDate,
+    });
+
+    // 4. Scroll to bottom
+    setTimeout(() => {
+      if (scrollViewRef.current) {
+        scrollViewRef.current.scrollToEnd({ animated: true });
+        setIsNearBottom(true);
+      }
+    }, 100);
+
+    // 5. Reset fetch flag and trigger streaming response
+    hasFetchedAIRef.current = false;
+    lastMessageDetailRef.current = null;
+
+    // 6. Set message payload to continue conversation
+    const token = await AsyncStorage.getItem("token");
+    const chatHistory = messages.map((msg) => ({
+      role: msg.isAi ? "assistant" : "user",
+      content: msg.text,
+    }));
+
+    setMessageDatail({
+      messages: [
+        ...chatHistory,
+        {
+          role: "user",
+          content: action,
+        },
+      ],
+    });
+  };
+
+  // Handle date picker submission
+  const handleDateSubmit = async (
+    messageId: string,
+    payload: { date: string },
+  ) => {
+    const fullDate = new Date();
+    const timestamp = fullDate.toLocaleTimeString("en-US", {
+      hour: "2-digit",
+      minute: "2-digit",
+    });
+    const date = formatDateHeader(fullDate);
+
+    useChatStore.getState().updateMessageSelectedDate(messageId, payload.date);
+
+    useChatStore.getState().addMessage({
+      id: `user-${Date.now()}`,
+      text: payload.date,
+      isAi: false,
+      timestamp,
+      date,
+      fullDate,
+    });
+
+    useChatStore.getState().addMessage({
+      id: "typing-indicator",
+      text: "...",
+      isAi: true,
+      timestamp,
+      date,
+      fullDate,
     });
 
     setTimeout(() => {
@@ -431,6 +571,144 @@ const ChatWithAi = () => {
         setIsNearBottom(true);
       }
     }, 100);
+
+    hasFetchedAIRef.current = false;
+    lastMessageDetailRef.current = null;
+
+    const chatHistory = messages.map((msg) => ({
+      role: msg.isAi ? "assistant" : "user",
+      content: msg.text,
+    }));
+
+    setMessageDatail({
+      messages: [
+        ...chatHistory,
+        {
+          role: "user",
+          content: payload.date,
+        },
+      ],
+    });
+  };
+
+  // Handle cycle form submission
+  const handleCycleSubmit = async (
+    messageId: string,
+    payload: { cycleData: string },
+  ) => {
+    const fullDate = new Date();
+    const timestamp = fullDate.toLocaleTimeString("en-US", {
+      hour: "2-digit",
+      minute: "2-digit",
+    });
+    const date = formatDateHeader(fullDate);
+
+    useChatStore
+      .getState()
+      .updateMessageSelectedCycle(messageId, payload.cycleData);
+
+    useChatStore.getState().addMessage({
+      id: `user-${Date.now()}`,
+      text: payload.cycleData,
+      isAi: false,
+      timestamp,
+      date,
+      fullDate,
+    });
+
+    useChatStore.getState().addMessage({
+      id: "typing-indicator",
+      text: "...",
+      isAi: true,
+      timestamp,
+      date,
+      fullDate,
+    });
+
+    setTimeout(() => {
+      if (scrollViewRef.current) {
+        scrollViewRef.current.scrollToEnd({ animated: true });
+        setIsNearBottom(true);
+      }
+    }, 100);
+
+    hasFetchedAIRef.current = false;
+    lastMessageDetailRef.current = null;
+
+    const chatHistory = messages.map((msg) => ({
+      role: msg.isAi ? "assistant" : "user",
+      content: msg.text,
+    }));
+
+    setMessageDatail({
+      messages: [
+        ...chatHistory,
+        {
+          role: "user",
+          content: payload.cycleData,
+        },
+      ],
+    });
+  };
+
+  // Handle symptom form submission
+  const handleSymptomSubmit = async (
+    messageId: string,
+    payload: { symptomData: string },
+  ) => {
+    const fullDate = new Date();
+    const timestamp = fullDate.toLocaleTimeString("en-US", {
+      hour: "2-digit",
+      minute: "2-digit",
+    });
+    const date = formatDateHeader(fullDate);
+
+    useChatStore
+      .getState()
+      .updateMessageSelectedSymptom(messageId, payload.symptomData);
+
+    useChatStore.getState().addMessage({
+      id: `user-${Date.now()}`,
+      text: payload.symptomData,
+      isAi: false,
+      timestamp,
+      date,
+      fullDate,
+    });
+
+    useChatStore.getState().addMessage({
+      id: "typing-indicator",
+      text: "...",
+      isAi: true,
+      timestamp,
+      date,
+      fullDate,
+    });
+
+    setTimeout(() => {
+      if (scrollViewRef.current) {
+        scrollViewRef.current.scrollToEnd({ animated: true });
+        setIsNearBottom(true);
+      }
+    }, 100);
+
+    hasFetchedAIRef.current = false;
+    lastMessageDetailRef.current = null;
+
+    const chatHistory = messages.map((msg) => ({
+      role: msg.isAi ? "assistant" : "user",
+      content: msg.text,
+    }));
+
+    setMessageDatail({
+      messages: [
+        ...chatHistory,
+        {
+          role: "user",
+          content: payload.symptomData,
+        },
+      ],
+    });
   };
 
   // Handle widget submission
@@ -459,7 +737,7 @@ const ChatWithAi = () => {
     }, 100);
   };
 
-  // Render message content segments (text, actions, widgets)
+  //! Render message content segments (text, actions, widgets)
   const renderMessageContent = (message: Message) => {
     const segments = parseMessage(message.text);
 
@@ -475,27 +753,76 @@ const ChatWithAi = () => {
           switch (segment.type) {
             case "text":
               return segment.content ? (
-                <View key={index}>
+                <View className=" pb-2" key={index}>
                   {renderFormattedText(segment.content)}
                 </View>
               ) : null;
             case "actions":
               return (
-                <View key={index} style={{ marginTop: 12 }}>
+                <View
+                  className="  overflow-hidden py-4"
+                  key={index}
+                  style={{ marginTop: 12 }}
+                >
                   <ActionPills
                     actions={segment.options}
-                    onPress={handleActionPress}
-                    disabled={false}
+                    messageId={message.id}
+                    selectedButton={message.selectedAction}
+                    onPress={(action) => handleActionPress(message.id, action)}
+                    disabled={
+                      message.id !== lastInteractiveMessageId ||
+                      !!message.selectedAction
+                    }
                   />
                 </View>
               );
             case "widget":
               return (
-                <View key={index} style={{ marginTop: 12 }}>
+                <View
+                  className="  overflow-hidden py-4"
+                  key={index}
+                  style={{ marginTop: 12, paddingVertical: 8 }}
+                >
                   <InlineWidget
                     type={segment.name}
-                    onSubmit={handleWidgetSubmit(message.id)}
-                    disabled={false}
+                    messageId={message.id}
+                    selectedDate={selectedDate}
+                    durationData={durationData}
+                    initialDate={message.initialDate}
+                    initialCycle={message.initialCycle}
+                    initialSymptom={message.initialSymptom}
+                    handleDurationBottomSheetOpen={
+                      message.id !== lastInteractiveMessageId
+                        ? undefined
+                        : handleDurationBottomSheetOpen
+                    }
+                    handleDateBottomSheetOpen={
+                      message.id !== lastInteractiveMessageId
+                        ? undefined
+                        : handleDateBottomSheetOpen
+                    }
+                    onSubmit={
+                      segment.name === "date_picker"
+                        ? (payload) => handleDateSubmit(message.id, payload)
+                        : segment.name === "cycle_form"
+                          ? (payload) => handleCycleSubmit(message.id, payload)
+                          : segment.name === "symptom_form"
+                            ? (payload) =>
+                                handleSymptomSubmit(message.id, payload)
+                            : handleWidgetSubmit(message.id)
+                    }
+                    submitted={
+                      message.id !== lastInteractiveMessageId ||
+                      !!message.selectedDate ||
+                      !!message.selectedCycle ||
+                      !!message.selectedSymptom
+                    }
+                    disabled={
+                      message.id !== lastInteractiveMessageId ||
+                      !!message.selectedDate ||
+                      !!message.selectedCycle ||
+                      !!message.selectedSymptom
+                    }
                   />
                 </View>
               );
@@ -508,8 +835,43 @@ const ChatWithAi = () => {
           <View style={{ marginTop: 12 }}>
             <InlineWidget
               type={message.widget}
-              onSubmit={handleWidgetSubmit(message.id)}
-              disabled={false}
+              messageId={message.id}
+              selectedDate={selectedDate}
+              durationData={durationData}
+              initialDate={message.initialDate}
+              initialCycle={message.initialCycle}
+              initialSymptom={message.initialSymptom}
+              handleDurationBottomSheetOpen={
+                message.id !== lastInteractiveMessageId
+                  ? undefined
+                  : handleDurationBottomSheetOpen
+              }
+              handleDateBottomSheetOpen={
+                message.id !== lastInteractiveMessageId
+                  ? undefined
+                  : handleDateBottomSheetOpen
+              }
+              onSubmit={
+                message.widget === "date_picker"
+                  ? (payload) => handleDateSubmit(message.id, payload)
+                  : message.widget === "cycle_form"
+                    ? (payload) => handleCycleSubmit(message.id, payload)
+                    : message.widget === "symptom_form"
+                      ? (payload) => handleSymptomSubmit(message.id, payload)
+                      : handleWidgetSubmit(message.id)
+              }
+              submitted={
+                message.id !== lastInteractiveMessageId ||
+                !!message.selectedDate ||
+                !!message.selectedCycle ||
+                !!message.selectedSymptom
+              }
+              disabled={
+                message.id !== lastInteractiveMessageId ||
+                !!message.selectedDate ||
+                !!message.selectedCycle ||
+                !!message.selectedSymptom
+              }
             />
           </View>
         )}
@@ -580,9 +942,24 @@ const ChatWithAi = () => {
     return currentDate.getTime() !== prevDate.getTime();
   };
 
+  // Format system payload for user display
+  const formatUserMessageForDisplay = (text: string): string => {
+    let formatted = stripSelectionTag(text);
+
+    if (formatted.startsWith("[SYSTEM_PAYLOAD:")) {
+      formatted = formatted
+        .replace("[SYSTEM_PAYLOAD: FORM_SUBMITTED | ", "")
+        .replace("]", "")
+        .replace("type: ", "");
+    }
+    return formatted;
+  };
+
   // ✅ Transform server data from getAllChatAiHistory to message format
   useEffect(() => {
     let isMounted = true;
+
+    useChatStore.getState().clearMessages();
 
     if (
       getAllChatAiHistory.data?.messages &&
@@ -597,6 +974,35 @@ const ChatWithAi = () => {
           minute: "2-digit",
         });
         const date = formatDateHeader(fullDate);
+        const selectedAction = extractSelection(msg.content);
+
+        const rawSelection = extractSelection(msg.content);
+        let selectedDate: string | undefined;
+        let selectedCycle: string | undefined;
+        let selectedSymptom: string | undefined;
+        let initialDate: string | undefined;
+        let initialCycle: CyclePayload | undefined;
+        let initialSymptom: SymptomPayload | undefined;
+
+        if (rawSelection) {
+          const parsed = parseWidgetSelection(rawSelection);
+          if (parsed) {
+            switch (parsed.widgetType) {
+              case "date_picker":
+                initialDate = parsed.payload as string;
+                selectedDate = parsed.payload as string;
+                break;
+              case "cycle_form":
+                initialCycle = parsed.payload as CyclePayload;
+                selectedCycle = rawSelection;
+                break;
+              case "symptom_form":
+                initialSymptom = parsed.payload as SymptomPayload;
+                selectedSymptom = rawSelection;
+                break;
+            }
+          }
+        }
 
         return {
           id: msg.id,
@@ -605,6 +1011,13 @@ const ChatWithAi = () => {
           timestamp: timestamp,
           date: date,
           fullDate: fullDate,
+          selectedAction,
+          selectedDate,
+          selectedCycle,
+          selectedSymptom,
+          initialDate,
+          initialCycle,
+          initialSymptom,
         };
       });
 
@@ -730,25 +1143,48 @@ const ChatWithAi = () => {
                   <TypingDots />
                 </View>
               ) : (
-                <LinearGradient
-                  colors={["#6B5591", "#6E3F8C", "#853385", "#9F3E83"]}
-                  start={{ x: 0, y: 0 }}
-                  end={{ x: 1, y: 1 }}
-                  style={{ padding: 16 }}
+                // <LinearGradient
+                //   colors={["#853385", "#9F3E83"]}
+                //   start={{ x: 0, y: 0 }}
+                //   end={{ x: 1, y: 1 }}
+                //   style={{ padding: 16 }}
+                // >
+                //   {renderMessageContent(item)}
+                // </LinearGradient>
+                <View
+                  className="p-4  rounded-2xl bg-secondary border border-[#FBC3F8] "
+                  style={{ maxWidth: bubbleMaxWidth }}
                 >
-                  {renderMessageContent(item)}
-                </LinearGradient>
+                  <Text className="text-base font-[PoppinsRegular]">
+                    {renderMessageContent(item)}
+                  </Text>
+                </View>
               )}
             </View>
           ) : (
-            <View
-              className="px-4 py-3 rounded-2xl bg-secondary border border-[#FBC3F8] rounded-tr-none"
-              style={{ maxWidth: bubbleMaxWidth }}
+            // <View
+            //   className="px-4 py-3 rounded-2xl bg-secondary border border-[#FBC3F8] rounded-tr-none"
+            //   style={{ maxWidth: bubbleMaxWidth }}
+            // >
+            // <Text className="text-base font-[PoppinsRegular] text-titleText">
+            //   {item.text}
+            // </Text>
+            // </View>
+            <LinearGradient
+              colors={["#6B5591", "#6E3F8C", "#853385", "#9F3E83"]}
+              start={{ x: 0, y: 0 }}
+              end={{ x: 1, y: 1 }}
+              style={{
+                paddingHorizontal: 20,
+                paddingVertical: 16,
+                borderRadius: 16,
+                borderTopRightRadius: 4,
+              }}
             >
-              <Text className="text-base font-[PoppinsRegular] text-titleText">
-                {item.text}
+              <Text className="text-base text-white font-[PoppinsRegular]">
+                {formatUserMessageForDisplay(item.text)}
               </Text>
-            </View>
+            </LinearGradient>
           )}
 
           <Text className="text-xs text-gray-400 mt-1 px-2 font-[PoppinsRegular]">
@@ -870,10 +1306,10 @@ const ChatWithAi = () => {
                       {isStreaming && streamingText && (
                         <View className="mb-4 items-start">
                           <View
-                            className="rounded-2xl rounded-tl-none overflow-hidden"
+                            className="rounded-2xl p-4 rounded-tl-none overflow-hidden bg-secondary border border-[#FBC3F8]"
                             style={{ maxWidth: bubbleMaxWidth }}
                           >
-                            <LinearGradient
+                            {/* <LinearGradient
                               colors={[
                                 "#6B5591",
                                 "#6E3F8C",
@@ -883,12 +1319,12 @@ const ChatWithAi = () => {
                               start={{ x: 0, y: 0 }}
                               end={{ x: 1, y: 1 }}
                               style={{ padding: 16 }}
-                            >
-                              {renderFormattedText(streamingText)}
-                              <Text style={{ color: "white", fontSize: 16 }}>
-                                ▌
-                              </Text>
-                            </LinearGradient>
+                            > */}
+                            {renderFormattedText(streamingText)}
+                            <Text style={{ color: "black", fontSize: 16 }}>
+                              ▌
+                            </Text>
+                            {/* </LinearGradient> */}
                           </View>
                           <Text className="text-xs text-gray-400 mt-1 px-2 font-[PoppinsRegular]">
                             {new Date().toLocaleTimeString("en-US", {
@@ -989,6 +1425,36 @@ const ChatWithAi = () => {
           </View>
         </KeyboardAvoidingView>
       </ImageBackground>
+
+      <BottomSheetScreen
+        snapPoints={snapPoints}
+        ref={datebottomSheetRef}
+        isBackdropComponent={true}
+        enablePanDownToClose={true}
+        index={-1}
+        message={
+          <StartDateBottomSheet
+            selectedDate={selectedDate}
+            setSelectedDate={setSelectedDate}
+            handleDateBottomSheetClose={handleDateBottomSheetClose}
+          />
+        }
+      />
+
+      <BottomSheetScreen
+        snapPoints={snapPoints}
+        ref={durationBottomSheetRef}
+        isBackdropComponent={true}
+        enablePanDownToClose={true}
+        index={-1}
+        message={
+          <Duration
+            handleDurationBottomSheetClose={handleDurationBottomSheetClose}
+            durationData={durationData}
+            setDurationData={setDurationData}
+          />
+        }
+      />
     </Screen>
   );
 };

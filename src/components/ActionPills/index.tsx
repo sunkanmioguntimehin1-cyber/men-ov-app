@@ -1,12 +1,12 @@
+import { rS, rV } from "@/src/lib/responsivehandler";
 import { LinearGradient } from "expo-linear-gradient";
-import React, { useState } from "react";
+import React from "react";
 import {
-    ScrollView,
-    StyleProp,
-    Text,
-    TouchableOpacity,
-    View,
-    ViewStyle,
+  StyleProp,
+  Text,
+  TouchableOpacity,
+  View,
+  ViewStyle,
 } from "react-native";
 
 interface ActionPillsProps {
@@ -14,102 +14,102 @@ interface ActionPillsProps {
   onPress: (action: string) => void;
   disabled?: boolean;
   style?: StyleProp<ViewStyle>;
+  selectedButton?: string;
+  setSelectedButton?: (action: string) => void;
+  messageId?: string;
 }
 
-/**
- * Renders a horizontal row of quick-reply pill buttons parsed from
- * the <<ACTIONS: [...]>> tag in an AI message.
- *
- * Tapping a pill:
- *  1. Highlights it with the brand gradient
- *  2. Calls onPress so the parent can send it as a user message
- *  3. Locks all pills so they can't be pressed again (one-shot)
- */
 export const ActionPills: React.FC<ActionPillsProps> = ({
   actions,
   onPress,
   disabled = false,
   style,
+  selectedButton,
+  setSelectedButton,
 }) => {
-  const [selected, setSelected] = useState<string | null>(null);
-
   const handlePress = (action: string) => {
-    if (disabled || selected !== null) return;
-    setSelected(action);
+    if (disabled || selectedButton !== undefined) return;
+    setSelectedButton?.(action);
     onPress(action);
   };
 
   return (
-    <View style={style}>
-      <ScrollView
-        horizontal
-        showsHorizontalScrollIndicator={false}
-        contentContainerStyle={{
+    <View
+      style={[
+        {
           flexDirection: "row",
-          gap: 8,
-          paddingVertical: 2,
-        }}
-      >
-        {actions.map((action) => {
-          const isSelected = selected === action;
-          const isLocked = selected !== null && !isSelected;
+          flexWrap: "wrap",
+          gap: 10,
+          alignSelf: "flex-start",
+        },
+        style,
+      ]}
+    >
+      {actions.map((action) => {
+        const isSelected = selectedButton === action;
+        const isLocked = selectedButton !== undefined && !isSelected;
 
-          return (
-            <TouchableOpacity
-              key={action}
-              onPress={() => handlePress(action)}
-              activeOpacity={0.75}
-              disabled={disabled || selected !== null}
-            >
-              {isSelected ? (
-                /* Selected pill – gradient fill */
-                <LinearGradient
-                  colors={["#6B5591", "#6E3F8C", "#853385", "#9F3E83"]}
-                  start={{ x: 0, y: 0 }}
-                  end={{ x: 1, y: 0 }}
+        const BUTTON_WIDTH = rS(120);
+        const BUTTON_HEIGHT = rV(40);
+
+        return (
+          <TouchableOpacity
+            key={action}
+            onPress={() => handlePress(action)}
+            activeOpacity={0.8}
+            disabled={disabled || selectedButton !== undefined}
+            style={{ width: BUTTON_WIDTH, height: BUTTON_HEIGHT, padding: 2 }}
+          >
+            {isSelected ? (
+              <LinearGradient
+                colors={["#635B91", "#8B3D88", "#B54475"]}
+                start={{ x: 0, y: 0.5 }}
+                end={{ x: 1, y: 0.5 }}
+                style={{
+                  flex: 1,
+                  borderRadius: 18, // Slightly more squared as per image
+                  justifyContent: "center",
+                  alignItems: "center",
+                }}
+              >
+                <Text
+                  numberOfLines={1}
                   style={{
-                    borderRadius: 20,
-                    paddingHorizontal: 16,
-                    paddingVertical: 7,
+                    color: "white",
+                    fontSize: 14,
+                    fontWeight: "500",
+                    textAlign: "center",
                   }}
                 >
-                  <Text
-                    style={{
-                      color: "white",
-                      fontSize: 13,
-                      fontFamily: "PoppinsMedium",
-                    }}
-                  >
-                    {action}
-                  </Text>
-                </LinearGradient>
-              ) : (
-                /* Unselected / locked pill – outlined */
-                <View
+                  {action}
+                </Text>
+              </LinearGradient>
+            ) : (
+              <View
+                style={{
+                  flex: 1,
+                  borderRadius: 18,
+                  backgroundColor: isLocked ? "#F1EBF9" : "#EBE4F9",
+                  justifyContent: "center",
+                  alignItems: "center",
+                }}
+              >
+                <Text
+                  numberOfLines={1}
                   style={{
-                    borderRadius: 20,
-                    paddingHorizontal: 16,
-                    paddingVertical: 7,
-                    borderWidth: 1.5,
-                    borderColor: isLocked ? "#D1C8E0" : "#6B5591",
-                    backgroundColor: isLocked ? "#F9F6FF" : "white",
+                    color: isLocked ? "#9A93B0" : "#5A5D72",
+                    fontSize: 14,
+                    fontWeight: "500",
+                    textAlign: "center",
                   }}
                 >
-                  <Text
-                    style={{
-                      color: isLocked ? "#B0A8C0" : "#6B5591",
-                      fontSize: 13,
-                      fontFamily: "PoppinsMedium",
-                    }}
-                  >
-                    {action}
-                  </Text>
-                </View>
-              )}
-            </TouchableOpacity>
-          );
-        })}
-      </ScrollView>
+                  {action}
+                </Text>
+              </View>
+            )}
+          </TouchableOpacity>
+        );
+      })}
     </View>
   );
 };

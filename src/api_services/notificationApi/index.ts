@@ -1,9 +1,8 @@
 import axiosInstance from "@/src/lib/axiosInstance";
 
-export const getNotificationsApi = async () => {
+export const getNotificationsApi = async (page = 1, limit = 20) => {
   try {
-    const res = await axiosInstance.get(`/notification`);
-    console.log("getNotificationsApi response:", res.data);
+    const res = await axiosInstance.get(`/notification`, { params: { page, limit } });
     return res.data;
   } catch (error) {
     console.error("getNotificationsApi:", error);

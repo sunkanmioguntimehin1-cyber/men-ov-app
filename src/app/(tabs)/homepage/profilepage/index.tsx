@@ -276,7 +276,7 @@ export default function ProfilePage() {
       paymentSync.mutate({
         customerId: customerInfo?.original_app_user_id || userId || "unknown",
       });
-      router.replace("/(tabs)/homepage/welcome-plus");
+      router.push("/(tabs)/homepage/welcome-plus");
     }
 
     wasProMember.current = isProMember;
