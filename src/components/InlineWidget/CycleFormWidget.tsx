@@ -195,7 +195,7 @@ export const CycleFormWidget: React.FC<{
             label="Start Date"
             value={dateValue}
             icon={
-              <TouchableOpacity onPress={() => {}}>
+              <TouchableOpacity onPress={handleDateBottomSheetOpen}>
                 {/* <Feather name="calendar" size={24} className="!text-primary" /> */}
                 <GradientFeatherIcon
                   name="calendar"
@@ -215,7 +215,7 @@ export const CycleFormWidget: React.FC<{
             placeholder="0 days"
             value={durationData}
             icon={
-              <TouchableOpacity onPress={() => {}}>
+              <TouchableOpacity onPress={handleDurationBottomSheetOpen}>
                 <MaterialIcons
                   name={"keyboard-arrow-down"}
                   size={24}

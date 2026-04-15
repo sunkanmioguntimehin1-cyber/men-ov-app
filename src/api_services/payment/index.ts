@@ -19,3 +19,13 @@ export const cancelSubscriptionApi = async (data: any) => {
     throw error;
   }
 };
+
+export const manageSubscriptionApi = async () => {
+  try {
+    const res = await axiosInstance.get(`/payment/manage`);
+    return res.data;
+  } catch (error) {
+    console.error("manageSubscriptionApi:", error);
+    throw error;
+  }
+};

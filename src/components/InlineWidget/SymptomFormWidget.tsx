@@ -255,7 +255,7 @@ export const SymptomFormWidget: React.FC<{
           label="Date"
           value={dateValue}
           icon={
-            <TouchableOpacity onPress={() => {}}>
+            <TouchableOpacity onPress={handleDateBottomSheetOpen}>
               <GradientFeatherIcon
                 name="calendar"
                 size={24}

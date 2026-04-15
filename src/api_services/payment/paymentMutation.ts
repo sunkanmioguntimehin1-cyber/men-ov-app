@@ -1,7 +1,11 @@
 import { handleAxiosError } from "@/src/lib/handleAxiosError";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "expo-router";
-import { cancelSubscriptionApi, paymentSyncApi } from ".";
+import {
+  cancelSubscriptionApi,
+  manageSubscriptionApi,
+  paymentSyncApi,
+} from ".";
 
 export const usePaymentSyncApi = () => {
   const queryClient = useQueryClient();
@@ -18,7 +22,7 @@ export const usePaymentSyncApi = () => {
   });
 };
 
-export const useCancelSubscriptionApi = () => {
+export const useCancelSubscriptionApi = (handleCancelPress: any) => {
   const queryClient = useQueryClient();
   const router = useRouter();
 
@@ -27,12 +31,26 @@ export const useCancelSubscriptionApi = () => {
     onSuccess(data: any) {
       console.log("Payment cancel successful3000:", data);
       // queryClient.invalidateQueries(["userData"]);
-      router.push(
-        "/homepage/manage-subscription/cancel-subscription/cancellation-page",
-      );
+      handleCancelPress();
+      // router.push(
+      //   "/homepage/manage-subscription/cancel-subscription/cancellation-page",
+      // );
     },
     onError(error: any) {
       handleAxiosError(error);
+    },
+  });
+};
+
+export const useManageSubscriptionApi = (handleOpenModal: any) => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: manageSubscriptionApi,
+    // Optional: cache the result if needed elsewhere
+    onSuccess: (data) => {
+      handleOpenModal();
+      console.log("dataManage:", data);
+      queryClient.setQueryData(["manage-subscription"], data);
     },
   });
 };
