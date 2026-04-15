@@ -354,7 +354,7 @@ const ManageSubscription = () => {
   // If unsubscribe_detected_at exists, they have turned off auto-renew
   const isCancelled = !!activeSubDetails?.unsubscribe_detected_at;
 
-  const statusActive = getUserData?.data?.billingAction?.type === "cancel";
+  // const statusActive = getUserData?.data?.billingAction?.type === "cancel";
 
   const statusLabel = isCancelled
     ? "Cancelled"

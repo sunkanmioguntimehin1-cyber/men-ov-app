@@ -9,14 +9,18 @@ interface QuotaBannerProps {
 }
 
 function formatResetTime(resets: string): string {
+  console.log("resets", resets);
   try {
     const resetDate = new Date(resets);
     const now = new Date();
     const diffMs = resetDate.getTime() - now.getTime();
+    console.log("diffMs3000", diffMs);
 
     if (diffMs <= 0) return "soon";
 
     const diffHours = Math.ceil(diffMs / (1000 * 60 * 60));
+    console.log("diffHours", diffHours);
+
     if (diffHours < 24) return `in ${diffHours}h`;
 
     return "in 24 hours";
@@ -27,8 +31,10 @@ function formatResetTime(resets: string): string {
 
 const QuotaBanner: React.FC<QuotaBannerProps> = ({ info }) => {
   const router = useRouter();
+  console.log("info40000:", info);
   const isExhausted = info.status === "exhausted";
   const resetLabel = formatResetTime(info.resets);
+  console.log("resetLabel:", resetLabel);
 
   if (!isExhausted) return null;
 
@@ -48,9 +54,9 @@ const QuotaBanner: React.FC<QuotaBannerProps> = ({ info }) => {
 
       {/* Right: Upgrade button */}
       <TouchableOpacity
-        onPress={() =>
-          router.push("/(tabs)/homepage/profilepage/paywall-screen" as any)
-        }
+        // onPress={() =>
+        //   router.push("/(tabs)/homepage/profilepage/paywall-screen" as any)
+        // }
         activeOpacity={0.85}
       >
         <LinearGradient
