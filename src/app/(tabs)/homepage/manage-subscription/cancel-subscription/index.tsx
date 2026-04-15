@@ -243,6 +243,7 @@ const CancelSubscription = () => {
   };
 
   const onCancel = () => {
+    router.replace("/homepage");
     setModelVisible(false);
   };
 

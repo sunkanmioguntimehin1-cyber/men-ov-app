@@ -140,10 +140,7 @@ const CancelModal = ({
       </View>
 
       <TouchableOpacity
-        // onPress={onCancel}
-        onPress={() => {
-          router.push("/homepage");
-        }}
+        onPress={onCancel}
         className="mt-4 py-3 items-center bg-gray-100 rounded-lg"
       >
         <Text className="font-[PoppinsMedium]">Go Back</Text>

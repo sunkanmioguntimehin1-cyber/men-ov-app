@@ -277,6 +277,7 @@ const ManageSubscription = () => {
   };
 
   const onCancel = () => {
+    router.replace("/homepage");
     setModelVisible(false);
   };
   const handleSwitchPlan = () => {
@@ -416,13 +417,14 @@ const ManageSubscription = () => {
 
             <Row label="Plan Name" value={planName} />
             <Row label="Price" value={priceLabel} />
-            {formattedCancelDate ? (
+            {formattedCancelDate && (
               <Row
                 label="Cancelled date"
                 value={formattedCancelDate}
                 isLast={false}
               />
-            ) : (
+            )}
+            {formattedDate && (
               <Row label="Renewal date" value={formattedDate} isLast={false} />
             )}
             <Row
@@ -539,17 +541,20 @@ const ManageSubscription = () => {
       <View className="flex-1" />
 
       {/* Actions */}
-      <View className="flex-row gap-4 pt-4 pb-10 w-full">
-        {isProMember && !isCancelled && (
-          <TouchableOpacity
-            className="flex-1 border-2 border-red-500 rounded-2xl items-center justify-center"
-            style={{ height: 56 }}
-            onPress={handleManageBottomSheetOpen}
-          >
-            <Text className="text-red-500 font-bold text-base">Cancel</Text>
-          </TouchableOpacity>
-        )}
 
+      <View className="flex-row gap-4 pt-4 pb-10 w-full">
+        {getUserData?.data?.billingAction?.startedAt
+          ? null
+          : isProMember &&
+            !isCancelled && (
+              <TouchableOpacity
+                className="flex-1 border-2 border-red-500 rounded-2xl items-center justify-center"
+                style={{ height: 56 }}
+                onPress={handleManageBottomSheetOpen}
+              >
+                <Text className="text-red-500 font-bold text-base">Cancel</Text>
+              </TouchableOpacity>
+            )}
         <Pressable
           className="flex-1"
           // onPress={() =>
