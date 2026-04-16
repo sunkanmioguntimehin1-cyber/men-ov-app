@@ -1547,7 +1547,7 @@ const ChatWithAi = () => {
   const [isNearBottom, setIsNearBottom] = useState(true);
 
   const [quotaInfo, setQuotaInfo] = React.useState<QuotaInfo | null>(null);
-  
+
   const isQuotaReset = React.useMemo(() => {
     if (!quotaInfo?.resets) return false;
     const resetTime = new Date(quotaInfo.resets).getTime();
@@ -2262,7 +2262,12 @@ const ChatWithAi = () => {
                     messageId={message.id}
                     selectedButton={message.selectedAction}
                     onPress={(action) => handleActionPress(message.id, action)}
+                    // disabled={
+                    //   message.id !== lastInteractiveMessageId ||
+                    //   !!message.selectedAction
+                    // }
                     disabled={
+                      isQuotaExhausted || // <-- ADD
                       message.id !== lastInteractiveMessageId ||
                       !!message.selectedAction
                     }
@@ -2310,7 +2315,14 @@ const ChatWithAi = () => {
                       !!message.selectedCycle ||
                       !!message.selectedSymptom
                     }
+                    // disabled={
+                    //   message.id !== lastInteractiveMessageId ||
+                    //   !!message.selectedDate ||
+                    //   !!message.selectedCycle ||
+                    //   !!message.selectedSymptom
+                    // }
                     disabled={
+                      isQuotaExhausted || // <-- ADD
                       message.id !== lastInteractiveMessageId ||
                       !!message.selectedDate ||
                       !!message.selectedCycle ||
@@ -2354,12 +2366,14 @@ const ChatWithAi = () => {
                       : handleWidgetSubmit(message.id)
               }
               submitted={
+                isQuotaExhausted ||
                 message.id !== lastInteractiveMessageId ||
                 !!message.selectedDate ||
                 !!message.selectedCycle ||
                 !!message.selectedSymptom
               }
               disabled={
+                isQuotaExhausted ||
                 message.id !== lastInteractiveMessageId ||
                 !!message.selectedDate ||
                 !!message.selectedCycle ||
@@ -2528,16 +2542,16 @@ const ChatWithAi = () => {
         };
       });
 
-const quotaMessages = serverMessages.filter(
-          (msg: any) =>
-            msg.role === "assistant" && msg.content?.includes("<<QUOTA:")
-        );
-        // Server messages are returned newest‑first, so the first match is the newest quota.
-        const quotaMsg = quotaMessages.length ? quotaMessages[0] : undefined;
-        if (quotaMsg) {
-          const q = extractQuota(quotaMsg.content);
-          if (q) setQuotaInfo(q);
-        }
+      const quotaMessages = serverMessages.filter(
+        (msg: any) =>
+          msg.role === "assistant" && msg.content?.includes("<<QUOTA:"),
+      );
+      // Server messages are returned newest‑first, so the first match is the newest quota.
+      const quotaMsg = quotaMessages.length ? quotaMessages[0] : undefined;
+      if (quotaMsg) {
+        const q = extractQuota(quotaMsg.content);
+        if (q) setQuotaInfo(q);
+      }
 
       transformedMessages.sort(
         (a, b) => a.fullDate.getTime() - b.fullDate.getTime(),
