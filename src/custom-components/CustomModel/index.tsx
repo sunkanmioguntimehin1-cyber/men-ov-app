@@ -47,7 +47,8 @@
 import React from "react";
 import {
   Modal,
-  TouchableWithoutFeedback,
+  Pressable,
+  StyleSheet,
   View
 } from "react-native";
 
@@ -64,42 +65,41 @@ const CustomModel = ({
   setModelVisible,
   closeOnOutsideClick = true,
 }: Props) => {
+  const dismiss = () => {
+    if (closeOnOutsideClick) {
+      setModelVisible(false);
+    }
+  };
+
   return (
     <Modal
       visible={modelVisible}
       transparent
       animationType="slide"
       hardwareAccelerated
+      onRequestClose={dismiss}
     >
       <View
-        style={{
-          backgroundColor: "rgba(0,0,0,0.6)",
-          flex: 1,
-          justifyContent: "center",
-          alignItems: "center",
-        }}
+        style={styles.container}
+        pointerEvents="box-none"
       >
-        <TouchableWithoutFeedback
-          onPress={() => {
-            if (closeOnOutsideClick) {
-              setModelVisible(false);
-            }
-          }}
-        >
-          <View
-            style={{
-              position: "absolute",
-              top: 0,
-              bottom: 0,
-              left: 0,
-              right: 0,
-            }}
-          />
-        </TouchableWithoutFeedback>
+        <Pressable
+          style={StyleSheet.absoluteFill}
+          onPress={dismiss}
+        />
         {message}
       </View>
     </Modal>
   );
 };
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "rgba(0,0,0,0.6)",
+  },
+});
 
 export default CustomModel;
