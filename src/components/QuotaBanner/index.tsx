@@ -1,3 +1,7 @@
+import { usePaymentSyncApi } from "@/src/api_services/payment/paymentMutation";
+import { useGetUser } from "@/src/api_services/userApi/userQuery";
+import useRevenueCat from "@/src/hooks/useRevenueCat";
+import useWebPaywall from "@/src/hooks/useWebPaywall";
 import { LinearGradient } from "expo-linear-gradient";
 import { useRouter } from "expo-router";
 import React from "react";
@@ -36,6 +40,61 @@ const QuotaBanner: React.FC<QuotaBannerProps> = ({ info }) => {
   const resetLabel = formatResetTime(info.resets);
   console.log("resetLabel:", resetLabel);
 
+  const getUserData = useGetUser();
+  const userId = getUserData?.data?.id;
+  const paymentSync = usePaymentSyncApi(); // Add this line to use the mutation
+
+  const {
+    isProMember,
+    openManagementPortal,
+    restoreSubscription,
+    fetchCustomerInfo,
+    customerInfo,
+  } = useRevenueCat(userId);
+
+  // ✅ No onSuccess callback needed here anymore
+  const { openWebPaywall } = useWebPaywall(fetchCustomerInfo);
+
+  // ✅ Single source of truth for post-purchase navigation
+  const wasProMember = React.useRef<boolean | null>(null);
+
+  React.useEffect(() => {
+    // ✅ don't do anything until customerInfo has actually loaded
+    if (customerInfo === null) return;
+
+    // first time customerInfo is available — set baseline, no navigation
+    if (wasProMember.current === null) {
+      wasProMember.current = isProMember;
+      return;
+    }
+
+    // only navigate if it JUST changed false → true
+    if (!wasProMember.current && isProMember) {
+      paymentSync.mutate({
+        customerId: customerInfo?.original_app_user_id || userId || "unknown",
+      });
+      router.push("/(tabs)/homepage/welcome-plus");
+    }
+
+    wasProMember.current = isProMember;
+  }, [isProMember, customerInfo]);
+
+  console.log(
+    "🚀 ~ file: index.tsx:24 ~ ProfilePage ~ isProMember:",
+    isProMember,
+  );
+
+  console.log(
+    "🚀 ~ file: index.tsx:24 ~ ProfilePage ~ customerInfo:",
+    customerInfo,
+  );
+
+  const handlePaywall = async () => {
+    const userId = getUserData?.data?.id;
+    if (!userId) return;
+    await openWebPaywall(userId);
+  };
+
   if (!isExhausted) return null;
 
   return (
@@ -57,6 +116,7 @@ const QuotaBanner: React.FC<QuotaBannerProps> = ({ info }) => {
         // onPress={() =>
         //   router.push("/(tabs)/homepage/profilepage/paywall-screen" as any)
         // }
+        onPress={handlePaywall}
         activeOpacity={0.85}
       >
         <LinearGradient
