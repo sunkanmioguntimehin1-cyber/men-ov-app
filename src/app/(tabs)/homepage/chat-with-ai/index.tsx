@@ -1580,6 +1580,11 @@ const ChatWithAi = () => {
   const [streamingText, setStreamingText] = useState("");
   const [isStreaming, setIsStreaming] = useState(false);
 
+  const [quotaError, setQuotaError] = React.useState<{
+    message: string;
+    refillsAt: string;
+  } | null>(null);
+
   // ✅ Typing animation state
   const typingQueueRef = useRef<string>("");
   const isTypingRef = useRef(false);
@@ -1742,10 +1747,45 @@ const ChatWithAi = () => {
         body: JSON.stringify(messageDatail),
       });
 
+      // if (!response.ok) {
+      //   console.error("Failed to fetch AI", response);
+      //   stopTypingAnimation();
+      //   setIsStreaming(false);
+      //   return;
+      // }
+
       if (!response.ok) {
-        console.error("Failed to fetch AI", response);
         stopTypingAnimation();
         setIsStreaming(false);
+        useChatStore.getState().removeTypingIndicator();
+
+        try {
+          const errData = await response.json();
+          if (errData?.error === "quota_exceeded") {
+            // Format the refill time nicely
+            const refillDate = new Date(errData.quota_refills_at);
+            const refillsAt = refillDate.toLocaleTimeString("en-US", {
+              hour: "2-digit",
+              minute: "2-digit",
+            });
+            setQuotaError({
+              message:
+                errData.message ||
+                "You've used all your tokens for this period.",
+              refillsAt,
+            });
+            // Also lock the UI via quotaInfo
+            setQuotaInfo({
+              status: "exhausted",
+              plan: "free",
+              used: 0,
+              limit: 0,
+              resets: errData.quota_refills_at,
+            });
+          }
+        } catch (_) {
+          console.error("Failed to fetch AI", response.status);
+        }
         return;
       }
 
@@ -2590,6 +2630,7 @@ const ChatWithAi = () => {
   };
 
   const handleSend = async () => {
+    setQuotaError(null);
     if (message.trim() && !isStreaming) {
       const userMessageText = message.trim();
       const fullDate = new Date();
@@ -2859,6 +2900,104 @@ const ChatWithAi = () => {
                             {/* </LinearGradient> */}
                           </View>
                           <Text className="text-xs text-gray-400 mt-1 px-2 font-[PoppinsRegular]">
+                            {new Date().toLocaleTimeString("en-US", {
+                              hour: "2-digit",
+                              minute: "2-digit",
+                            })}
+                          </Text>
+                        </View>
+                      )}
+
+                      {/* Quota exceeded error bubble */}
+                      {quotaError && (
+                        <View className="mb-4 items-start">
+                          <View
+                            style={{
+                              maxWidth: bubbleMaxWidth,
+                              backgroundColor: "#FFF7ED",
+                              borderRadius: 16,
+                              borderTopLeftRadius: 4,
+                              borderWidth: 1,
+                              borderColor: "#FED7AA",
+                              padding: 16,
+                            }}
+                          >
+                            {/* Header row */}
+                            <View
+                              style={{
+                                flexDirection: "row",
+                                alignItems: "center",
+                                marginBottom: 8,
+                              }}
+                            >
+                              <Text style={{ fontSize: 18, marginRight: 8 }}>
+                                ⏳
+                              </Text>
+                              <Text
+                                style={{
+                                  fontFamily: "PoppinsSemiBold",
+                                  fontSize: 14,
+                                  color: "#C2410C",
+                                }}
+                              >
+                                Daily limit reached
+                              </Text>
+                            </View>
+
+                            {/* Message */}
+                            <Text
+                              style={{
+                                fontFamily: "PoppinsRegular",
+                                fontSize: 13,
+                                color: "#9A3412",
+                                lineHeight: 20,
+                                marginBottom: 10,
+                              }}
+                            >
+                              {`You've used all your messages for today. Your
+                              quota refreshes at`}
+                              <Text style={{ fontFamily: "PoppinsSemiBold" }}>
+                                {quotaError.refillsAt}
+                              </Text>
+                              .
+                            </Text>
+
+                            {/* Upgrade nudge */}
+                            <TouchableOpacity
+                              onPress={() =>
+                                router.push(
+                                  "/(tabs)/homepage/profilepage/paywall-screen" as any,
+                                )
+                              }
+                              style={{
+                                backgroundColor: "#EA580C",
+                                borderRadius: 10,
+                                paddingVertical: 9,
+                                paddingHorizontal: 16,
+                                alignSelf: "flex-start",
+                              }}
+                            >
+                              <Text
+                                style={{
+                                  fontFamily: "PoppinsSemiBold",
+                                  fontSize: 13,
+                                  color: "#fff",
+                                }}
+                              >
+                                Upgrade for unlimited access →
+                              </Text>
+                            </TouchableOpacity>
+                          </View>
+
+                          <Text
+                            style={{
+                              fontSize: 11,
+                              color: "#9ca3af",
+                              marginTop: 4,
+                              paddingHorizontal: 8,
+                              fontFamily: "PoppinsRegular",
+                            }}
+                          >
                             {new Date().toLocaleTimeString("en-US", {
                               hour: "2-digit",
                               minute: "2-digit",

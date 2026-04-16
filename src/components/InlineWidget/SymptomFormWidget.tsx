@@ -83,13 +83,14 @@ export const SymptomFormWidget: React.FC<{
   initialSymptom,
 }) => {
   const [severity, setSeverity] = useState(5);
-  const [selectedSymptoms, setSelectedSymptoms] = useState<string[]>([]);
+  const [selectedSymptom, setSelectedSymptom] = useState<string | null>(null);
   const [selectedTriggers, setSelectedTriggers] = useState<string[]>([]);
   const [note, setNote] = useState("");
 
   useEffect(() => {
     if (initialSymptom && submitted) {
-      setSelectedSymptoms(initialSymptom.symptoms || []);
+      const sym = initialSymptom.symptoms?.[0] || null;
+      setSelectedSymptom(sym);
       if (initialSymptom.severity_level === "Mild") setSeverity(2);
       else if (initialSymptom.severity_level === "Moderate") setSeverity(5);
       else if (initialSymptom.severity_level === "Severe") setSeverity(8);
@@ -100,9 +101,7 @@ export const SymptomFormWidget: React.FC<{
 
   const toggleSymptom = (sym: string) => {
     if (submitted) return;
-    setSelectedSymptoms((prev) =>
-      prev.includes(sym) ? prev.filter((s) => s !== sym) : [...prev, sym],
-    );
+    setSelectedSymptom((prev) => (prev === sym ? null : sym));
   };
 
   const toggleTrigger = (trigger: string) => {
@@ -119,15 +118,15 @@ export const SymptomFormWidget: React.FC<{
   const handleSubmit = () => {
     if (submitted) return;
     const severityLabel =
-      severity <= 3 ? "Mild" : severity <= 6 ? "Moderate" : "Severe";
-    const payload = `[SYSTEM_PAYLOAD: FORM_SUBMITTED | type: symptom | symptoms: ${selectedSymptoms.join(", ") || "none"} | severity_level: ${severityLabel} | date_logged: ${selectedDate || "not_set"} | triggers: ${selectedTriggers.join(", ") || "none"} | notes: ${note}]`;
+      severity === 1 ? "Mild" : severity <= 3 ? "Moderate" : "Severe";
+    const payload = `[SYSTEM_PAYLOAD: FORM_SUBMITTED | type: symptom | symptoms: ${selectedSymptom || "none"} | severity_level: ${severityLabel} | date_logged: ${selectedDate || "not_set"} | triggers: ${selectedTriggers.join(", ") || "none"} | notes: ${note}]`;
     onSubmit({ symptomData: payload });
   };
 
   const severityLabel =
-    severity <= 3 ? "Mild" : severity <= 6 ? "Moderate" : "Severe";
+    severity === 1 ? "Mild" : severity <= 3 ? "Moderate" : "Severe";
   const severityColor =
-    severity <= 3 ? "#4CAF50" : severity <= 6 ? "#FF9800" : "#F44336";
+    severity === 1 ? "#4CAF50" : severity <= 3 ? "#FF9800" : "#F44336";
 
   return (
     <View style={CARD_STYLE}>
@@ -151,7 +150,7 @@ export const SymptomFormWidget: React.FC<{
       </Text>
       <View style={{ flexDirection: "row", flexWrap: "wrap", gap: 8 }}>
         {SYMPTOM_OPTIONS.map((sym) => {
-          const sel = selectedSymptoms.includes(sym);
+          const sel = selectedSymptom === sym;
           return (
             <TouchableOpacity
               key={sym}
@@ -229,7 +228,7 @@ export const SymptomFormWidget: React.FC<{
           <Slider
             style={{ width: "100%", height: 40 }}
             minimumValue={1}
-            maximumValue={10}
+            maximumValue={4}
             step={1}
             value={severity}
             onValueChange={setSeverity}
@@ -242,8 +241,9 @@ export const SymptomFormWidget: React.FC<{
 
         <View style={styles.scaleRow}>
           <Text style={styles.scaleText}>1</Text>
-          <Text style={styles.scaleText}>5</Text>
-          <Text style={styles.scaleText}>10</Text>
+          <Text style={styles.scaleText}>2</Text>
+          <Text style={styles.scaleText}>3</Text>
+          <Text style={styles.scaleText}>4</Text>
         </View>
       </View>
 
