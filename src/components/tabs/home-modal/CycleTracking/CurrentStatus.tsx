@@ -15,6 +15,7 @@ const CurrentStatus = ({
     { label: "Perimenopause", value: "perimenopause" },
     { label: "Menopause", value: "menopause" },
     { label: "Postmenopause", value: "postmenopause" },
+    { label: "Don't Know", value: "don't know" },
   ];
 
   // React.useEffect(() => {

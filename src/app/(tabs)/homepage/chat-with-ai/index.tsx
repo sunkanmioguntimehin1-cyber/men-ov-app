@@ -1465,6 +1465,7 @@
 //! ########################################
 
 import { useGetAllChatAiHistory } from "@/src/api_services/chatApi/chatQuery";
+import { useGetUser } from "@/src/api_services/userApi/userQuery";
 import { ActionPills } from "@/src/components/ActionPills";
 import { InlineWidget } from "@/src/components/InlineWidget";
 import QuotaBanner from "@/src/components/QuotaBanner";
@@ -1548,6 +1549,9 @@ const ChatWithAi = () => {
 
   const [quotaInfo, setQuotaInfo] = React.useState<QuotaInfo | null>(null);
 
+  const getUserData = useGetUser();
+  const chatfrozen = getUserData?.data?.chatConfig?.frozenAt;
+
   const isQuotaReset = React.useMemo(() => {
     if (!quotaInfo?.resets) return false;
     const resetTime = new Date(quotaInfo.resets).getTime();
@@ -1556,6 +1560,12 @@ const ChatWithAi = () => {
   }, [quotaInfo?.resets]);
 
   const isQuotaExhausted = quotaInfo?.status === "exhausted" && !isQuotaReset;
+
+  React.useEffect(() => {
+    if (!chatfrozen) {
+      getUserData.refetch();
+    }
+  }, [chatfrozen, getUserData]);
 
   console.log("isQuotaExhausted:", isQuotaExhausted);
   console.log("isQuotaReset:", isQuotaReset);
@@ -3045,7 +3055,7 @@ const ChatWithAi = () => {
             )}
 
             {/* Quota Banner */}
-            {isQuotaExhausted && quotaInfo && (
+            {/* {isQuotaExhausted && quotaInfo && (
               <View
                 style={{
                   paddingHorizontal: horizontalPadding,
@@ -3053,6 +3063,16 @@ const ChatWithAi = () => {
                 }}
               >
                 <QuotaBanner info={quotaInfo} />
+              </View>
+            )} */}
+            {chatfrozen && (
+              <View
+                style={{
+                  paddingHorizontal: horizontalPadding,
+                  paddingBottom: 4,
+                }}
+              >
+                <QuotaBanner info={chatfrozen} />
               </View>
             )}
             {/* Input Area */}
@@ -3076,20 +3096,27 @@ const ChatWithAi = () => {
                     onSubmitEditing={handleSend}
                     autoCapitalize="sentences"
                     // editable={!isLoadingHistory && !isStreaming}
-                    editable={
-                      !isLoadingHistory && !isStreaming && !isQuotaExhausted
-                    } // <-- ADD !isQuotaExhausted
+                    // editable={
+                    //   !isLoadingHistory && !isStreaming && !isQuotaExhausted
+                    // } // <-- ADD !isQuotaExhausted
+                    editable={!isLoadingHistory && !isStreaming && !chatfrozen}
                   />
                 </View>
                 <TouchableOpacity
                   onPress={handleSend}
                   // disabled={!message.trim() || isLoadingHistory || isStreaming}
+                  // disabled={
+                  //   !message.trim() ||
+                  //   isLoadingHistory ||
+                  //   isStreaming ||
+                  //   isQuotaExhausted
+                  // } // <-- ADD || isQuotaExhausted
                   disabled={
                     !message.trim() ||
                     isLoadingHistory ||
                     isStreaming ||
-                    isQuotaExhausted
-                  } // <-- ADD || isQuotaExhausted
+                    chatfrozen
+                  }
                   className={`w-12 h-12 rounded-full items-center justify-center ${
                     message.trim() && !isLoadingHistory && !isStreaming
                       ? "bg-primaryLight"
