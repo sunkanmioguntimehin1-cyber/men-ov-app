@@ -1551,6 +1551,7 @@ const ChatWithAi = () => {
 
   const getUserData = useGetUser();
   const chatfrozen = getUserData?.data?.chatConfig?.frozenAt;
+  const chatResetAt = getUserData?.data?.chatConfig?.resetAt;
 
   const isQuotaReset = React.useMemo(() => {
     if (!quotaInfo?.resets) return false;
@@ -1565,7 +1566,7 @@ const ChatWithAi = () => {
     if (!chatfrozen) {
       getUserData.refetch();
     }
-  }, [chatfrozen, getUserData]);
+  }, [chatfrozen, chatResetAt, getUserData]);
 
   console.log("isQuotaExhausted:", isQuotaExhausted);
   console.log("isQuotaReset:", isQuotaReset);
@@ -3072,7 +3073,7 @@ const ChatWithAi = () => {
                   paddingBottom: 4,
                 }}
               >
-                <QuotaBanner info={chatfrozen} />
+                <QuotaBanner info={chatResetAt} />
               </View>
             )}
             {/* Input Area */}

@@ -231,7 +231,7 @@ function formatResetTime(resets: string) {
   }
 }
 
-const QuotaBanner = ({ info }) => {
+const QuotaBanner = ({ info }: any) => {
   const router = useRouter();
   console.log("info40000:", info);
   const isExhausted = info;

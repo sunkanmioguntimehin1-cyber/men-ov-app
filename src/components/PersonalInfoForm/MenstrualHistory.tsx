@@ -2,7 +2,7 @@ import CustomSelectData from "@/src/custom-components/CustomSelectData";
 import YesNoSelector from "@/src/custom-components/YesNoSelector";
 import { rS } from "@/src/lib/responsivehandler";
 import { AntDesign } from "@expo/vector-icons";
-import React from "react";
+import { format } from "date-fns";
 import { Text, TouchableOpacity, View } from "react-native";
 import { GradientText } from "../GradientText";
 
@@ -15,11 +15,11 @@ const MenstrualHistory = ({
   periodsStoppedAnswer,
   setPeriodsStoppedAnswer,
 }: any) => {
+  const dateValue = selectedDate ? format(selectedDate, "yyyy-MM-dd") : "";
 
   return (
     <View>
       <View className=" items-center my-5">
-      
         <GradientText className="font-[PoppinsMedium] text-xl">
           Menstrual History
         </GradientText>
@@ -52,7 +52,7 @@ const MenstrualHistory = ({
             primary
             placeholder="Date of last menstrual period"
             label="Date of last menstrual period "
-            value={selectedDate}
+            value={dateValue}
             icon={
               <TouchableOpacity onPress={handleLastPeriodOpen}>
                 <AntDesign name="down" size={20} color="#1E1D2F" />

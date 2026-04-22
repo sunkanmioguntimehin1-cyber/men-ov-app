@@ -162,7 +162,9 @@ const PersonalInfoForm = () => {
           !!(values.fullname || getUserData?.data?.fullname)
         ); // Form validation will handle this
       case 1: // Menstrual History
-        return firstPeriod && lastDateValue && periodsStoppedAnswer !== null;
+        // return firstPeriod && lastDateValue && periodsStoppedAnswer !== null;
+        return firstPeriod;
+
       case 2: // Surgical & Reproductive History
         return isHysterectomy !== null && isAvariesRemoved !== null;
       case 3: // Current Status

@@ -39,14 +39,10 @@ const PURPLE = "#6B5591";
 const WHITE_LIGHT = "#FFFFFF";
 
 const SYMPTOM_OPTIONS = [
-  "Hot flashes",
-  "Night sweats",
-  "Mood changes",
-  "Sleep issues",
-  "Fatigue",
-  "Palpitations",
+  "Back Pain",
+  "Headache",
   "Anxiety",
-  "Brain fog",
+  "Heart Palpitations",
 ];
 
 const TRIGGERS = [
@@ -82,7 +78,7 @@ export const SymptomFormWidget: React.FC<{
   handleDateBottomSheetOpen,
   initialSymptom,
 }) => {
-  const [severity, setSeverity] = useState(5);
+  const [severity, setSeverity] = useState(4);
   const [selectedSymptom, setSelectedSymptom] = useState<string | null>(null);
   const [selectedTriggers, setSelectedTriggers] = useState<string[]>([]);
   const [note, setNote] = useState("");
@@ -119,7 +115,7 @@ export const SymptomFormWidget: React.FC<{
     if (submitted) return;
     const severityLabel =
       severity === 1 ? "Mild" : severity <= 3 ? "Moderate" : "Severe";
-    const payload = `[SYSTEM_PAYLOAD: FORM_SUBMITTED | type: symptom | symptoms: ${selectedSymptom || "none"} | severity_level: ${severityLabel} | date_logged: ${selectedDate || "not_set"} | triggers: ${selectedTriggers.join(", ") || "none"} | notes: ${note}]`;
+    const payload = `[SYSTEM_PAYLOAD: FORM_SUBMITTED | type: symptom | symptoms: ${selectedSymptom || "none"} | severity_level: ${severity} | date_logged: ${selectedDate || "not_set"} | triggers: ${selectedTriggers.join(", ") || "none"} | notes: ${note}]`;
     onSubmit({ symptomData: payload });
   };
 

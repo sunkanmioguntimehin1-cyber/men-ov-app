@@ -3,7 +3,7 @@
     "name": "Menovia",
     "slug": "menovia",
     "owner": "menovia",
-    "version": "1.0.13",
+    "version": "1.0.14",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
     "scheme": "menoviaapp",
@@ -129,7 +129,8 @@
       "policy": "appVersion"
     },
     "updates": {
-      "url": "https://u.expo.dev/99d071a9-b0d9-4db0-85b7-90a308101011"
+      "url": "https://u.expo.dev/99d071a9-b0d9-4db0-85b7-90a308101011",
+      "enableBsdiffPatchSupport": true
     }
   }
 }

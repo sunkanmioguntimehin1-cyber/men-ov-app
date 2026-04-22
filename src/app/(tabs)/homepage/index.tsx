@@ -63,9 +63,6 @@ export default function HomePage() {
     getUserData.data?.menopauseStage === null ||
     getUserData.data?.menopauseStage === undefined;
 
-  // console.log("getUserData1111", getUserData.data?.menopauseStage);
-  // console.log("isPeriMenopause3000", isPeriMenopause);
-
   const insets = useSafeAreaInsets();
 
   const router = useRouter();
