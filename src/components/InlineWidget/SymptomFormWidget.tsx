@@ -111,18 +111,22 @@ export const SymptomFormWidget: React.FC<{
 
   const dateValue = selectedDate ? format(selectedDate, "dd-MM-yyy") : "";
 
-  const handleSubmit = () => {
-    if (submitted) return;
-    const severityLabel =
-      severity === 1 ? "Mild" : severity <= 3 ? "Moderate" : "Severe";
-    const payload = `[SYSTEM_PAYLOAD: FORM_SUBMITTED | type: symptom | symptoms: ${selectedSymptom || "none"} | severity_level: ${severity} | date_logged: ${selectedDate || "not_set"} | triggers: ${selectedTriggers.join(", ") || "none"} | notes: ${note}]`;
-    onSubmit({ symptomData: payload });
+  // Normalize date to ISO format (YYYY-MM-DD)
+  const normalizeDate = (d: string): string => {
+    if (!d) return "not_set";
+    if (/^\d{4}-\d{2}-\d{2}$/.test(d)) return d;
+    const parsed = new Date(d);
+    if (isNaN(parsed.getTime())) return "not_set";
+    return `${parsed.getFullYear()}-${String(parsed.getMonth() + 1).padStart(2, "0")}-${String(parsed.getDate()).padStart(2, "0")}`;
   };
 
-  const severityLabel =
-    severity === 1 ? "Mild" : severity <= 3 ? "Moderate" : "Severe";
-  const severityColor =
-    severity === 1 ? "#4CAF50" : severity <= 3 ? "#FF9800" : "#F44336";
+  const handleSubmit = () => {
+    if (submitted) return;
+
+    const normalizedDateForPayload = normalizeDate(selectedDate);
+    const payload = `[SYSTEM_PAYLOAD: FORM_SUBMITTED | type: symptom | symptoms: ${selectedSymptom || "none"} | severity_level: ${severity} | date_logged: ${normalizedDateForPayload} | triggers: ${selectedTriggers.join(", ") || "none"} | notes: ${note}]`;
+    onSubmit({ symptomData: payload });
+  };
 
   return (
     <View style={CARD_STYLE}>
