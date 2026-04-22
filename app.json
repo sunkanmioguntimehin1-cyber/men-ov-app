@@ -3,12 +3,11 @@
     "name": "Menovia",
     "slug": "menovia",
     "owner": "menovia",
-    "version": "1.0.13",
+    "version": "1.0.1",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
     "scheme": "menoviaapp",
     "userInterfaceStyle": "light",
-    "newArchEnabled": true,
     "ios": {
       "supportsTablet": true,
       "usesAppleSignIn": true,
@@ -30,7 +29,6 @@
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "edgeToEdgeEnabled": true,
       "permissions": [
         "android.permission.CAMERA",
         "android.permission.RECORD_AUDIO"
@@ -45,7 +43,11 @@
       "intentFilters": [
         {
           "action": "VIEW",
-          "data": [{ "scheme": "menoviaapp" }],
+          "data": [
+            {
+              "scheme": "menoviaapp"
+            }
+          ],
           "category": ["BROWSABLE", "DEFAULT"]
         }
       ]
@@ -110,7 +112,9 @@
       ],
       "expo-asset",
       "expo-font",
-      "expo-web-browser"
+      "expo-web-browser",
+      "expo-image",
+      "expo-sharing"
     ],
     "experiments": {
       "typedRoutes": true
@@ -125,7 +129,8 @@
       "policy": "appVersion"
     },
     "updates": {
-      "url": "https://u.expo.dev/99d071a9-b0d9-4db0-85b7-90a308101011"
+      "url": "https://u.expo.dev/99d071a9-b0d9-4db0-85b7-90a308101011",
+      "enableBsdiffPatchSupport": true
     }
   }
 }

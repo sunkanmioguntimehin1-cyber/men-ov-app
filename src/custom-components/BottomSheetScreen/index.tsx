@@ -25,7 +25,7 @@ const BottomSheetScreen = React.forwardRef(
       pressBehavior = "close", // Default value
       bgColor,
     }: BottomType,
-    ref
+    ref,
   ) => {
     // ref
     // callbacks
@@ -37,7 +37,7 @@ const BottomSheetScreen = React.forwardRef(
       (props: any) => (
         <BottomSheetBackdrop
           {...props}
-           appearsOnIndex={0} // Show backdrop when sheet is open
+          appearsOnIndex={0} // Show backdrop when sheet is open
           // appearsOnIndex={1}
           disappearsOnIndex={-1} // Hide when sheet is closed
           // pressBehavior="close" // Close sheet when backdrop is pressed (optional)
@@ -46,7 +46,7 @@ const BottomSheetScreen = React.forwardRef(
           pressBehavior={pressBehavior} // Close sheet when backdrop is pressed (optional)
         />
       ),
-      [pressBehavior]
+      [pressBehavior],
     );
 
     return (
@@ -58,12 +58,11 @@ const BottomSheetScreen = React.forwardRef(
         enablePanDownToClose={enablePanDownToClose}
         backdropComponent={isBackdropComponent ? renderBackdrop : undefined}
         backgroundStyle={{ backgroundColor: bgColor || "#FFFFFF" }}
-       
       >
         <BottomSheetView>{message}</BottomSheetView>
       </BottomSheet>
     );
-  }
+  },
 );
 
 BottomSheetScreen.displayName = "BottomSheetScreen";
@@ -82,7 +81,6 @@ const styles = StyleSheet.create({
 });
 
 export default BottomSheetScreen;
-
 
 // import BottomSheet, {
 //   BottomSheetBackdrop,

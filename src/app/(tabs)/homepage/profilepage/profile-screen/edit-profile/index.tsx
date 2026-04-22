@@ -20,7 +20,7 @@ import {
   ScrollView,
   Text,
   TouchableOpacity,
-  View
+  View,
 } from "react-native";
 
 interface Item {
@@ -58,6 +58,7 @@ const EditProfile = () => {
     defaultValues: {
       address: "",
       fullname: "",
+      email: "",
     },
   });
   const {
@@ -84,6 +85,8 @@ const EditProfile = () => {
       reset({
         fullname: getUserData?.data?.fullname,
         address: getUserData?.data?.address,
+        email: getUserData?.data?.email,
+
         // dob: getUserData?.data?.dob,
       });
       const matchingGender = dataItem.find((item) => item.value === userGender);
@@ -92,6 +95,7 @@ const EditProfile = () => {
       setSelectedDate(parsedDob);
     }
   }, [getUserData?.data, reset]);
+  console.log("getUserData.data3000", getUserData.data);
 
   const dateValue = selectedDate ? format(selectedDate, "yyyy-MM-dd") : "";
 
@@ -166,6 +170,27 @@ const EditProfile = () => {
                     onBlur={onBlur}
                     value={value}
                     error={errors.fullname?.message}
+                  />
+                )}
+              />
+            </View>
+
+            <View>
+              <Controller
+                control={control}
+                name="email"
+                rules={{
+                  required: "Email is required",
+                }}
+                render={({ field: { onChange, onBlur, value } }) => (
+                  <CustomInput
+                    primary
+                    label="Email"
+                    placeholder="Email"
+                    // onChangeText={onChange}
+                    onBlur={onBlur}
+                    value={value}
+                    error={errors.email?.message}
                   />
                 )}
               />

@@ -54,9 +54,12 @@ export const usePushNotifications = (): PushNotificationState => {
         projectId: Constants.expoConfig?.extra?.eas.projectId,
       });
 
+      const timeZome = Intl.DateTimeFormat().resolvedOptions().timeZone;
+
       if (token) {
         getPushNotificationSyncDeviceToken.mutate({
           fcmToken: token?.data,
+          timezone: timeZome,
         });
       }
 
@@ -110,7 +113,7 @@ export const usePushNotifications = (): PushNotificationState => {
           editPost: "/communitypage/edit-post",
           insights: "/summarypage",
           profile: "/profilepage/profile-screen",
-          subscription: "/manage-subscription/choose-your-plan",
+          subscription: "/profilepage",
         };
 
         const route = screen

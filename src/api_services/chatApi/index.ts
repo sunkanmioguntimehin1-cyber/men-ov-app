@@ -34,7 +34,7 @@ export const talkToChatAiwithStream = async (data: any) => {
 
 export const getAllChatAiHistory = async () => {
   try {
-    const res = await customAxiosInstance.get(`/history?limit=500`);
+    const res = await customAxiosInstance.get(`/history?limit=1000`);
     return res.data;
   } catch (error) {
     console.error("getAllChatAiHistory", error);

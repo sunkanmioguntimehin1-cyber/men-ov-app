@@ -31,9 +31,23 @@ export const editUserDetails = async (data: any) => {
 };
 
 export const intakeDetailsApi = async (data: any) => {
-  // console.log("data22", data);
+  // console.log("data22445500", data);
+
+  const requestPayload = {
+    ...(data.dateOfLastPeriod && { dateOfLastPeriod: data.dateOfLastPeriod }),
+    ...(data.isPeriodsStopped12Months && {
+      isPeriodsStopped12Months: data.isPeriodsStopped12Months,
+    }),
+    ageOfFirstPeriod: data.ageOfFirstPeriod,
+    isOnHormoneTherapy: data.isOnHormoneTherapy,
+    isOvariesRemoved: data.isOvariesRemoved,
+    ishysterectomy: data.ishysterectomy,
+    menopauseStage: data.menopauseStage,
+  };
+
+  console.log("requestPayloadppp", requestPayload);
   try {
-    const res = await axiosInstance.post(`/user/intake`, data);
+    const res = await axiosInstance.post(`/user/intake`, requestPayload);
     return res.data;
   } catch (error) {
     console.error("intakeDetailsApi", error);
@@ -42,8 +56,19 @@ export const intakeDetailsApi = async (data: any) => {
 };
 export const editIntakeDetailsApi = async (data: any) => {
   // console.log("data22", data)
+  const requestPayload = {
+    ...(data.dateOfLastPeriod && { dateOfLastPeriod: data.dateOfLastPeriod }),
+    ...(data.isPeriodsStopped12Months && {
+      isPeriodsStopped12Months: data.isPeriodsStopped12Months,
+    }),
+    ageOfFirstPeriod: data.ageOfFirstPeriod,
+    isOnHormoneTherapy: data.isOnHormoneTherapy,
+    isOvariesRemoved: data.isOvariesRemoved,
+    ishysterectomy: data.ishysterectomy,
+    menopauseStage: data.menopauseStage,
+  };
   try {
-    const res = await axiosInstance.put(`/user/intake`, data);
+    const res = await axiosInstance.put(`/user/intake`, requestPayload);
     return res.data;
   } catch (error) {
     console.error("editIntakeDetailsApi", error);

@@ -96,7 +96,7 @@ const PersonalInfoForm = () => {
   const validateCurrentStep = () => {
     switch (currentIndex) {
       case 0:
-        return firstPeriod && lastDateValue && periodsStoppedAnswer !== null;
+        return firstPeriod;
       case 1:
         return isHysterectomy !== null && isAvariesRemoved !== null;
       case 2:

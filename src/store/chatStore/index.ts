@@ -84,9 +84,20 @@ const useChatStore = create<ChatStore>()((set, get) => ({
   },
 
   updateMessageSelectedDate: (messageId: string, date: string) => {
+    // Normalize date to ISO format (YYYY-MM-DD) to avoid timezone issues
+    let normalizedDate = date;
+    if (date && !/^\d{4}-\d{2}-\d{2}$/.test(date)) {
+      const parsed = new Date(date);
+      if (!isNaN(parsed.getTime())) {
+        const year = parsed.getFullYear();
+        const month = String(parsed.getMonth() + 1).padStart(2, "0");
+        const day = String(parsed.getDate()).padStart(2, "0");
+        normalizedDate = `${year}-${month}-${day}`;
+      }
+    }
     set((state) => ({
       messages: state.messages.map((msg) =>
-        msg.id === messageId ? { ...msg, selectedDate: date } : msg
+        msg.id === messageId ? { ...msg, selectedDate: normalizedDate } : msg
       ),
     }));
   },

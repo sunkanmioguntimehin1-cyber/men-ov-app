@@ -23,7 +23,9 @@ const NOTIFICATION_ROUTES: Record<
   chat: {
     route: "/(tabs)/homepage/chat-with-ai",
     params: (actionData) => ({
-      ...(actionData?.chat_message && { initialMessage: actionData.chat_message }),
+      ...(actionData?.chat_message && {
+        initialMessage: actionData.chat_message,
+      }),
     }),
   },
   learn: {
@@ -57,7 +59,7 @@ const NOTIFICATION_ROUTES: Record<
     route: "/(tabs)/homepage/personal-info",
   },
   subscription: {
-    route: "/(tabs)/manage-subscription/choose-your-plan",
+    route: "/(tabs)/profilepage",
   },
   viewPost: {
     route: "/(tabs)/communitypage/view-post",
@@ -169,7 +171,11 @@ const NotificationScreen = () => {
 
       {/* Notifications List */}
       <FlatList
-        data={getNotificationsDetails.data?.pages.flatMap((page: any) => page.data) || []}
+        data={
+          getNotificationsDetails.data?.pages.flatMap(
+            (page: any) => page.data,
+          ) || []
+        }
         keyExtractor={(item: any) => item.id}
         renderItem={({ item: notification }) => {
           const iconConfig = getCategoryIcon(notification.notification_type);
@@ -190,8 +196,7 @@ const NotificationScreen = () => {
               {/* Content */}
               <View className="flex-1">
                 <Text className="text-sm font-[Poppins] text-gray-500 mb-2">
-                  {notification.chat_message ||
-                    notification.notification_text}
+                  {notification.chat_message || notification.notification_text}
                 </Text>
 
                 <Text className="text-xs font-[Poppins] text-gray-400">

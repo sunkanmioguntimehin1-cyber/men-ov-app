@@ -39,14 +39,10 @@ const PURPLE = "#6B5591";
 const WHITE_LIGHT = "#FFFFFF";
 
 const SYMPTOM_OPTIONS = [
-  "Hot flashes",
-  "Night sweats",
-  "Mood changes",
-  "Sleep issues",
-  "Fatigue",
-  "Palpitations",
+  "Back Pain",
+  "Headache",
   "Anxiety",
-  "Brain fog",
+  "Heart Palpitations",
 ];
 
 const TRIGGERS = [
@@ -82,14 +78,15 @@ export const SymptomFormWidget: React.FC<{
   handleDateBottomSheetOpen,
   initialSymptom,
 }) => {
-  const [severity, setSeverity] = useState(5);
-  const [selectedSymptoms, setSelectedSymptoms] = useState<string[]>([]);
+  const [severity, setSeverity] = useState(4);
+  const [selectedSymptom, setSelectedSymptom] = useState<string | null>(null);
   const [selectedTriggers, setSelectedTriggers] = useState<string[]>([]);
   const [note, setNote] = useState("");
 
   useEffect(() => {
     if (initialSymptom && submitted) {
-      setSelectedSymptoms(initialSymptom.symptoms || []);
+      const sym = initialSymptom.symptoms?.[0] || null;
+      setSelectedSymptom(sym);
       if (initialSymptom.severity_level === "Mild") setSeverity(2);
       else if (initialSymptom.severity_level === "Moderate") setSeverity(5);
       else if (initialSymptom.severity_level === "Severe") setSeverity(8);
@@ -100,9 +97,7 @@ export const SymptomFormWidget: React.FC<{
 
   const toggleSymptom = (sym: string) => {
     if (submitted) return;
-    setSelectedSymptoms((prev) =>
-      prev.includes(sym) ? prev.filter((s) => s !== sym) : [...prev, sym],
-    );
+    setSelectedSymptom((prev) => (prev === sym ? null : sym));
   };
 
   const toggleTrigger = (trigger: string) => {
@@ -116,18 +111,22 @@ export const SymptomFormWidget: React.FC<{
 
   const dateValue = selectedDate ? format(selectedDate, "dd-MM-yyy") : "";
 
-  const handleSubmit = () => {
-    if (submitted) return;
-    const severityLabel =
-      severity <= 3 ? "Mild" : severity <= 6 ? "Moderate" : "Severe";
-    const payload = `[SYSTEM_PAYLOAD: FORM_SUBMITTED | type: symptom | symptoms: ${selectedSymptoms.join(", ") || "none"} | severity_level: ${severityLabel} | date_logged: ${selectedDate || "not_set"} | triggers: ${selectedTriggers.join(", ") || "none"} | notes: ${note}]`;
-    onSubmit({ symptomData: payload });
+  // Normalize date to ISO format (YYYY-MM-DD)
+  const normalizeDate = (d: string): string => {
+    if (!d) return "not_set";
+    if (/^\d{4}-\d{2}-\d{2}$/.test(d)) return d;
+    const parsed = new Date(d);
+    if (isNaN(parsed.getTime())) return "not_set";
+    return `${parsed.getFullYear()}-${String(parsed.getMonth() + 1).padStart(2, "0")}-${String(parsed.getDate()).padStart(2, "0")}`;
   };
 
-  const severityLabel =
-    severity <= 3 ? "Mild" : severity <= 6 ? "Moderate" : "Severe";
-  const severityColor =
-    severity <= 3 ? "#4CAF50" : severity <= 6 ? "#FF9800" : "#F44336";
+  const handleSubmit = () => {
+    if (submitted) return;
+
+    const normalizedDateForPayload = normalizeDate(selectedDate);
+    const payload = `[SYSTEM_PAYLOAD: FORM_SUBMITTED | type: symptom | symptoms: ${selectedSymptom || "none"} | severity_level: ${severity} | date_logged: ${normalizedDateForPayload} | triggers: ${selectedTriggers.join(", ") || "none"} | notes: ${note}]`;
+    onSubmit({ symptomData: payload });
+  };
 
   return (
     <View style={CARD_STYLE}>
@@ -151,7 +150,7 @@ export const SymptomFormWidget: React.FC<{
       </Text>
       <View style={{ flexDirection: "row", flexWrap: "wrap", gap: 8 }}>
         {SYMPTOM_OPTIONS.map((sym) => {
-          const sel = selectedSymptoms.includes(sym);
+          const sel = selectedSymptom === sym;
           return (
             <TouchableOpacity
               key={sym}
@@ -229,7 +228,7 @@ export const SymptomFormWidget: React.FC<{
           <Slider
             style={{ width: "100%", height: 40 }}
             minimumValue={1}
-            maximumValue={10}
+            maximumValue={4}
             step={1}
             value={severity}
             onValueChange={setSeverity}
@@ -242,8 +241,9 @@ export const SymptomFormWidget: React.FC<{
 
         <View style={styles.scaleRow}>
           <Text style={styles.scaleText}>1</Text>
-          <Text style={styles.scaleText}>5</Text>
-          <Text style={styles.scaleText}>10</Text>
+          <Text style={styles.scaleText}>2</Text>
+          <Text style={styles.scaleText}>3</Text>
+          <Text style={styles.scaleText}>4</Text>
         </View>
       </View>
 

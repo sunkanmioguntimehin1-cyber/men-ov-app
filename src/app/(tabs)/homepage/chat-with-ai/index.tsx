@@ -1,6 +1,8 @@
 import { useGetAllChatAiHistory } from "@/src/api_services/chatApi/chatQuery";
+import { useGetUser } from "@/src/api_services/userApi/userQuery";
 import { ActionPills } from "@/src/components/ActionPills";
 import { InlineWidget } from "@/src/components/InlineWidget";
+import QuotaBanner from "@/src/components/QuotaBanner";
 import Duration from "@/src/components/tabs/home-modal/CycleTracking/logCycleBottomSheet/Duration";
 import StartDateBottomSheet from "@/src/components/tabs/home-modal/CycleTracking/logCycleBottomSheet/StartDateBottomSheet";
 import BottomSheetScreen from "@/src/custom-components/BottomSheetScreen";
@@ -11,16 +13,20 @@ import Screen from "@/src/layout/Screen";
 import useChatStore, { WidgetName } from "@/src/store/chatStore";
 import {
   CyclePayload,
+  QuotaInfo,
   SymptomPayload,
+  extractQuota,
   extractSelection,
   parseMessage,
   parseWidgetSelection,
+  stripQuotaTag,
   stripSelectionTag,
 } from "@/src/widgets/messageParser";
 import { MaterialIcons } from "@expo/vector-icons";
 import BottomSheet from "@gorhom/bottom-sheet";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useQueryClient } from "@tanstack/react-query";
+import { format, isValid, parse } from "date-fns";
 import { Image } from "expo-image";
 import { LinearGradient } from "expo-linear-gradient";
 import * as Linking from "expo-linking";
@@ -76,6 +82,31 @@ const ChatWithAi = () => {
   const { messages, setMessages, addMessage } = useChatStore();
   const [isNearBottom, setIsNearBottom] = useState(true);
 
+  const [quotaInfo, setQuotaInfo] = React.useState<QuotaInfo | null>(null);
+
+  const getUserData = useGetUser();
+  const chatfrozen = getUserData?.data?.chatConfig?.frozenAt;
+  const chatResetAt = getUserData?.data?.chatConfig?.resetAt;
+
+  const isQuotaReset = React.useMemo(() => {
+    if (!quotaInfo?.resets) return false;
+    const resetTime = new Date(quotaInfo.resets).getTime();
+    const now = Date.now();
+    return now >= resetTime;
+  }, [quotaInfo?.resets]);
+
+  const isQuotaExhausted = quotaInfo?.status === "exhausted" && !isQuotaReset;
+
+  React.useEffect(() => {
+    if (!chatfrozen) {
+      getUserData.refetch();
+    }
+  }, [chatfrozen, chatResetAt, getUserData]);
+
+  console.log("isQuotaExhausted:", isQuotaExhausted);
+  console.log("isQuotaReset:", isQuotaReset);
+  console.log("quotaInfo2000:", quotaInfo);
+
   const lastInteractiveMessageId = useMemo(() => {
     for (let i = messages.length - 1; i >= 0; i--) {
       if (messages[i].isAi) {
@@ -94,6 +125,11 @@ const ChatWithAi = () => {
   // ✅ Separate streaming state with typing animation
   const [streamingText, setStreamingText] = useState("");
   const [isStreaming, setIsStreaming] = useState(false);
+
+  const [quotaError, setQuotaError] = React.useState<{
+    message: string;
+    refillsAt: string;
+  } | null>(null);
 
   // ✅ Typing animation state
   const typingQueueRef = useRef<string>("");
@@ -257,10 +293,45 @@ const ChatWithAi = () => {
         body: JSON.stringify(messageDatail),
       });
 
+      // if (!response.ok) {
+      //   console.error("Failed to fetch AI", response);
+      //   stopTypingAnimation();
+      //   setIsStreaming(false);
+      //   return;
+      // }
+
       if (!response.ok) {
-        console.error("Failed to fetch AI", response);
         stopTypingAnimation();
         setIsStreaming(false);
+        useChatStore.getState().removeTypingIndicator();
+
+        try {
+          const errData = await response.json();
+          if (errData?.error === "quota_exceeded") {
+            // Format the refill time nicely
+            const refillDate = new Date(errData.quota_refills_at);
+            const refillsAt = refillDate.toLocaleTimeString("en-US", {
+              hour: "2-digit",
+              minute: "2-digit",
+            });
+            setQuotaError({
+              message:
+                errData.message ||
+                "You've used all your tokens for this period.",
+              refillsAt,
+            });
+            // Also lock the UI via quotaInfo
+            setQuotaInfo({
+              status: "exhausted",
+              plan: "free",
+              used: 0,
+              limit: 0,
+              resets: errData.quota_refills_at,
+            });
+          }
+        } catch (_) {
+          console.error("Failed to fetch AI", response.status);
+        }
         return;
       }
 
@@ -284,6 +355,8 @@ const ChatWithAi = () => {
               clearInterval(waitForTyping);
               stopTypingAnimation();
 
+              //! #################
+
               setStreamingText((prev) => {
                 const fullDate = new Date();
                 const timestamp = fullDate.toLocaleTimeString("en-US", {
@@ -302,12 +375,18 @@ const ChatWithAi = () => {
                   fullDate,
                 });
 
+                // ── Extract quota from newly streamed message ──
+                const q = extractQuota(prev);
+                if (q) setQuotaInfo(q);
+                // ─────────────────────────────────────────────
+
                 queryClient.invalidateQueries({
                   queryKey: ["get-all-chat-history"],
                 });
-
                 return "";
               });
+
+              //! #######################
 
               setIsStreaming(false);
             }
@@ -769,7 +848,12 @@ const ChatWithAi = () => {
                     messageId={message.id}
                     selectedButton={message.selectedAction}
                     onPress={(action) => handleActionPress(message.id, action)}
+                    // disabled={
+                    //   message.id !== lastInteractiveMessageId ||
+                    //   !!message.selectedAction
+                    // }
                     disabled={
+                      isQuotaExhausted || // <-- ADD
                       message.id !== lastInteractiveMessageId ||
                       !!message.selectedAction
                     }
@@ -817,7 +901,14 @@ const ChatWithAi = () => {
                       !!message.selectedCycle ||
                       !!message.selectedSymptom
                     }
+                    // disabled={
+                    //   message.id !== lastInteractiveMessageId ||
+                    //   !!message.selectedDate ||
+                    //   !!message.selectedCycle ||
+                    //   !!message.selectedSymptom
+                    // }
                     disabled={
+                      isQuotaExhausted || // <-- ADD
                       message.id !== lastInteractiveMessageId ||
                       !!message.selectedDate ||
                       !!message.selectedCycle ||
@@ -861,12 +952,14 @@ const ChatWithAi = () => {
                       : handleWidgetSubmit(message.id)
               }
               submitted={
+                isQuotaExhausted ||
                 message.id !== lastInteractiveMessageId ||
                 !!message.selectedDate ||
                 !!message.selectedCycle ||
                 !!message.selectedSymptom
               }
               disabled={
+                isQuotaExhausted ||
                 message.id !== lastInteractiveMessageId ||
                 !!message.selectedDate ||
                 !!message.selectedCycle ||
@@ -942,18 +1035,47 @@ const ChatWithAi = () => {
     return currentDate.getTime() !== prevDate.getTime();
   };
 
-  // Format system payload for user display
-  const formatUserMessageForDisplay = (text: string): string => {
-    let formatted = stripSelectionTag(text);
+  //! Format system payload for user display
+  // const formatUserMessageForDisplay = (text: string): string => {
+  //   let formatted = stripSelectionTag(text);
 
+  //   if (formatted.startsWith("[SYSTEM_PAYLOAD:")) {
+  //     formatted = formatted
+  //       .replace("[SYSTEM_PAYLOAD: FORM_SUBMITTED | ", "")
+  //       .replace("]", "")
+  //       .replace("type: ", "");
+  //   }
+  //   return formatted;
+  // };
+
+  //! ######################
+  const formatUserMessageForDisplay = (text: string): string => {
+    console.log("Original message text for formatting:", text);
+    let formatted = stripSelectionTag(text);
+    formatted = stripQuotaTag(formatted); // <-- ADD THIS LINE
     if (formatted.startsWith("[SYSTEM_PAYLOAD:")) {
       formatted = formatted
         .replace("[SYSTEM_PAYLOAD: FORM_SUBMITTED | ", "")
         .replace("]", "")
         .replace("type: ", "");
     }
+
+    // Format date fields (date_logged, start_date, etc.) for user display
+    // Handle ISO format (2026-04-26)
+    formatted = formatted.replace(
+      /([a-z_]+):\s*(\d{4}-\d{2}-\d{2})(?:\s|$|\|)/g,
+      (match, fieldName, dateStr) => {
+        const parsed = parse(dateStr, "yyyy-MM-dd", new Date());
+        if (!isValid(parsed)) return match;
+        return `${fieldName}: ${format(parsed, "MMM d, yyyy")}`;
+      },
+    );
+
+    console.log("Formatted message text for display:", formatted);
+
     return formatted;
   };
+  //! ########################
 
   // ✅ Transform server data from getAllChatAiHistory to message format
   useEffect(() => {
@@ -1021,6 +1143,17 @@ const ChatWithAi = () => {
         };
       });
 
+      const quotaMessages = serverMessages.filter(
+        (msg: any) =>
+          msg.role === "assistant" && msg.content?.includes("<<QUOTA:"),
+      );
+      // Server messages are returned newest‑first, so the first match is the newest quota.
+      const quotaMsg = quotaMessages.length ? quotaMessages[0] : undefined;
+      if (quotaMsg) {
+        const q = extractQuota(quotaMsg.content);
+        if (q) setQuotaInfo(q);
+      }
+
       transformedMessages.sort(
         (a, b) => a.fullDate.getTime() - b.fullDate.getTime(),
       );
@@ -1058,6 +1191,7 @@ const ChatWithAi = () => {
   };
 
   const handleSend = async () => {
+    setQuotaError(null);
     if (message.trim() && !isStreaming) {
       const userMessageText = message.trim();
       const fullDate = new Date();
@@ -1334,6 +1468,104 @@ const ChatWithAi = () => {
                           </Text>
                         </View>
                       )}
+
+                      {/* Quota exceeded error bubble */}
+                      {quotaError && (
+                        <View className="mb-4 items-start">
+                          <View
+                            style={{
+                              maxWidth: bubbleMaxWidth,
+                              backgroundColor: "#FFF7ED",
+                              borderRadius: 16,
+                              borderTopLeftRadius: 4,
+                              borderWidth: 1,
+                              borderColor: "#FED7AA",
+                              padding: 16,
+                            }}
+                          >
+                            {/* Header row */}
+                            <View
+                              style={{
+                                flexDirection: "row",
+                                alignItems: "center",
+                                marginBottom: 8,
+                              }}
+                            >
+                              <Text style={{ fontSize: 18, marginRight: 8 }}>
+                                ⏳
+                              </Text>
+                              <Text
+                                style={{
+                                  fontFamily: "PoppinsSemiBold",
+                                  fontSize: 14,
+                                  color: "#C2410C",
+                                }}
+                              >
+                                Daily limit reached
+                              </Text>
+                            </View>
+
+                            {/* Message */}
+                            <Text
+                              style={{
+                                fontFamily: "PoppinsRegular",
+                                fontSize: 13,
+                                color: "#9A3412",
+                                lineHeight: 20,
+                                marginBottom: 10,
+                              }}
+                            >
+                              {`You've used all your messages for today. Your
+                              quota refreshes at`}
+                              <Text style={{ fontFamily: "PoppinsSemiBold" }}>
+                                {quotaError.refillsAt}
+                              </Text>
+                              .
+                            </Text>
+
+                            {/* Upgrade nudge */}
+                            <TouchableOpacity
+                              onPress={() =>
+                                router.push(
+                                  "/(tabs)/homepage/profilepage/paywall-screen" as any,
+                                )
+                              }
+                              style={{
+                                backgroundColor: "#EA580C",
+                                borderRadius: 10,
+                                paddingVertical: 9,
+                                paddingHorizontal: 16,
+                                alignSelf: "flex-start",
+                              }}
+                            >
+                              <Text
+                                style={{
+                                  fontFamily: "PoppinsSemiBold",
+                                  fontSize: 13,
+                                  color: "#fff",
+                                }}
+                              >
+                                Upgrade for unlimited access →
+                              </Text>
+                            </TouchableOpacity>
+                          </View>
+
+                          <Text
+                            style={{
+                              fontSize: 11,
+                              color: "#9ca3af",
+                              marginTop: 4,
+                              paddingHorizontal: 8,
+                              fontFamily: "PoppinsRegular",
+                            }}
+                          >
+                            {new Date().toLocaleTimeString("en-US", {
+                              hour: "2-digit",
+                              minute: "2-digit",
+                            })}
+                          </Text>
+                        </View>
+                      )}
                     </>
                   )}
                 </ScrollView>
@@ -1373,6 +1605,27 @@ const ChatWithAi = () => {
               </View>
             )}
 
+            {/* Quota Banner */}
+            {/* {isQuotaExhausted && quotaInfo && (
+              <View
+                style={{
+                  paddingHorizontal: horizontalPadding,
+                  paddingBottom: 4,
+                }}
+              >
+                <QuotaBanner info={quotaInfo} />
+              </View>
+            )} */}
+            {chatfrozen && (
+              <View
+                style={{
+                  paddingHorizontal: horizontalPadding,
+                  paddingBottom: 4,
+                }}
+              >
+                <QuotaBanner info={chatResetAt} />
+              </View>
+            )}
             {/* Input Area */}
             <View
               className="border-t border-[#EAEAEA] bg-white"
@@ -1393,12 +1646,28 @@ const ChatWithAi = () => {
                     returnKeyType="send"
                     onSubmitEditing={handleSend}
                     autoCapitalize="sentences"
-                    editable={!isLoadingHistory && !isStreaming}
+                    // editable={!isLoadingHistory && !isStreaming}
+                    // editable={
+                    //   !isLoadingHistory && !isStreaming && !isQuotaExhausted
+                    // } // <-- ADD !isQuotaExhausted
+                    editable={!isLoadingHistory && !isStreaming && !chatfrozen}
                   />
                 </View>
                 <TouchableOpacity
                   onPress={handleSend}
-                  disabled={!message.trim() || isLoadingHistory || isStreaming}
+                  // disabled={!message.trim() || isLoadingHistory || isStreaming}
+                  // disabled={
+                  //   !message.trim() ||
+                  //   isLoadingHistory ||
+                  //   isStreaming ||
+                  //   isQuotaExhausted
+                  // } // <-- ADD || isQuotaExhausted
+                  disabled={
+                    !message.trim() ||
+                    isLoadingHistory ||
+                    isStreaming ||
+                    chatfrozen
+                  }
                   className={`w-12 h-12 rounded-full items-center justify-center ${
                     message.trim() && !isLoadingHistory && !isStreaming
                       ? "bg-primaryLight"

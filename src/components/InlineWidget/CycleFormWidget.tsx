@@ -100,13 +100,22 @@ export const CycleFormWidget: React.FC<{
     );
   };
 
+  // Normalize date to ISO format (YYYY-MM-DD)
+  const normalizeDate = (d: string): string => {
+    if (!d) return "";
+    if (/^\d{4}-\d{2}-\d{2}$/.test(d)) return d;
+    const parsed = new Date(d);
+    if (isNaN(parsed.getTime())) return "";
+    return `${parsed.getFullYear()}-${String(parsed.getMonth() + 1).padStart(2, "0")}-${String(parsed.getDate()).padStart(2, "0")}`;
+  };
+  const dateValue = selectedDate ? format(selectedDate, "dd-MM-yyy") : "";
+
   const handleSubmit = () => {
     if (!selectedDate || !durationData || submitted) return;
-    const payload = `[SYSTEM_PAYLOAD: FORM_SUBMITTED | type: cycle | start_date: ${selectedDate} | duration: ${durationData} | note: ${note}]`;
+    const normalizedStartDate = normalizeDate(selectedDate);
+    const payload = `[SYSTEM_PAYLOAD: FORM_SUBMITTED | type: cycle | start_date: ${normalizedStartDate} | duration: ${durationData} | note: ${note}]`;
     onSubmit({ cycleData: payload });
   };
-
-  const dateValue = selectedDate ? format(selectedDate, "dd-MM-yyy") : "";
 
   return (
     <View style={CARD_STYLE} className="  ">

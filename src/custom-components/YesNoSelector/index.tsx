@@ -252,12 +252,11 @@ const YesNoSelector = ({
   iconSize = 20,
 }: YesNoSelectorProps) => {
   const [internalSelected, setInternalSelected] = useState<true | false | null>(
-    null
+    null,
   );
 
   console.log("controlledValue", controlledValue);
   console.log("selectedValue", selectedValue);
-
 
   const selectedValue =
     controlledValue !== undefined ? controlledValue : internalSelected;
@@ -298,7 +297,7 @@ const YesNoSelector = ({
           return (
             <React.Fragment key={index}>
               <TouchableOpacity
-                className="flex-1 rounded-lg overflow-hidden"
+                className="flex-1 rounded-lg"
                 style={{
                   opacity: isDisabled ? 0.5 : 1,
                 }}
@@ -307,7 +306,8 @@ const YesNoSelector = ({
                 activeOpacity={0.7}
               >
                 <LinearGradient
-                  colors={gradientColors}
+                  // colors={gradientColors}
+                  colors={["#6B5591", "#6E3F8C", "#853385", "#9F3E83"]}
                   start={{ x: 0, y: 0 }}
                   end={{ x: 1, y: 1 }}
                   // className="h-14 flex-row items-center justify-center"
@@ -317,6 +317,7 @@ const YesNoSelector = ({
                     // padding: Platform.OS === "ios" ? 16 : 16,
                     alignItems: "center",
                     justifyContent: "center",
+                    borderRadius: 8,
                   }}
                 >
                   <Text className="mx-3 text-white">{item.title}</Text>
