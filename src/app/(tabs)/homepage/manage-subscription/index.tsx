@@ -384,6 +384,15 @@ const ManageSubscription = () => {
     }
   };
 
+  console.log("activeSubDetails", activeSubDetails);
+  console.log("planName", planName);
+  console.log("priceLabel", priceLabel);
+  console.log("formattedDate", formattedDate);
+  console.log("statusLabel", statusLabel);
+  console.log("isProMember", isProMember);
+  console.log("isCancelled", isCancelled);
+  console.log("formattedCancelDate", formattedCancelDate);
+
   return (
     <Screen contentClassName="px-4 pb-10 flex-1 ">
       <CustomModel
@@ -414,7 +423,6 @@ const ManageSubscription = () => {
             <Text className="text-lg font-[PoppinsSemiBold] text-slate-900 mb-2">
               Current Plan
             </Text>
-
             <Row label="Plan Name" value={planName} />
             <Row label="Price" value={priceLabel} />
             {formattedCancelDate && (
@@ -424,7 +432,13 @@ const ManageSubscription = () => {
                 isLast={false}
               />
             )}
-            {formattedDate && (
+            {isCancelled ? (
+              <Row
+                label="Expiration date"
+                value={formattedDate}
+                isLast={false}
+              />
+            ) : (
               <Row label="Renewal date" value={formattedDate} isLast={false} />
             )}
             <Row

@@ -95,7 +95,6 @@ const EditProfile = () => {
       setSelectedDate(parsedDob);
     }
   }, [getUserData?.data, reset]);
-  console.log("getUserData.data3000", getUserData.data);
 
   const dateValue = selectedDate ? format(selectedDate, "yyyy-MM-dd") : "";
 
@@ -187,6 +186,7 @@ const EditProfile = () => {
                     primary
                     label="Email"
                     placeholder="Email"
+                    editable={false}
                     // onChangeText={onChange}
                     onBlur={onBlur}
                     value={value}
