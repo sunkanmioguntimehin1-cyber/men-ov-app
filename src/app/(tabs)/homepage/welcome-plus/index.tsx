@@ -5,7 +5,6 @@ import Screen from "@/src/layout/Screen";
 import { Entypo, Ionicons } from "@expo/vector-icons";
 import { Image } from "expo-image";
 import { useRouter } from "expo-router";
-import React from "react";
 import { Text, TouchableOpacity, View } from "react-native";
 
 const WelcomePlus = () => {
@@ -20,7 +19,7 @@ const WelcomePlus = () => {
   console.log("🚀 ~ file: ~ WelcomePlus ~ customerInfo:", customerInfo);
   console.log(
     " WelcomePlus ~ customerInfo:",
-    customerInfo?.subscriptions?.menovia_web_monthly?.period_type === "trial",
+    customerInfo?.subscriptions?.menovia_plus_monthly?.period_type === "trial",
   );
 
   console.log(
@@ -95,7 +94,7 @@ const WelcomePlus = () => {
         <GradientText className="font-[PoppinsBold] text-3xl text-center">
           Welcome to Plus
         </GradientText>
-        {customerInfo?.subscriptions?.menovia_web_monthly?.period_type ===
+        {customerInfo?.subscriptions?.menovia_plus_monthly?.period_type ===
           "trial" && (
           <Text className="text-[#6b7280] text-lg text-center mt-4 font-[PoppinsRegular]">
             Your 7-day trial has started

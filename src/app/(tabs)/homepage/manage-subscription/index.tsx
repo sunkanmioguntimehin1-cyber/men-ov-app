@@ -384,15 +384,6 @@ const ManageSubscription = () => {
     }
   };
 
-  console.log("activeSubDetails", activeSubDetails);
-  console.log("planName", planName);
-  console.log("priceLabel", priceLabel);
-  console.log("formattedDate", formattedDate);
-  console.log("statusLabel", statusLabel);
-  console.log("isProMember", isProMember);
-  console.log("isCancelled", isCancelled);
-  console.log("formattedCancelDate", formattedCancelDate);
-
   return (
     <Screen contentClassName="px-4 pb-10 flex-1 ">
       <CustomModel
